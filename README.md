@@ -1,12 +1,15 @@
 # AutonomousDrivingSamplePrograms
-Sample program collection for studying Autonomous Driving Algorithm.  
+自動運転のアルゴリズムについて学ぶためのサンプルプログラム集。  
 
-## Requirements
-* Python 3.10.x~
+## このリポジトリについて
+ロボットの自律移動や車両の自動運転に必要な各種要素技術の一般的なアルゴリズムについて学ぶためのサンプルプログラムをまとめています。内容の理解や実装がしやすいように、Pythonで書くものがメインになります。また、各プログラムで実装された技術について解説したドキュメントも作成していくので、合わせて参照ください。  
+
+## 動作環境
+* Python 3.10.x以上
 * numpy
 * matplotlib
 
-If you need to install the above libraries, you can install by executing the following command easily.  
+もしこれらライブラリが不足している場合は、下記コマンドを実行してインストールしてください。  
 ```bash
 $ pip install -r requirements.txt
 ```
