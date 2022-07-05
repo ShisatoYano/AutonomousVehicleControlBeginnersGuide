@@ -27,6 +27,6 @@ class Axle:
         self.plot, = axes.plot(self.points[0, :], self.points[1, :], lw=1, color='k')
     
     def draw(self, x_m, y_m, yaw_angle_deg, steer_angle_deg):
-        transformed_points = rotate_translate_2d(self.points, self.offset_x, 0.0, steer_angle_deg)
-        transformed_points = rotate_translate_2d(transformed_points, x_m, y_m, yaw_angle_deg)
+        transformed_points = rotate_translate_2d(self.points, self.offset_x, 0.0, np.deg2rad(steer_angle_deg))
+        transformed_points = rotate_translate_2d(transformed_points, x_m, y_m, np.deg2rad(yaw_angle_deg))
         self.plot.set_data(transformed_points[0, :], transformed_points[1, :])
