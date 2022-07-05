@@ -10,29 +10,52 @@ from body import Body
 from tire import Tire
 from chassis import Chassis
 
-FRONT_LENGHT_M = 6.35
-REAR_LENGTH_M = 0.0
-TIRE_RADIUS_M = 1.27
-TIRE_WIDTH_HALF_M = 0.64
-
 
 class TwoWheelsVehicle:
-    def __init__(self, axes):
-        self.body = Body(axes, FRONT_LENGHT_M, REAR_LENGTH_M)
-        self.front_tire = Tire(axes, TIRE_RADIUS_M, TIRE_WIDTH_HALF_M, FRONT_LENGHT_M, 0.0)
-        self.rear_tire = Tire(axes, TIRE_RADIUS_M, TIRE_WIDTH_HALF_M, -REAR_LENGTH_M, 0.0)
-        self.chassis = Chassis(axes, FRONT_LENGHT_M, REAR_LENGTH_M)
+    """
+    2輪モデルの車両を描画するクラス
+    """
+    
+    def __init__(self, axes, front_length_m=6.35, rear_length_m=0.0, tire_radius_m=1.27, tire_width_half_m=0.64):
+        """
+        コンストラクタ
+        axes: 描画オブジェクト
+        front_length_m: 車両位置から前方への長さ[m]
+        rear_length_m: 車両位置から後方への長さ[m]
+        tire_radius_m: タイヤ半径[m]
+        tire_width_half_m: タイヤ幅の半分[m]
+        """
+        
+        # 各パーツクラスのインスタンス生成
+        self.body = Body(axes, front_length_m, rear_length_m)
+        self.front_tire = Tire(axes, tire_radius_m, tire_width_half_m, front_length_m, 0.0)
+        self.rear_tire = Tire(axes, tire_radius_m, tire_width_half_m, -rear_length_m, 0.0)
+        self.chassis = Chassis(axes, front_length_m, rear_length_m)
     
     def draw(self, x_m, y_m, yaw_angle_deg, steer_angle_deg):
+        """
+        車両の形を描画する関数
+        指定した分だけ回転 + 並進移動させて描画する
+        x_m: X軸方向の並進移動量
+        y_m: Y軸方向の並進移動量
+        yaw_angle_deg: 車両の方位角度[deg]
+        steering_angle_deg: ステアリング角度[deg]
+        """
+
+        # 各パーツインスタンスの描画メソッドを呼び出す
         self.body.draw(x_m, y_m, yaw_angle_deg)
         self.front_tire.draw(x_m, y_m, yaw_angle_deg, steer_angle_deg)
         self.rear_tire.draw(x_m, y_m, yaw_angle_deg, 0.0)
         self.chassis.draw(x_m, y_m, yaw_angle_deg)
 
 
+# メイン処理
+# このファイルを実行すると、方位の向きと
+# ステアリング角度を変えた車両の絵が描画される
 if __name__ == "__main__":
     print(__file__ + " start!!")
 
+    # 描画の設定
     ax = plt.subplot(1, 1, 1)
     ax.set_xlabel("X[m]")
     ax.set_ylabel("Y[m]")
@@ -41,12 +64,14 @@ if __name__ == "__main__":
     ax.set_aspect("equal")
     ax.grid(True)
 
+    # 描画クラスのインスタンス生成
     twv = TwoWheelsVehicle(ax)
 
+    # 角度を30°ずつずらしながら描画
     angle_deg = -60
     while angle_deg <= 60:
-        twv.draw(0, 0, angle_deg, angle_deg)
+        twv.draw(0, 0, angle_deg, angle_deg) # 描画メソッドの実行
 
-        angle_deg += 30
+        angle_deg += 30 # 30度ずらす
         
-        plt.pause(1)
+        plt.pause(2) # 一度描画するたびに2秒ポーズ
