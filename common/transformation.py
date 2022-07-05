@@ -4,20 +4,40 @@ Transformation function library
 Author: Shisato Yano
 """
 
-from cmath import pi
-from math import sin, cos
+from math import sin, cos, pi
 import numpy as np
 
 
-def rotate_translate_2d(points, x_m, y_m, angle_deg):
-    angle_cos = cos(np.deg2rad(angle_deg))
-    angle_sin = sin(np.deg2rad(angle_deg))
+def rotate_translate_2d(points, x_m, y_m, angle_rad):
+    """
+    2次元点群を同次変換する関数
+    angle_degだけ回転させて、x_m, y_mだけ並進移動
+    points: 2 x 点数の2次元配列, np.array([[x1, x2, x3], [y1, y2, y3]])など
+    x_m: X軸方向の並進移動量
+    y_m: Y軸方向の並進移動量
+    angle_rad: 回転角度[rad]
+    """
+    
+    # 回転角度の単位をradにして、sin, cos成分を計算
+    angle_cos = cos(angle_rad)
+    angle_sin = sin(angle_rad)
+
+    # 回転行列を定義
     rotation_matrix = np.array([[angle_cos, -angle_sin], [angle_sin, angle_cos]])
+    
+    # 入力点群を回転
     rotated_points = rotation_matrix.dot(points)
+    
+    # 回転させた点群を並進移動
     transformed_points = rotated_points + np.ones(points.shape) * (np.array([[x_m], [y_m]]))
-    return transformed_points
+    
+    return transformed_points # 回転 + 並進移動させた点群
 
 
-def limit_angle_pi_2_pi(angle_deg):
-    angle_rad = np.deg2rad(angle_deg)
-    return (angle_rad + pi) % (2 * pi) - pi
+def limit_angle_pi_2_pi(angle_rad):
+    """
+    角度値を-180°～180°に制限する関数
+    angle_rad: 入力角度[rad]
+    """
+    
+    return (angle_rad + pi) % (2 * pi) - pi # 制限したあとの角度値
