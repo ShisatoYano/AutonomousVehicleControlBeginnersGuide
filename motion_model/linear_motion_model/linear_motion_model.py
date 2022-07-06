@@ -5,15 +5,10 @@ Author: Shisato Yano
 """
 
 import sys
-from os.path import dirname, abspath
 
 # 他のディレクトリにあるモジュールを読み込むためのパス設定
-# parent_dir = dirname(dirname(dirname(abspath(__file__))))
-# if parent_dir not in sys.path: sys.path.append(parent_dir)
-# from vehicle_drawing import two_wheels_vehicle
-
-from ...vehicle_drawing.two_wheels_vehicle import TwoWheelsVehicle
-
+sys.path.append("../../vehicle_drawing")
+from two_wheels_vehicle import TwoWheelsVehicle
 
 class LinearMotionModel:
     """

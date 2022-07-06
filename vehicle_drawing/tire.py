@@ -7,12 +7,10 @@ Author: Shisato Yano
 import numpy as np
 import matplotlib.pyplot as plt
 import sys
-from os.path import dirname, abspath
 
 # 他のディレクトリにあるモジュールを読み込むためのパス設定
-parent_dir = dirname(dirname(abspath(__file__)))
-if parent_dir not in sys.path: sys.path.append(parent_dir)
-from common.transformation import rotate_translate_2d
+sys.path.append("../common")
+from transformation import rotate_translate_2d
 
 
 class Tire:
