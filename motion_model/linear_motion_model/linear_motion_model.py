@@ -67,6 +67,9 @@ class LinearMotionModel:
     
 
 # メイン処理
+# このファイルを実行すると、運動モデルに従って
+# 車両の位置と方位を計算するシミュレーションが
+# 実行される
 if __name__ == "__main__":
     print(__file__ + " + start!!")
 
