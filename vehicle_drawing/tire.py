@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 import sys
 
 # 他のディレクトリにあるモジュールを読み込むためのパス設定
-sys.path.append("../common")
+# sys.path.append("../common")
 from transformation import rotate_translate_2d
 
 

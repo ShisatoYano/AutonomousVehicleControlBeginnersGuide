@@ -5,7 +5,10 @@ Author: Shisato Yano
 """
 
 import matplotlib.pyplot as plt
+import sys
 
+# 他のディレクトリにあるモジュールを読み込むためのパス設定
+sys.path.append("../common")
 from body import Body
 from tire import Tire
 from chassis import Chassis
