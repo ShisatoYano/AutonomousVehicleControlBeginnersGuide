@@ -81,7 +81,7 @@ if __name__ == "__main__":
     ax.grid(True)
 
     # 描画クラスのインスタンス生成
-    fwv = FourWheelsVehicle(ax, color='b')
+    fwv = FourWheelsVehicle(ax)
 
     # 角度を30°ずつずらしながら描画
     angle_deg = -60
