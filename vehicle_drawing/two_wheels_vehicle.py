@@ -20,7 +20,8 @@ class TwoWheelsVehicle:
     2輪モデルの車両を描画するクラス
     """
     
-    def __init__(self, axes, front_length_m=6.35, rear_length_m=0.0, tire_radius_m=1.27, tire_width_half_m=0.64):
+    def __init__(self, axes, front_length_m=6.35, rear_length_m=0.0, 
+                 tire_radius_m=1.27, tire_width_half_m=0.64, color='k'):
         """
         コンストラクタ
         axes: 描画オブジェクト
@@ -28,13 +29,14 @@ class TwoWheelsVehicle:
         rear_length_m: 車両位置から後方への長さ[m]
         tire_radius_m: タイヤ半径[m]
         tire_width_half_m: タイヤ幅の半分[m]
+        color: ラインの色
         """
         
         # 各パーツクラスのインスタンス生成
-        self.body = Body(axes, front_length_m, rear_length_m)
-        self.front_tire = Tire(axes, tire_radius_m, tire_width_half_m, front_length_m, 0.0)
-        self.rear_tire = Tire(axes, tire_radius_m, tire_width_half_m, -rear_length_m, 0.0)
-        self.chassis = Chassis(axes, front_length_m, rear_length_m)
+        self.body = Body(axes, front_length_m, rear_length_m, color)
+        self.front_tire = Tire(axes, tire_radius_m, tire_width_half_m, front_length_m, 0.0, color)
+        self.rear_tire = Tire(axes, tire_radius_m, tire_width_half_m, -rear_length_m, 0.0, color)
+        self.chassis = Chassis(axes, front_length_m, rear_length_m, color)
     
     def draw(self, x_m, y_m, yaw_angle_deg, steer_angle_deg):
         """

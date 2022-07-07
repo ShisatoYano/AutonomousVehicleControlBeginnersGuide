@@ -21,7 +21,8 @@ class FourWheelsVehicle:
     4輪モデルの車両を描画するクラス
     """
 
-    def __init__(self, axes, front_length_m=6.35, rear_length_m=0.0, tire_radius_m=1.27, tire_width_half_m=0.64, axle_half_m=2.54):
+    def __init__(self, axes, front_length_m=6.35, rear_length_m=0.0, tire_radius_m=1.27, 
+                 tire_width_half_m=0.64, axle_half_m=2.54, color='k'):
         """
         コンストラクタ
         axes: 描画オブジェクト
@@ -30,17 +31,18 @@ class FourWheelsVehicle:
         tire_radius_m: タイヤ半径[m]
         tire_width_half_m: タイヤ幅の半分[m]
         axle_half_m: アクスル長さの半分[m]
+        color: ラインの色
         """
 
         # 各パーツクラスのインスタンス生成
-        self.body = Body(axes, front_length_m, rear_length_m)
-        self.chassis = Chassis(axes, front_length_m, rear_length_m)
-        self.front_axle = Axle(axes, front_length_m, axle_half_m)
-        self.rear_axle = Axle(axes, -rear_length_m, axle_half_m)
-        self.front_left_tire = Tire(axes, tire_radius_m, tire_width_half_m, front_length_m, axle_half_m)
-        self.front_right_tire = Tire(axes, tire_radius_m, tire_width_half_m, front_length_m, -axle_half_m)
-        self.rear_left_tire = Tire(axes, tire_radius_m, tire_width_half_m, -rear_length_m, axle_half_m)
-        self.rear_right_tire = Tire(axes, tire_radius_m, tire_width_half_m, -rear_length_m, -axle_half_m)
+        self.body = Body(axes, front_length_m, rear_length_m, color)
+        self.chassis = Chassis(axes, front_length_m, rear_length_m, color)
+        self.front_axle = Axle(axes, front_length_m, axle_half_m, color)
+        self.rear_axle = Axle(axes, -rear_length_m, axle_half_m, color)
+        self.front_left_tire = Tire(axes, tire_radius_m, tire_width_half_m, front_length_m, axle_half_m, color)
+        self.front_right_tire = Tire(axes, tire_radius_m, tire_width_half_m, front_length_m, -axle_half_m, color)
+        self.rear_left_tire = Tire(axes, tire_radius_m, tire_width_half_m, -rear_length_m, axle_half_m, color)
+        self.rear_right_tire = Tire(axes, tire_radius_m, tire_width_half_m, -rear_length_m, -axle_half_m, color)
     
     def draw(self, x_m, y_m, yaw_angle_deg, steer_angle_deg):
         """
@@ -79,7 +81,7 @@ if __name__ == "__main__":
     ax.grid(True)
 
     # 描画クラスのインスタンス生成
-    fwv = FourWheelsVehicle(ax)
+    fwv = FourWheelsVehicle(ax, color='b')
 
     # 角度を30°ずつずらしながら描画
     angle_deg = -60
