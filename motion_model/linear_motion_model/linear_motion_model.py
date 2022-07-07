@@ -5,13 +5,14 @@ Author: Shisato Yano
 """
 
 import sys
+import os
 import numpy as np
 import matplotlib.pyplot as plt
 from math import sin, cos, asin
 
 # 他のディレクトリにあるモジュールを読み込むためのパス設定
-sys.path.append("../../vehicle_drawing")
-sys.path.append("../../common")
+sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../../vehicle_drawing")
+sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../../common")
 from two_wheels_vehicle import TwoWheelsVehicle
 from transformation import convert_speed_kmh_2_ms
 

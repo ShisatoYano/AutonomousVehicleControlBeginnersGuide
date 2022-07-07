@@ -6,9 +6,10 @@ Author: Shisato Yano
 
 import matplotlib.pyplot as plt
 import sys
+import os
 
 # 他のディレクトリにあるモジュールを読み込むためのパス設定
-sys.path.append("../common")
+sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../common")
 from body import Body
 from tire import Tire
 from chassis import Chassis
