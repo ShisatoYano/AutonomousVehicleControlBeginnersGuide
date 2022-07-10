@@ -1,0 +1,94 @@
+"""
+Linear motion model comparison program
+
+Author: Shisato Yano
+"""
+
+import sys
+import os
+import matplotlib.pyplot as plt
+
+# 他のディレクトリにあるモジュールを読み込むためのパス設定
+sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../../vehicle_drawing")
+sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../../common")
+from two_wheels_vehicle import TwoWheelsVehicle
+from transformation import convert_speed_kmh_2_ms
+from linear_motion_model import LinearMotionModel
+from accurate_linear_motion_model import AccurateLinearMotionModel
+
+# パラメータ定数
+INTERVAL_SEC = 0.05
+TIME_LIMIT_SEC = 30
+SPEED_KMH = 20
+YAW_RATE_DS = 15
+
+
+# メイン処理
+# このファイルを実行すると、運動モデルに従って
+# 車両の位置と方位を計算するシミュレーションが
+# 実行される
+if __name__ == "__main__":
+    print(__file__ + " + start!!")
+
+    # 描画の設定
+    ax = plt.subplot(1, 1, 1)
+    ax.set_xlabel("X[m]")
+    ax.set_ylabel("Y[m]")
+    ax.set_aspect("equal")
+    ax.set_title("Blue:Normal Red:Accurate")
+    ax.grid(True)
+
+    # 通常の直線運動モデル
+    lmm = LinearMotionModel(interval_sec=INTERVAL_SEC) # モデル
+    lmm_twv = TwoWheelsVehicle(ax, color='b') # 描画オブジェクト
+    x_lmm, y_lmm, yaw_lmm, steer_lmm = 0.0, 0.0, 0.0, 0.0 # 計算される位置、方位角、ステア角
+    x_lmm_all, y_lmm_all = [], [] # 計算されたx, y座標を記録する配列
+
+    # 高精度版の直線運動モデル
+    almm = AccurateLinearMotionModel(interval_sec=INTERVAL_SEC) # モデル
+    almm_twv = TwoWheelsVehicle(ax, color='r') # 描画オブジェクト
+    x_almm, y_almm, yaw_almm, steer_almm = 0.0, 0.0, 0.0, 0.0 # 計算される位置、方位角、ステア角
+    x_almm_all, y_almm_all = [], [] # 計算されたx, y座標を記録する配列
+
+    elapsed_time_sec = 0.0 # 経過時間[s]
+    speed_input, yaw_rate_input = 0.0, 0.0 # 入力する速度[m/s], 角速度[deg/s]
+
+    # シミュレーション実行
+    while TIME_LIMIT_SEC >= elapsed_time_sec:
+        # 入力値の決定
+        if elapsed_time_sec <= TIME_LIMIT_SEC/2:
+            yaw_rate_input = YAW_RATE_DS
+        else:
+            yaw_rate_input = -YAW_RATE_DS
+        speed_input = convert_speed_kmh_2_ms(SPEED_KMH)
+
+        # 通常の運動モデルによる計算
+        x_lmm, y_lmm, yaw_lmm, steer_lmm = lmm.calculate_state(x_lmm, y_lmm, yaw_lmm, speed_input, yaw_rate_input)
+        x_lmm_all.append(x_lmm), y_lmm_all.append(y_lmm)
+        # 車両を描画
+        lmm_twv.draw(x_lmm, y_lmm, yaw_lmm, steer_lmm)
+
+        # 高精度版の運動モデルによる計算
+        x_almm, y_almm, yaw_almm, steer_almm = almm.calculate_state(x_almm, y_almm, yaw_almm, speed_input, yaw_rate_input)
+        x_almm_all.append(x_almm), y_almm_all.append(y_almm)
+        # 車両を描画
+        almm_twv.draw(x_almm, y_almm, yaw_almm, steer_almm)
+
+        # 車両の位置に合わせて描画範囲を更新
+        ax.set_xlim([(x_lmm + x_almm)/2 - 20, (x_lmm + x_almm)/2 + 20])
+        ax.set_ylim([(y_lmm + y_almm)/2 - 20, (y_lmm + y_almm)/2 + 20])
+
+        # 時間を進める
+        elapsed_time_sec += INTERVAL_SEC
+
+        # アニメーション更新を遅くしたい場合はここで一瞬ポーズさせる
+        plt.pause(INTERVAL_SEC)
+    
+    # それぞれのモデルによる走行軌跡を描画して比較
+    plt.plot(x_lmm_all, y_lmm_all, ".b")
+    plt.plot(x_almm_all, y_almm_all, ".r")
+    plt.xlabel("X[m]")
+    plt.ylabel("Y[m]")
+    plt.axis("equal")
+    plt.grid(True)
+    plt.show()

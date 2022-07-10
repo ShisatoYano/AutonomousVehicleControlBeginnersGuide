@@ -85,7 +85,7 @@ if __name__ == "__main__":
     ax.grid(True)
 
     # 直線運動モデルのオブジェクト
-    lmm = LinearMotionModel()
+    lmm = LinearMotionModel(interval_sec=INTERVAL_SEC)
 
     # 2輪モデル車両の描画オブジェクト
     twv = TwoWheelsVehicle(ax)
@@ -117,4 +117,4 @@ if __name__ == "__main__":
         elapsed_time_sec += INTERVAL_SEC
 
         # アニメーション更新を遅くしたい場合はここで一瞬ポーズさせる
-        plt.pause(0.01)
+        plt.pause(INTERVAL_SEC)
