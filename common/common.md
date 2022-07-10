@@ -36,7 +36,7 @@
 座標系B(U-V)を基準としたものにすることです。  
 ![](/images/rotate_a_b.png)  
 
-このとき、X-Y軸の単位ベクトルを$\boldsymbol{x}$, $\boldsymbol{y}$、U-V軸の単位ベクトルを$\boldsymbol{u}$, $\boldsymbol{v}$、両者の成す角を$\theta$とすると、  
+このとき、X-Y軸の単位ベクトルを、$\boldsymbol{x}$, $\boldsymbol{y}$、U-V軸の単位ベクトルを$\boldsymbol{u}$, $\boldsymbol{v}$、両者の成す角を$\theta$とすると、  
 $$
 \boldsymbol{u} = cos\theta\boldsymbol{x} + sin\theta\boldsymbol{y} \\
 \boldsymbol{v} = -sin\theta\boldsymbol{x} + cos\theta\boldsymbol{y}
