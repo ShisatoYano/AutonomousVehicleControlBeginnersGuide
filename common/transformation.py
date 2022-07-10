@@ -11,10 +11,10 @@ import numpy as np
 def rotate_translate_2d(points, x_m, y_m, angle_rad):
     """
     2次元点群を同次変換する関数
-    angle_degだけ回転させて、x_m, y_mだけ並進移動
+    angle_degだけ回転させて、x_m, y_mだけ平行移動
     points: 2 x 点数の2次元配列, np.array([[x1, x2, x3], [y1, y2, y3]])など
-    x_m: X軸方向の並進移動量
-    y_m: Y軸方向の並進移動量
+    x_m: X軸方向の平行移動量
+    y_m: Y軸方向の平行移動量
     angle_rad: 回転角度[rad]
     """
     
@@ -28,10 +28,10 @@ def rotate_translate_2d(points, x_m, y_m, angle_rad):
     # 入力点群を回転
     rotated_points = rotation_matrix.dot(points)
     
-    # 回転させた点群を並進移動
+    # 回転させた点群を平行移動
     transformed_points = rotated_points + np.ones(points.shape) * (np.array([[x_m], [y_m]]))
     
-    return transformed_points # 回転 + 並進移動させた点群
+    return transformed_points # 回転 + 平行移動させた点群
 
 
 def limit_angle_pi_2_pi(angle_rad):

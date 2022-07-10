@@ -7,6 +7,7 @@
     * [座標変換の分解](#座標変換の分解)
     * [回転](#回転)
     * [平行移動](#平行移動)
+    * [Pythonでの実装](#pythonでの実装)
 
 ## transformation
 座標系や単位、値の範囲などを変換する関数をまとめたものです。  
@@ -96,3 +97,77 @@ $$
 と簡潔に書くことができ、$^A\boldsymbol{R}_B$を、座標系Bから座標系Aに変換するための回転行列と言います。  
 
 ### 平行移動
+平行移動は、単純に座標をオフセットさせるだけの処理です。  
+例えばこのように異なる座標系A, Bがあり、それぞれから見た点Pの位置座標を$^A\boldsymbol{p}$, $^B\boldsymbol{p}$とします。  
+![](/images/translation_a_b.png)  
+
+自動運転システムでは、座標系B基準で見ていた座標Pを座標系A基準で見たらどうなるか、あるいはその逆は、といった演算が度々必要となります。特に多いのは、座標系Aをワールド座標系、座標系Bを車両座標系としたときに、車両座標系上での位置座標Pをワールド座標系上での位置座標に変換するこちらの式です。  
+$$
+^A\boldsymbol{p} = ^B\boldsymbol{p} + \boldsymbol{q}
+$$  
+この式にある$\boldsymbol{q}$は、座標系Aから見た座標系Bの原点位置であり、$^B\boldsymbol{p}$にその分を足し合わせることで、座標系Aから見た$^A\boldsymbol{p}$になるという訳です。  
+
+### Pythonでの実装
+ここまで説明した回転 + 平行移動の座標変換を行うPythonプログラムは下記のように実装できます。  
+```python
+def rotate_translate_2d(points, x_m, y_m, angle_rad):
+    """
+    2次元点群を同次変換する関数
+    angle_degだけ回転させて、x_m, y_mだけ平行移動
+    points: 2 x 点数の2次元配列, np.array([[x1, x2, x3], [y1, y2, y3]])など
+    x_m: X軸方向の平行移動量
+    y_m: Y軸方向の平行移動量
+    angle_rad: 回転角度[rad]
+    """
+    
+    # 回転角度の単位をradにして、sin, cos成分を計算
+    angle_cos = cos(angle_rad)
+    angle_sin = sin(angle_rad)
+
+    # 回転行列を定義
+    rotation_matrix = np.array([[angle_cos, -angle_sin], [angle_sin, angle_cos]])
+    
+    # 入力点群を回転
+    rotated_points = rotation_matrix.dot(points)
+    
+    # 回転させた点群を平行移動
+    transformed_points = rotated_points + np.ones(points.shape) * (np.array([[x_m], [y_m]]))
+    
+    return transformed_points # 回転 + 平行移動させた点群
+```
+
+このプログラムは、ここまでに説明してきた図の座標系B上で見た点の2次元位置座標$^B\boldsymbol{p}=(p_u, p_v)^T$を入力pointsとし、それを座標系Aとの成す角angle_rad分だけ回転、そして座標系Aから見た座標系Bの原点位置x_m, y_m分だけ平行移動させることで座標系A上で見た位置座標に変換する計算を関数化したものです。  
+
+まず、変換の対象となる入力位置座標pointsは、下記のような2次元配列の形式で与えるようにします。  
+```python
+np.array([[x1, x2, x3], [y1, y2, y3]])
+```
+これは2 X 入力する座標点の数の2次元配列を定義したものであり、数式としてはこのようになります。  
+$$
+\begin{pmatrix}
+p_{x1} & p_{x2} & p_{x3} \\ p_{y1} & p_{y2} & p_{y3}
+\end{pmatrix}
+$$  
+こうすることで、複数の点に対してまとめて座標変換できるようにしています。  
+
+続いて、回転行列$^A\boldsymbol{R}_B$はこちらのように実装できます。  
+```python
+angle_cos = cos(angle_rad)
+angle_sin = sin(angle_rad)
+
+rotation_matrix = np.array([[angle_cos, -angle_sin], [angle_sin, angle_cos]])
+```
+そして、実装したrotation_matrixとpointsを掛け合わせることで回転による変換を実現するのですが、Pythonではそれをこのようなコードで書くことができます。  
+```python
+rotated_points = rotation_matrix.dot(points)
+```
+
+最後に、回転による変換が施された点であるrotated_pointsに対して平行移動による変換を施して、一連の座標変換処理を完了させます。その計算はこのようなコードで実装できます。  
+```python
+transformed_points = rotated_points + np.ones(points.shape) * (np.array([[x_m], [y_m]]))
+```
+ここでポイントになるのは、式の右辺の後半にある  
+```python
+np.ones(points.shape) * (np.array([[x_m], [y_m]]))
+```
+です。rotated_pointsは2 X 点の数となる2次元配列なので、それに平行移動分を足し合わせるためには配列のサイズを一致させる必要があります。そこで、上記のようなコードにすることで平行移動分のベクトルをrotated_pointsと同じサイズにすることができます。  
