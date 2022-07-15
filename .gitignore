@@ -1,3 +1,6 @@
 common/__pycache__
 vehicle_drawing/__pycache__
 motion_model/linear_motion_model/__pycache__
+test/__pycache__
+test/.pytest_cache
+test/.coverage
