@@ -91,6 +91,7 @@ def main():
     axle.draw(0.0, 0.0, 0.0, 0.0)
 
     # ユニットテスト時はこのフラグをFlaseにする
+    # グラフが表示されるとテストが進まなくなる
     if show_plot: plt.show()
 
     return True
