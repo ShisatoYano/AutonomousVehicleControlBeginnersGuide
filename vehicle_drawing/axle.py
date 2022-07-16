@@ -13,6 +13,7 @@ import os
 sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../common")
 from transformation import rotate_translate_2d
 
+# グラフの出力有無を切り替えるフラグ
 show_plot = True
 
 
