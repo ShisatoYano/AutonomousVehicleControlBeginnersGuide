@@ -40,7 +40,7 @@ def limit_angle_pi_2_pi(angle_rad):
     angle_rad: 入力角度[rad]
     """
     
-    return (angle_rad + pi) % (2 * pi) - pi # 制限したあとの角度値
+    return round((angle_rad + pi) % (2 * pi) - pi, 2) # 制限したあとの角度値
 
 
 def convert_speed_kmh_2_ms(speed_kmh):
@@ -49,4 +49,4 @@ def convert_speed_kmh_2_ms(speed_kmh):
     speed_kmh: 入力速度[km/h]
     """
     
-    return speed_kmh / 3.6 # m/sに変換した後の速度
+    return round(speed_kmh / 3.6, 2) # m/sに変換した後の速度
