@@ -15,6 +15,9 @@ from tire import Tire
 from chassis import Chassis
 from axle import Axle
 
+# グラフの出力有無を切り替えるフラグ
+show_plot = True
+
 
 class FourWheelsVehicle:
     """
@@ -65,10 +68,7 @@ class FourWheelsVehicle:
         self.rear_right_tire.draw(x_m, y_m, yaw_angle_deg, 0.0)
 
 
-# メイン処理
-# このファイルを実行すると、方位の向きと
-# ステアリング角度を変えた車両の絵が描画される
-if __name__ == "__main__":
+def main():
     print(__file__ + " start!!")
 
     # 描画の設定
@@ -90,4 +90,13 @@ if __name__ == "__main__":
 
         angle_deg += 30 # 30度ずらす
         
-        plt.pause(2) # 一度描画するたびに2秒ポーズ
+        # ユニットテスト時はこのフラグをFlaseにする
+        # グラフが表示されるとテストが進まなくなる
+        # 一度描画するたびに2秒ポーズ
+        if show_plot: plt.pause(2)
+    
+    return True
+
+# メイン関数の実行
+if __name__ == "__main__":
+    main()
