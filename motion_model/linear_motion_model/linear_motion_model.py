@@ -22,6 +22,9 @@ TIME_LIMIT_SEC = 30
 SPEED_KMH = 20
 YAW_RATE_DS = 15
 
+# グラフの出力有無を切り替えるフラグ
+show_plot = True
+
 
 class LinearMotionModel:
     """
@@ -68,13 +71,9 @@ class LinearMotionModel:
         steer_rad = asin(self.wheel_base_m * np.deg2rad(self.yaw_rate_ds)/self.speed_ms)
         
         return x, y, yaw, np.rad2deg(steer_rad)
-    
 
-# メイン処理
-# このファイルを実行すると、運動モデルに従って
-# 車両の位置と方位を計算するシミュレーションが
-# 実行される
-if __name__ == "__main__":
+
+def main():
     print(__file__ + " + start!!")
 
     # 描画の設定
@@ -115,6 +114,15 @@ if __name__ == "__main__":
 
         # 時間を進める
         elapsed_time_sec += INTERVAL_SEC
+        
+        # ユニットテスト時はこのフラグをFlaseにする
+        # グラフが表示されるとテストが進まなくなる
+        # 一度描画するたびにインターバル時間分だけポーズ
+        if show_plot: plt.pause(INTERVAL_SEC)
+    
+    return True
 
-        # アニメーション更新を遅くしたい場合はここで一瞬ポーズさせる
-        plt.pause(INTERVAL_SEC)
+
+# メイン関数の実行
+if __name__ == "__main__":
+    main()
