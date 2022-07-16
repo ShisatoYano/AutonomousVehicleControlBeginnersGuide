@@ -11,8 +11,8 @@ import os
 # テストターゲットのモジュールを読み込むためのパス設定
 sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../vehicle_drawing")
 sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../common")
-sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../motion_model/")
-import linear_motion_model.accurate_linear_motion_model as almm
+sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../motion_model/linear_motion")
+import accurate_linear_motion_model as almm
 
 
 def test_simulation():
