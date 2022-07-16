@@ -6,9 +6,15 @@ Author: Shisato Yano
 
 import numpy as np
 import matplotlib.pyplot as plt
+import sys
+import os
 
 # 他のディレクトリにあるモジュールを読み込むためのパス設定
+sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../common")
 from transformation import rotate_translate_2d
+
+# グラフの出力有無を切り替えるフラグ
+show_plot = True
 
 
 class Tire:
@@ -63,3 +69,38 @@ class Tire:
         
         # 描画
         self.plot.set_data(transformed_points[0, :], transformed_points[1, :])
+
+
+def main():
+    """
+    このファイルを単体で実行したときの処理を実装したメイン関数
+    車両のタイヤの絵を描画する
+    """
+
+    print(__file__ + "start!!")
+
+    # 描画の設定
+    ax = plt.subplot(1, 1, 1)
+    ax.set_xlabel("X[m]")
+    ax.set_ylabel("Y[m]")
+    ax.set_xlim([-10, 10])
+    ax.set_ylim([-10, 10])
+    ax.set_aspect("equal")
+    ax.grid(True)
+
+    # 描画クラスのインスタンス生成
+    tire = Tire(ax, 1.27, 0.64, 0.0, 0.0, 'k')
+
+    # 描画
+    tire.draw(0.0, 0.0, 0.0, 0.0)
+
+    # ユニットテスト時はこのフラグをFlaseにする
+    # グラフが表示されるとテストが進まなくなる
+    if show_plot: plt.show()
+
+    return True
+
+
+# メイン関数の実行
+if __name__ == "__main__":
+    main()
