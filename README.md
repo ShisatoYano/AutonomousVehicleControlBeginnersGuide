@@ -13,6 +13,8 @@
 * Python 3.10.x以上
 * numpy
 * matplotlib
+* pytest
+* pytest-cov
 
 もしこれらライブラリが不足している場合は、下記コマンドを実行してインストールしてください。  
 ```bash
@@ -21,5 +23,7 @@ $ pip install -r requirements.txt
 
 ## ディレクトリ構成
 * [common](/common/common.md): 各プログラムで共通で使える関数
+* images: 各ドキュメント用の画像ファイル
 * [motion_model](/motion_model/motion_model.md): 運動モデルで車両の位置と姿勢を計算するプログラム
+* [test](/test/test.md): 各プログラムのユニットテストコード
 * [vehicle_drawing](/vehicle_drawing/vehicle_drawing.md): 車両の絵を描画するプログラム
