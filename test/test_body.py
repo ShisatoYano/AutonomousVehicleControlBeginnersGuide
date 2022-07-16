@@ -14,7 +14,7 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../common")
 import body
 
 
-def test_main():
+def test_draw():
     body.show_plot = False
     
     assert body.main() == True

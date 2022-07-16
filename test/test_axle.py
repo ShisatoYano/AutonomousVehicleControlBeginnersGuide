@@ -14,7 +14,7 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../common")
 import axle
 
 
-def test_main():
+def test_draw():
     axle.show_plot = False
     
     assert axle.main() == True
