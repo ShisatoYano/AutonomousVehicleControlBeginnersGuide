@@ -19,7 +19,7 @@ x_{t+1} = x_t + v_t cos\theta_t dt \\
 y_{t+1} = y_t + v_t sin\theta_t dt \\
 \theta_{t+1} = \theta_t + \omega_t dt
 $$  
-この式における$v_t$は時刻$t$の時の車両の速度、$\omega_t$は同じく時刻$t$の時の車両の方位角速度です。速度に時間をかけることで移動量が求まるので、上の式に含まれるこれらの部分は、時刻$t$から時刻$t+1$の間の車両の位置座標$x, y$と方位角$\theta$の変化量ということになります。  
+この式における$v_t$は時刻$t$の時の車両の速度、$\omega_t$は同じく時刻$t$の時の車両の方位角速度であり、これらの情報は車両の車速センサーやジャイロセンサーから取得できるとします。速度に刻み時間をかけることで移動量が求まるので、上の式に含まれるこれらの部分は、時刻$t$から時刻$t+1$までの刻み時間$dt$の間の車両の位置座標$x, y$と方位角$\theta$の変化量ということになります。  
 $$
 v_t cos\theta_t dt \\
 v_t sin\theta_t dt \\
@@ -28,58 +28,9 @@ $$
 その変化量を時刻$t$の時の位置座標$x_t, y_t$と方位角$\theta_t$に足し合わせることで、次の時刻$t+1$の時の位置座標$x_{t+1}, y_{t+1}$と方位角$\theta_{t+1}$が求まるという訳です。  
 
 ### Pythonでの実装
-こちらのファイルに、直線運動モデルのPythonコードを実装しています。  
-/motion_model/linear_motion_model/linear_motion_model.py  
+こちらのファイルに、[直線運動モデルのPythonコード](/motion_model/linear_motion/linear_motion_model.py)を実装しています。上記の理論式に該当するのはこの部分です。  
 ```python
-"""
-Linear motion model program
-
-Author: Shisato Yano
-"""
-
-import sys
-import os
-import numpy as np
-import matplotlib.pyplot as plt
-from math import sin, cos, asin
-
-# 他のディレクトリにあるモジュールを読み込むためのパス設定
-sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../../vehicle_drawing")
-sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../../common")
-from two_wheels_vehicle import TwoWheelsVehicle
-from transformation import convert_speed_kmh_2_ms
-
-# パラメータ定数
-INTERVAL_SEC = 0.05
-TIME_LIMIT_SEC = 30
-SPEED_KMH = 20
-YAW_RATE_DS = 15
-
-
-class LinearMotionModel:
-    """
-    直線運動モデルに従って車両の位置と方位を計算するクラス
-    """
-
-    def __init__(self, front_length_m=6.35, rear_length_m=0.0, interval_sec=0.05):
-        """
-        コンストラクタ
-        front_length_m: 車両位置から前方への長さ[m]
-        rear_length_m: 車両位置から後方への長さ[m]
-        interval_sec: 移動前後の刻み時間[sec]
-        """
-
-        # パラメータのセット
-        self.wheel_base_m = front_length_m + rear_length_m # ホイールベース(前輪と後輪の間の距離)
-        self.interval_sec = interval_sec
-
-        # メンバ変数の初期化
-        self.speed_ms = 0.0
-        self.yaw_rate_ds = 0.0
-        self.turning_radius_m = 0.0
-        self.curvature = 0.0
-    
-    def calculate_state(self, x_m, y_m, yaw_deg, speed_ms, yaw_rate_ds):
+def calculate_state(self, x_m, y_m, yaw_deg, speed_ms, yaw_rate_ds):
         """
         速度[m/s]と角速度[deg/s]から車両の位置(x, y)と方位(yaw)を計算する関数
         x_m, y_m, yaw_deg: 1時刻前のx, y座標、方位yaw
@@ -101,59 +52,28 @@ class LinearMotionModel:
         steer_rad = asin(self.wheel_base_m * np.deg2rad(self.yaw_rate_ds)/self.speed_ms)
         
         return x, y, yaw, np.rad2deg(steer_rad)
-    
-
-# メイン処理
-# このファイルを実行すると、運動モデルに従って
-# 車両の位置と方位を計算するシミュレーションが
-# 実行される
-if __name__ == "__main__":
-    print(__file__ + " + start!!")
-
-    # 描画の設定
-    ax = plt.subplot(1, 1, 1)
-    ax.set_xlabel("X[m]")
-    ax.set_ylabel("Y[m]")
-    ax.set_aspect("equal")
-    ax.grid(True)
-
-    # 直線運動モデルのオブジェクト
-    lmm = LinearMotionModel(interval_sec=INTERVAL_SEC)
-
-    # 2輪モデル車両の描画オブジェクト
-    twv = TwoWheelsVehicle(ax)
-
-    elapsed_time_sec = 0.0 # 経過時間[s]
-    speed_input, yaw_rate_input = 0.0, 0.0 # 入力する速度[m/s], 角速度[deg/s]
-    x_m, y_m, yaw_deg, steer_deg = 0.0, 0.0, 0.0, 0.0 # 計算される位置、方位角、ステア角
-
-    # シミュレーション実行
-    while TIME_LIMIT_SEC >= elapsed_time_sec:
-        # 入力値の決定
-        if elapsed_time_sec <= TIME_LIMIT_SEC/2:
-            yaw_rate_input = YAW_RATE_DS
-        else:
-            yaw_rate_input = -YAW_RATE_DS
-        speed_input = convert_speed_kmh_2_ms(SPEED_KMH)
-
-        # 運動モデルによる計算
-        x_m, y_m, yaw_deg, steer_deg = lmm.calculate_state(x_m, y_m, yaw_deg, speed_input, yaw_rate_input)
-
-        # 計算された位置と方位、ステアに従って車両を描画
-        twv.draw(x_m, y_m, yaw_deg, steer_deg)
-
-        # 車両の位置に合わせて描画範囲を更新
-        ax.set_xlim([x_m - 15, x_m + 15])
-        ax.set_ylim([y_m - 15, y_m + 15])
-
-        # 時間を進める
-        elapsed_time_sec += INTERVAL_SEC
-
-        # アニメーション更新を遅くしたい場合はここで一瞬ポーズさせる
-        plt.pause(INTERVAL_SEC)
-
 ```
+このコードを実行すると、直線運動モデルによる位置と方位を計算するシミュレーションが実行され、このように車両が動くアニメーションが表示されます。  
+![](/images/linear_motion_model_simulation.png)  
+また、このコードはLinearMotionModelというクラスとしてモジュール化されているので、これをimportすることで他のサンプルプログラムから使うこともできます。使い方については、同ファイルに実装されているmain関数を参照してください。  
 
+### より高精度な直線運動モデル
+上記のモデルはシンプルで扱いやすいですが、時刻間の刻み時間$dt$が長くなると、それだけ実際の車両の動きに対してオフセット誤差が生じてしまう場合があります。  
+そこで、より高精度に車両の動きをモデル化する工夫として、刻み時間の間の角速度は一定と仮定し、その刻み時間のちょうど真ん中の方位角を使用して、次の時刻の位置座標$x_{t+1}, y_{t+1}$を求めるようにします。それを理論式で表すとこちらのようになります。  
+$$
+x_{t+1} = x_t + v_t cos(\theta_t + \frac{\omega_t dt}{2}) dt \\
+y_{t+1} = y_t + v_t sin(\theta_t + \frac{\omega_t dt}{2}) dt \\
+\theta_{t+1} = \theta_t + \omega_t dt
+$$  
+こうすることで、モデル化によるオフセット誤差はかなり小さくなりますが、刻み時間$dt$が限りなく小さい場合はどちらのモデルを使っても計算結果に大きな差は生じません。[この運動モデルのPythonコードはこちら](/motion_model/linear_motion/accurate_linear_motion_model.py)に置いてあります。このファイルを実行すると、先に説明した運動モデルのコードと同じようなシミュレーションが実行されます。  
+
+### 2つの直線運動モデルの比較
+ここまでに紹介した2つの直線運動モデルにより位置座標と方位の計算を比較してみました。  
+[こちらのコード](/motion_model/linear_motion/compare_linear_model.py)を実行すると、シンプル版モデル(青)と高精度版モデル(赤)の計算シミュレーションが表示されます。  
+まず、刻み時間を50msに設定した場合の比較結果がこちらです。刻み時間が短いので、両者の計算結果に大きな差は生じていないことが分かります。  
+![](/images/compare_linear_model_dt50ms.png)  
+次に、刻み時間を500msに設定するとこのようになります。両者の理論式を見ると分かるように、位置座標を計算する際の方位角の扱いに違いがあり、その違いは刻み時間が長くなるほど大きくなるので、その様子が見て取れると思います。    
+![](/images/compare_linear_model_dt500ms.png)  
 
 ## 円運動モデル
 
