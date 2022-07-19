@@ -65,15 +65,15 @@ class CircularMotionModel:
         turning_radius_m = speed_ms / np.deg2rad(yaw_rate_ds)
 
         # 円運動モデルに従って位置と方位を計算
-        yaw_next = yaw_deg + yaw_rate_ds * self.interval_sec
-        x_next = x_m - turning_radius_m * (sin(np.deg2rad(yaw_deg)) - sin(np.deg2rad(yaw_next)))
-        y_next = y_m + turning_radius_m * (cos(np.deg2rad(yaw_deg)) - cos(np.deg2rad(yaw_next)))
+        yaw_deg_next = yaw_deg + yaw_rate_ds * self.interval_sec
+        x_m_next = x_m - turning_radius_m * (sin(np.deg2rad(yaw_deg)) - sin(np.deg2rad(yaw_deg_next)))
+        y_m_next = y_m + turning_radius_m * (cos(np.deg2rad(yaw_deg)) - cos(np.deg2rad(yaw_deg_next)))
         
         # 速度と角速度からステアリング角度を計算
         # 速度が0になると0割りになるので注意
         steer_rad = asin(self.wheel_base_m * np.deg2rad(yaw_rate_ds)/speed_ms)
         
-        return x_next, y_next, yaw_next, np.rad2deg(steer_rad)
+        return x_m_next, y_m_next, yaw_deg_next, np.rad2deg(steer_rad)
 
 
 def main():
