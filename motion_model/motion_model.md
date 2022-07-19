@@ -194,6 +194,44 @@ y_{t+1} = y_t + \frac{v_t}{\omega_t}(cos\theta_t - cos(\theta_t+\omega_t dt))
 $$
 と変形できます。この計算式を利用することで、時刻$t$での位置$(x_t, y_t)$と速度$v_t$、角速度$\omega_t$が分かれば、回転運動時の時刻$t+1$での車両位置が計算できるということになります。  
 
+### Pythonでの実装
+上記の理論式を[こちらのPythonコード](/motion_model/circular_motion/circular_motion_model.py)に実装しています。該当するのは下記の部分です。  
+```python
+def calculate_state(self, x_m, y_m, yaw_deg, speed_ms, yaw_rate_ds):
+        """
+        速度[m/s]と角速度[deg/s]から車両の位置(x, y)と方位(yaw)を計算する関数
+        x_m, y_m, yaw_deg: 1時刻前のx, y座標、方位yaw
+        speed_ms: その時刻での速度[m/s]
+        yaw_rate_ds: その時刻での角速度[deg/s]
+        """
+
+        # 入力
+        self.speed_ms = speed_ms
+        self.yaw_rate_ds = yaw_rate_ds
+
+        # 旋回半径を計算
+        turning_radius_m = speed_ms / np.deg2rad(yaw_rate_ds)
+
+        # 円運動モデルに従って位置と方位を計算
+        yaw_deg_next = yaw_deg + yaw_rate_ds * self.interval_sec
+        x_m_next = x_m - turning_radius_m * (sin(np.deg2rad(yaw_deg)) - sin(np.deg2rad(yaw_deg_next)))
+        y_m_next = y_m + turning_radius_m * (cos(np.deg2rad(yaw_deg)) - cos(np.deg2rad(yaw_deg_next)))
+        
+        # 速度と角速度からステアリング角度を計算
+        # 速度が0になると0割りになるので注意
+        steer_rad = asin(self.wheel_base_m * np.deg2rad(yaw_rate_ds)/speed_ms)
+        
+        return x_m_next, y_m_next, yaw_deg_next, np.rad2deg(steer_rad)
+```
+このコードを実行すると、直線運動モデルのコードと同様に、車両の位置と方位を計算するシミュレーションが表示されます。  
+
+### 直線運動モデルとの比較
+最後に、既に説明した直線運動モデルとの比較をしてみました。[こちらのコード](/motion_model/circular_motion/compare_linear_circular.py)を実行すると、直線運動モデル(青)と円運動モデル(赤)の計算シミュレーションが表示されます。  
+まずは刻み時間を50msに設定した場合ですが、若干のずれはあれど両者に大きな違いは見られません。  
+![](/images/compare_linear_circular_dt50ms.png)  
+次は刻み時間を500msにした場合です。ここでは特に旋回時の違いが大きくなるのが分かります。    
+![](/images/compare_linear_circular_dt500ms.png)  
+
 ## 四輪モデル
 車両の運動モデルとしてまず取り上げられるのは、こちらのような四輪モデルです。  
 車両のダイナミクスを考える際は、このような2次元平面の力学、運動学を考えるのが一般的です。  
