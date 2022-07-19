@@ -62,15 +62,15 @@ class LinearMotionModel:
         self.yaw_rate_ds = yaw_rate_ds
 
         # 直線運動モデルに従って位置と方位を計算
-        x = x_m + speed_ms * cos(np.deg2rad(yaw_deg)) * self.interval_sec
-        y = y_m + speed_ms * sin(np.deg2rad(yaw_deg)) * self.interval_sec
-        yaw = yaw_deg + yaw_rate_ds * self.interval_sec
+        x_m_next = x_m + speed_ms * cos(np.deg2rad(yaw_deg)) * self.interval_sec
+        y_m_next = y_m + speed_ms * sin(np.deg2rad(yaw_deg)) * self.interval_sec
+        yaw_deg_next = yaw_deg + yaw_rate_ds * self.interval_sec
         
         # 速度と角速度からステアリング角度を計算
         # 速度が0になると0割りになるので注意
-        steer_rad = asin(self.wheel_base_m * np.deg2rad(self.yaw_rate_ds)/self.speed_ms)
+        steer_rad = asin(self.wheel_base_m * np.deg2rad(yaw_rate_ds)/speed_ms)
         
-        return x, y, yaw, np.rad2deg(steer_rad)
+        return x_m_next, y_m_next, yaw_deg_next, np.rad2deg(steer_rad)
 
 
 def main():
