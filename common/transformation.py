@@ -10,7 +10,7 @@ import numpy as np
 
 def rotate_translate_2d(points, x_m, y_m, angle_rad):
     """
-    2次元点群を同次変換する関数
+    2次元点群を座標変換する関数
     angle_degだけ回転させて、x_m, y_mだけ平行移動
     points: 2 x 点数の2次元配列, np.array([[x1, x2, x3], [y1, y2, y3]])など
     x_m: X軸方向の平行移動量
