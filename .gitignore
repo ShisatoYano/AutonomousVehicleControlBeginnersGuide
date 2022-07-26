@@ -5,4 +5,5 @@ motion_model/circular_motion/__pycache__
 test/__pycache__
 test/.pytest_cache
 test/.coverage
+.pytest_cache
 .coverage
