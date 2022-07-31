@@ -16,6 +16,8 @@ from gif_animation import GifAnimation
 
 
 def test_gif_creation():
+    plt.clf()
+    
     save_name_path = os.path.dirname(os.path.abspath(__file__)) + "/../gif/test.gif"
 
     ga = GifAnimation(save_name_path=save_name_path, duration_ms=100)
