@@ -29,6 +29,9 @@ show_plot = True
 def main():
     print(__file__ + " + start!!")
 
+    # 既に作成されている図があればクリア
+    plt.clf()
+
     # 描画の設定
     ax = plt.subplot(1, 1, 1)
     ax.set_xlabel("X[m]")
