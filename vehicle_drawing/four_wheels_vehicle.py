@@ -14,6 +14,7 @@ from body import Body
 from tire import Tire
 from chassis import Chassis
 from axle import Axle
+from gif_animation import GifAnimation
 
 # グラフの出力有無を切り替えるフラグ
 show_plot = True
@@ -86,17 +87,25 @@ def main():
     # 描画クラスのインスタンス生成
     fwv = FourWheelsVehicle(ax)
 
+    # Gif作成クラスのインスタンス生成
+    save_name_path = os.path.dirname(os.path.abspath(__file__)) + "/../gif/four_wheels_vehicle.gif"
+    ga = GifAnimation(save_name_path=save_name_path, duration_ms=2000)
+
     # 角度を30°ずつずらしながら描画
     angle_deg = -60
     while angle_deg <= 60:
         fwv.draw(0, 0, angle_deg, angle_deg) # 描画メソッドの実行
 
         angle_deg += 30 # 30度ずらす
+
+        ga.save_image() # 描画した図を画像として保存
         
         # ユニットテスト時はこのフラグをFlaseにする
         # グラフが表示されるとテストが進まなくなる
         # 一度描画するたびに2秒ポーズ
         if show_plot: plt.pause(2)
+    
+    ga.create_gif() # 保存した画像を繋ぎ合わせてGifを作成
     
     return True
 
