@@ -92,7 +92,7 @@ def main():
         # ユニットテスト時はこのフラグをFlaseにする
         # グラフが表示されるとテストが進まなくなる
         if show_plot:
-            ga.save_image() # 描画した画像を繋ぎ合わせてGifを作成
+            ga.save_image() # 描画した図を画像として保存
             plt.pause(INTERVAL_SEC) # 一度描画するたびにインターバル時間分だけポーズ
     
     # 保存した画像を繋ぎ合わせてGifを作成
