@@ -124,13 +124,11 @@ def main():
         # 時間を進める
         elapsed_time_sec += INTERVAL_SEC
 
-        # 描画した図を画像として保存
-        ga.save_image()
-        
         # ユニットテスト時はこのフラグをFlaseにする
         # グラフが表示されるとテストが進まなくなる
-        # 一度描画するたびにインターバル時間分だけポーズ
-        if show_plot: plt.pause(INTERVAL_SEC)
+        if show_plot:
+            ga.save_image() # 描画した画像を繋ぎ合わせてGifを作成
+            plt.pause(INTERVAL_SEC) # 一度描画するたびにインターバル時間分だけポーズ
     
     # 保存した画像を繋ぎ合わせてGifを作成
     ga.create_gif()
