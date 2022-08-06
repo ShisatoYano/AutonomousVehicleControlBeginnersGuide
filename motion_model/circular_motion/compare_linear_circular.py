@@ -16,9 +16,11 @@ from two_wheels_vehicle import TwoWheelsVehicle
 from transformation import convert_speed_kmh_2_ms
 from linear_motion_model import LinearMotionModel
 from circular_motion_model import CircularMotionModel
+from gif_animation import GifAnimation
 
 # パラメータ定数
 INTERVAL_SEC = 0.05
+INTERVAL_MSEC = INTERVAL_SEC * 1000
 TIME_LIMIT_SEC = 30
 SPEED_KMH = 20
 YAW_RATE_DS = 15
@@ -53,6 +55,10 @@ def main():
     x_cmm, y_cmm, yaw_cmm, steer_cmm = 0.0, 0.0, 0.0, 0.0 # 計算される位置、方位角、ステア角
     x_cmm_all, y_cmm_all = [], [] # 計算されたx, y座標を記録する配列
 
+    # Gif作成クラスのインスタンス生成
+    save_name_path = os.path.dirname(os.path.abspath(__file__)) + "/../../gif/compare_linear_circular.gif"
+    ga = GifAnimation(save_name_path=save_name_path, duration_ms=INTERVAL_MSEC)
+
     elapsed_time_sec = 0.0 # 経過時間[s]
     speed_input, yaw_rate_input = 0.0, 0.0 # 入力する速度[m/s], 角速度[deg/s]
 
@@ -86,9 +92,13 @@ def main():
 
         # ユニットテスト時はこのフラグをFlaseにする
         # グラフが表示されるとテストが進まなくなる
-        # 一度描画するたびにインターバル時間分だけポーズ
-        if show_plot: plt.pause(INTERVAL_SEC)
+        if show_plot:
+            ga.save_image() # 描画した図を画像として保存
+            plt.pause(INTERVAL_SEC) # 一度描画するたびにインターバル時間分だけポーズ
     
+    # 保存した画像を繋ぎ合わせてGifを作成
+    ga.create_gif()
+
     # それぞれのモデルによる走行軌跡を描画して比較
     plt.plot(x_lmm_all, y_lmm_all, ".b")
     plt.plot(x_cmm_all, y_cmm_all, ".r")
