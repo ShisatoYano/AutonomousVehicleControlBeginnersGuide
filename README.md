@@ -19,7 +19,7 @@
 * pytest-cov
 
 ## 使い方
-1. このリポジトリを自身のローカルにクローンします。  
+1. このリポジトリを自分のPCのローカルにクローンします。  
 ```bash
 $ git clone https://github.com/ShisatoYano/AutonomousDrivingSamplePrograms.git
 ```
@@ -33,6 +33,10 @@ $ python motion_model/linear_motion/linear_motion_model.py
 ```
 4. もし気に入っていただけたら、スターを付けていただけると嬉しいです。
 
+## 本プロジェクトへの貢献
+バグの報告や改善要望などありましたらご自由にIssuesに登録ください。  
+コード追加や変更などのプルリクも大歓迎です。  
+
 ## ディレクトリ構成
 * [common](/common/common.md): 各プログラムで共通で使える関数
 * [images](/images/): 各ドキュメント用の画像ファイル
@@ -40,5 +44,6 @@ $ python motion_model/linear_motion/linear_motion_model.py
 * [test](/test/test.md): 各プログラムのユニットテストコード
 * [vehicle_drawing](/vehicle_drawing/vehicle_drawing.md): 車両の絵を描画するプログラム
 
-## 作者
-* [Shisato Yano](https://github.com/ShisatoYano)
+## お問い合わせ
+ご質問等ありましたら、こちらのメールアドレスまでご連絡ください。  
+shisatoyano@gmail.com  
