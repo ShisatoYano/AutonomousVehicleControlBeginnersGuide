@@ -15,9 +15,22 @@
 既存のサンプルプログラムのコード修正や新規コードの追加を提案していただける場合は、是非[こちら](https://github.com/ShisatoYano/AutonomousDrivingSamplePrograms/pulls)へプルリクエストを作成してください。その際は、下記の手順に従っていただけると助かります。  
 
 1. もしGitHubアカウントをお持ちでなければ作成してください。
-2. 本プロジェクトの[リポジトリ](https://github.com/ShisatoYano/AutonomousDrivingSamplePrograms)のページ右上にある"Fork"ボタンを押して、リポジトリをForkしてください。Forkとは、そのリポジトリのコピーをあなたのアカウントの管理下で作成することです。
+2. 本プロジェクトの[リポジトリ](https://github.com/ShisatoYano/AutonomousDrivingSamplePrograms)を自分のGitHubアカウントにForkして、自分が所有するリポジトリとして扱える様にしてください。  
 3. Forkしたリポジトリをローカルにクローンしてください。
 ```bash
 git clone https://github.com/<YOUR GITHUB USERNAME>/AutonomousDrivingSamplePrograms.git
 ```
-
+4. 本リポジトリをupstreamとしてgit configに登録してください。  
+```bash
+git remote add upstream https://github.com/ShisatoYano/AutonomousDrivingSamplePrograms.git
+```
+5. [README](../README.md)に記載している本リポジトリの使い方に従って必要なライブラリをインストールし、既存のサンプルプログラムが動作することを確認ください。  
+6. 作業用のブランチを作成し、コードの追加や変更を行ってください。決してmainブランチ上では作業を行わないでください。    
+```bash
+git branch -b my_feature origin/main
+```
+7. 追加、修正作業が完了したら、それらの変更をcommit & pushする前に、下記のスクリプトでユニットテストを実行してください。このとき、OSがWindowsである場合は、run_test_suites.batを代わりに実行してください。    
+```bash
+$ ./run_test_suites.sh
+```
+8. ユニットテストでExeptionなどが出ずに全てのテストがPassすることを確認できたら、変更をリモートにcommin & pushしましょう。
