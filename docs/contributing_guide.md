@@ -33,4 +33,7 @@ git branch -b my_feature origin/main
 ```bash
 $ ./run_test_suites.sh
 ```
-8. ユニットテストでExeptionなどが出ずに全てのテストがPassすることを確認できたら、変更をリモートにcommin & pushしましょう。
+8. ユニットテストでExceptionなどが出ずに全てのテストがPassすることを確認できたら、変更をリモートにcommin & pushしましょう。  
+9. リモートにpushが出来たら、Forkした自分のリポジトリのWebページ上に"Compare & pull request"というボタンが出ているはずなので、それをクリックします。すると、Pull Requestに添付するコメントを入力する画面になるので、コメントを入力して、"Create pull request"を押してください。  
+10. 9にて提出されたプルリクエストを私の方でレビューしますので、修正などが必要になった場合は対応をお願い致します。  
+11. 最終的に全て問題無ければマージを指示させていただくので、そしたらマージをお願い致します。  
