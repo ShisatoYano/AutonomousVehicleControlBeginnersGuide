@@ -35,7 +35,7 @@ $ python motion_model/linear_motion/linear_motion_model.py
 
 ## 本プロジェクトへの貢献
 バグの報告や改善要望などありましたらご自由にIssuesに登録ください。  
-コード追加や変更などのプルリクも大歓迎です。  
+コード追加や変更などのプルリクエストも大歓迎です。プルリクエストを出していただく際は、[こちらの手順](/docs/contributing_guide.md)に従ってください。    
 
 ## ディレクトリ構成
 * [common](/common/common.md): 各プログラムで共通で使える関数
