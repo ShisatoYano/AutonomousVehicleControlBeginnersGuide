@@ -29,7 +29,7 @@ git remote add upstream https://github.com/ShisatoYano/AutonomousDrivingSamplePr
 ```bash
 git branch -b my_feature origin/main
 ```
-7. 追加、修正作業が完了したら、それらの変更をcommit & pushする前に、下記のスクリプトでユニットテストを実行してください。このとき、OSがWindowsである場合は、run_test_suites.batを代わりに実行してください。    
+7. 追加、修正作業が完了したら、それらの変更をcommit & pushする前に、下記のスクリプトでユニットテストを実行してください。このとき、OSがWindowsである場合は、run_test_suites.batを代わりに実行してください。テストの実行に関する詳細なルールについては、[こちらのドキュメント](/docs/test_guide.md)を参照してください。  
 ```bash
 $ ./run_test_suites.sh
 ```
@@ -37,6 +37,3 @@ $ ./run_test_suites.sh
 9. リモートにpushが出来たら、Forkした自分のリポジトリのWebページ上に"Compare & pull request"というボタンが出ているはずなので、それをクリックします。すると、Pull Requestに添付するコメントを入力する画面になるので、コメントを入力して、"Create pull request"を押してください。  
 10. 9にて提出されたプルリクエストを私の方でレビューしますので、修正などが必要になった場合は対応をお願い致します。  
 11. 最終的に全て問題無ければマージを指示させていただくので、そしたらmainブランチへのマージをお願い致します。  
-
-## 自動テスト
-
