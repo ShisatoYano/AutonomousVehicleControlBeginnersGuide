@@ -35,14 +35,7 @@ $ python motion_model/linear_motion/linear_motion_model.py
 
 ## 本プロジェクトへの貢献
 バグの報告や改善要望などありましたらご自由にIssuesに登録ください。  
-コード追加や変更などのプルリクエストも大歓迎です。プルリクエストを出していただく際は、[こちらの手順](/docs/contributing_guide.md)に従ってください。    
-
-## ディレクトリ構成
-* [common](/common/common.md): 各プログラムで共通で使える関数
-* [images](/images/): 各ドキュメント用の画像ファイル
-* [motion_model](/motion_model/motion_model.md): 運動モデルで車両の位置と姿勢を計算するプログラム
-* [test](/test/test.md): 各プログラムのユニットテストコード
-* [vehicle_drawing](/vehicle_drawing/vehicle_drawing.md): 車両の絵を描画するプログラム
+コード追加や変更などのプルリクエストも大歓迎です。プルリクエストを出していただく際は、[こちらの手順](/docs/contributing_guide.md)に従ってください。また、コード変更時は[こちらのルール](/docs/test_guide.md)に従ってテストを実行し、既存コードに不具合が起きていないことを確認してからプルリクエストを出すようにしてください。  
 
 ## お問い合わせ
 ご質問等ありましたら、こちらのメールアドレスまでご連絡ください。  
