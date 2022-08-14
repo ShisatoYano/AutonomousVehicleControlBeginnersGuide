@@ -33,6 +33,12 @@ $ python motion_model/linear_motion/linear_motion_model.py
 ```
 4. もし気に入っていただけたら、スターを付けていただけると嬉しいです。
 
+## プログラムの構成
+本リポジトリのサンプルプログラムは、以下のような構成でジャンルや目的別のディレクトリに分けられて配置されています。これらは全てモジュール化されており、単体で実行出来るだけでなく、それぞれを組み合わせて別のプログラムとして実行することもできます。  
+### common
+### motion_model
+### vehicle_drawing
+
 ## 本プロジェクトへの貢献
 バグの報告や改善要望などありましたらご自由に[Issues](https://github.com/ShisatoYano/AutonomousDrivingSamplePrograms/issues)に登録ください。  
 コード追加や変更などのプルリクエストも大歓迎です。プルリクエストを出していただく際は、[こちらの手順](/docs/contributing_guide.md)に従ってください。また、コード変更時は[こちらのルール](/docs/test_guide.md)に従ってテストを実行し、既存コードに不具合が起きていないことを確認してからプルリクエストを出すようにしてください。  
