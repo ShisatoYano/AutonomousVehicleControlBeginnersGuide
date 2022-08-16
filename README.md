@@ -43,9 +43,10 @@ $ python motion_model/linear_motion/linear_motion_model.py
 車両の動きを理論的に計算するための運動モデルを実装したクラスをまとめています。  
 各種モデルを実装したクラスのコードは全て単体で実行できるようになっており、実行すると以下のように運動モデルに従った車両の動きがアニメーションで描画されます。  
 ![](/gif/linear_motion_model.gif)  
-また、このディレクトリにある運動モデルクラスをimportすることで、位置計測や車両制御などのアルゴリズムのシミュレーションにも使うことができます。運動モデルの理論の詳細については[こちらのドキュメント](/motion_model/motion_model.md)を参照ください。    
+また、このディレクトリにある運動モデルクラスをimportすることで、位置計測や車両制御などのアルゴリズムのシミュレーションにも使うことができます。運動モデルの理論の詳細については[こちらのドキュメント](/motion_model/motion_model.md)を参照ください。  
 
-### vehicle_drawing
+### [vehicle_drawing](/vehicle_drawing/)
+各種シミュレーションを実行したときの車両の動きをアニメーションとして可視化するクラスをまとめています。主に二輪モデルと四輪モデルの車両の二種類を描画でき、それぞれはボディやタイヤなどといったパーツクラスの集合体として表現されています。詳細については、[こちらのドキュメント](/vehicle_drawing/vehicle_drawing.md)を参照ください。  
 
 ## 本プロジェクトへの貢献
 バグの報告や改善要望などありましたらご自由に[Issues](https://github.com/ShisatoYano/AutonomousDrivingSamplePrograms/issues)に登録ください。  
