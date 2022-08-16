@@ -13,7 +13,7 @@ from math import sin, cos, asin
 # 他のディレクトリにあるモジュールを読み込むためのパス設定
 sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../../vehicle_drawing")
 sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../../common")
-from two_wheels_vehicle import TwoWheelsVehicle
+from four_wheels_vehicle import FourWheelsVehicle
 from transformation import convert_speed_kmh_2_ms
 from gif_animation import GifAnimation
 
@@ -92,7 +92,7 @@ def main():
     lmm = LinearMotionModel(interval_sec=INTERVAL_SEC)
 
     # 2輪モデル車両の描画オブジェクト
-    twv = TwoWheelsVehicle(ax)
+    fwv = FourWheelsVehicle(ax)
 
     # Gif作成クラスのインスタンス生成
     save_name_path = os.path.dirname(os.path.abspath(__file__)) + "/../../gif/linear_motion_model.gif"
@@ -115,7 +115,7 @@ def main():
         x_m, y_m, yaw_deg, steer_deg = lmm.calculate_state(x_m, y_m, yaw_deg, speed_input, yaw_rate_input)
 
         # 計算された位置と方位、ステアに従って車両を描画
-        twv.draw(x_m, y_m, yaw_deg, steer_deg)
+        fwv.draw(x_m, y_m, yaw_deg, steer_deg)
 
         # 車両の位置に合わせて描画範囲を更新
         ax.set_xlim([x_m - 15, x_m + 15])
