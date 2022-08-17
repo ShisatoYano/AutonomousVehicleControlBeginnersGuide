@@ -31,4 +31,8 @@ def test_gif_creation():
     
     ga.create_gif()
 
-    assert os.path.isfile(save_name_path) == True
+    exist_gif = os.path.isfile(save_name_path)
+
+    assert exist_gif == True
+
+    if exist_gif: os.remove(save_name_path)
