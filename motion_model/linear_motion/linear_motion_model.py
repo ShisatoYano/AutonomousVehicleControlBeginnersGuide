@@ -91,7 +91,7 @@ def main():
     # 直線運動モデルのオブジェクト
     lmm = LinearMotionModel(interval_sec=INTERVAL_SEC)
 
-    # 2輪モデル車両の描画オブジェクト
+    # 四輪モデル車両の描画オブジェクト
     fwv = FourWheelsVehicle(ax)
 
     # Gif作成クラスのインスタンス生成
