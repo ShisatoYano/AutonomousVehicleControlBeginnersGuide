@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 # 他のディレクトリにあるモジュールを読み込むためのパス設定
 sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../../vehicle_drawing")
 sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../../common")
-from two_wheels_vehicle import TwoWheelsVehicle
+from four_wheels_vehicle import FourWheelsVehicle
 from transformation import convert_speed_kmh_2_ms
 from linear_motion_model import LinearMotionModel
 from accurate_linear_motion_model import AccurateLinearMotionModel
@@ -44,13 +44,13 @@ def main():
 
     # 通常の直線運動モデル
     lmm = LinearMotionModel(interval_sec=INTERVAL_SEC) # モデル
-    lmm_twv = TwoWheelsVehicle(ax, color='b') # 描画オブジェクト
+    lmm_fwv = FourWheelsVehicle(ax, color='b') # 描画オブジェクト
     x_lmm, y_lmm, yaw_lmm, steer_lmm = 0.0, 0.0, 0.0, 0.0 # 計算される位置、方位角、ステア角
     x_lmm_all, y_lmm_all = [], [] # 計算されたx, y座標を記録する配列
 
     # 高精度版の直線運動モデル
     almm = AccurateLinearMotionModel(interval_sec=INTERVAL_SEC) # モデル
-    almm_twv = TwoWheelsVehicle(ax, color='r') # 描画オブジェクト
+    almm_fwv = FourWheelsVehicle(ax, color='r') # 描画オブジェクト
     x_almm, y_almm, yaw_almm, steer_almm = 0.0, 0.0, 0.0, 0.0 # 計算される位置、方位角、ステア角
     x_almm_all, y_almm_all = [], [] # 計算されたx, y座標を記録する配列
 
@@ -74,13 +74,13 @@ def main():
         x_lmm, y_lmm, yaw_lmm, steer_lmm = lmm.calculate_state(x_lmm, y_lmm, yaw_lmm, speed_input, yaw_rate_input)
         x_lmm_all.append(x_lmm), y_lmm_all.append(y_lmm)
         # 車両を描画
-        lmm_twv.draw(x_lmm, y_lmm, yaw_lmm, steer_lmm)
+        lmm_fwv.draw(x_lmm, y_lmm, yaw_lmm, steer_lmm)
 
         # 高精度版の運動モデルによる計算
         x_almm, y_almm, yaw_almm, steer_almm = almm.calculate_state(x_almm, y_almm, yaw_almm, speed_input, yaw_rate_input)
         x_almm_all.append(x_almm), y_almm_all.append(y_almm)
         # 車両を描画
-        almm_twv.draw(x_almm, y_almm, yaw_almm, steer_almm)
+        almm_fwv.draw(x_almm, y_almm, yaw_almm, steer_almm)
 
         # 車両の位置に合わせて描画範囲を更新
         ax.set_xlim([(x_lmm + x_almm)/2 - 20, (x_lmm + x_almm)/2 + 20])
