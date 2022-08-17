@@ -97,13 +97,12 @@ def main():
         fwv.draw(0, 0, angle_deg, angle_deg) # 描画メソッドの実行
 
         angle_deg += 30 # 30度ずらす
-
-        ga.save_image() # 描画した図を画像として保存
         
         # ユニットテスト時はこのフラグをFlaseにする
         # グラフが表示されるとテストが進まなくなる
-        # 一度描画するたびに2秒ポーズ
-        if show_plot: plt.pause(2)
+        if show_plot:
+            ga.save_image() # 描画した図を画像として保存
+            plt.pause(2) # 一度描画するたびに2秒ポーズ
     
     ga.create_gif() # 保存した画像を繋ぎ合わせてGifを作成
     
