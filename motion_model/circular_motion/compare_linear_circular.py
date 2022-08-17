@@ -12,7 +12,7 @@ import matplotlib.pyplot as plt
 sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../../vehicle_drawing")
 sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../../common")
 sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../linear_motion")
-from two_wheels_vehicle import TwoWheelsVehicle
+from four_wheels_vehicle import FourWheelsVehicle
 from transformation import convert_speed_kmh_2_ms
 from linear_motion_model import LinearMotionModel
 from circular_motion_model import CircularMotionModel
@@ -45,13 +45,13 @@ def main():
 
     # 直線運動モデル
     lmm = LinearMotionModel(interval_sec=INTERVAL_SEC) # モデル
-    lmm_twv = TwoWheelsVehicle(ax, color='b') # 描画オブジェクト
+    lmm_fwv = FourWheelsVehicle(ax, color='b') # 描画オブジェクト
     x_lmm, y_lmm, yaw_lmm, steer_lmm = 0.0, 0.0, 0.0, 0.0 # 計算される位置、方位角、ステア角
     x_lmm_all, y_lmm_all = [], [] # 計算されたx, y座標を記録する配列
 
     # 円運動モデル
     cmm = CircularMotionModel(interval_sec=INTERVAL_SEC) # モデル
-    cmm_twv = TwoWheelsVehicle(ax, color='r') # 描画オブジェクト
+    cmm_fwv = FourWheelsVehicle(ax, color='r') # 描画オブジェクト
     x_cmm, y_cmm, yaw_cmm, steer_cmm = 0.0, 0.0, 0.0, 0.0 # 計算される位置、方位角、ステア角
     x_cmm_all, y_cmm_all = [], [] # 計算されたx, y座標を記録する配列
 
@@ -75,13 +75,13 @@ def main():
         x_lmm, y_lmm, yaw_lmm, steer_lmm = lmm.calculate_state(x_lmm, y_lmm, yaw_lmm, speed_input, yaw_rate_input)
         x_lmm_all.append(x_lmm), y_lmm_all.append(y_lmm)
         # 車両を描画
-        lmm_twv.draw(x_lmm, y_lmm, yaw_lmm, steer_lmm)
+        lmm_fwv.draw(x_lmm, y_lmm, yaw_lmm, steer_lmm)
 
         # 円運動モデルによる計算
         x_cmm, y_cmm, yaw_cmm, steer_cmm = cmm.calculate_state(x_cmm, y_cmm, yaw_cmm, speed_input, yaw_rate_input)
         x_cmm_all.append(x_cmm), y_cmm_all.append(y_cmm)
         # 車両を描画
-        cmm_twv.draw(x_cmm, y_cmm, yaw_cmm, steer_cmm)
+        cmm_fwv.draw(x_cmm, y_cmm, yaw_cmm, steer_cmm)
 
         # 車両の位置に合わせて描画範囲を更新
         ax.set_xlim([(x_lmm + x_cmm)/2 - 20, (x_lmm + x_cmm)/2 + 20])
