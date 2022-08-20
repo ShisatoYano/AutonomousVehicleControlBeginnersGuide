@@ -37,17 +37,23 @@ class LinearMotionModel:
     直線運動モデルに従って車両の位置と方位を計算するクラス
     """
 
-    def __init__(self, front_length_m=6.35, rear_length_m=0.0, interval_sec=0.05):
+    def __init__(self, front_length_m=6.35, rear_length_m=0.0, 
+                 interval_sec=0.1, speed_noise_std=0.0,
+                 yaw_rate_noise_std=0.0):
         """
         コンストラクタ
         front_length_m: 車両位置から前方への長さ[m]
         rear_length_m: 車両位置から後方への長さ[m]
         interval_sec: 移動前後の刻み時間[sec]
+        speed_noise_std: 速度入力に含まれる誤差の標準偏差[m/sec]
+        yaw_rate_noise_std: 角速度入力に含まれる誤差の標準偏差[deg/sec]
         """
 
         # パラメータのセット
         self.wheel_base_m = front_length_m + rear_length_m # ホイールベース(前輪と後輪の間の距離)
         self.interval_sec = interval_sec
+        self.speed_noise_std = speed_noise_std
+        self.yaw_rate_noise_std = yaw_rate_noise_std
 
         # メンバ変数の初期化
         self.speed_ms = 0.0
@@ -63,18 +69,24 @@ class LinearMotionModel:
         yaw_rate_ds: その時刻での角速度[deg/s]
         """
 
-        # 入力
-        self.speed_ms = speed_ms
-        self.yaw_rate_ds = yaw_rate_ds
+        # 入力が含む誤差の共分散行列を定義
+        # 正規分布に従った誤差を含むと仮定
+        input_noise_covariance_matrix = \
+            (np.diag([self.speed_noise_std, self.yaw_rate_noise_std]) ** 2) @ np.random.randn(2, 1) 
+
+        # 誤差を含んだ入力
+        self.speed_ms = speed_ms + input_noise_covariance_matrix[0, 0]
+        self.yaw_rate_ds = yaw_rate_ds + input_noise_covariance_matrix[1, 0]
 
         # 直線運動モデルに従って位置と方位を計算
-        x_m_next = x_m + speed_ms * cos(np.deg2rad(yaw_deg)) * self.interval_sec
-        y_m_next = y_m + speed_ms * sin(np.deg2rad(yaw_deg)) * self.interval_sec
-        yaw_deg_next = yaw_deg + yaw_rate_ds * self.interval_sec
+        x_m_next = x_m + self.speed_ms * cos(np.deg2rad(yaw_deg)) * self.interval_sec
+        y_m_next = y_m + self.speed_ms * sin(np.deg2rad(yaw_deg)) * self.interval_sec
+        yaw_deg_next = yaw_deg + self.yaw_rate_ds * self.interval_sec
         
         # 速度と角速度からステアリング角度を計算
         # 速度が0になると0割りになるので注意
-        steer_rad = asin(self.wheel_base_m * np.deg2rad(yaw_rate_ds)/speed_ms)
+        # asin -> ValueError: math domain error
+        steer_rad = asin(self.wheel_base_m * np.deg2rad(self.yaw_rate_ds)/self.speed_ms)
         
         return x_m_next, y_m_next, yaw_deg_next, np.rad2deg(steer_rad)
 
