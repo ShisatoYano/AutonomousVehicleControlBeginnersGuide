@@ -19,7 +19,7 @@ from circular_motion_model import CircularMotionModel
 from gif_animation import GifAnimation
 
 # パラメータ定数
-INTERVAL_SEC = 0.05
+INTERVAL_SEC = 0.1
 INTERVAL_MSEC = INTERVAL_SEC * 1000
 TIME_LIMIT_SEC = 30
 SPEED_KMH = 20
