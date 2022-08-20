@@ -2,6 +2,7 @@ common/__pycache__
 vehicle_drawing/__pycache__
 motion_model/linear_motion/__pycache__
 motion_model/circular_motion/__pycache__
+localization/dead_reckoning/__pycache__
 test/__pycache__
 test/.pytest_cache
 test/.coverage
