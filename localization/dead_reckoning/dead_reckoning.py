@@ -27,7 +27,7 @@ YAW_RATE_DS = 15
 # 入力が含む誤差の標準偏差パラメータ
 # これらの標準偏差を持った正規分布に従う誤差
 SPEED_NOISE_STD = 1.0 # [m/sec]
-YAW_RATE_NOISE_STD = 2.0 # [deg/sec]
+YAW_RATE_NOISE_STD = 1.0 # [deg/sec]
 
 # グラフの出力有無を切り替えるフラグ
 show_plot = True
