@@ -61,8 +61,6 @@ $ python motion_model/linear_motion/linear_motion_model.py
 バグの報告や改善要望などありましたらご自由に[Issues](https://github.com/ShisatoYano/AutonomousDrivingSamplePrograms/issues)に登録ください。  
 コード追加や変更などのプルリクエストも大歓迎です。プルリクエストを出していただく際は、[こちらの手順](/docs/contributing_guide.md)に従ってください。また、コード変更時は[こちらのルール](/docs/test_guide.md)に従ってテストを実行し、既存コードに不具合が起きていないことを確認してからプルリクエストを出すようにしてください。  
 
-## ライセンス
-MIT  
 
 ## お問い合わせ
 ご質問等ありましたら、こちらのメールアドレスまでご連絡ください。  
