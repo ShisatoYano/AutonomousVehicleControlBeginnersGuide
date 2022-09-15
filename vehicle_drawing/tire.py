@@ -39,6 +39,7 @@ class Tire:
         self.offset_x = offset_x_m
         self.offset_y = offset_y_m
         self.color = color
+        print("半径:" + str(self.radius), "横幅:" + str(self.width_half*2), "offset_x" + str(self.offset_x), "offset_y" + str(self.offset_y))
 
         # タイヤの形を形成するための点群
         self.points = np.array([
