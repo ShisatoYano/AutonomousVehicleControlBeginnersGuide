@@ -25,8 +25,8 @@ class FourWheelsVehicle:
     4輪モデルの車両を描画するクラス
     """
 
-    def __init__(self, axes, front_length_m=6.35, rear_length_m=0.0, tire_radius_m=1.27, 
-                 tire_width_half_m=0.64, axle_half_m=2.54, color='k'):
+    def __init__(self, axes, front_length_m=3.0, rear_length_m=0.0, tire_radius_m=0.5, 
+                 tire_width_half_m=0.3, axle_half_m=0.5, color='k'):
         """
         コンストラクタ
         axes: 描画オブジェクト

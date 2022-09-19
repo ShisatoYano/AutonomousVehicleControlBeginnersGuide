@@ -34,10 +34,10 @@ class Body:
         # パラメータのセット
         self.front_length = front_length_m
         self.rear_length = rear_length_m 
-        self.tread_half = 0.5 * (1.0 + front_length_m + rear_length_m)
-        self.front_edge = self.front_length + 0.5
-        self.rear_edge = self.rear_length + 0.5
-        self.width_half = 0.45 * self.tread_half
+        self.tread_half = 0.25* (1.0 + front_length_m + rear_length_m)
+        self.front_edge = self.front_length + 0.25
+        self.rear_edge = self.rear_length + 0.25
+        self.width_half = 0.75 * self.tread_half
         self.color = color
         print("軸から前輪:" + str(self.front_length), "軸から後輪:" + str(self.rear_length), "縦幅" + str(self.front_edge + self.rear_edge), "横幅" + str(self.width_half*2))
 
