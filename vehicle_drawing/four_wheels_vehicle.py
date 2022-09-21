@@ -25,7 +25,7 @@ class FourWheelsVehicle:
     4輪モデルの車両を描画するクラス
     """
 
-    def __init__(self, axes, front_length_m=3.0, rear_length_m=0.0, tire_radius_m=0.5, 
+    def __init__(self, axes, front_length_m=3.0, rear_length_m=0.0, tire_radius_m=0.3, 
                  tire_width_half_m=0.3, axle_half_m=0.5, color='k'):
         """
         コンストラクタ
@@ -79,8 +79,8 @@ def main():
     ax = plt.subplot(1, 1, 1)
     ax.set_xlabel("X[m]")
     ax.set_ylabel("Y[m]")
-    ax.set_xlim([-10, 10])
-    ax.set_ylim([-10, 10])
+    ax.set_xlim([-5, 5])
+    ax.set_ylim([-5, 5])
     ax.set_aspect("equal")
     ax.grid(True)
 
