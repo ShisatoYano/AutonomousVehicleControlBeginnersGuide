@@ -39,7 +39,7 @@ class Tire:
         self.offset_x = offset_x_m
         self.offset_y = offset_y_m
         self.color = color
-
+        
         # タイヤの形を形成するための点群
         self.points = np.array([
             [self.radius, -self.radius, -self.radius, self.radius, self.radius],

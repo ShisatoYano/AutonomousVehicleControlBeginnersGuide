@@ -32,14 +32,14 @@ class Body:
         """
 
         # パラメータのセット
-        self.front_length = front_length_m
-        self.rear_length = rear_length_m
-        self.tread_half = 0.4 * (front_length_m + rear_length_m)
-        self.front_edge = self.front_length + 3
-        self.rear_edge = self.rear_length + 3
-        self.width_half = 1.5 * self.tread_half
+        self.front_length = front_length_m - 0.25
+        self.rear_length = rear_length_m - 0.25
+        self.tread_half = 0.25* (1.0 + front_length_m + rear_length_m)
+        self.front_edge = self.front_length + 0.75
+        self.rear_edge = self.rear_length + 0.75
+        self.width_half = 1.0 * self.tread_half
         self.color = color
-
+        
         # ボディの形を形成するための点群
         self.points = np.array([
             [self.front_edge, -self.rear_edge, -self.rear_edge, self.front_edge, self.front_edge],
