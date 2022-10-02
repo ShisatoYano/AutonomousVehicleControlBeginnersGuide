@@ -1,9 +1,8 @@
 # AutonomousVehicleControlBeginnersGuide
 [![Linux_CI](https://github.com/ShisatoYano/AutonomousDrivingSamplePrograms/actions/workflows/Linux_CI.yml/badge.svg)](https://github.com/ShisatoYano/AutonomousDrivingSamplePrograms/actions/workflows/Linux_CI.yml) [![Windows_CI](https://github.com/ShisatoYano/AutonomousDrivingSamplePrograms/actions/workflows/Windows_CI.yml/badge.svg)](https://github.com/ShisatoYano/AutonomousDrivingSamplePrograms/actions/workflows/Windows_CI.yml) [![MacOS_CI](https://github.com/ShisatoYano/AutonomousDrivingSamplePrograms/actions/workflows/MacOS_CI.yml/badge.svg)](https://github.com/ShisatoYano/AutonomousDrivingSamplePrograms/actions/workflows/MacOS_CI.yml) [![CodeFactor](https://www.codefactor.io/repository/github/shisatoyano/autonomousvehiclecontrolbeginnersguide/badge)](https://www.codefactor.io/repository/github/shisatoyano/autonomousvehiclecontrolbeginnersguide)  
-自動運転のアルゴリズムについて学べるPythonサンプルプログラム集。  
 
-## 目次
-* [このリポジトリについて](#このリポジトリについて)
+## Contents
+* [Preface](#preface)
 * [動作条件](#動作条件)
 * [使い方](#使い方)
 * [プログラムの構成](#プログラムの構成)
@@ -14,8 +13,8 @@
 * [ライセンス](#ライセンス)
 * [お問い合わせ](#お問い合わせ)
 
-## このリポジトリについて
-車両の自動運転に必要な各種要素技術の一般的なアルゴリズムについて学ぶためのサンプルプログラムをまとめています。各サンプルプログラムを実行することで、そのアルゴリズムにより車両がどのような振る舞いをするのかアニメーションで分かりやすく確認することができます。また、モジュール化された各プログラムを組み合わせることで、自動運転の一連の流れを簡易的にシミュレートすることもできます。  
+## Preface
+This repository is beginner's guide to learn basic way of thinking and representative algorithms for Autonomous vehicle control. Explanation documents and sample codes about Motion model, Localization, Path Planning/Following and Vehicle Control are included in this repository. All of them are themed typical 4 wheel drive vehicle. I hope you can understand the above algorithms practically by reading documents and implementing codes.  
 
 ## 動作条件
 各サンプルプログラムを動かすためには下記条件を満たしている必要があります。  
