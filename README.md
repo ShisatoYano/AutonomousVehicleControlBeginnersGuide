@@ -14,7 +14,18 @@
 * [お問い合わせ](#お問い合わせ)
 
 ## Preface
-This repository is beginner's guide to learn basic way of thinking and representative algorithms for Autonomous vehicle control. Explanation documents and sample codes about Motion model, Localization, Path Planning/Following and Vehicle Control are included in this repository. All of them are themed typical 4 wheel drive vehicle. I hope you can understand the above algorithms practically by reading documents and implementing codes.  
+This repository is beginner's guide to learn basic way of thinking and representative algorithms for Autonomous vehicle control. Explanation documents and sample codes about Motion model, Localization, Path Planning/Following and Vehicle Control are included in this repository. All of them are themed typical 4 wheels drive vehicle. I hope you can understand the above algorithms practically by reading documents and implementing codes.  
+
+## Composition
+This repository is composed of multiple directories as follow.  
+
+* Basis
+* Modeling
+* Localization
+* Path Planning
+* Vehicle Control
+
+In each directory, explanation documents, sample codes are located.
 
 ## 動作条件
 各サンプルプログラムを動かすためには下記条件を満たしている必要があります。  
