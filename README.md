@@ -17,15 +17,23 @@
 This repository is beginner's guide to learn basic way of thinking and representative algorithms for Autonomous vehicle control. Explanation documents and sample codes about Motion model, Localization, Path Planning/Following and Vehicle Control are included in this repository. All of them are themed typical 4 wheels drive vehicle. I hope you can understand the above algorithms practically by reading documents and implementing codes.  
 
 ## Composition
-This repository is composed of multiple directories as follow.  
+This repository is composed of multiple directories as follow. Each directory has explanation documents, source codes and image files about component technologies for autonomous vehicle control system.  
 
 * Basis
 * Modeling
 * Localization
 * Path Planning
 * Vehicle Control
+* Navigation
+* Test
 
-In each directory, explanation documents, sample codes are located.
+Each directory have the following 3 sub directories.  
+"Documents" directory has explanation documents. In each document, an theory of algorithm is explained in detail while mixing formulas and sample codes. You can understand the algorithm by reading explanations and implementing codes practically.  
+"Sources" directory has source files of sample codes introduced in documents. 
+
+* Documents
+* Sources
+* Images
 
 ## 動作条件
 各サンプルプログラムを動かすためには下記条件を満たしている必要があります。  
