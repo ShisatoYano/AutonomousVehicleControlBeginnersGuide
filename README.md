@@ -3,6 +3,7 @@
 
 ## Contents
 * [Preface](#preface)
+* [Composition](#composition)
 * [動作条件](#動作条件)
 * [使い方](#使い方)
 * [プログラムの構成](#プログラムの構成)
@@ -29,7 +30,8 @@ This repository is composed of multiple directories as follow. Each directory ha
 
 Each directory have the following 3 sub directories.  
 "Documents" directory has explanation documents. In each document, an theory of algorithm is explained in detail while mixing formulas and sample codes. You can understand the algorithm by reading explanations and implementing codes practically.  
-"Sources" directory has source files of sample codes introduced in documents. 
+"Sources" directory has source files of sample codes introduced in documents. These codes are written in Python. Usually, almost all of the codes for autonomous vehicle system are written in C/C++ but it is very difficult for beginner to understand and implement. So, all of the codes in this repository are written in Python because you can understand and implement a code more easily and more roughly than C/C++.  
+"Images" direcotry has image or gif files shown in documents.
 
 * Documents
 * Sources
