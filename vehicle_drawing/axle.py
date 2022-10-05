@@ -43,7 +43,7 @@ class Axle:
         ])
 
         # 描画オブジェクトの初期化
-        self.plot, = axes.plot(self.points[0, :], self.points[1, :], lw=1, color=self.color)
+        self.plot, = axes.plot(self.points[0, :], self.points[1, :], lw=2.0, color=self.color)
     
     def draw(self, x_m, y_m, yaw_angle_deg, steer_angle_deg):
         """

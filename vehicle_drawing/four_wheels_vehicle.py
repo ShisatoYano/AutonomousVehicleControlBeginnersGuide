@@ -26,7 +26,7 @@ class FourWheelsVehicle:
     """
 
     def __init__(self, axes, front_length_m=2.0, rear_length_m=0.0, tire_radius_m=0.34, 
-                 tire_width_half_m=0.2, axle_half_m=0.75, color='k'):
+                 tire_width_half_m=0.2, axle_half_m=0.75, color='m'):
         """
         コンストラクタ
         axes: 描画オブジェクト
@@ -82,7 +82,7 @@ def main():
     ax.set_xlim([-5, 5])
     ax.set_ylim([-5, 5])
     ax.set_aspect("equal")
-    ax.grid(True)
+    ax.grid(linestyle='--',linewidth=1.0)
 
     # 描画クラスのインスタンス生成
     fwv = FourWheelsVehicle(ax)

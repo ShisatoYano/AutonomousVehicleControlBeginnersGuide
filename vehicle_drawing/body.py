@@ -38,7 +38,7 @@ class Body:
         self.front_edge = self.front_length + 0.75
         self.rear_edge = self.rear_length + 0.75
         self.width_half = 1.0 * self.tread_half
-        self.color = color
+        self.color = 'g'
         
         # ボディの形を形成するための点群
         self.points = np.array([
@@ -47,7 +47,7 @@ class Body:
         ])
 
         # 描画オブジェクトの初期化
-        self.plot, = axes.plot(self.points[0, :], self.points[1, :], lw=1, color=self.color)
+        self.plot, = axes.plot(self.points[0, :], self.points[1, :], lw=3.0, color=self.color)
     
     def draw(self, x_m, y_m, yaw_angle_deg):
         """
