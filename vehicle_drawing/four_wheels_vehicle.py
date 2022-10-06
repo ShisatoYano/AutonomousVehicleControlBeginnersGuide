@@ -70,6 +70,11 @@ class FourWheelsVehicle:
         self.rear_left_tire.draw(x_m, y_m, yaw_angle_deg, 0.0)
         self.rear_right_tire.draw(x_m, y_m, yaw_angle_deg, 0.0)
 
+    def set_tire_color(self, color):
+        self.front_left_tire.color = color
+        self.front_right_tire.color = color
+        self.rear_left_tire.color = color
+        self.rear_right_tire.color = color
 
 def main():
     print(__file__ + " start!!")
@@ -88,6 +93,7 @@ def main():
 
     # 描画クラスのインスタンス生成
     fwv = FourWheelsVehicle(ax)
+    fwv.set_tire_color('r')
 
     # Gif作成クラスのインスタンス生成
     save_name_path = os.path.dirname(os.path.abspath(__file__)) + "/../gif/colerful_four_wheels_vehicle.gif"
