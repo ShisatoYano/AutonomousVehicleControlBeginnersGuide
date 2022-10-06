@@ -22,7 +22,7 @@ class Tire:
     車両のタイヤを描画するクラス
     """
     
-    def __init__(self, axes, radius_m, width_half_m, offset_x_m, offset_y_m, color):
+    def __init__(self, axes, radius_m, width_half_m, offset_x_m, offset_y_m, color, line_width, line_type):
         """
         コンストラクタ
         axes: 描画オブジェクト
@@ -38,7 +38,9 @@ class Tire:
         self.width_half = width_half_m
         self.offset_x = offset_x_m
         self.offset_y = offset_y_m
-        self.color = 'y'
+        self.color = color
+        self.line_width = line_width
+        self.line_type = line_type
         
         # タイヤの形を形成するための点群
         self.points = np.array([
@@ -47,7 +49,7 @@ class Tire:
         ])
 
         # 描画オブジェクトの初期化
-        self.plot, = axes.plot(self.points[0, :], self.points[1, :], lw=5.0, color=self.color)
+        self.plot, = axes.plot(self.points[0, :], self.points[1, :], lw=self.line_width, color=self.color, ls=self.line_type)
     
     def draw(self, x_m, y_m, yaw_angle_deg, steering_angle_deg):
         """

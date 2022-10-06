@@ -22,7 +22,7 @@ class Chassis:
     車両のシャーシを描画するクラス
     """
 
-    def __init__(self, axes, front_length_m, rear_length_m, color):
+    def __init__(self, axes, front_length_m, rear_length_m, color, line_width, line_type):
         """
         コンストラクタ
         axes: 描画オブジェクト
@@ -35,6 +35,8 @@ class Chassis:
         self.front_length = front_length_m
         self.rear_length = rear_length_m
         self.color = color
+        self.line_width = line_width
+        self.line_type = line_type
         
         # シャーシの形を形成するための点群
         self.points = np.array([
@@ -43,7 +45,7 @@ class Chassis:
         ])
 
         # 描画オブジェクトの初期化
-        self.plot, = axes.plot(self.points[0, :], self.points[1, :], lw=1, color=self.color)
+        self.plot, = axes.plot(self.points[0, :], self.points[1, :], lw=self.line_width, color=self.color, ls=self.line_type)
     
     def draw(self, x_m, y_m, yaw_angle_deg):
         """

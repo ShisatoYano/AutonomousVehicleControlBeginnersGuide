@@ -22,19 +22,23 @@ class Axle:
     アクスルを描画するクラス
     """
 
-    def __init__(self, axes, offset_x_m, offset_y_m, color):
+    def __init__(self, axes, offset_x_m, offset_y_m, color, line_width, line_type):
         """
         コンストラクタ
         axes: 描画オブジェクト
         offset_x_m: 車両位置から前方への取付位置[m]
         offset_y_m: 車両位置から後方への取付位置[m]
         color: ラインの色
+        line_width:　ラインの幅
+        line_type:　ラインの種類
         """
 
         # パラメータのセット
         self.offset_x = offset_x_m
         self.offset_y = offset_y_m
         self.color = color
+        self.line_width = line_width
+        self.line_type = line_type
 
         # アクスルの形を形成するための点群
         self.points = np.array([
@@ -43,7 +47,7 @@ class Axle:
         ])
 
         # 描画オブジェクトの初期化
-        self.plot, = axes.plot(self.points[0, :], self.points[1, :], lw=2.0, color=self.color)
+        self.plot, = axes.plot(self.points[0, :], self.points[1, :], lw=self.line_width, color=self.color, ls=self.line_type)
     
     def draw(self, x_m, y_m, yaw_angle_deg, steer_angle_deg):
         """
