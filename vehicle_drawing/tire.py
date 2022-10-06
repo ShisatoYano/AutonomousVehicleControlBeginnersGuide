@@ -31,6 +31,8 @@ class Tire:
         offset_x_m: 車両位置から縦方向への取付位置[m]
         offset_y_m: 車両位置から横方向への取付位置[m]
         color: ラインの色
+        line_width: ラインの幅
+        line_type: ラインの種類
         """
         
         # パラメータのセット
@@ -94,7 +96,7 @@ def main():
     ax.grid(True)
 
     # 描画クラスのインスタンス生成
-    tire = Tire(ax, 1.27, 0.64, 0.0, 0.0, 'k')
+    tire = Tire(ax, 1.27, 0.64, 0.0, 0.0, 'k', 1.0, '-')
 
     # 描画
     tire.draw(0.0, 0.0, 0.0, 0.0)

@@ -29,8 +29,8 @@ class Body:
         front_length_m: 車両位置から前方への長さ[m]
         rear_length_m: 車両位置から後方への長さ[m]
         color: ラインの色
-        line_width:　ラインの幅
-        line_type:　ラインの種類
+        line_width: ラインの幅
+        line_type: ラインの種類
         """
 
         # パラメータのセット(Bodyクラスのメンバ変数の設定)
@@ -91,7 +91,7 @@ def main():
     ax.grid(True)
 
     # 描画クラスのインスタンス生成
-    body = Body(ax, 6.35, 0.0, 'k')
+    body = Body(ax, 6.35, 0.0, 'k', 1.0, '-')
 
     # 描画
     body.draw(0.0, 0.0, 0.0)

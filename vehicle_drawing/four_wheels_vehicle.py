@@ -36,6 +36,8 @@ class FourWheelsVehicle:
         tire_width_half_m: タイヤ幅の半分[m]
         axle_half_m: アクスル長さの半分[m]
         color: ラインの色
+        line_width: ラインの幅
+        line_type: ラインの種類
         """
 
         # 各パーツクラスのインスタンス生成
@@ -88,7 +90,7 @@ def main():
     fwv = FourWheelsVehicle(ax)
 
     # Gif作成クラスのインスタンス生成
-    save_name_path = os.path.dirname(os.path.abspath(__file__)) + "/../gif/four_wheels_vehicle.gif"
+    save_name_path = os.path.dirname(os.path.abspath(__file__)) + "/../gif/colerful_four_wheels_vehicle.gif"
     ga = GifAnimation(save_name_path=save_name_path, duration_ms=2000)
 
     # 角度を30°ずつずらしながら描画
