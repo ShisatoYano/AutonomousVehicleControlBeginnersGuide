@@ -73,6 +73,18 @@ class Tire:
         
         # 描画
         self.plot.set_data(transformed_points[0, :], transformed_points[1, :])
+    
+    def set_color(self, color):
+        """
+        Function to set color parameter
+        How to use:
+        tire_obj = Tire(input_1, input_2, ...)
+        tire_obj.set_color('r') or tire_obj.set_color("#F08080")
+        color: char or color code of color you want to set
+        """
+
+        self.color = color # set into member variable
+        self.plot.set_color(self.color) # update color setting of plot object
 
 
 def main():

@@ -71,10 +71,18 @@ class FourWheelsVehicle:
         self.rear_right_tire.draw(x_m, y_m, yaw_angle_deg, 0.0)
 
     def set_tire_color(self, color):
-        self.front_left_tire.color = color
-        self.front_right_tire.color = color
-        self.rear_left_tire.color = color
-        self.rear_right_tire.color = color
+        """
+        Function to set color parameter of tire
+        How to use:
+        fwv = FourWheelsVehicle(input_1, input_2, ...)
+        fwv.set_tire_color('r') or fwv.set_tire_color("#F08080")
+        color: char or color code of color you want to set
+        """
+
+        self.front_left_tire.set_color(color)
+        self.front_right_tire.set_color(color)
+        self.rear_left_tire.set_color(color)
+        self.rear_right_tire.set_color(color)
 
 def main():
     print(__file__ + " start!!")
