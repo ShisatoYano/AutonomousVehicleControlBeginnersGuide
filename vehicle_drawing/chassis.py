@@ -65,6 +65,9 @@ class Chassis:
         # 描画
         self.plot.set_data(transformed_points[0, :], transformed_points[1, :])
 
+    def set_color(self,color):
+        self.color = color
+        self.plot.set_color(self.color)
 
 def main():
     """
