@@ -81,11 +81,25 @@ class FourWheelsVehicle:
         self.rear_axle.set_color(color)
 
     def set_tire_color(self, color):
+<<<<<<< HEAD
+=======
+        """
+        Function to set color parameter of tire
+        How to use:
+        fwv = FourWheelsVehicle(input_1, input_2, ...)
+        fwv.set_tire_color('r') or fwv.set_tire_color("#F08080")
+        color: char or color code of color you want to set
+        """
+
+>>>>>>> e9af3a0f4b067539d8bf7ca18f691d85008b7351
         self.front_left_tire.set_color(color)
         self.front_right_tire.set_color(color)
         self.rear_left_tire.set_color(color)
         self.rear_right_tire.set_color(color)
+<<<<<<< HEAD
 
+=======
+>>>>>>> e9af3a0f4b067539d8bf7ca18f691d85008b7351
 
 def main():
     print(__file__ + " start!!")
