@@ -22,7 +22,7 @@ class Tire:
     車両のタイヤを描画するクラス
     """
     
-    def __init__(self, axes, radius_m, width_half_m, offset_x_m, offset_y_m, color):
+    def __init__(self, axes, radius_m, width_half_m, offset_x_m, offset_y_m, color, line_width, line_type):
         """
         コンストラクタ
         axes: 描画オブジェクト
@@ -31,6 +31,8 @@ class Tire:
         offset_x_m: 車両位置から縦方向への取付位置[m]
         offset_y_m: 車両位置から横方向への取付位置[m]
         color: ラインの色
+        line_width: ラインの幅
+        line_type: ラインの種類
         """
         
         # パラメータのセット
@@ -39,6 +41,8 @@ class Tire:
         self.offset_x = offset_x_m
         self.offset_y = offset_y_m
         self.color = color
+        self.line_width = line_width
+        self.line_type = line_type
         
         # タイヤの形を形成するための点群
         self.points = np.array([
@@ -47,7 +51,7 @@ class Tire:
         ])
 
         # 描画オブジェクトの初期化
-        self.plot, = axes.plot(self.points[0, :], self.points[1, :], lw=1, color=self.color)
+        self.plot, = axes.plot(self.points[0, :], self.points[1, :], lw=self.line_width, color=self.color, ls=self.line_type)
     
     def draw(self, x_m, y_m, yaw_angle_deg, steering_angle_deg):
         """
@@ -69,6 +73,10 @@ class Tire:
         
         # 描画
         self.plot.set_data(transformed_points[0, :], transformed_points[1, :])
+
+    def set_color(self, color):
+        self.color = color
+        self.plot.set_color(self.color)
 
 
 def main():
@@ -92,7 +100,7 @@ def main():
     ax.grid(True)
 
     # 描画クラスのインスタンス生成
-    tire = Tire(ax, 1.27, 0.64, 0.0, 0.0, 'k')
+    tire = Tire(ax, 1.27, 0.64, 0.0, 0.0, 'k', 1.0, '-')
 
     # 描画
     tire.draw(0.0, 0.0, 0.0, 0.0)

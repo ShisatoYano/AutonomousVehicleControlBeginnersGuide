@@ -22,19 +22,23 @@ class Chassis:
     車両のシャーシを描画するクラス
     """
 
-    def __init__(self, axes, front_length_m, rear_length_m, color):
+    def __init__(self, axes, front_length_m, rear_length_m, color, line_width, line_type):
         """
         コンストラクタ
         axes: 描画オブジェクト
         front_length_m: 車両位置から前方への長さ[m]
         rear_length_m: 車両位置から後方への長さ[m]
         color: ラインの色
+        line_width: ラインの幅
+        line_type: ラインの種類
         """
 
         # パラメータのセット
         self.front_length = front_length_m
         self.rear_length = rear_length_m
         self.color = color
+        self.line_width = line_width
+        self.line_type = line_type
         
         # シャーシの形を形成するための点群
         self.points = np.array([
@@ -43,7 +47,7 @@ class Chassis:
         ])
 
         # 描画オブジェクトの初期化
-        self.plot, = axes.plot(self.points[0, :], self.points[1, :], lw=1, color=self.color)
+        self.plot, = axes.plot(self.points[0, :], self.points[1, :], lw=self.line_width, color=self.color, ls=self.line_type)
     
     def draw(self, x_m, y_m, yaw_angle_deg):
         """
@@ -61,6 +65,9 @@ class Chassis:
         # 描画
         self.plot.set_data(transformed_points[0, :], transformed_points[1, :])
 
+    def set_color(self,color):
+        self.color = color
+        self.plot.set_color(self.color)
 
 def main():
     """
@@ -83,7 +90,7 @@ def main():
     ax.grid(True)
 
     # 描画クラスのインスタンス生成
-    chassis = Chassis(ax, 6.35, 0.0, 'k')
+    chassis = Chassis(ax, 6.35, 0.0, 'k', 1.0, '-')
 
     # 描画
     chassis.draw(0.0, 0.0, 0.0)
