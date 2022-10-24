@@ -4,6 +4,8 @@
 ## Contents
 * [Preface](#preface)
 * [Composition](#composition)
+    * [Basis](#basis)
+    * [Modeling](#modeling)
 * [動作条件](#動作条件)
 * [使い方](#使い方)
 * [プログラムの構成](#プログラムの構成)
@@ -20,8 +22,13 @@ This repository is beginner's guide to learn basic way of thinking and represent
 ## Composition
 This repository is composed of multiple directories as follow. Each directory has explanation documents, source codes and image files about component technologies for autonomous vehicle control system.  
 
-* basis
-* modeling
+### Basis
+Studying the basic knowledge of Probability and Statistics.  
+
+### Modeling
+Formulating vehicle's motion and observation by sensor and implement their simulation.  
+
+
 * localization
 * path_planning
 * vehicle_control
@@ -37,8 +44,6 @@ Each directory have the following 3 sub directories.
 "docs" directory has explanation documents. In each document, an theory of algorithm is explained in detail while mixing formulas and sample codes. You can understand the algorithm by reading explanations and implementing codes practically.  
 "srcs" directory has source files of sample codes introduced in documents. These codes are written in Python. Usually, almost all of the codes for autonomous vehicle system are written in C/C++ but it is very difficult for beginner to understand and implement. So, all of the codes in this repository are written in Python because you can understand and implement a code more easily and more roughly than C/C++.  
 "imgs" direcotry has image or gif files shown in documents. These files are created as output by each sample codes and you can confirm how an algorithm behave by seeing them.  
-
-
 
 ## 動作条件
 各サンプルプログラムを動かすためには下記条件を満たしている必要があります。  
