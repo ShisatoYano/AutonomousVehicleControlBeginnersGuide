@@ -6,6 +6,9 @@
 * [Composition](#composition)
     * [Basis](#basis)
     * [Modeling](#modeling)
+    * [Localization](#localization)
+    * [PathPlanning](#pathplanning)
+    * [VehicleControl](#vehiclecontrol)
 * [動作条件](#動作条件)
 * [使い方](#使い方)
 * [プログラムの構成](#プログラムの構成)
@@ -28,10 +31,16 @@ Studying the basic knowledge of Probability and Statistics.
 ### Modeling
 Formulating vehicle's motion and observation by sensor and implement their simulation.  
 
+### Localization
+Understanding and implementing algorithm of Self-Localization and SLAM.  
 
-* localization
-* path_planning
-* vehicle_control
+### PathPlanning
+Understanding and implementing algorithm of Global/Local Path Planning.  
+
+### VehicleControl
+Understanding and implementing algorithm of Vehicle Control and Path Tracking.  
+
+
 * navigation
 * test
 
