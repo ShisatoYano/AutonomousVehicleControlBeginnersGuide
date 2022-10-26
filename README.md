@@ -54,9 +54,11 @@ Each directory have the following 3 sub directories.
 "srcs" directory has source files of sample codes introduced in documents. These codes are written in Python. Usually, almost all of the codes for autonomous vehicle system are written in C/C++ but it is very difficult for beginner to understand and implement. So, all of the codes in this repository are written in Python because you can understand and implement a code more easily and more roughly than C/C++.  
 "imgs" direcotry has image or gif files shown in documents. These files are created as output by each sample codes and you can confirm how an algorithm behave by seeing them.  
 
-## 動作条件
-各サンプルプログラムを動かすためには下記条件を満たしている必要があります。  
-* Python 3.10.x以上
+## How to run sample codes
+Each sample codes are implemented by Python and some libraries.  
+The following Python version and libraries are required.  
+
+* Newer than Python 3.10.x
 * numpy
 * matplotlib
 * pytest
