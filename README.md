@@ -9,6 +9,7 @@
     * [Localization](#localization)
     * [PathPlanning](#pathplanning)
     * [VehicleControl](#vehiclecontrol)
+    * [Navigation](#navigation)
 * [動作条件](#動作条件)
 * [使い方](#使い方)
 * [プログラムの構成](#プログラムの構成)
@@ -40,9 +41,8 @@ Understanding and implementing algorithm of Global/Local Path Planning.
 ### VehicleControl
 Understanding and implementing algorithm of Vehicle Control and Path Tracking.  
 
-
-* navigation
-* test
+### Navigation
+Design scenario in case of navigating autonomous vehicle from start to goal and implement algorithm to achieve the navigation.  
 
 Each directory have the following 3 sub directories.  
 
