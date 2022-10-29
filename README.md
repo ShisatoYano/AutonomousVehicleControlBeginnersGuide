@@ -11,6 +11,7 @@
     * [VehicleControl](#vehiclecontrol)
     * [Navigation](#navigation)
 * [How to run sample code](#how-to-run-sample-code)
+* [License](#license)
 * [本プロジェクトへの貢献](#本プロジェクトへの貢献)
 * [ライセンス](#ライセンス)
 * [お問い合わせ](#お問い合わせ)
@@ -73,7 +74,10 @@ $ pip install -r requirements.txt
 ```bash
 $ python Localization/Sources/kalman_filter/linear_kalman_filter_1d.py
 ```
-4. Add star to this repository if you like it. 
+4. Add star to this repository if you like it.  
+
+## License
+MIT  
 
 ## 本プロジェクトへの貢献
 バグの報告や改善要望などありましたらご自由に[Issues](https://github.com/ShisatoYano/AutonomousDrivingSamplePrograms/issues)に登録ください。  
