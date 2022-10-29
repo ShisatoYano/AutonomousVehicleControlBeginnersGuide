@@ -11,10 +11,6 @@
     * [VehicleControl](#vehiclecontrol)
     * [Navigation](#navigation)
 * [How to run sample code](#how-to-run-sample-code)
-* [プログラムの構成](#プログラムの構成)
-    * [common](#common)
-    * [motion_model](#motion_model)
-    * [vehicle_drawing](#vehicle_drawing)
 * [本プロジェクトへの貢献](#本プロジェクトへの貢献)
 * [ライセンス](#ライセンス)
 * [お問い合わせ](#お問い合わせ)
@@ -78,23 +74,6 @@ $ pip install -r requirements.txt
 $ python Localization/Sources/kalman_filter/linear_kalman_filter_1d.py
 ```
 4. Add star to this repository if you like it. 
-
-## プログラムの構成
-本リポジトリのサンプルプログラムは、以下のような構成でジャンルや目的別のディレクトリに分けられて配置されています。  
-### common
-プログラム全体で共通で使えるモジュールをまとめています。  
-詳細については、コードに書かれたコメントや[こちらのドキュメント](/common/common.md)を参照ください。  
-
-### motion_model
-車両の動きを理論的に計算するための運動モデルを実装したモジュールをまとめています。  
-各種モデルを実装したクラスのコードは全て単体で実行できるようになっており、実行すると以下のように運動モデルに従った車両の動きがアニメーションで描画されます。  
-![](/gif/linear_motion_model.gif)  
-また、このディレクトリにある運動モデルクラスをimportすることで、位置計測や車両制御などのアルゴリズムのシミュレーションにも使うことができます。運動モデルの理論の詳細については[こちらのドキュメント](/motion_model/motion_model.md)を参照ください。  
-
-### vehicle_drawing
-各種シミュレーションを実行したときの車両の動きをアニメーションとして可視化するモジュールをまとめています。主に二輪モデルと四輪モデルの車両の二種類を描画でき、それぞれはボディやタイヤなどのパーツモジュールの集合体として表現されています。例えば、モジュールの一つであるfour_wheels_vehicle.pyを実行すると、このように四輪モデルの車両の描画例を見ることができます。  
-![](/gif/four_wheels_vehicle.gif)  
-詳細については、[こちらのドキュメント](/vehicle_drawing/vehicle_drawing.md)を参照ください。  
 
 ## 本プロジェクトへの貢献
 バグの報告や改善要望などありましたらご自由に[Issues](https://github.com/ShisatoYano/AutonomousDrivingSamplePrograms/issues)に登録ください。  
