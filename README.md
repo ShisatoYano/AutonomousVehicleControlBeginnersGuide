@@ -10,8 +10,7 @@
     * [PathPlanning](#pathplanning)
     * [VehicleControl](#vehiclecontrol)
     * [Navigation](#navigation)
-* [動作条件](#動作条件)
-* [使い方](#使い方)
+* [How to run sample code](#how-to-run-sample-code)
 * [プログラムの構成](#プログラムの構成)
     * [common](#common)
     * [motion_model](#motion_model)
@@ -54,7 +53,7 @@ Each directory have the following 3 sub directories.
 "Sources" directory has source files of sample codes introduced in documents. These codes are written in Python. Usually, almost all of the codes for autonomous vehicle system are written in C/C++ but it is very difficult for beginner to understand and implement. So, all of the codes in this repository are written in Python because you can understand and implement a code more easily and more roughly than C/C++.  
 "Images" direcotry has image or gif files shown in documents. These files are created as output by each sample codes and you can confirm how an algorithm behave by seeing them.  
 
-## How to run sample codes
+## How to run sample code
 Each sample codes are implemented by Python and some libraries.  
 The following Python version and libraries are required.  
 
@@ -64,20 +63,21 @@ The following Python version and libraries are required.
 * pytest
 * pytest-cov
 
-## 使い方
-1. このリポジトリを自分のPCのローカルにクローンします。  
+You can run a code by following this procedure.  
+
+1. Clone this repository.  
 ```bash
-$ git clone https://github.com/ShisatoYano/AutonomousDrivingSamplePrograms.git
+$ git clone https://github.com/ShisatoYano/AutonomousVehicleControlBeginnersGuide.git
 ```
-2. 必要なPython用ライブラリをインストールします。  
+2. Install required libraries.  
 ```bash
 $ pip install -r requirements.txt
 ```
-3. 下記のように各ディレクトリにあるPythonスクリプトを実行します。  
+3. Execute python script in each directory.  
 ```bash
-$ python motion_model/linear_motion/linear_motion_model.py
+$ python Localization/Sources/kalman_filter/linear_kalman_filter_1d.py
 ```
-4. もし気に入っていただけたら、スターを付けていただけると嬉しいです。
+4. Add star to this repository if you like it. 
 
 ## プログラムの構成
 本リポジトリのサンプルプログラムは、以下のような構成でジャンルや目的別のディレクトリに分けられて配置されています。  
