@@ -9,7 +9,7 @@ import sys
 import os
 
 # テストターゲットのモジュールを読み込むためのパス設定
-sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../vehicle_drawing")
+sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../Modeling/Sources/vehicle")
 sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../common")
 import axle
 

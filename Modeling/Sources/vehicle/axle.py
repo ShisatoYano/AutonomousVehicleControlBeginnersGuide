@@ -10,7 +10,7 @@ import sys
 import os
 
 # 他のディレクトリにあるモジュールを読み込むためのパス設定
-sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../common")
+sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../../../common")
 from transformation import rotate_translate_2d
 
 # グラフの出力有無を切り替えるフラグ
@@ -89,13 +89,13 @@ def main():
     ax = plt.subplot(1, 1, 1)
     ax.set_xlabel("X[m]")
     ax.set_ylabel("Y[m]")
-    ax.set_xlim([-10, 10])
-    ax.set_ylim([-10, 10])
+    ax.set_xlim([-2, 2])
+    ax.set_ylim([-2, 2])
     ax.set_aspect("equal")
     ax.grid(True)
 
     # 描画クラスのインスタンス生成
-    axle = Axle(ax, 0.0, 3.0, 'k', 1.0, '-')
+    axle = Axle(ax, 0.0, 0.5, 'k', 1.0, '-')
 
     # 描画
     axle.draw(0.0, 0.0, 0.0, 0.0)
