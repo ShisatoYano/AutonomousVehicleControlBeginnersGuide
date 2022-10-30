@@ -188,7 +188,7 @@ class LinearKalmanFilter1D:
         p_pred = self.predict_variance(p_prev)
 
         # update with current observation
-        delta_z = self.calculate_inovation(z, x_pred)
+        delta_z = self.calculate_innovation(z, x_pred)
         p_obsrv_pred_err = self.calculate_obsrv_pred_err_var(p_pred)
         kalman_gain = self.calculate_kalman_gain(p_pred, p_obsrv_pred_err)
         x_updated = self.update_position(x_pred, delta_z, kalman_gain)
