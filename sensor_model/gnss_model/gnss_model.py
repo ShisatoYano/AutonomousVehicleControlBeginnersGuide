@@ -10,12 +10,12 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # 他のディレクトリにあるモジュールを読み込むためのパス設定
-sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../../motion_model")
-sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../../vehicle_drawing")
+sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../../Modeling/Sources/motion")
+sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../../Modeling/Sources/vehicle")
 sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../../common")
 from four_wheels_vehicle import FourWheelsVehicle
 from transformation import convert_speed_kmh_2_ms
-from linear_motion.linear_motion_model import LinearMotionModel
+from linear_motion_model import LinearMotionModel
 from gif_animation import GifAnimation
 
 # パラメータ定数
