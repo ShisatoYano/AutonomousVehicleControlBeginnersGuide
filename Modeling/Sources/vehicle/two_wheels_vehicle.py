@@ -8,12 +8,9 @@ import matplotlib.pyplot as plt
 import sys
 import os
 
-# 他のディレクトリにあるモジュールを読み込むためのパス設定
-sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../common")
 from body import Body
 from tire import Tire
 from chassis import Chassis
-from gif_animation import GifAnimation
 
 # グラフの出力有無を切り替えるフラグ
 show_plot = True
@@ -25,7 +22,7 @@ class TwoWheelsVehicle:
     """
     
     def __init__(self, axes, front_length_m=2.0, rear_length_m=0.0, 
-                 tire_radius_m=0.3, tire_width_half_m=0.2, color='k', line_width=1.0, line_type='-'):
+                 tire_radius_m=0.3, tire_width_half_m=0.12, color='k', line_width=1.0, line_type='-'):
         """
         コンストラクタ
         axes: 描画オブジェクト
@@ -69,32 +66,18 @@ def main():
     ax = plt.subplot(1, 1, 1)
     ax.set_xlabel("X[m]")
     ax.set_ylabel("Y[m]")
-    ax.set_xlim([-5, 5])
-    ax.set_ylim([-5, 5])
+    ax.set_xlim([-1, 3])
+    ax.set_ylim([-2, 2])
     ax.set_aspect("equal")
     ax.grid(True)
 
     # 描画クラスのインスタンス生成
     twv = TwoWheelsVehicle(ax)
-
-    # Gif作成クラスのインスタンス生成
-    save_name_path = os.path.dirname(os.path.abspath(__file__)) + "/../gif/two_wheels_vehicle.gif"
-    ga = GifAnimation(save_name_path=save_name_path, duration_ms=2000)
-
-    # 角度を30°ずつずらしながら描画
-    angle_deg = -60
-    while angle_deg <= 60:
-        twv.draw(0, 0, angle_deg, angle_deg) # 描画メソッドの実行
-
-        angle_deg += 30 # 30度ずらす
-        
-        # ユニットテスト時はこのフラグをFlaseにする
-        # グラフが表示されるとテストが進まなくなる
-        if show_plot:
-            ga.save_image() # 描画した図を画像として保存
-            plt.pause(2) # 一度描画するたびに2秒ポーズ
     
-    ga.create_gif() # 保存した画像を繋ぎ合わせてGifを作成
+    twv.draw(0, 0, 0, 0)
+
+    if show_plot: plt.show()
+
     return True
 
 
