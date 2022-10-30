@@ -10,10 +10,13 @@
     * [PathPlanning](#pathplanning)
     * [VehicleControl](#vehiclecontrol)
     * [Navigation](#navigation)
+    * [Sub directories](#sub-directories)
+        * [Documents](#documents)
+        * [Sources](#sources)
+        * [Images](#images)
 * [How to run sample code](#how-to-run-sample-code)
 * [License](#license)
-* [本プロジェクトへの貢献](#本プロジェクトへの貢献)
-* [ライセンス](#ライセンス)
+* [Contribution](#contribution)
 * [お問い合わせ](#お問い合わせ)
 
 ## Preface
@@ -40,15 +43,17 @@ Understanding and implementing algorithm of Vehicle Control and Path Tracking.
 ### Navigation
 Design scenario in case of navigating autonomous vehicle from start to goal and implement algorithm to achieve the navigation.  
 
+### Sub directories
 Each directory have the following 3 sub directories.  
 
-* Documents
-* Sources
-* Images
+#### Documents
+Explanation documents are located in this sub directory. In each document, an theory of algorithm is explained in detail while mixing formulas and sample codes. You can understand the algorithm by reading explanations and implementing codes practically.  
 
-"Documents" directory has explanation documents. In each document, an theory of algorithm is explained in detail while mixing formulas and sample codes. You can understand the algorithm by reading explanations and implementing codes practically.  
-"Sources" directory has source files of sample codes introduced in documents. These codes are written in Python. Usually, almost all of the codes for autonomous vehicle system are written in C/C++ but it is very difficult for beginner to understand and implement. So, all of the codes in this repository are written in Python because you can understand and implement a code more easily and more roughly than C/C++.  
-"Images" direcotry has image or gif files shown in documents. These files are created as output by each sample codes and you can confirm how an algorithm behave by seeing them.  
+#### Sources
+Source files of sample codes introduced in documents are located in this sub directory. These codes are written in Python. Usually, almost all of the codes for autonomous vehicle system are written in C/C++ but it is very difficult for beginner to understand and implement. So, all of the codes in this repository are written in Python because you can understand and implement a code more easily and more roughly than C/C++.  
+
+#### Images
+Image or gif files shown in documents are located in this sub direcotry. These files are created as output by each sample codes and you can confirm how an algorithm behave by seeing them.  
 
 ## How to run sample code
 Each sample codes are implemented by Python and some libraries.  
@@ -79,7 +84,9 @@ $ python Localization/Sources/kalman_filter/linear_kalman_filter_1d.py
 ## License
 MIT  
 
-## 本プロジェクトへの貢献
+## Contribution
+
+
 バグの報告や改善要望などありましたらご自由に[Issues](https://github.com/ShisatoYano/AutonomousDrivingSamplePrograms/issues)に登録ください。  
 コード追加や変更などのプルリクエストも大歓迎です。プルリクエストを出していただく際は、[こちらの手順](/docs/contributing_guide.md)に従ってください。また、コード変更時は[こちらのルール](/docs/test_guide.md)に従ってテストを実行し、既存コードに不具合が起きていないことを確認してからプルリクエストを出すようにしてください。  
 
