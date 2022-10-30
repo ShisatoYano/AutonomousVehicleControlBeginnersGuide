@@ -15,11 +15,10 @@ import matplotlib.pyplot as plt
 from math import sin, cos, asin
 
 # 他のディレクトリにあるモジュールを読み込むためのパス設定
-sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../../vehicle_drawing")
-sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../../common")
+sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../vehicle")
+sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../../../common")
 from four_wheels_vehicle import FourWheelsVehicle
 from transformation import convert_speed_kmh_2_ms
-from gif_animation import GifAnimation
 
 # パラメータ定数
 INTERVAL_SEC = 0.1
@@ -37,7 +36,7 @@ class LinearMotionModel:
     直線運動モデルに従って車両の位置と方位を計算するクラス
     """
 
-    def __init__(self, front_length_m=6.35, rear_length_m=0.0, 
+    def __init__(self, front_length_m=2.0, rear_length_m=0.0, 
                  interval_sec=0.1, speed_noise_std=0.0,
                  yaw_rate_noise_std=0.0):
         """
@@ -110,10 +109,6 @@ def main():
     # 四輪モデル車両の描画オブジェクト
     fwv = FourWheelsVehicle(ax)
 
-    # Gif作成クラスのインスタンス生成
-    save_name_path = os.path.dirname(os.path.abspath(__file__)) + "/../../gif/linear_motion_model.gif"
-    ga = GifAnimation(save_name_path=save_name_path, duration_ms=INTERVAL_MSEC)
-
     elapsed_time_sec = 0.0 # 経過時間[s]
     speed_input, yaw_rate_input = 0.0, 0.0 # 入力する速度[m/s], 角速度[deg/s]
     x_m, y_m, yaw_deg, steer_deg = 0.0, 0.0, 0.0, 0.0 # 計算される位置、方位角、ステア角
@@ -134,21 +129,16 @@ def main():
         fwv.draw(x_m, y_m, yaw_deg, steer_deg)
 
         # 車両の位置に合わせて描画範囲を更新
-        ax.set_xlim([x_m - 15, x_m + 15])
-        ax.set_ylim([y_m - 15, y_m + 15])
+        ax.set_xlim([x_m - 5, x_m + 5])
+        ax.set_ylim([y_m - 5, y_m + 5])
 
         # 時間を進める
         elapsed_time_sec += INTERVAL_SEC
 
         # ユニットテスト時はこのフラグをFlaseにする
         # グラフが表示されるとテストが進まなくなる
-        if show_plot:
-            ga.save_image() # 描画した図を画像として保存
-            plt.pause(INTERVAL_SEC) # 一度描画するたびにインターバル時間分だけポーズ
-    
-    # 保存した画像を繋ぎ合わせてGifを作成
-    ga.create_gif()
-    
+        if show_plot: plt.pause(INTERVAL_SEC) # 一度描画するたびにインターバル時間分だけポーズ
+
     return True
 
 
