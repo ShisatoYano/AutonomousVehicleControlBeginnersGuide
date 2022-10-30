@@ -9,8 +9,8 @@ import os
 import matplotlib.pyplot as plt
 
 # 他のディレクトリにあるモジュールを読み込むためのパス設定
-sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../../vehicle_drawing")
-sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../../common")
+sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../vehicle")
+sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../../../common")
 from four_wheels_vehicle import FourWheelsVehicle
 from transformation import convert_speed_kmh_2_ms
 from linear_motion_model import LinearMotionModel
@@ -55,7 +55,7 @@ def main():
     x_almm_all, y_almm_all = [], [] # 計算されたx, y座標を記録する配列
 
     # Gif作成クラスのインスタンス生成
-    save_name_path = os.path.dirname(os.path.abspath(__file__)) + "/../../gif/compare_linear_model.gif"
+    save_name_path = "compare_linear_model.gif"
     ga = GifAnimation(save_name_path=save_name_path, duration_ms=INTERVAL_MSEC)
 
     elapsed_time_sec = 0.0 # 経過時間[s]
@@ -83,8 +83,8 @@ def main():
         almm_fwv.draw(x_almm, y_almm, yaw_almm, steer_almm)
 
         # 車両の位置に合わせて描画範囲を更新
-        ax.set_xlim([(x_lmm + x_almm)/2 - 20, (x_lmm + x_almm)/2 + 20])
-        ax.set_ylim([(y_lmm + y_almm)/2 - 20, (y_lmm + y_almm)/2 + 20])
+        ax.set_xlim([(x_lmm + x_almm)/2 - 5, (x_lmm + x_almm)/2 + 5])
+        ax.set_ylim([(y_lmm + y_almm)/2 - 5, (y_lmm + y_almm)/2 + 5])
 
         # 時間を進める
         elapsed_time_sec += INTERVAL_SEC
