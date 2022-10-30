@@ -23,6 +23,9 @@ INPUT_ACCEL_MS2 = 5.0
 INPUT_NOISE_VARIANCE = 0.5
 OBSERVATION_NOISE_VARIANCE = 5.0
 
+# flag to switch showing output graph or not
+show_plot = True
+
 
 class MotionModel:
     """
@@ -38,15 +41,16 @@ class MotionModel:
 
         # set inputs as parameters
         self.DT = interval_sec
-        self.Q = input_noise_variance
+        self.Q = np.array([[input_noise_variance]])
 
         self.define_matrix_in_state_equation()
     
     def define_matrix_in_state_equation(self):
-        self.F = np.matrix([[1.0, self.DT],
+        self.F = np.array([[1.0, self.DT],
                            [0.0, 1.0]])
         
-        self.G = np.matrix([(self.DT ** 2)/2, self.DT]).T
+        self.G = np.array([[(self.DT ** 2)/2], 
+                           [self.DT]])
     
     def calculate_state(self, x_prev, u):
         """
@@ -59,7 +63,7 @@ class MotionModel:
         u: acceleration input, u_t
         """
 
-        x_next = self.F * x_prev + self.G * u
+        x_next = self.F @ x_prev + self.G @ u
         return x_next
     
     def calculate_covariance(self, p_prev):
@@ -70,7 +74,7 @@ class MotionModel:
         p_prev: estimated covariance at previous time, p^_t
         """
 
-        p_next = self.F * p_prev * self.F.T + self.G * self.Q * self.G.T
+        p_next = self.F @ p_prev @ self.F.T + self.G @ self.Q @ self.G.T
         return p_next
 
 
@@ -87,10 +91,10 @@ class ObservationModel:
         """
 
         # set input as parameter
-        self.R = observation_noise_variance
+        self.R = np.array([[observation_noise_variance]])
 
         # define matrix in observation equation
-        self.H = np.matrix([1.0, 0.0])
+        self.H = np.array([[1.0, 0.0]])
     
     def observe(self, x_true):
         """
@@ -107,7 +111,7 @@ class ObservationModel:
         x_pred: predicted position by state equation, x_{t+1}
         """
 
-        z_pred = self.H * x_pred
+        z_pred = self.H @ x_pred
         return z_pred
 
 
@@ -145,7 +149,7 @@ class LinearKalmanFilter2D:
         p_pred: predicted variance with previous data, p_{t+1}
         """
 
-        p_obsrv_pred_err = self.om.H * p_pred * self.om.H.T + self.om.R
+        p_obsrv_pred_err = self.om.H @ p_pred @ self.om.H.T + self.om.R
         return p_obsrv_pred_err
     
     def calculate_kalman_gain(self, p_pred, p_obsrv_pred_err):
@@ -157,7 +161,7 @@ class LinearKalmanFilter2D:
         p_obsrv_pred_err: observation prediction error variance, s_{t+1}
         """
 
-        kalman_gain = p_pred * self.om.H.T * np.linalg.inv(p_obsrv_pred_err)
+        kalman_gain = p_pred @ self.om.H.T @ np.linalg.inv(p_obsrv_pred_err)
         return kalman_gain
     
     def calculate_state(self, x_pred, delta_z, kalman_gain):
@@ -170,7 +174,7 @@ class LinearKalmanFilter2D:
         kalman_gain: kalman gain to update position and velocity, k_{t+1}
         """
 
-        x_updated = x_pred + kalman_gain * delta_z
+        x_updated = x_pred + kalman_gain @ delta_z
         return x_updated
     
     def calculate_covariance(self, p_pred, kalman_gain, p_obsrv_pred_err):
@@ -183,7 +187,7 @@ class LinearKalmanFilter2D:
         p_obsrv_pred_err: observation prediction error variance, s_{t+1}
         """
 
-        p_updated = p_pred - kalman_gain * p_obsrv_pred_err * kalman_gain.T
+        p_updated = p_pred - kalman_gain @ p_obsrv_pred_err @ kalman_gain.T
         return p_updated
 
     def estimate_state(self, x_prev, p_prev, u, z):
@@ -222,7 +226,7 @@ def decide_input_accel(elapsed_time_sec):
     if elapsed_time_sec <= TIME_LIMIT_ACCEL_SEC: input_accel_ms2 = INPUT_ACCEL_MS2
     else: input_accel_ms2 = 0.0
 
-    return input_accel_ms2
+    return np.array([[input_accel_ms2]])
 
 
 def add_noise_input_accel(input_accel_ms2):
@@ -232,9 +236,9 @@ def add_noise_input_accel(input_accel_ms2):
     input_accel_ms2: true acceleration input
     """
 
-    input_accel_noise_ms2 = input_accel_ms2 + np.random.randn() * INPUT_NOISE_VARIANCE
-    if input_accel_noise_ms2 < 0.0: return 0.0
-    return input_accel_noise_ms2
+    input_accel_noise_ms2 = input_accel_ms2[0, 0] + np.random.randn() * INPUT_NOISE_VARIANCE
+    if input_accel_noise_ms2 < 0.0: input_accel_noise_ms2 = 0.0
+    return np.array([[input_accel_noise_ms2]])
 
 
 def main():
@@ -252,11 +256,11 @@ def main():
     # initialize data
     input_accel_ms2 = 0.0
     elapsed_time_sec, time_list = 0.0, []
-    true_state, true_pos_list, true_vel_list = np.matrix(np.zeros((2, 1))), [], []
-    pred_state, pred_pos_list, pred_vel_list = np.matrix(np.zeros((2, 1))), [], []
+    true_state, true_pos_list, true_vel_list = np.zeros((2, 1)), [], []
+    pred_state, pred_pos_list, pred_vel_list = np.zeros((2, 1)), [], []
     obsrv, obsrv_list = 0.0, []
-    est_state = np.matrix(np.zeros((2, 1)))
-    est_cov = np.matrix([[OBSERVATION_NOISE_VARIANCE, 0.0], 
+    est_state = np.zeros((2, 1))
+    est_cov = np.array([[OBSERVATION_NOISE_VARIANCE, 0.0], 
                         [0.0, INPUT_NOISE_VARIANCE]])
     est_pos_list, est_vel_list, est_pos_cov_list, est_vel_cov_list = [], [], [], []
 
@@ -297,7 +301,7 @@ def main():
 
         # record data
         time_list.append(elapsed_time_sec)
-        obsrv_list.append(obsrv)
+        obsrv_list.append(obsrv[0, 0])
         true_pos_list.append(true_state[0, 0]), true_vel_list.append(true_state[1, 0])
         pred_pos_list.append(pred_state[0, 0]), pred_vel_list.append(pred_state[1, 0])
         est_pos_list.append(est_state[0, 0]), est_vel_list.append(est_state[1, 0])
@@ -321,7 +325,13 @@ def main():
     ax_vel_var.plot(time_list, est_vel_cov_list, color='r', lw=2, label="Est Vel Variance")
     ax_vel_var.legend()
     fig.tight_layout()
-    plt.show()
+    
+    # only when show plot flag is true, show output graph
+    # when unit test is executed, this flag become false
+    # and the graph is not shown
+    if show_plot: plt.show()
+
+    return True
 
 
 # execute main process
