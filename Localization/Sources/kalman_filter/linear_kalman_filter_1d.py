@@ -21,6 +21,9 @@ INPUT_VELOCITY_MS = 10.0
 INPUT_NOISE_VARIANCE = 10.0
 OBSERVATION_NOISE_VARIANCE = 5.0
 
+# flag to switch showing output graph or not
+show_plot = True
+
 
 class LinearKalmanFilter1D:
     """
@@ -261,7 +264,13 @@ def main():
     ax_variance.plot(time_list, est_var_list, color='r', lw=2, label="Estimated Variance")
     ax_variance.legend()
     fig.tight_layout()
-    plt.show()
+
+    # only when show plot flag is true, show output graph
+    # when unit test is executed, this flag become false
+    # and the graph is not shown
+    if show_plot: plt.show()
+
+    return True
 
 
 # execute main process
