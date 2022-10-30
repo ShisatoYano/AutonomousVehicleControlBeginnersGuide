@@ -17,7 +17,8 @@
 * [How to run sample code](#how-to-run-sample-code)
 * [License](#license)
 * [Contribution](#contribution)
-* [お問い合わせ](#お問い合わせ)
+* [Author](#author)
+* [Contact](#contact)
 
 ## Preface
 This repository is beginner's guide to learn basic way of thinking and representative algorithms for Autonomous vehicle control. Explanation documents and sample codes about Motion model, Localization, Path Planning/Following and Vehicle Control are included in this repository. All of them are themed typical 4 wheels drive vehicle. I hope you can understand the above algorithms practically by reading documents and implementing codes.  
@@ -85,12 +86,12 @@ $ python Localization/Sources/kalman_filter/linear_kalman_filter_1d.py
 MIT  
 
 ## Contribution
+If you found any bugs or had any requirements of improvement, please feel free to register them into [Issues](https://github.com/ShisatoYano/AutonomousVehicleControlBeginnersGuide/issues).  
+Any contribution is also welcome!! Please follow [Contribution guide](contribution_guide.md) when you create a pull request. And then, please check all of unit tests pass before creating the pull request by following [Test guide](test_guide.md).  
 
+## Author
+[Shisato Yano](https://github.com/ShisatoYano)
 
-バグの報告や改善要望などありましたらご自由に[Issues](https://github.com/ShisatoYano/AutonomousDrivingSamplePrograms/issues)に登録ください。  
-コード追加や変更などのプルリクエストも大歓迎です。プルリクエストを出していただく際は、[こちらの手順](/docs/contributing_guide.md)に従ってください。また、コード変更時は[こちらのルール](/docs/test_guide.md)に従ってテストを実行し、既存コードに不具合が起きていないことを確認してからプルリクエストを出すようにしてください。  
-
-
-## お問い合わせ
-ご質問等ありましたら、こちらのメールアドレスまでご連絡ください。  
+## Contact
+If you have any questions, please feel free to send a email to this address.  
 shisatoyano@gmail.com  
