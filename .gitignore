@@ -1,10 +1,7 @@
 common/__pycache__
-motion_model/linear_motion/__pycache__
-motion_model/circular_motion/__pycache__
 Localization/Sources/kalman_filter/__pycache__
 Modeling/Sources/motion/__pycache__
 Modeling/Sources/vehicle/__pycache__
-sensor_model/gnss_model/__pycache__
 test/__pycache__
 test/.pytest_cache
 test/.coverage
