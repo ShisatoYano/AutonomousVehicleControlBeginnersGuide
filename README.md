@@ -87,7 +87,7 @@ MIT
 
 ## Contribution
 If you found any bugs or had any requirements of improvement, please feel free to register them into [Issues](https://github.com/ShisatoYano/AutonomousVehicleControlBeginnersGuide/issues).  
-Any contribution is also welcome!! Please follow [Contribution guide](contribution_guide.md) when you create a pull request. And then, please check all of unit tests pass before creating the pull request by following [Test guide](test_guide.md).  
+Any contribution is also welcome!! Please follow [Contribution guide](CONTRIBUTION.md) when you create a pull request. And then, please check all of unit tests pass before creating the pull request by following [Test guide](TEST.md).  
 
 ## Author
 [Shisato Yano](https://github.com/ShisatoYano)
