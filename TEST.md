@@ -1,6 +1,6 @@
-# テストのルール
-本リポジトリにある全てのサンプルプログラムはモジュール化されており、単体で実行して動作を確認することが出来るようになっています。また、中には複数のモジュールをimportし組み合わせることで動作するプログラムもあります。  
-そのため、各プログラムのソースコードを変更した際は本ルールに従ってユニットテストを実行し、プログラムが正常に動作することを確認してからプルリクエストを出していただけると助かります。  
+# Testing standards
+This document is about standards of Unit test.  
+Each sample programs are modularized and can be executed independently. Some of programs are implemented by importing multiple modules. When you create a pull request, please confirm all of programs can be executed correctly by Unite test in advance.  
 
 ## テストコードの作り方
 テストコードは全てtestディレクトリに置くようにしてください。また、各テストコードのファイル名はtest_テスト対象ファイル名.pyにしてください。例えば、テスト対象ファイルがhoge.pyである場合は、テストコードファイル名をtest_hoge.pyとしてtestディレクトリ以下に配置します。  
