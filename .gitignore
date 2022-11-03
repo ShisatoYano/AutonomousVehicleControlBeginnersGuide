@@ -2,8 +2,8 @@ common/__pycache__
 Localization/Sources/kalman_filter/__pycache__
 Modeling/Sources/motion/__pycache__
 Modeling/Sources/vehicle/__pycache__
-test/__pycache__
-test/.pytest_cache
-test/.coverage
+Test/__pycache__
+Test/.pytest_cache
+Test/.coverage
 .pytest_cache
 .coverage
