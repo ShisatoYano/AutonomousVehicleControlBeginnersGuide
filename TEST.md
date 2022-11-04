@@ -2,8 +2,8 @@
 This document is about standards of Unit test.  
 Each sample programs are modularized and can be executed independently. Some of programs are implemented by importing multiple modules. When you create a pull request, please confirm all of programs can be executed correctly by Unite test in advance.  
 
-## テストコードの作り方
-テストコードは全てtestディレクトリに置くようにしてください。また、各テストコードのファイル名はtest_テスト対象ファイル名.pyにしてください。例えば、テスト対象ファイルがhoge.pyである場合は、テストコードファイル名をtest_hoge.pyとしてtestディレクトリ以下に配置します。  
+## How to create test code
+All of test codes are located at "Test" directory. And then, a name of test code should be "test_xxx.py". For example, when the name of test target file is "hoge.py", you need to create "test_hoge.py" as test code file.  
 
 ## フレームワーク
 各テストコードは、Pythonスクリプトをテストするためのフレームワークである[pytest](https://github.com/pytest-dev/pytest)を使用しています。pytestの使い方については、[こちらの記事](https://note.com/npaka/n/n84de488ba011)の説明が分かりやすいので参照ください。  
