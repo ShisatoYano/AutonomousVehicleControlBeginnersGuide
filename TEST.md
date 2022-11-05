@@ -5,28 +5,24 @@ Each sample programs are modularized and can be executed independently. Some of 
 ## How to create test code
 All of test codes are located at "Test" directory. And then, a name of test code should be "test_xxx.py". For example, when the name of test target file is "hoge.py", you need to create "test_hoge.py" as test code file.  
 
-## フレームワーク
-各テストコードは、Pythonスクリプトをテストするためのフレームワークである[pytest](https://github.com/pytest-dev/pytest)を使用しています。pytestの使い方については、[こちらの記事](https://note.com/npaka/n/n84de488ba011)の説明が分かりやすいので参照ください。  
+## Framework
+Each test code is implemented by using Python's testing framework, [pytest](https://github.com/pytest-dev/pytest).  
 
-## テストの実行方法
-全てのテストコードをまとめて実行する際は、本リポジトリのルートディレクトリにある下記のスクリプトを実行してください。実行環境がLinuxの場合は、  
+## How to run test
+You can run all of unit tests by executing the following command.  
+On Linux,    
 ```bash
 $ ./run_test_suites.sh
 ```
-Windowsの場合は、  
+On Windows,  
 ```bash
 .\run_test_suites.bat
 ```
-をそれぞれ実行することで、testディレクトリ以下にあるtest_から始まるファイルをテストコードとして自動探索してユニットテストしてくれます。また、全てではなく特定のテストコードのみを実行したい場合は、  
+If you want to run certain unit test, you can do by executing the following command.  
 ```bash
 $ pytest test/test_hoge.py
 ```
-というようにして実行します。そして、テストの結果がこのようにErrorが出ず全てPassすればOKです。  
-![](/images/unit_test.png)  
 
-## GitHub Actionsによる自動テスト
-リモートリポジトリのmainブランチにコードがpushされた際は、[GitHub Actions](https://github.com/ShisatoYano/AutonomousDrivingSamplePrograms/actions)により自動で全てのユニットテストが実行されるようになっています。こちらのような3パターンのOSの仮想実行環境がGitHubサーバ上で構築され、上記のテストスクリプトが実行されます。  
-![](/images/test_workflows_os.png)  
-サーバ上での環境構築やテスト実行のログは、このようにGitHub Actionsのページから確認できます。  
-![](/images/actions_test_example.png)  
+## Automated test by GitHub Actions
+When you created a pull request or your code was merged into main branch、all of unit tests are also executed by [GitHub Actions](https://github.com/ShisatoYano/AutonomousDrivingSamplePrograms/actions).  
 
