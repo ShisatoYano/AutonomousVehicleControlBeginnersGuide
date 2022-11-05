@@ -15,6 +15,7 @@
         * [Sources](#sources)
         * [Images](#images)
 * [How to run sample code](#how-to-run-sample-code)
+* [Test](#test)
 * [License](#license)
 * [Contribution](#contribution)
 * [Author](#author)
@@ -82,12 +83,15 @@ $ python Localization/Sources/kalman_filter/linear_kalman_filter_1d.py
 ```
 4. Add star to this repository if you like it.  
 
+## Test
+Unit test codes of each sample program are located at "Test" directory. When you change an existing code or added an new code for contribution, please execute unit test suites to confirm the code works correctly following [Testing standards](TEST.md).  
+
 ## License
 MIT  
 
 ## Contribution
 If you found any bugs or had any requirements of improvement, please feel free to register them into [Issues](https://github.com/ShisatoYano/AutonomousVehicleControlBeginnersGuide/issues).  
-Any contribution is also welcome!! Please follow [Contribution guide](CONTRIBUTION.md) when you create a pull request. And then, please check all of unit tests pass before creating the pull request by following [Test guide](TEST.md).  
+Any contribution is also welcome!! Please follow [Contribution guide](CONTRIBUTION.md) when you create a pull request.
 
 ## Author
 [Shisato Yano](https://github.com/ShisatoYano)
