@@ -90,8 +90,7 @@ Unit test codes of each sample program are located at "Test" directory. When you
 MIT  
 
 ## Contribution
-If you found any bugs or had any requirements of improvement, please feel free to register them into [Issues](https://github.com/ShisatoYano/AutonomousVehicleControlBeginnersGuide/issues).  
-Any contribution is also welcome!! Please follow [Contribution guide](CONTRIBUTION.md) when you create a pull request.
+If you found any bugs or had any requirements of improvement, please feel free to register them into [Issues](https://github.com/ShisatoYano/AutonomousVehicleControlBeginnersGuide/issues). Any contribution is also welcome!! Please follow [Contributing standards](CONTRIBUTION.md) when you create a pull request.
 
 ## Author
 [Shisato Yano](https://github.com/ShisatoYano)
