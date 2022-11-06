@@ -60,8 +60,6 @@ class LinearMotionModel:
         # メンバ変数の初期化
         self.speed_ms = 0.0
         self.yaw_rate_ds = 0.0
-        self.turning_radius_m = 0.0
-        self.curvature = 0.0
     
     def calculate_state(self, x_m, y_m, yaw_deg, speed_ms, yaw_rate_ds):
         """
