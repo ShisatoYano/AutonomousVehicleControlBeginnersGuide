@@ -1,7 +1,7 @@
-# 貢献していただく際のルール
-バグ報告や改善要望、プルリクエストなど、誰でも自由に本プロジェクトへ貢献していただくことができます。その際は、下記に定めるにルールに従っていただけると幸いです。  
+# Contributing standards
+Everyone can contribute this project by reporting a bug, requiring improvement or creating a pull request. And then, please follow this standards.  
 
-## バグの報告
+## Bug report
 もし、本プロジェクトのサンプルプログラムのバグやドキュメントの不備を見つけた際は、遠慮なく[Issues](https://github.com/ShisatoYano/AutonomousDrivingSamplePrograms/issues)に登録してください。その際は、下記の情報を含めて登録していただけると助かります。  
 
 * バグの概要
