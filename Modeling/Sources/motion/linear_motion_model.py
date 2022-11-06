@@ -3,7 +3,7 @@ Linear motion model program
 
 x_{t+1} = x_t + v_t * cos(yaw_t) * dt
 y_{t+1} = y_t + v_t * sin(yaw_t) * dt
-yaw_{t+1} = yaw_t * omega_t * dt
+yaw_{t+1} = yaw_t + omega_t * dt
 
 Author: Shisato Yano
 """
