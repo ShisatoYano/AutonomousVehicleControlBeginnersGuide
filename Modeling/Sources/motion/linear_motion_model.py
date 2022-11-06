@@ -26,6 +26,7 @@ INTERVAL_MSEC = INTERVAL_SEC * 1000
 TIME_LIMIT_SEC = 30
 SPEED_KMH = 20
 YAW_RATE_DS = 15
+PLOT_WIDTH_M = 5
 
 # flag to switch showing plot
 # when this module is called for unit testing,
@@ -177,7 +178,7 @@ def main():
     """
     Main function
     """
-    
+
     print(__file__ + " + start!!")
 
     # clear all figures
@@ -211,8 +212,10 @@ def main():
         fwv.draw(state_vector[0, 0], state_vector[1, 0], np.rad2deg(state_vector[2, 0]), np.rad2deg(steer_rad))
 
         # update plot range
-        ax.set_xlim([state_vector[0, 0] - 5, state_vector[0, 0] + 5])
-        ax.set_ylim([state_vector[1, 0] - 5, state_vector[1, 0] + 5])
+        center_x_m = state_vector[0, 0]
+        center_y_m = state_vector[1, 0]
+        ax.set_xlim([center_x_m - PLOT_WIDTH_M, center_x_m + PLOT_WIDTH_M])
+        ax.set_ylim([center_y_m - PLOT_WIDTH_M, center_y_m + PLOT_WIDTH_M])
 
         # increment time
         elapsed_time_sec += INTERVAL_SEC
