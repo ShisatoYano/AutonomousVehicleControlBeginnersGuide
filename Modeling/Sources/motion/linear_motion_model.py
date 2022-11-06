@@ -57,9 +57,30 @@ class LinearMotionModel:
         self.SPEED_NOISE_STD = speed_noise_std_mps
         self.YAW_RATE_NOISE_STD = yaw_rate_noise_std_rps
 
-        self.define_input_covariance_matrix()
+        self.matrix_A_in_state_equation()
+        self.input_covariance_matrix()
     
-    def define_input_covariance_matrix(self):
+    def matrix_A_in_state_equation(self):
+        """
+        Matrix A in state equation
+        x_{t+1} = A * x_t + G * u_t
+        """
+
+        self.A = np.array([[1.0, 0.0, 0.0],
+                           [0.0, 1.0, 0.0],
+                           [0.0, 0.0, 1.0]])
+    
+    def matrix_B_in_state_equation(self, yaw_rad):
+        """
+        Matrix B in state equation
+        x_{t+1} = A * x_t + B * u_t
+        """
+
+        return np.array([[cos(yaw_rad) * self.DT, 0.0],
+                         [sin(yaw_rad) * self.DT, 0.0],
+                         [0.0, self.DT]])
+
+    def input_covariance_matrix(self):
         """
         System noise covariance matrix (2 x 2)
         [[speed input std^2 0.0],
@@ -70,21 +91,21 @@ class LinearMotionModel:
         self.Q[0, 0] = self.SPEED_NOISE_STD ** 2
         self.Q[1, 1] = self.YAW_RATE_NOISE_STD ** 2
     
-    def calculate_jacobian_F(self):
+    def jacobian_F(self, speed_mps, yaw_rad):
         """
         Jacobian matrix of Motion model
         about state [x, y, yaw]
 
-        dx/dx = 1, dx/dy = 0, dx/dyaw = 0
-        dy/dx = 0, dy/dy = 1, dy/dyaw = 0
+        dx/dx = 1, dx/dy = 0, dx/dyaw = -v*sin(yaw)*dt
+        dy/dx = 0, dy/dy = 1, dy/dyaw = v*cos(yaw)*dt
         dyaw/dx = 0, dyaw/dy = 0, dyaw/dyaw = 1 
         """
 
-        return np.array([[1.0, 0.0, 0.0],
-                         [0.0, 1.0, 0.0],
+        return np.array([[1.0, 0.0, -speed_mps*sin(yaw_rad)*self.DT],
+                         [0.0, 1.0, speed_mps*cos(yaw_rad)*self.DT],
                          [0.0, 0.0, 1.0]])
     
-    def calculate_jacobian_G(self, yaw_rad):
+    def jacobian_G(self, yaw_rad):
         """
         Jacobian matrix of Motion model
         about input [speed, yaw rate]
@@ -111,9 +132,8 @@ class LinearMotionModel:
         u: input vector [speed[m/s], yaw rate[rad/s]]' at current step
         """
 
-        F = self.calculate_jacobian_F()
-        G = self.calculate_jacobian_G(x[2, 0])
-        x = F @ x + G @ u
+        B = self.matrix_B_in_state_equation(x[2, 0])
+        x = self.A @ x + B @ u
 
         # calculate steering angle from speed and yaw rate
         # zero division error will happen when speed is zero
@@ -130,8 +150,8 @@ class LinearMotionModel:
         p: estimated covariance at previous time, p^_t
         """
 
-        F = self.calculate_jacobian_F()
-        G = self.calculate_jacobian_G(x[2, 0])
+        F = self.jacobian_F(u[0, 0], x[2, 0])
+        G = self.jacobian_G(x[2, 0])
         
         return F @ p @ F.T + G @ self.Q @ G.T
 
@@ -157,6 +177,7 @@ def main():
     """
     Main function
     """
+    
     print(__file__ + " + start!!")
 
     # clear all figures
