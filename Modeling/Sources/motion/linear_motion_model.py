@@ -35,19 +35,20 @@ show_plot = True
 
 class LinearMotionModel:
     """
-    直線運動モデルに従って車両の位置と方位を計算するクラス
+    Class to predict 3 dimensional state (position x, y and yaw angle)
+    by Linear Motion Model
     """
 
     def __init__(self, front_length_m=2.0, rear_length_m=0.0, 
                  interval_sec=0.1, speed_noise_std=0.0,
                  yaw_rate_noise_std=0.0):
         """
-        コンストラクタ
-        front_length_m: 車両位置から前方への長さ[m]
-        rear_length_m: 車両位置から後方への長さ[m]
-        interval_sec: 移動前後の刻み時間[sec]
-        speed_noise_std: 速度入力に含まれる誤差の標準偏差[m/sec]
-        yaw_rate_noise_std: 角速度入力に含まれる誤差の標準偏差[deg/sec]
+        Constructor
+        front_length_m: length from vehicle origin to front edge[m]
+        rear_length_m: length from vehicle origin to rear edge[m]
+        interval_sec: interval time between previous and current step[sec]
+        speed_noise_std: standard deviation included in speed input[m/sec]
+        yaw_rate_noise_std: standard deviation included in yaw rate input[deg/sec]
         """
 
         # パラメータのセット
