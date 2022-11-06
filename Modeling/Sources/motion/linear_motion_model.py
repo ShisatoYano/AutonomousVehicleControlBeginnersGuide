@@ -52,10 +52,10 @@ class LinearMotionModel:
         """
 
         # パラメータのセット
-        self.wheel_base_m = front_length_m + rear_length_m # ホイールベース(前輪と後輪の間の距離)
-        self.interval_sec = interval_sec
-        self.speed_noise_std = speed_noise_std
-        self.yaw_rate_noise_std = yaw_rate_noise_std
+        self.WHEEL_BASE_M = front_length_m + rear_length_m # ホイールベース(前輪と後輪の間の距離)
+        self.DT = interval_sec
+        self.SPEED_NOISE_STD = speed_noise_std
+        self.YAW_RATE_NOISE_STD = yaw_rate_noise_std
 
         # メンバ変数の初期化
         self.speed_ms = 0.0
@@ -72,21 +72,21 @@ class LinearMotionModel:
         # 入力が含む誤差の共分散行列を定義
         # 正規分布に従った誤差を含むと仮定
         input_noise_covariance_matrix = \
-            (np.diag([self.speed_noise_std, self.yaw_rate_noise_std]) ** 2) @ np.random.randn(2, 1) 
+            (np.diag([self.SPEED_NOISE_STD, self.YAW_RATE_NOISE_STD]) ** 2) @ np.random.randn(2, 1) 
 
         # 誤差を含んだ入力
         self.speed_ms = speed_ms + input_noise_covariance_matrix[0, 0]
         self.yaw_rate_ds = yaw_rate_ds + input_noise_covariance_matrix[1, 0]
 
         # 直線運動モデルに従って位置と方位を計算
-        x_m_next = x_m + self.speed_ms * cos(np.deg2rad(yaw_deg)) * self.interval_sec
-        y_m_next = y_m + self.speed_ms * sin(np.deg2rad(yaw_deg)) * self.interval_sec
-        yaw_deg_next = yaw_deg + self.yaw_rate_ds * self.interval_sec
+        x_m_next = x_m + self.speed_ms * cos(np.deg2rad(yaw_deg)) * self.DT
+        y_m_next = y_m + self.speed_ms * sin(np.deg2rad(yaw_deg)) * self.DT
+        yaw_deg_next = yaw_deg + self.yaw_rate_ds * self.DT
         
         # 速度と角速度からステアリング角度を計算
         # 速度が0になると0割りになるので注意
         # asin -> ValueError: math domain error
-        steer_rad = asin(self.wheel_base_m * np.deg2rad(self.yaw_rate_ds)/self.speed_ms)
+        steer_rad = asin(self.WHEEL_BASE_M * np.deg2rad(self.yaw_rate_ds)/self.speed_ms)
         
         return x_m_next, y_m_next, yaw_deg_next, np.rad2deg(steer_rad)
 
