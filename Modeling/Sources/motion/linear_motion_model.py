@@ -14,20 +14,22 @@ import numpy as np
 import matplotlib.pyplot as plt
 from math import sin, cos, asin
 
-# 他のディレクトリにあるモジュールを読み込むためのパス設定
+# path setting to import external module
 sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../vehicle")
 sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../../../Basis/Sources/transformation")
 from four_wheels_vehicle import FourWheelsVehicle
 from transformation import convert_speed_kmh_2_ms
 
-# パラメータ定数
+# parameters constant
 INTERVAL_SEC = 0.1
 INTERVAL_MSEC = INTERVAL_SEC * 1000
 TIME_LIMIT_SEC = 30
 SPEED_KMH = 20
 YAW_RATE_DS = 15
 
-# グラフの出力有無を切り替えるフラグ
+# flag to switch showing plot
+# when this module is called for unit testing,
+# this flag is set as false not to show plot
 show_plot = True
 
 
