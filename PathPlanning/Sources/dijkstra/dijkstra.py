@@ -13,6 +13,12 @@ GRID_SIZE_M = 2.0
 VEHICLE_SIZE_HALF_M = 1.5
 
 
+class ObstacleGridMap:
+    def __init__(self):
+        self.obst_x_list = []
+        self.obst_y_list = []
+
+
 def main():
     print(__file__ + " start!!")
 
