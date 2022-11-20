@@ -85,6 +85,23 @@ class ObstacleGridMap:
         plt.axis("equal")
 
 
+class Dijkstra:
+    def __init__(self, a_map):
+        self.o_map = a_map
+        self.define_motion_model()
+    
+    def define_motion_model(self):
+        # move direction x, move direction y, move cost(distance)
+        self.motion_model = [[1, 0, 1], # right
+                             [0, 1, 1], # up
+                             [-1, 0, 1], # left
+                             [0, -1, 1], # down
+                             [-1, -1, math.sqrt(2)], # lower left
+                             [-1, 1, math.sqrt(2)], # upper left
+                             [1, -1, math.sqrt(2)], # lower right
+                             [1, 1, math.sqrt(2)]] # upper right
+
+
 def main():
     print(__file__ + " start!!")
 
@@ -92,6 +109,8 @@ def main():
                           a_goal_x_m=GOAL_X_M, a_goal_y_m=GOAL_Y_M, 
                           a_grid_size_m=GRID_SIZE_M, 
                           a_vehicle_size_half_m=VEHICLE_SIZE_HALF_M)
+    
+    dijkstra = Dijkstra(a_map=ogm)
     
     # only when show plot flag is true, show output graph
     # when unit test is executed, this flag become false
