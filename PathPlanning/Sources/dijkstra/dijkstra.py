@@ -5,6 +5,7 @@ Author: Shisato Yano
 """
 
 import matplotlib.pyplot as plt
+import math
 
 # parameters
 START_X_M = -5.0 # start point
@@ -30,6 +31,9 @@ class ObstacleGridMap:
         self.o_vehicle_size_half_m = a_vehicle_size_half_m
 
         self.set_obstacles_position()
+        self.calculate_map_range()
+        self.calculate_map_grid_width()
+        self.generate_obstacle_map()
     
     def set_obstacles_position(self):
         self.o_obst_x = []
@@ -41,6 +45,38 @@ class ObstacleGridMap:
         for i in range(-10, 40): self.o_obst_x.append(20.0), self.o_obst_y.append(i)
         for i in range(0, 40): self.o_obst_x.append(40.0), self.o_obst_y.append(60.0-i)
     
+    def calculate_map_range(self):
+        self.o_min_x_m = round(min(self.o_obst_x))
+        self.o_min_y_m = round(min(self.o_obst_y))
+        self.o_max_x_m = round(max(self.o_obst_x))
+        self.o_max_y_m = round(max(self.o_obst_y))
+        print("Min X[m]:", self.o_min_x_m)
+        print("Min Y[m]:", self.o_min_y_m)
+        print("Max X[m]:", self.o_max_x_m)
+        print("Max Y[m]:", self.o_max_y_m)
+
+    def calculate_map_grid_width(self):
+        self.o_gird_width_x = round((self.o_max_x_m - self.o_min_x_m) / self.o_grid_size_m)
+        self.o_gird_width_y = round((self.o_max_y_m - self.o_min_y_m) / self.o_grid_size_m)
+        print("Grid Width X:", self.o_gird_width_x)
+        print("Grid Width Y:", self.o_gird_width_y)
+    
+    def generate_obstacle_map(self):
+        self.o_obstacle_map = [[False for _ in range(self.o_gird_width_y)]
+                               for _ in range(self.o_gird_width_x)]
+        for idx_x in range(self.o_gird_width_x):
+            x = self.calculate_xy_position_from_index(idx_x, self.o_min_x_m)
+            for idx_y in range(self.o_gird_width_y):
+                y = self.calculate_xy_position_from_index(idx_y, self.o_min_y_m)
+                for obst_x, obst_y in zip(self.o_obst_x, self.o_obst_y):
+                    diff_xy = math.hypot(obst_x - x, obst_y - y)
+                    if diff_xy <= self.o_vehicle_size_half_m:
+                        self.o_obstacle_map[idx_x][idx_y] = True
+                        break
+    
+    def calculate_xy_position_from_index(self, a_index, a_min_position):
+        return a_index * self.o_grid_size_m + a_min_position        
+
     def draw(self):
         plt.plot(self.o_obst_x, self.o_obst_y, ".k")
         plt.plot(self.o_start_x_m, self.o_start_y_m, "og")
@@ -56,8 +92,6 @@ def main():
                           a_goal_x_m=GOAL_X_M, a_goal_y_m=GOAL_Y_M, 
                           a_grid_size_m=GRID_SIZE_M, 
                           a_vehicle_size_half_m=VEHICLE_SIZE_HALF_M)
-    
-    ogm.draw()
     
     # only when show plot flag is true, show output graph
     # when unit test is executed, this flag become false
