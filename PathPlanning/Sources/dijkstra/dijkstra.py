@@ -123,7 +123,7 @@ class ObstacleGridMap:
 
         return True
 
-    def draw(self):
+    def draw_map(self):
         plt.plot(self.o_obst_x, self.o_obst_y, ".k")
         plt.plot(self.o_start_x_m, self.o_start_y_m, "og")
         plt.plot(self.o_goal_x_m, self.o_goal_y_m, "xb")
@@ -146,8 +146,8 @@ class Dijkstra:
             self.o_idx_prnt = a_idx_prnt
         
         def __str__(self):
-            return str(self.o_idx_x) + "," + str(self.o_idx_y) + "," + \
-                str(self.o_cost) + "," + str(self.o_idx_prnt)
+            return "Idx X:" + str(self.o_idx_x) + ", Idx Y:" + str(self.o_idx_y) + ", Cost:" + \
+                str(self.o_cost) + ", Parent Idx:" + str(self.o_idx_prnt)
 
     def define_motion_model(self):
         # move direction x, move direction y, move cost(distance)
@@ -161,74 +161,89 @@ class Dijkstra:
                              [1, 1, math.sqrt(2)]] # upper right
     
     def search_path(self):
-        start_node = self.Node(a_idx_x=self.o_map.start_x_index(),
-                               a_idx_y=self.o_map.start_y_index(), 
-                               a_cost=0.0, a_idx_prnt=-1)
+        start_node = self.Node(self.o_map.start_x_index(),
+                               self.o_map.start_y_index(), 
+                               0.0, -1)
         
-        goal_node = self.Node(a_idx_x=self.o_map.goal_x_index(),
-                              a_idx_y=self.o_map.goal_y_index(), 
-                              a_cost=0.0, a_idx_prnt=-1)
+        goal_node = self.Node(self.o_map.goal_x_index(),
+                              self.o_map.goal_y_index(), 
+                              0.0, -1)
         
         self.open_nodes_set[self.o_map.start_vector_index()] = start_node
 
-        print(start_node, self.o_map.start_vector_index())
-        print(goal_node, self.o_map.goal_vector_index())
+        print("Start node info: ", start_node, "Vector Idx:", self.o_map.start_vector_index())
+        print("Goal node info: ", goal_node, "Vector Idx:", self.o_map.goal_vector_index())
 
         while 1:
-            current_idx = min(self.open_nodes_set, key=lambda o: self.open_nodes_set[o].o_cost)
-            current_node = self.open_nodes_set[current_idx]
+            current_idx, current_node = self.select_min_cost_node_from_open_set()
 
-            # show graph
-            if show_plot:
-                plt.plot(self.o_map.calculate_x_position_from_index(current_node.o_idx_x),
-                         self.o_map.calculate_y_position_from_index(current_node.o_idx_y),
-                         "xc")
-                if len(self.closed_nodes_set.keys()) % 10 == 0:
-                    plt.pause(0.001)
+            if show_plot: self.draw_searched_node(current_node)
             
-            # check goal
-            if current_node.o_idx_x == goal_node.o_idx_x and current_node.o_idx_y == goal_node.o_idx_y:
+            if self.found_goal(current_node, goal_node):
                 print("Found Goal!!")
                 goal_node.o_idx_prnt = current_node.o_idx_prnt
                 goal_node.o_cost == current_node.o_cost
                 break
 
-            # remove node from open set
-            del self.open_nodes_set[current_idx]
+            self.remove_current_node_from_open_set(current_idx)
 
-            # add removed node to closed set
-            self.closed_nodes_set[current_idx] = current_node
+            self.move_current_node_to_closed_set(current_node, current_idx)
 
-            # search neighboring nodes based on motion model
-            for move_dist_x, move_dist_y, move_cost in self.motion_model:
-                neighbor_node = self.Node(current_node.o_idx_x + move_dist_x, 
-                                          current_node.o_idx_y + move_dist_y, 
-                                          current_node.o_cost + move_cost, 
-                                          current_idx)
-                neighbor_idx = self.o_map.calculate_vector_index(neighbor_node.o_idx_x, 
-                                                                 neighbor_node.o_idx_y)
-                
-                if neighbor_idx in self.closed_nodes_set:
-                    continue
-
-                if not self.o_map.verify_index(neighbor_node.o_idx_x, neighbor_node.o_idx_y):
-                    continue
-
-                if neighbor_idx not in self.open_nodes_set:
-                    self.open_nodes_set[neighbor_idx] = neighbor_node
-                else:
-                    if self.open_nodes_set[neighbor_idx].o_cost >= neighbor_node.o_cost:
-                        self.open_nodes_set[neighbor_idx] = neighbor_node
+            self.search_neighbor_node(current_node, current_idx)
 
         x_list, y_list = self.find_final_path(goal_node)
 
         return x_list, y_list
+    
+    def select_min_cost_node_from_open_set(self):
+        current_idx = min(self.open_nodes_set, key=lambda o: self.open_nodes_set[o].o_cost)
+        current_node = self.open_nodes_set[current_idx]
+        
+        return current_idx, current_node
+    
+    def draw_searched_node(self, a_crnt_node):
+        plt.plot(self.o_map.calculate_x_position_from_index(a_crnt_node.o_idx_x),
+                 self.o_map.calculate_y_position_from_index(a_crnt_node.o_idx_y),
+                 "xc")
+        
+        if len(self.closed_nodes_set.keys()) % 10 == 0: plt.pause(0.001)
+    
+    def remove_current_node_from_open_set(self, a_crnt_idx):
+        del self.open_nodes_set[a_crnt_idx]
+    
+    def move_current_node_to_closed_set(self, a_crnt_node, a_crnt_idx):
+        self.closed_nodes_set[a_crnt_idx] = a_crnt_node
+    
+    def found_goal(self, a_crnt_node, a_goal_node):
+        return (a_crnt_node.o_idx_x == a_goal_node.o_idx_x) and \
+            (a_crnt_node.o_idx_y == a_goal_node.o_idx_y)
+    
+    def search_neighbor_node(self, a_crnt_node, a_crnt_idx):
+        for move_dist_x, move_dist_y, move_cost in self.motion_model:
+            neighbor_node = self.Node(a_crnt_node.o_idx_x + move_dist_x, 
+                                      a_crnt_node.o_idx_y + move_dist_y, 
+                                      a_crnt_node.o_cost + move_cost, 
+                                      a_crnt_idx)
+            neighbor_idx = self.o_map.calculate_vector_index(neighbor_node.o_idx_x, 
+                                                             neighbor_node.o_idx_y)
+            
+            if neighbor_idx in self.closed_nodes_set:
+                continue
 
-    def find_final_path(self, goal_node):
-        x_list = [self.o_map.calculate_x_position_from_index(goal_node.o_idx_x)]
-        y_list = [self.o_map.calculate_y_position_from_index(goal_node.o_idx_y)]
+            if not self.o_map.verify_index(neighbor_node.o_idx_x, neighbor_node.o_idx_y):
+                continue
 
-        parent_idx = goal_node.o_idx_prnt
+            if neighbor_idx not in self.open_nodes_set:
+                    self.open_nodes_set[neighbor_idx] = neighbor_node
+            else:
+                if self.open_nodes_set[neighbor_idx].o_cost >= neighbor_node.o_cost:
+                    self.open_nodes_set[neighbor_idx] = neighbor_node
+
+    def find_final_path(self, a_goal_node):
+        x_list = [self.o_map.calculate_x_position_from_index(a_goal_node.o_idx_x)]
+        y_list = [self.o_map.calculate_y_position_from_index(a_goal_node.o_idx_y)]
+
+        parent_idx = a_goal_node.o_idx_prnt
         while parent_idx != -1:
             parent_node = self.closed_nodes_set[parent_idx]
             x_list.append(self.o_map.calculate_x_position_from_index(parent_node.o_idx_x))
@@ -236,27 +251,26 @@ class Dijkstra:
             parent_idx = parent_node.o_idx_prnt
         
         return x_list, y_list
+    
+    def draw_final_path(self, a_x_list, a_y_list):
+        plt.plot(a_x_list, a_y_list, "-r")
 
 
 def main():
     print(__file__ + " start!!")
 
-    ogm = ObstacleGridMap(a_start_x_m=START_X_M, a_start_y_m=START_Y_M, 
-                          a_goal_x_m=GOAL_X_M, a_goal_y_m=GOAL_Y_M, 
-                          a_grid_size_m=GRID_SIZE_M, 
-                          a_vehicle_size_half_m=VEHICLE_SIZE_HALF_M)
+    ogm = ObstacleGridMap(START_X_M, START_Y_M, GOAL_X_M, GOAL_Y_M, 
+                          GRID_SIZE_M, VEHICLE_SIZE_HALF_M)
+    if show_plot: ogm.draw_map()
     
-    ogm.draw()
-    
-    dijkstra = Dijkstra(a_map=ogm)
+    dijkstra = Dijkstra(ogm)
     x_list, y_list = dijkstra.search_path()
     
     # only when show plot flag is true, show output graph
     # when unit test is executed, this flag become false
     # and the graph is not shown
     if show_plot:
-        plt.plot(x_list, y_list, "-r")
-        plt.pause(0.01) 
+        dijkstra.draw_final_path(x_list, y_list)
         plt.show()
 
     return True
