@@ -35,9 +35,10 @@ class ObstacleGridMap:
         self.calculate_map_grid_width()
         self.generate_obstacle_map()
 
-        self.plot_obstacles, = a_axes.plot(self.o_obst_x, self.o_obst_y, ".k")
-        self.plot_start, = a_axes.plot(self.o_start_x_m, self.o_start_y_m, "og")
-        self.plot_goal, = a_axes.plot(self.o_goal_x_m, self.o_goal_y_m, "xb")
+        if show_plot:
+            self.plot_obstacles, = a_axes.plot(self.o_obst_x, self.o_obst_y, ".k")
+            self.plot_start, = a_axes.plot(self.o_start_x_m, self.o_start_y_m, "og")
+            self.plot_goal, = a_axes.plot(self.o_goal_x_m, self.o_goal_y_m, "xb")
     
     def set_obstacles_position(self):
         self.o_obst_x = []
@@ -134,6 +135,12 @@ class Dijkstra:
         self.o_open_set = dict()
         self.o_closed_set = dict()
         self.define_motion_model()
+        self.o_searched_xs = []
+        self.o_searched_ys = []
+        self.o_path_xs = []
+        self.o_path_ys = []
+        self.plot_nodes, = a_axes.plot(self.o_searched_xs, self.o_searched_ys, "xc")
+        self.plot_path, = a_axes.plot(self.o_path_xs, self.o_path_ys, "-r")
     
     class Node:
         def __init__(self, a_idx_x, a_idx_y, a_cost, a_idx_prnt):
@@ -188,9 +195,7 @@ class Dijkstra:
 
             self.search_neighbor_node(current_node, current_idx)
 
-        x_list, y_list = self.find_final_path(goal_node)
-
-        return x_list, y_list
+        self.find_final_path(goal_node)
     
     def select_min_cost_node_from_open_set(self):
         current_idx = min(self.o_open_set, key=lambda o: self.o_open_set[o].o_cost)
@@ -199,11 +204,10 @@ class Dijkstra:
         return current_idx, current_node
     
     def draw_searched_node(self, a_crnt_node):
-        plt.plot(self.o_map.calculate_x_position_from_index(a_crnt_node.o_idx_x),
-                 self.o_map.calculate_y_position_from_index(a_crnt_node.o_idx_y),
-                 "xc")
-        
-        if len(self.o_closed_set.keys()) % 10 == 0: plt.pause(0.001)
+        self.o_searched_xs.append(self.o_map.calculate_x_position_from_index(a_crnt_node.o_idx_x))
+        self.o_searched_ys.append(self.o_map.calculate_y_position_from_index(a_crnt_node.o_idx_y))
+        self.plot_nodes.set_data(self.o_searched_xs, self.o_searched_ys)
+        plt.pause(0.001)
     
     def remove_current_node_from_open_set(self, a_crnt_idx):
         del self.o_open_set[a_crnt_idx]
@@ -237,20 +241,18 @@ class Dijkstra:
                     self.o_open_set[neighbor_idx] = neighbor_node
 
     def find_final_path(self, a_goal_node):
-        x_list = [self.o_map.calculate_x_position_from_index(a_goal_node.o_idx_x)]
-        y_list = [self.o_map.calculate_y_position_from_index(a_goal_node.o_idx_y)]
+        self.o_path_xs.append(self.o_map.calculate_x_position_from_index(a_goal_node.o_idx_x))
+        self.o_path_ys.append(self.o_map.calculate_y_position_from_index(a_goal_node.o_idx_y))
 
         parent_idx = a_goal_node.o_idx_prnt
         while parent_idx != -1:
             parent_node = self.o_closed_set[parent_idx]
-            x_list.append(self.o_map.calculate_x_position_from_index(parent_node.o_idx_x))
-            y_list.append(self.o_map.calculate_y_position_from_index(parent_node.o_idx_y))
+            self.o_path_xs.append(self.o_map.calculate_x_position_from_index(parent_node.o_idx_x))
+            self.o_path_ys.append(self.o_map.calculate_y_position_from_index(parent_node.o_idx_y))
             parent_idx = parent_node.o_idx_prnt
-        
-        return x_list, y_list
     
-    def draw_final_path(self, a_x_list, a_y_list):
-        plt.plot(a_x_list, a_y_list, "-r")
+    def draw_final_path(self):
+        self.plot_path.set_data(self.o_path_xs, self.o_path_ys)
 
 
 def main():
@@ -268,13 +270,13 @@ def main():
                           GOAL_Y_M, GRID_SIZE_M, VEHICLE_SIZE_HALF_M)
     
     dijkstra = Dijkstra(ax, ogm)
-    x_list, y_list = dijkstra.search_path()
+    dijkstra.search_path()
     
     # only when show plot flag is true, show output graph
     # when unit test is executed, this flag become false
     # and the graph is not shown
     if show_plot:
-        dijkstra.draw_final_path(x_list, y_list)
+        dijkstra.draw_final_path()
         plt.show()
 
     return True
