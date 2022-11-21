@@ -20,8 +20,8 @@ show_plot = True
 
 
 class ObstacleGridMap:
-    def __init__(self, a_start_x_m, a_start_y_m, a_goal_x_m, a_goal_y_m,
-                 a_grid_size_m, a_vehicle_size_half_m):
+    def __init__(self, a_axes, a_start_x_m, a_start_y_m, a_goal_x_m, 
+                 a_goal_y_m, a_grid_size_m, a_vehicle_size_half_m):
         # set parameters
         self.o_start_x_m = a_start_x_m
         self.o_start_y_m = a_start_y_m
@@ -34,6 +34,10 @@ class ObstacleGridMap:
         self.calculate_map_range()
         self.calculate_map_grid_width()
         self.generate_obstacle_map()
+
+        self.plot_obstacles, = a_axes.plot(self.o_obst_x, self.o_obst_y, ".k")
+        self.plot_start, = a_axes.plot(self.o_start_x_m, self.o_start_y_m, "og")
+        self.plot_goal, = a_axes.plot(self.o_goal_x_m, self.o_goal_y_m, "xb")
     
     def set_obstacles_position(self):
         self.o_obst_x = []
@@ -123,19 +127,12 @@ class ObstacleGridMap:
 
         return True
 
-    def draw_map(self):
-        plt.plot(self.o_obst_x, self.o_obst_y, ".k")
-        plt.plot(self.o_start_x_m, self.o_start_y_m, "og")
-        plt.plot(self.o_goal_x_m, self.o_goal_y_m, "xb")
-        plt.grid(True)
-        plt.axis("equal")
-
 
 class Dijkstra:
-    def __init__(self, a_map):
+    def __init__(self, a_axes, a_map):
         self.o_map = a_map
-        self.open_nodes_set = dict()
-        self.closed_nodes_set = dict()
+        self.o_open_set = dict()
+        self.o_closed_set = dict()
         self.define_motion_model()
     
     class Node:
@@ -169,7 +166,7 @@ class Dijkstra:
                               self.o_map.goal_y_index(), 
                               0.0, -1)
         
-        self.open_nodes_set[self.o_map.start_vector_index()] = start_node
+        self.o_open_set[self.o_map.start_vector_index()] = start_node
 
         print("Start node info: ", start_node, "Vector Idx:", self.o_map.start_vector_index())
         print("Goal node info: ", goal_node, "Vector Idx:", self.o_map.goal_vector_index())
@@ -196,8 +193,8 @@ class Dijkstra:
         return x_list, y_list
     
     def select_min_cost_node_from_open_set(self):
-        current_idx = min(self.open_nodes_set, key=lambda o: self.open_nodes_set[o].o_cost)
-        current_node = self.open_nodes_set[current_idx]
+        current_idx = min(self.o_open_set, key=lambda o: self.o_open_set[o].o_cost)
+        current_node = self.o_open_set[current_idx]
         
         return current_idx, current_node
     
@@ -206,13 +203,13 @@ class Dijkstra:
                  self.o_map.calculate_y_position_from_index(a_crnt_node.o_idx_y),
                  "xc")
         
-        if len(self.closed_nodes_set.keys()) % 10 == 0: plt.pause(0.001)
+        if len(self.o_closed_set.keys()) % 10 == 0: plt.pause(0.001)
     
     def remove_current_node_from_open_set(self, a_crnt_idx):
-        del self.open_nodes_set[a_crnt_idx]
+        del self.o_open_set[a_crnt_idx]
     
     def move_current_node_to_closed_set(self, a_crnt_node, a_crnt_idx):
-        self.closed_nodes_set[a_crnt_idx] = a_crnt_node
+        self.o_closed_set[a_crnt_idx] = a_crnt_node
     
     def found_goal(self, a_crnt_node, a_goal_node):
         return (a_crnt_node.o_idx_x == a_goal_node.o_idx_x) and \
@@ -227,17 +224,17 @@ class Dijkstra:
             neighbor_idx = self.o_map.calculate_vector_index(neighbor_node.o_idx_x, 
                                                              neighbor_node.o_idx_y)
             
-            if neighbor_idx in self.closed_nodes_set:
+            if neighbor_idx in self.o_closed_set:
                 continue
 
             if not self.o_map.verify_index(neighbor_node.o_idx_x, neighbor_node.o_idx_y):
                 continue
 
-            if neighbor_idx not in self.open_nodes_set:
-                    self.open_nodes_set[neighbor_idx] = neighbor_node
+            if neighbor_idx not in self.o_open_set:
+                    self.o_open_set[neighbor_idx] = neighbor_node
             else:
-                if self.open_nodes_set[neighbor_idx].o_cost >= neighbor_node.o_cost:
-                    self.open_nodes_set[neighbor_idx] = neighbor_node
+                if self.o_open_set[neighbor_idx].o_cost >= neighbor_node.o_cost:
+                    self.o_open_set[neighbor_idx] = neighbor_node
 
     def find_final_path(self, a_goal_node):
         x_list = [self.o_map.calculate_x_position_from_index(a_goal_node.o_idx_x)]
@@ -245,7 +242,7 @@ class Dijkstra:
 
         parent_idx = a_goal_node.o_idx_prnt
         while parent_idx != -1:
-            parent_node = self.closed_nodes_set[parent_idx]
+            parent_node = self.o_closed_set[parent_idx]
             x_list.append(self.o_map.calculate_x_position_from_index(parent_node.o_idx_x))
             y_list.append(self.o_map.calculate_y_position_from_index(parent_node.o_idx_y))
             parent_idx = parent_node.o_idx_prnt
@@ -259,11 +256,18 @@ class Dijkstra:
 def main():
     print(__file__ + " start!!")
 
-    ogm = ObstacleGridMap(START_X_M, START_Y_M, GOAL_X_M, GOAL_Y_M, 
-                          GRID_SIZE_M, VEHICLE_SIZE_HALF_M)
-    if show_plot: ogm.draw_map()
+    # initialize plot
+    ax = plt.subplot(1, 1, 1)
+    ax.set_xlabel("X[m]")
+    ax.set_ylabel("Y[m]")
+    ax.set_aspect("equal")
+    ax.grid(True)
+
+    # generate map instance
+    ogm = ObstacleGridMap(ax, START_X_M, START_Y_M, GOAL_X_M, 
+                          GOAL_Y_M, GRID_SIZE_M, VEHICLE_SIZE_HALF_M)
     
-    dijkstra = Dijkstra(ogm)
+    dijkstra = Dijkstra(ax, ogm)
     x_list, y_list = dijkstra.search_path()
     
     # only when show plot flag is true, show output graph
