@@ -179,6 +179,10 @@ class AStar:
         print("Goal node info: ", goal_node, "Vector Idx:", self.o_map.goal_vector_index())
 
         while 1:
+            if self.open_set_is_empty():
+                print("Open set is empty. Failed planning path..")
+                break
+            
             current_idx, current_node = self.select_min_cost_node_from_open_set()
 
             if show_plot: self.draw_searched_node(current_node)
@@ -197,6 +201,9 @@ class AStar:
 
         self.find_final_path(goal_node)
     
+    def open_set_is_empty(self):
+        return len(self.o_open_set) == 0
+
     def select_min_cost_node_from_open_set(self):
         current_idx = min(self.o_open_set, key=lambda o: self.o_open_set[o].o_cost)
         current_node = self.o_open_set[current_idx]
