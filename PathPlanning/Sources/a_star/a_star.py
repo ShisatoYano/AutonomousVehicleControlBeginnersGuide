@@ -182,8 +182,8 @@ class AStar:
             if self.open_set_is_empty():
                 print("Open set is empty. Failed planning path..")
                 break
-            
-            current_idx, current_node = self.select_min_cost_node_from_open_set()
+
+            current_idx, current_node = self.select_min_cost_node_from_open_set(goal_node)
 
             if show_plot: self.draw_searched_node(current_node)
             
@@ -203,9 +203,19 @@ class AStar:
     
     def open_set_is_empty(self):
         return len(self.o_open_set) == 0
+    
+    def calculate_heuristic(self, node_1, node_2):
+        w = 1.0 # weight of heuristic
+        d = w * math.hypot(node_1.o_idx_x - node_2.o_idx_x,
+                           node_1.o_idx_y - node_2.o_idx_y)
+        
+        return d
 
-    def select_min_cost_node_from_open_set(self):
-        current_idx = min(self.o_open_set, key=lambda o: self.o_open_set[o].o_cost)
+    def select_min_cost_node_from_open_set(self, goal_node):
+        current_idx = min(
+            self.o_open_set, 
+            key=lambda o: self.o_open_set[o].o_cost + self.calculate_heuristic(goal_node, self.o_open_set[o]))
+        
         current_node = self.o_open_set[current_idx]
         
         return current_idx, current_node
