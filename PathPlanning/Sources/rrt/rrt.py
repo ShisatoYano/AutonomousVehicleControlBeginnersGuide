@@ -25,13 +25,13 @@ show_plot = True
 
 class ObstacleMap:
     def __init__(self, a_axes, a_start_x_m, a_start_y_m, a_goal_x_m, 
-                 a_goal_y_m, a_obstacle_size_m):
+                 a_goal_y_m, a_obst_radius_m):
         # set parameters
         self.o_start_x_m = a_start_x_m
         self.o_start_y_m = a_start_y_m
         self.o_goal_x_m = a_goal_x_m
         self.o_goal_y_m = a_goal_y_m
-        self.o_obstacle_size_m = a_obstacle_size_m
+        self.o_obst_radius_m = a_obst_radius_m
 
         self.set_obstacles_position_size()
         self.calculate_map_range()
@@ -49,27 +49,27 @@ class ObstacleMap:
         for i in range(0, 60): 
             self.o_obst_x_list.append(i)
             self.o_obst_y_list.append(0.0)
-            self.o_obst_size_list.append(self.o_obstacle_size_m)
+            self.o_obst_size_list.append(self.o_obst_radius_m)
         for i in range(0, 60): 
             self.o_obst_x_list.append(60.0) 
             self.o_obst_y_list.append(i)
-            self.o_obst_size_list.append(self.o_obstacle_size_m)
+            self.o_obst_size_list.append(self.o_obst_radius_m)
         for i in range(0, 61): 
             self.o_obst_x_list.append(i)
             self.o_obst_y_list.append(60.0)
-            self.o_obst_size_list.append(self.o_obstacle_size_m)
+            self.o_obst_size_list.append(self.o_obst_radius_m)
         for i in range(0, 60): 
             self.o_obst_x_list.append(0.0)
             self.o_obst_y_list.append(i)
-            self.o_obst_size_list.append(self.o_obstacle_size_m)
+            self.o_obst_size_list.append(self.o_obst_radius_m)
         for i in range(0, 40): 
             self.o_obst_x_list.append(20.0)
             self.o_obst_y_list.append(i)
-            self.o_obst_size_list.append(self.o_obstacle_size_m)
+            self.o_obst_size_list.append(self.o_obst_radius_m)
         for i in range(0, 40): 
             self.o_obst_x_list.append(40.0)
             self.o_obst_y_list.append(60.0-i)
-            self.o_obst_size_list.append(self.o_obstacle_size_m)
+            self.o_obst_size_list.append(self.o_obst_radius_m)
     
     def calculate_map_range(self):
         self.o_min_x_m = round(min(self.o_obst_x_list))
