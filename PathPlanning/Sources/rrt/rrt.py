@@ -25,13 +25,14 @@ show_plot = True
 
 class ObstacleMap:
     def __init__(self, a_axes, a_start_x_m, a_start_y_m, a_goal_x_m, 
-                 a_goal_y_m, a_obst_radius_m):
+                 a_goal_y_m, a_obst_radius_m, a_vehicle_size_half_m):
         # set parameters
         self.o_start_x_m = a_start_x_m
         self.o_start_y_m = a_start_y_m
         self.o_goal_x_m = a_goal_x_m
         self.o_goal_y_m = a_goal_y_m
         self.o_obst_radius_m = a_obst_radius_m
+        self.o_vehicle_size_half_m = a_vehicle_size_half_m
 
         self.set_obstacles_position_size()
         self.calculate_map_range()
@@ -89,6 +90,20 @@ class ObstacleMap:
         a_axes.fill(x_list, y_list, a_color)
 
 
+class RRT:
+    def __init__(self, a_axes, a_map, a_min_samp, a_max_samp, a_expand_dist_m=3.0,
+                 a_path_reso_m=0.5, a_goal_samp_rate=5.0, a_max_iter=500):
+        self.o_map = a_map
+    
+    class Node:
+        def __init__(self, a_x_m, a_y_m):
+            self.o_x_m = a_x_m
+            self.o_y_m = a_y_m
+            self.o_x_path = []
+            self.o_y_path = []
+            self.o_parent_node = None
+
+
 def main():
     print(__file__ + " start!!")
 
@@ -101,7 +116,7 @@ def main():
 
     # generate map instance
     om = ObstacleMap(ax, START_X_M, START_Y_M, GOAL_X_M, GOAL_Y_M, 
-                     OBSTACLE_RADIUS_M)
+                     OBSTACLE_RADIUS_M, VEHICLE_SIZE_HALF_M)
 
     # only when show plot flag is true, show output graph
     # when unit test is executed, this flag become false
