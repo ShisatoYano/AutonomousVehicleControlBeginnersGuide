@@ -8,6 +8,7 @@ Author: Shisato Yano
 import matplotlib.pyplot as plt
 import numpy as np
 import math
+import random
 
 # parameters
 START_X_M = 10.0 # start point
@@ -93,7 +94,19 @@ class ObstacleMap:
 class RRT:
     def __init__(self, a_axes, a_map, a_min_samp, a_max_samp, a_expand_dist_m=3.0,
                  a_path_reso_m=0.5, a_goal_samp_rate=5.0, a_max_iter=500):
+        # set parameters
         self.o_map = a_map
+        self.o_start = self.Node(self.o_map.o_start_x_m, self.o_map.o_start_y_m)
+        self.o_goal = self.Node(self.o_map.o_goal_x_m, self.o_map.o_goal_y_m)
+        self.o_min_samp = a_min_samp
+        self.o_max_samp = a_max_samp
+        self.o_expand_dist_m = a_expand_dist_m
+        self.o_path_reso_m = a_path_reso_m
+        self.o_goal_samp_rate = a_goal_samp_rate
+        self.o_max_iter = a_max_iter
+        self.o_node_list = []
+
+        self.plot_samp_node, = a_axes.plot([], [], "xg")
     
     class Node:
         def __init__(self, a_x_m, a_y_m):
@@ -102,6 +115,35 @@ class RRT:
             self.o_x_path = []
             self.o_y_path = []
             self.o_parent_node = None
+    
+    def random_sampling_node(self):
+        if random.randint(0, 100) > self.o_goal_samp_rate:
+            node = self.Node(random.uniform(self.o_min_samp, self.o_max_samp),
+                             random.uniform(self.o_min_samp, self.o_max_samp))
+        else: # goal bias sampling
+            node = self.Node(self.o_goal.o_x_m, self.o_goal.o_y_m)
+        return node
+    
+    def get_nearest_node(self, a_sampled_node):
+        dist_list = [(node.o_x_m - a_sampled_node.o_x_m)**2 + (node.o_y_m - a_sampled_node.o_y_m)**2 
+                     for node in self.o_node_list]
+        nearest_index = dist_list.index(min(dist_list))
+        return self.o_node_list[nearest_index]
+    
+    def draw_searched_node(self, a_sampled_node):
+        if a_sampled_node is not None:
+            self.plot_samp_node.set_data(a_sampled_node.o_x_m, a_sampled_node.o_y_m)
+        plt.pause(0.001)
+    
+    def search_path(self):
+        self.o_node_list = [self.o_start]
+
+        for i in range(self.o_max_iter):
+            rand_samp_node = self.random_sampling_node()
+
+            nearest_node = self.get_nearest_node(rand_samp_node)
+
+            if show_plot: self.draw_searched_node(rand_samp_node)
 
 
 def main():
@@ -117,6 +159,10 @@ def main():
     # generate map instance
     om = ObstacleMap(ax, START_X_M, START_Y_M, GOAL_X_M, GOAL_Y_M, 
                      OBSTACLE_RADIUS_M, VEHICLE_SIZE_HALF_M)
+    
+    # generate RRT instance
+    rrt = RRT(ax, om, MIN_SAMPLING_AREA_M, MAX_SAMPLING_AREA_M)
+    rrt.search_path()
 
     # only when show plot flag is true, show output graph
     # when unit test is executed, this flag become false
