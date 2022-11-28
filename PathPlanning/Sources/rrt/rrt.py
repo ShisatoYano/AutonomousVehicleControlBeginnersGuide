@@ -92,7 +92,7 @@ class ObstacleMap:
 
 
 class RRT:
-    def __init__(self, a_axes, a_map, a_min_samp, a_max_samp, a_expand_dist_m=3.0,
+    def __init__(self, a_axes, a_map, a_min_samp, a_max_samp, a_expand_th_m=3.0,
                  a_path_reso_m=0.5, a_goal_samp_rate=5.0, a_max_iter=500):
         # set parameters
         self.o_map = a_map
@@ -100,7 +100,7 @@ class RRT:
         self.o_goal = self.Node(self.o_map.o_goal_x_m, self.o_map.o_goal_y_m)
         self.o_min_samp = a_min_samp
         self.o_max_samp = a_max_samp
-        self.o_expand_dist_m = a_expand_dist_m
+        self.o_expand_th_m = a_expand_th_m
         self.o_path_reso_m = a_path_reso_m
         self.o_goal_samp_rate = a_goal_samp_rate
         self.o_max_iter = a_max_iter
@@ -130,6 +130,27 @@ class RRT:
         nearest_index = dist_list.index(min(dist_list))
         return self.o_node_list[nearest_index]
     
+    def calculate_distance_angle(self, a_from, a_to):
+        diff_x_m = a_to.o_x_m - a_from.o_x_m
+        diff_y_m = a_to.o_y_m - a_from.o_y_m
+        dist_m = math.hypot(diff_x_m, diff_y_m)
+        angle_rad = math.atan2(diff_y_m, diff_x_m)
+        return dist_m, angle_rad
+    
+    def expand_node(self, a_from, a_to):
+        new_node = self.Node(a_from.o_x_m, a_from.o_y_m)
+
+        dist_m, angle_rad = self.calculate_distance_angle(new_node, a_to)
+
+        new_node.o_x_path = [new_node.o_x_m]
+        new_node.o_y_path = [new_node.o_y_m]
+
+        expand_dist_m = float("inf")
+        if self.o_expand_th_m > dist_m: expand_dist_m  =  dist_m
+        else: expand_dist_m = self.o_expand_th_m
+
+        return new_node
+    
     def draw_searched_node(self, a_sampled_node):
         if a_sampled_node is not None:
             self.plot_samp_node.set_data(a_sampled_node.o_x_m, a_sampled_node.o_y_m)
@@ -142,6 +163,8 @@ class RRT:
             rand_samp_node = self.random_sampling_node()
 
             nearest_node = self.get_nearest_node(rand_samp_node)
+
+            new_node = self.expand_node(nearest_node, rand_samp_node)
 
             if show_plot: self.draw_searched_node(rand_samp_node)
 
