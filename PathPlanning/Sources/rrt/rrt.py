@@ -83,6 +83,21 @@ class ObstacleMap:
         print("Max X[m]:", self.o_max_x_m)
         print("Max Y[m]:", self.o_max_y_m)
     
+    def is_inside(self, a_x, a_y):
+        return (a_x >= self.o_min_x_m) and (a_x <= self.o_max_x_m) \
+            and (a_y >= self.o_min_y_m) and (a_y <= self.o_max_y_m)
+    
+    def is_safe(self, a_x_list, a_y_list):
+        for o_x, o_y, o_size in zip(self.o_obst_x_list, self.o_obst_y_list, self.o_obst_size_list):
+            diff_x_list = [o_x - x for x in a_x_list]
+            diff_y_list = [o_y - y for y in a_y_list]
+            diff_list = [d_x * d_x + d_y * d_y for (d_x, d_y) in zip(diff_x_list, diff_y_list)]
+
+            if min(diff_list) <= (o_size + self.o_vehicle_size_half_m)**2:
+                return False
+
+        return True
+    
     def plot_circle(self, a_axes, a_x, a_y, a_size, a_color="k"):
         angle_deg_list = list(range(0, 360, 5))
         angle_deg_list.append(0)
