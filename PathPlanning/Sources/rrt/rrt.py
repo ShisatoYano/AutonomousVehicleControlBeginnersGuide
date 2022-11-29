@@ -149,6 +149,23 @@ class RRT:
         if self.o_expand_th_m > dist_m: expand_dist_m  =  dist_m
         else: expand_dist_m = self.o_expand_th_m
 
+        # expand before sampled node
+        expand_num = math.floor(expand_dist_m / self.o_path_reso_m)
+        for _ in range(expand_num):
+            new_node.o_x_m += self.o_path_reso_m * math.cos(angle_rad)
+            new_node.o_y_m += self.o_path_reso_m * math.sin(angle_rad)
+            new_node.o_x_path.append(new_node.o_x_m)
+            new_node.o_y_path.append(new_node.o_y_m)
+        
+        # expand from expanded node to sampled node
+        dist_m, _ = self.calculate_distance_angle(new_node, a_to)
+        if dist_m <= self.o_path_reso_m:
+            new_node.o_x_path.append(a_to.o_x_m)
+            new_node.o_y_path.append(a_to.o_y_m)
+        
+        # expanded node's parent node
+        new_node.o_parent_node = a_from
+
         return new_node
     
     def draw_searched_node(self, a_sampled_node):
