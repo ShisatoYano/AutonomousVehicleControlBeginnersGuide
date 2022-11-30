@@ -177,11 +177,19 @@ class RRT:
         if dist_m <= self.o_path_reso_m:
             new_node.o_x_path.append(a_to.o_x_m)
             new_node.o_y_path.append(a_to.o_y_m)
+            new_node.o_x_m = a_to.o_x_m
+            new_node.o_y_m = a_to.o_y_m
         
         # expanded node's parent node
         new_node.o_parent_node = a_from
 
         return new_node
+    
+    def append_inside_safe_node(self, o_node):
+        if o_node is not None:
+            if self.o_map.is_inside(o_node.o_x_m, o_node.o_y_m) \
+                and self.o_map.is_safe(o_node.o_x_path, o_node.o_y_path):
+                self.o_node_list.append(o_node)
     
     def draw_searched_node(self, a_sampled_node):
         if a_sampled_node is not None:
@@ -197,6 +205,8 @@ class RRT:
             nearest_node = self.get_nearest_node(rand_samp_node)
 
             new_node = self.expand_node(nearest_node, rand_samp_node)
+
+            self.append_inside_safe_node(new_node)
 
             if show_plot: self.draw_searched_node(rand_samp_node)
 
