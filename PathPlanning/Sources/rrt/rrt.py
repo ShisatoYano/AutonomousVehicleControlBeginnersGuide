@@ -122,6 +122,7 @@ class RRT:
         self.o_node_list = []
 
         self.plot_samp_node, = a_axes.plot([], [], "xg")
+        self.plot_node_path, = a_axes.plot([], [], "-g")
     
     class Node:
         def __init__(self, a_x_m, a_y_m):
@@ -194,6 +195,11 @@ class RRT:
     def draw_searched_node(self, a_sampled_node):
         if a_sampled_node is not None:
             self.plot_samp_node.set_data(a_sampled_node.o_x_m, a_sampled_node.o_y_m)
+        
+        x_path = [x for node in self.o_node_list for x in node.o_x_path if node]
+        y_path = [y for node in self.o_node_list for y in node.o_y_path if node]
+        self.plot_node_path.set_data(x_path, y_path)
+
         plt.pause(0.001)
     
     def search_path(self):
