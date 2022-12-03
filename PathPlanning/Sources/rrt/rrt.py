@@ -123,7 +123,7 @@ class RRT:
         self.o_node_list = []
         self.o_final_path = []
 
-        self.plot_samp_node, = a_axes.plot([], [], "xg")
+        self.plot_samp_node, = a_axes.plot([], [], "xc")
         self.plot_final_path, = a_axes.plot([], [], "-r")
     
     class Node:
@@ -213,7 +213,7 @@ class RRT:
         
         for node in self.o_node_list:
             if node is not None:
-                self.o_axes.plot(node.o_x_path, node.o_y_path, "-g")
+                self.o_axes.plot(node.o_x_path, node.o_y_path, "-c")
 
         plt.pause(0.001)
     
