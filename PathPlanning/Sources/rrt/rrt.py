@@ -108,7 +108,7 @@ class ObstacleMap:
 
 class RRT:
     def __init__(self, a_axes, a_map, a_min_samp, a_max_samp, a_expand_th_m=3.0,
-                 a_path_reso_m=0.5, a_goal_samp_rate=5.0, a_max_iter=500):
+                 a_path_reso_m=0.5, a_goal_samp_rate=5.0, a_max_iter=1000):
         # set parameters
         self.o_axes = a_axes
         self.o_map = a_map
@@ -121,8 +121,10 @@ class RRT:
         self.o_goal_samp_rate = a_goal_samp_rate
         self.o_max_iter = a_max_iter
         self.o_node_list = []
+        self.o_final_path = []
 
         self.plot_samp_node, = a_axes.plot([], [], "xg")
+        self.plot_final_path, = a_axes.plot([], [], "-r")
     
     class Node:
         def __init__(self, a_x_m, a_y_m):
@@ -192,6 +194,19 @@ class RRT:
                 and self.o_map.is_safe(o_node.o_x_path, o_node.o_y_path):
                 self.o_node_list.append(o_node)
     
+    def calculate_dist_to_goal(self, a_x_m, a_y_m):
+        diff_x_m = a_x_m - self.o_goal.o_x_m
+        diff_y_m = a_y_m - self.o_goal.o_y_m
+        return math.hypot(diff_x_m, diff_y_m)
+    
+    def find_final_path(self, a_goal_index):
+        self.o_final_path = [[self.o_goal.o_x_m, self.o_goal.o_y_m]]
+        node = self.o_node_list[a_goal_index]
+        while node.o_parent_node is not None:
+            self.o_final_path.append([node.o_x_m, node.o_y_m])
+            node = node.o_parent_node
+        self.o_final_path.append([node.o_x_m, node.o_y_m])
+
     def draw_searched_node(self, a_sampled_node):
         if a_sampled_node is not None:
             self.plot_samp_node.set_data(a_sampled_node.o_x_m, a_sampled_node.o_y_m)
@@ -201,6 +216,14 @@ class RRT:
                 self.o_axes.plot(node.o_x_path, node.o_y_path, "-g")
 
         plt.pause(0.001)
+    
+    def draw_final_path(self):
+        if len(self.o_final_path) == 0:
+            print("Failed planning path..")
+        else:
+            self.o_axes.plot([x_m for (x_m, y_m) in self.o_final_path],
+                             [y_m for (x_m, y_m) in self.o_final_path],
+                             "-r")
     
     def search_path(self):
         self.o_node_list = [self.o_start]
@@ -214,7 +237,15 @@ class RRT:
 
             self.append_inside_safe_node(new_node)
 
-            if show_plot and i % 5 == 0: self.draw_searched_node(rand_samp_node)
+            if show_plot and i % 5 == 0:
+                self.draw_searched_node(rand_samp_node)
+            
+            if self.calculate_dist_to_goal(self.o_node_list[-1].o_x_m,
+                                           self.o_node_list[-1].o_y_m) <= self.o_expand_th_m:
+                final_node = self.expand_node(self.o_node_list[-1], self.o_goal)
+                if self.o_map.is_safe(final_node.o_x_path, final_node.o_y_path):
+                    self.find_final_path(len(self.o_node_list)-1)
+                    break
 
 
 def main():
@@ -239,6 +270,7 @@ def main():
     # when unit test is executed, this flag become false
     # and the graph is not shown
     if show_plot:
+        rrt.draw_final_path()
         plt.show()
 
     return True
