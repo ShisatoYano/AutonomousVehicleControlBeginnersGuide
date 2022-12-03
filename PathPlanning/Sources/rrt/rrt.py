@@ -110,6 +110,7 @@ class RRT:
     def __init__(self, a_axes, a_map, a_min_samp, a_max_samp, a_expand_th_m=3.0,
                  a_path_reso_m=0.5, a_goal_samp_rate=5.0, a_max_iter=500):
         # set parameters
+        self.o_axes = a_axes
         self.o_map = a_map
         self.o_start = self.Node(self.o_map.o_start_x_m, self.o_map.o_start_y_m)
         self.o_goal = self.Node(self.o_map.o_goal_x_m, self.o_map.o_goal_y_m)
@@ -122,7 +123,6 @@ class RRT:
         self.o_node_list = []
 
         self.plot_samp_node, = a_axes.plot([], [], "xg")
-        self.plot_node_path, = a_axes.plot([], [], "-g")
     
     class Node:
         def __init__(self, a_x_m, a_y_m):
@@ -196,9 +196,9 @@ class RRT:
         if a_sampled_node is not None:
             self.plot_samp_node.set_data(a_sampled_node.o_x_m, a_sampled_node.o_y_m)
         
-        x_path = [x for node in self.o_node_list for x in node.o_x_path if node]
-        y_path = [y for node in self.o_node_list for y in node.o_y_path if node]
-        self.plot_node_path.set_data(x_path, y_path)
+        for node in self.o_node_list:
+            if node is not None:
+                self.o_axes.plot(node.o_x_path, node.o_y_path, "-g")
 
         plt.pause(0.001)
     
@@ -214,7 +214,7 @@ class RRT:
 
             self.append_inside_safe_node(new_node)
 
-            if show_plot: self.draw_searched_node(rand_samp_node)
+            if show_plot and i % 5 == 0: self.draw_searched_node(rand_samp_node)
 
 
 def main():
