@@ -130,6 +130,7 @@ class RRTStar:
         def __init__(self, a_x_m, a_y_m):
             self.o_x_m = a_x_m
             self.o_y_m = a_y_m
+            self.o_cost = 0.0
             self.o_x_path = []
             self.o_y_path = []
             self.o_parent_node = None
