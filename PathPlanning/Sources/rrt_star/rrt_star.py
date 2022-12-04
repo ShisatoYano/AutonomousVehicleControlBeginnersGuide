@@ -187,6 +187,10 @@ class RRTStar:
         # expanded node's parent node
         new_node.o_parent_node = a_from
 
+        # calculate cost from nearest node
+        new_node.o_cost = a_from.o_cost + math.hypot(new_node.o_x_m - a_from.o_x_m,
+                                                     new_node.o_y_m - a_from.o_y_m)
+
         return new_node
     
     def append_inside_safe_node(self, o_node):
