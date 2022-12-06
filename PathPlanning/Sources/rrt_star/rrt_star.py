@@ -108,7 +108,8 @@ class ObstacleMap:
 
 class RRTStar:
     def __init__(self, a_axes, a_map, a_min_samp, a_max_samp, a_expand_th_m=3.0,
-                 a_path_reso_m=0.5, a_goal_samp_rate=5.0, a_max_iter=1000):
+                 a_path_reso_m=0.5, a_goal_samp_rate=5.0, a_max_iter=1000,
+                 a_connect_dist=50.0):
         # set parameters
         self.o_axes = a_axes
         self.o_map = a_map
@@ -120,6 +121,7 @@ class RRTStar:
         self.o_path_reso_m = a_path_reso_m
         self.o_goal_samp_rate = a_goal_samp_rate
         self.o_max_iter = a_max_iter
+        self.o_connect_dist = a_connect_dist
         self.o_node_list = []
         self.o_final_path = []
 
@@ -187,17 +189,21 @@ class RRTStar:
         # expanded node's parent node
         new_node.o_parent_node = a_from
 
-        # calculate cost from nearest node
-        new_node.o_cost = a_from.o_cost + math.hypot(new_node.o_x_m - a_from.o_x_m,
-                                                     new_node.o_y_m - a_from.o_y_m)
-
         return new_node
     
-    def append_inside_safe_node(self, o_node):
-        if o_node is not None:
-            if self.o_map.is_inside(o_node.o_x_m, o_node.o_y_m) \
-                and self.o_map.is_safe(o_node.o_x_path, o_node.o_y_path):
-                self.o_node_list.append(o_node)
+    def find_near_nodes(self, a_node):
+        node_num = len(self.o_node_list) + 1
+        radius = self.o_connect_dist * math.sqrt(math.log(node_num)/node_num)
+        radius = min(radius, self.o_expand_th_m)
+        dist_list = [(node.o_x_m - a_node.o_x_m)**2 + (node.o_y_m - a_node.o_y_m)**2 for node in self.o_node_list]
+        near_index_list = [dist_list.index(dist) for dist in dist_list if dist <= radius**2]
+        return near_index_list
+
+    def append_inside_safe_node(self, a_node):
+        if a_node is not None:
+            if self.o_map.is_inside(a_node.o_x_m, a_node.o_y_m) \
+                and self.o_map.is_safe(a_node.o_x_path, a_node.o_y_path):
+                self.o_node_list.append(a_node)
     
     def calculate_dist_to_goal(self, a_x_m, a_y_m):
         diff_x_m = a_x_m - self.o_goal.o_x_m
@@ -239,6 +245,10 @@ class RRTStar:
             nearest_node = self.get_nearest_node(rand_samp_node)
 
             new_node = self.expand_node(nearest_node, rand_samp_node)
+
+            # calculate new node's cost from nearest node
+            new_node.o_cost = nearest_node.o_cost + math.hypot(new_node.o_x_m - nearest_node.o_x_m,
+                                                               new_node.o_y_m - nearest_node.o_y_m)
 
             self.append_inside_safe_node(new_node)
 
