@@ -198,11 +198,24 @@ class RRTStar:
         dist_list = [(node.o_x_m - a_node.o_x_m)**2 + (node.o_y_m - a_node.o_y_m)**2 for node in self.o_node_list]
         near_index_list = [dist_list.index(dist) for dist in dist_list if dist <= radius**2]
         return near_index_list
+    
+    def select_parent(self, a_node, a_index_list):
+        # there is no near node
+        if not a_index_list:
+            return None
+        
+        # search minimum cost in near nodes
+        cost_list = []
+        for idx in a_index_list:
+            near_node = self.o_node_list[idx]
+            
 
     def append_inside_safe_node(self, a_node):
         if a_node is not None:
             if self.o_map.is_inside(a_node.o_x_m, a_node.o_y_m) \
                 and self.o_map.is_safe(a_node.o_x_path, a_node.o_y_path):
+                near_index_list = self.find_near_nodes(a_node)
+
                 self.o_node_list.append(a_node)
     
     def calculate_dist_to_goal(self, a_x_m, a_y_m):
