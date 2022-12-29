@@ -64,13 +64,13 @@ class ObstacleMap:
             self.o_obst_x_list.append(0.0)
             self.o_obst_y_list.append(i)
             self.o_obst_size_list.append(self.o_obst_radius_m)
-        for i in range(0, 40): 
+        for i in range(10, 25): 
             self.o_obst_x_list.append(20.0)
             self.o_obst_y_list.append(i)
             self.o_obst_size_list.append(self.o_obst_radius_m)
-        for i in range(0, 40): 
+        for i in range(0, 25): 
             self.o_obst_x_list.append(40.0)
-            self.o_obst_y_list.append(60.0-i)
+            self.o_obst_y_list.append(50.0-i)
             self.o_obst_size_list.append(self.o_obst_radius_m)
     
     def calculate_map_range(self):
@@ -110,7 +110,7 @@ class ObstacleMap:
 
 
 class RRTStar:
-    def __init__(self, a_axes, a_map, a_min_samp, a_max_samp, a_expand_th_m=3.0,
+    def __init__(self, a_axes, a_map, a_min_samp, a_max_samp, a_expand_th_m=1.0,
                  a_path_reso_m=0.5, a_goal_samp_rate=5.0, a_max_iter=1000,
                  a_connect_dist=50.0):
         # set parameters
@@ -290,7 +290,7 @@ class RRTStar:
         
         if not safe_goal_index_list: return None
 
-        min_cost = min([self.o_node_list[index] for index in safe_goal_index_list])
+        min_cost = min([self.o_node_list[index].o_cost for index in safe_goal_index_list])
         for goal_index in safe_goal_index_list:
             if self.o_node_list[goal_index].o_cost == min_cost:
                 return goal_index
@@ -348,11 +348,12 @@ class RRTStar:
                 if goal_index is not None:
                     self.find_final_path(goal_index)
                     break
-            
-        print("reached max iteration")
-        goal_index = self.search_best_goal_node()
-        if goal_index is not None:
-            self.find_final_path(goal_index)
+
+        if i == (self.o_max_iter - 1):    
+            print("reached max iteration")
+            goal_index = self.search_best_goal_node()
+            if goal_index is not None:
+                self.find_final_path(goal_index)
 
 
 def main():
