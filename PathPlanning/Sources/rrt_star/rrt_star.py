@@ -98,6 +98,9 @@ class ObstacleMap:
 
         return True
     
+    def is_inside_and_safe(self, a_x, a_y, a_x_list, a_y_list):
+        return (self.is_inside(a_x, a_y) and self.is_safe(a_x_list, a_y_list))
+    
     def plot_circle(self, a_axes, a_x, a_y, a_size, a_color="k"):
         angle_deg_list = list(range(0, 360, 5))
         angle_deg_list.append(0)
@@ -208,12 +211,15 @@ class RRTStar:
         cost_list = []
         for idx in a_index_list:
             near_node = self.o_node_list[idx]
-            
+            new_node = self.expand_node(near_node, a_node) # expand from near node to new node
+            if new_node and self.o_map.is_inside_and_safe(new_node.o_x_m, new_node.o_y_m, new_node.o_x_path, new_node.o_y_path):
+                cost_list.append(object)
+            else:
+                cost_list.append(float("inf"))
 
     def append_inside_safe_node(self, a_node):
         if a_node is not None:
-            if self.o_map.is_inside(a_node.o_x_m, a_node.o_y_m) \
-                and self.o_map.is_safe(a_node.o_x_path, a_node.o_y_path):
+            if self.o_map.is_inside_and_safe(a_node.o_x_m, a_node.o_y_m, a_node.o_x_path, a_node.o_y_path):
                 near_index_list = self.find_near_nodes(a_node)
 
                 self.o_node_list.append(a_node)
