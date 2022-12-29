@@ -231,6 +231,32 @@ class RRTStar:
         new_node.o_cost = min_cost # set new node's parent which has minimum cost
 
         return new_node
+    
+    def propagate_cost_to_leaves(self, a_parent_node):
+        for node in self.o_node_list:
+            if node.o_parent_node == a_parent_node:
+                node.o_cost = self.calculate_new_cost(a_parent_node, node)
+                self.propagate_cost_to_leaves(node)
+
+    def rewire_node(self, a_node, a_index_list):
+        for idx in a_index_list:
+            near_node = self.o_node_list[idx]
+            
+            # check the cost is cheaper if near node has new node as parent
+            edge_node = self.expand_node(a_node, near_node)
+            if not edge_node: continue
+            edge_node.o_cost = self.calculate_new_cost(a_node, near_node) # cost from new node to near node
+
+            is_inside_and_safe = self.o_map.is_inside_and_safe(edge_node.o_x_m, edge_node.o_y_m, edge_node.o_x_path, edge_node.o_y_path)
+            cost_was_improved = near_node.o_cost > edge_node.o_cost
+
+            # if cost was improved, rewire near node with new node
+            if is_inside_and_safe and cost_was_improved:
+                near_node.o_x_m, near_node.o_y_m = edge_node.o_x_m, edge_node.o_y_m
+                near_node.o_cost = edge_node.o_cost
+                near_node.o_x_path, near_node.o_y_path = edge_node.o_x_path, edge_node.o_y_path
+                near_node.o_parent_node = edge_node.o_parent_node
+                self.propagate_cost_to_leaves(a_node)
 
     def append_inside_safe_node(self, a_node):
         if a_node is not None:
@@ -239,6 +265,7 @@ class RRTStar:
 
                 new_node_min_cost_parent = self.select_parent(a_node, near_index_list)
                 if new_node_min_cost_parent:
+                    self.rewire_node(new_node_min_cost_parent, near_index_list)
                     self.o_node_list.append(new_node_min_cost_parent)
                 else:
                     # not found near node within range
