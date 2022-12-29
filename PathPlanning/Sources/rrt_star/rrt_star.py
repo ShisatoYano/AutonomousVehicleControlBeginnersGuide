@@ -161,6 +161,10 @@ class RRTStar:
         angle_rad = math.atan2(diff_y_m, diff_x_m)
         return dist_m, angle_rad
     
+    def calculate_new_cost(self, a_from, a_to):
+        dist_m, _ = self.calculate_distance_angle(a_from, a_to)
+        return a_from.o_cost + dist_m
+    
     def expand_node(self, a_from, a_to):
         new_node = self.Node(a_from.o_x_m, a_from.o_y_m)
 
@@ -211,11 +215,22 @@ class RRTStar:
         cost_list = []
         for idx in a_index_list:
             near_node = self.o_node_list[idx]
-            new_node = self.expand_node(near_node, a_node) # expand from near node to new node
-            if new_node and self.o_map.is_inside_and_safe(new_node.o_x_m, new_node.o_y_m, new_node.o_x_path, new_node.o_y_path):
-                cost_list.append(object)
+            tmp_node = self.expand_node(near_node, a_node) # expand from near node to input node
+            if tmp_node and self.o_map.is_inside_and_safe(tmp_node.o_x_m, tmp_node.o_y_m, tmp_node.o_x_path, tmp_node.o_y_path):
+                cost_list.append(self.calculate_new_cost(near_node, tmp_node))
             else:
                 cost_list.append(float("inf"))
+        min_cost = min(cost_list) # find minimum cost
+
+        if min_cost == float("inf"):
+            print("There is no good path because minimum cost is inf")
+            return None
+        
+        min_cost_index = a_index_list[cost_list.index(min_cost)]
+        new_node = self.expand_node(self.o_node_list[min_cost_index], a_node) # expand from minimum cost node to input node
+        new_node.o_cost = min_cost # select new node which has minimum cost as parent of near node
+
+        return new_node
 
     def append_inside_safe_node(self, a_node):
         if a_node is not None:
