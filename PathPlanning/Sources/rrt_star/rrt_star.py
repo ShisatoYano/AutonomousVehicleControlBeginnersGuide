@@ -277,6 +277,26 @@ class RRTStar:
         diff_y_m = a_y_m - self.o_goal.o_y_m
         return math.hypot(diff_x_m, diff_y_m)
     
+    def search_best_goal_node(self):
+        dist_to_goal_list = [self.calculate_dist_to_goal(n.o_x_m, n.o_y_m) for n in self.o_node_list]
+        goal_index_list = [dist_to_goal_list.index(d) for d in dist_to_goal_list if d <= self.o_expand_th_m]
+
+        # search the closest node to goal
+        safe_goal_index_list = []
+        for goal_index in goal_index_list:
+            goal_node = self.expand_node(self.o_node_list[goal_index], self.o_goal)
+            if self.o_map.is_inside_and_safe(goal_node.o_x_m, goal_node.o_y_m, goal_node.o_x_path, goal_node.o_y_path):
+                safe_goal_index_list.append(goal_index)
+        
+        if not safe_goal_index_list: return None
+
+        min_cost = min([self.o_node_list[index] for index in safe_goal_index_list])
+        for goal_index in safe_goal_index_list:
+            if self.o_node_list[goal_index].o_cost == min_cost:
+                return goal_index
+
+        return None
+    
     def find_final_path(self, a_goal_index):
         self.o_final_path = [[self.o_goal.o_x_m, self.o_goal.o_y_m]]
         node = self.o_node_list[a_goal_index]
@@ -322,12 +342,17 @@ class RRTStar:
             if show_plot and i % 5 == 0:
                 self.draw_searched_node(rand_samp_node)
             
-            if self.calculate_dist_to_goal(self.o_node_list[-1].o_x_m,
-                                           self.o_node_list[-1].o_y_m) <= self.o_expand_th_m:
-                final_node = self.expand_node(self.o_node_list[-1], self.o_goal)
-                if self.o_map.is_safe(final_node.o_x_path, final_node.o_y_path):
-                    self.find_final_path(len(self.o_node_list)-1)
+            # if reaches goal
+            if new_node:
+                goal_index = self.search_best_goal_node()
+                if goal_index is not None:
+                    self.find_final_path(goal_index)
                     break
+            
+        print("reached max iteration")
+        goal_index = self.search_best_goal_node()
+        if goal_index is not None:
+            self.find_final_path(goal_index)
 
 
 def main():
