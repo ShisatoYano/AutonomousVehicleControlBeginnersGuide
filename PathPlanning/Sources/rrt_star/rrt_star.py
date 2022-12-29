@@ -228,7 +228,7 @@ class RRTStar:
         
         min_cost_index = a_index_list[cost_list.index(min_cost)]
         new_node = self.expand_node(self.o_node_list[min_cost_index], a_node) # expand from minimum cost node to input node
-        new_node.o_cost = min_cost # select new node which has minimum cost as parent of near node
+        new_node.o_cost = min_cost # set new node's parent which has minimum cost
 
         return new_node
 
@@ -237,7 +237,13 @@ class RRTStar:
             if self.o_map.is_inside_and_safe(a_node.o_x_m, a_node.o_y_m, a_node.o_x_path, a_node.o_y_path):
                 near_index_list = self.find_near_nodes(a_node)
 
-                self.o_node_list.append(a_node)
+                new_node_min_cost_parent = self.select_parent(a_node, near_index_list)
+                if new_node_min_cost_parent:
+                    self.o_node_list.append(new_node_min_cost_parent)
+                else:
+                    # not found near node within range
+                    # add original new node into node list 
+                    self.o_node_list.append(a_node)
     
     def calculate_dist_to_goal(self, a_x_m, a_y_m):
         diff_x_m = a_x_m - self.o_goal.o_x_m
