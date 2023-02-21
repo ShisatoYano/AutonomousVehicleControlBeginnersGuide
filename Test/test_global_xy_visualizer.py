@@ -12,7 +12,6 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../src/visualizat
 from global_xy_visualizer import GlobalXYVisualizer
 
 
-def test_initialize():
+def test_create_instance():
     vis = GlobalXYVisualizer()
-
     assert vis.o_min == -5
