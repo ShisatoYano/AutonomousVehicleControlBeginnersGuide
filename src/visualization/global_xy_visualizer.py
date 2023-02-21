@@ -16,6 +16,7 @@ class GlobalXYVisualizer:
         self.o_objects = [] # register objects here
         self.o_min = a_min
         self.o_max = a_max
+        self.o_show_plot = True
     
     def add_object(self, a_object):
         """
@@ -24,6 +25,9 @@ class GlobalXYVisualizer:
 
         self.o_objects.append(a_object)
     
+    def not_show_plot(self):
+        self.o_show_plot = False
+
     def draw(self):
         # setting
         figure = plt.figure(figsize=(8, 8))
@@ -37,7 +41,7 @@ class GlobalXYVisualizer:
         # draw registered objects
         for obj in self.o_objects: obj.draw()
 
-        plt.show()
+        if self.o_show_plot: plt.show()
 
 
 def main():
