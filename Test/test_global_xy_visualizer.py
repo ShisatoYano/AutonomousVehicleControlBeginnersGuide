@@ -12,6 +12,29 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../src/visualizat
 from global_xy_visualizer import GlobalXYVisualizer
 
 
+# test instance
+vis = GlobalXYVisualizer()
+
+
+# mock class
+class MockObject:
+    def __init__(self):
+        pass
+
+    def draw(self):
+        pass
+
+
 def test_create_instance():
-    vis = GlobalXYVisualizer()
+    assert len(vis.o_objects) == 0
     assert vis.o_min == -5
+    assert vis.o_max == 5
+    assert vis.o_show_plot == True
+
+
+def test_draw():
+    mock = MockObject()
+    vis.add_object(mock)
+    vis.not_show_plot()
+    vis.draw()
+    assert len(vis.o_objects) == 1
