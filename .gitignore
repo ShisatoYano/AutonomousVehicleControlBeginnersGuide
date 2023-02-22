@@ -3,8 +3,6 @@ Localization/Sources/kalman_filter/__pycache__
 Modeling/Sources/motion/__pycache__
 Modeling/Sources/vehicle/__pycache__
 src/visualization/__pycache__
-Test/__pycache__
-Test/.pytest_cache
-Test/.coverage
+test/__pycache__
 .pytest_cache
 .coverage
