@@ -39,7 +39,7 @@ class GlobalXYVisualizer:
         axes.set_ylabel('Y[m]', fontsize=20)
 
         # draw registered objects
-        for obj in self.o_objects: obj.draw()
+        for obj in self.o_objects: obj.draw(axes)
 
         if self.o_show_plot: plt.show()
 
