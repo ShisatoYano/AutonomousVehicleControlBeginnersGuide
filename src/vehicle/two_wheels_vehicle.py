@@ -20,3 +20,6 @@ class TwoWheelsVehicle:
     def __init__(self, pose, f_len_m=2.0, r_len_m=0.0, tire_r_m=0.3,
                  tire_w_m=0.12, color='k', line_w=1.0, line_type='-'):
         self.pose = pose
+    
+    def draw(self, axes):
+        x_m, y_m, yaw_rad = self.pose
