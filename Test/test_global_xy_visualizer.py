@@ -26,10 +26,10 @@ class MockObject:
 
 
 def test_create_instance():
-    assert len(vis.o_objects) == 0
-    assert vis.o_min == -5
-    assert vis.o_max == 5
-    assert vis.o_show_plot == True
+    assert len(vis.objects) == 0
+    assert vis.min_lim == -5
+    assert vis.max_lim == 5
+    assert vis.show_plot == True
 
 
 def test_draw():
@@ -37,4 +37,4 @@ def test_draw():
     vis.add_object(mock)
     vis.not_show_plot()
     vis.draw()
-    assert len(vis.o_objects) == 1
+    assert len(vis.objects) == 1
