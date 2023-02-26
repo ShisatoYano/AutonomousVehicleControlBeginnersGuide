@@ -13,6 +13,7 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../visualization"
 from global_xy_visualizer import GlobalXYVisualizer
 from vehicle_specification import VehicleSpecification
 from body import Body
+from chassis import Chassis
 
 
 class TwoWheelsVehicle:
@@ -29,12 +30,14 @@ class TwoWheelsVehicle:
         
         self.pose = pose
         self.spec = spec
-        self.body = Body(self.spec)
+        self.body = Body(spec)
+        self.chassis = Chassis(spec)
 
     
     def draw(self, axes):
         x_m, y_m, yaw_rad = self.pose
         self.body.draw(axes)
+        self.chassis.draw(axes)
 
 
 def main():
