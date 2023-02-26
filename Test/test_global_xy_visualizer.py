@@ -35,6 +35,9 @@ def test_create_instance():
 def test_draw():
     mock = MockObject()
     vis.add_object(mock)
-    vis.not_show_plot()
-    vis.draw()
     assert len(vis.objects) == 1
+
+    vis.not_show_plot()
+    assert vis.show_plot == False
+
+    vis.draw()
