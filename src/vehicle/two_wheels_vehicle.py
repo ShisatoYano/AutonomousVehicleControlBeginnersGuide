@@ -14,6 +14,7 @@ from global_xy_visualizer import GlobalXYVisualizer
 from vehicle_specification import VehicleSpecification
 from body import Body
 from chassis import Chassis
+from tire import Tire
 
 
 class TwoWheelsVehicle:
@@ -32,12 +33,16 @@ class TwoWheelsVehicle:
         self.spec = spec
         self.body = Body(spec)
         self.chassis = Chassis(spec)
+        self.front_tire = Tire(spec, spec.f_len_m, 0.0)
+        self.rear_tire = Tire(spec, -spec.r_len_m, 0.0)
 
     
     def draw(self, axes):
         x_m, y_m, yaw_rad = self.pose
         self.body.draw(axes)
         self.chassis.draw(axes)
+        self.front_tire.draw(axes)
+        self.rear_tire.draw(axes)
 
 
 def main():
