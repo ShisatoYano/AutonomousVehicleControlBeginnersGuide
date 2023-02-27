@@ -4,6 +4,7 @@ Unit test of GlobalXYVisualizer
 Author: Shisato Yano
 """
 
+import matplotlib.pyplot as plt
 import pytest
 import sys
 import os
@@ -40,4 +41,5 @@ def test_draw():
     vis.not_show_plot()
     assert vis.show_plot == False
 
+    plt.clf()
     vis.draw()
