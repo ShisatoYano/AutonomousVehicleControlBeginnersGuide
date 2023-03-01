@@ -48,7 +48,7 @@ def test_points():
 
 
 def test_draw():
-    plt.clf()
+    # plt.clf()
     figure = plt.figure(figsize=(8, 8))
     axes = figure.add_subplot(111)
     chassis.draw(axes)
