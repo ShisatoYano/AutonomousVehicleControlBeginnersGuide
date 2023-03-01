@@ -32,6 +32,7 @@ class GlobalXYVisualizer:
     def one_step(self, i, elems, axes):
         while elems: elems.pop().remove()
         elems.append(axes.text(-4.4, 4.5, "t = "+str(i)+"[s]", fontsize=15))
+        for obj in self.objects: obj.draw(axes, elems)
 
     def draw(self):
         # setting
@@ -51,11 +52,6 @@ class GlobalXYVisualizer:
             plt.show()
         else:
             for i in range(1000): self.one_step(i, elems, axes)
-
-        # draw registered objects
-        # for obj in self.objects: obj.draw(axes)
-
-        # if self.show_plot: plt.show()
 
 
 def main():

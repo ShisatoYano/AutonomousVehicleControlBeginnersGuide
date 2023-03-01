@@ -37,7 +37,7 @@ class TwoWheelsVehicle:
         self.rear_tire = Tire(spec, -spec.r_len_m, 0.0)
 
     
-    def draw(self, axes):
+    def draw(self, axes, elems):
         x_m, y_m, yaw_rad = self.pose
         self.body.draw(axes)
         self.chassis.draw(axes)

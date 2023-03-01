@@ -22,7 +22,7 @@ class MockObject:
     def __init__(self):
         pass
 
-    def draw(self, a_axes):
+    def draw(self, a_axes, elems):
         pass
 
 
