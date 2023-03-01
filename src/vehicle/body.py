@@ -34,5 +34,8 @@ class Body:
             [self.width_m, self.width_m, -self.width_m, -self.width_m, self.width_m]
         ])
     
-    def draw(self, axes):
-        axes.plot(self.points[0, :], self.points[1, :], lw=self.line_w, color=self.color, ls=self.line_type)
+    def points(self):
+        return self.points
+
+    def draw_object(self, axes):
+        return axes.plot(self.points[0, :], self.points[1, :], lw=self.line_w, color=self.color, ls=self.line_type)

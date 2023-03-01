@@ -39,10 +39,10 @@ class TwoWheelsVehicle:
     
     def draw(self, axes, elems):
         x_m, y_m, yaw_rad = self.pose
-        self.body.draw(axes)
-        self.chassis.draw(axes)
-        self.front_tire.draw(axes)
-        self.rear_tire.draw(axes)
+        elems += self.body.draw_object(axes)
+        # self.chassis.draw(axes)
+        # self.front_tire.draw(axes)
+        # self.rear_tire.draw(axes)
 
 
 def main():
