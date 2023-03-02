@@ -57,7 +57,7 @@ def test_points():
     assert body.points[1, 4] == 0.75
 
 
-def test_draw():
+def test_draw_object():
     plt.clf()
     figure = plt.figure(figsize=(8, 8))
     axes = figure.add_subplot(111)
