@@ -51,4 +51,4 @@ def test_draw():
     # plt.clf()
     figure = plt.figure(figsize=(8, 8))
     axes = figure.add_subplot(111)
-    chassis.draw(axes)
+    chassis.draw_object(axes)
