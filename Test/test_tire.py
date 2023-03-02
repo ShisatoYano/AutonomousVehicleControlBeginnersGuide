@@ -55,8 +55,8 @@ def test_points():
     assert tire.points[1, 4] == 2.0
 
 
-def test_draw():
+def test_draw_object():
     plt.clf()
     figure = plt.figure(figsize=(8, 8))
     axes = figure.add_subplot(111)
-    tire.draw(axes)
+    tire.draw_object(axes)
