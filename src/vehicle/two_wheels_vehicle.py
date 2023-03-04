@@ -10,11 +10,13 @@ import sys
 import os
 
 sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../visualization")
+sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../agent")
 from global_xy_visualizer import GlobalXYVisualizer
 from vehicle_specification import VehicleSpecification
 from body import Body
 from chassis import Chassis
 from tire import Tire
+from agent import Agent
 
 
 class TwoWheelsVehicle:
@@ -27,6 +29,7 @@ class TwoWheelsVehicle:
         Constructor
         pose: vehicle's pose [x[m], y[m], yaw[rad]]
         spec: vehicle's specification object
+        agent: agent to decide control input
         """
         
         self.pose = pose
@@ -38,6 +41,9 @@ class TwoWheelsVehicle:
         self.agent = agent
         self.poses = [pose]
 
+    def one_step(self, time_s):
+        if not self.agent: return
+        speed_msp, yaw_rate_rps = self.agent.control_input()
     
     def draw(self, axes, elems):
         x_m, y_m, yaw_rad = self.pose
