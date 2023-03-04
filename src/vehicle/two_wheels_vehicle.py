@@ -22,7 +22,7 @@ class TwoWheelsVehicle:
     Two Wheels Vehicle model class
     """
 
-    def __init__(self, pose, spec):
+    def __init__(self, pose, spec, agent=None):
         """
         Constructor
         pose: vehicle's pose [x[m], y[m], yaw[rad]]
@@ -35,14 +35,20 @@ class TwoWheelsVehicle:
         self.chassis = Chassis(spec)
         self.front_tire = Tire(spec, spec.f_len_m, 0.0)
         self.rear_tire = Tire(spec, -spec.r_len_m, 0.0)
+        self.agent = agent
+        self.poses = [pose]
 
     
     def draw(self, axes, elems):
         x_m, y_m, yaw_rad = self.pose
+
         elems += self.body.draw_object(axes)
         elems += self.chassis.draw_object(axes)
         elems += self.front_tire.draw_object(axes)
         elems += self.rear_tire.draw_object(axes)
+
+        self.poses.append(self.pose)
+        elems += axes.plot([p[0] for p in self.poses], [p[1] for p in self.poses], linewidth=self.spec.line_w, color=self.spec.color)
 
 
 def main():
