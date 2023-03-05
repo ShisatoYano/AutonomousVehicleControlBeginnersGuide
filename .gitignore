@@ -3,6 +3,7 @@ Localization/Sources/kalman_filter/__pycache__
 Modeling/Sources/motion/__pycache__
 Modeling/Sources/vehicle/__pycache__
 src/agent/__pycache__
+src/motion_model/__pycache__
 src/vehicle/__pycache__
 src/visualization/__pycache__
 test/__pycache__
