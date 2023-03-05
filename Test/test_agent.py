@@ -22,5 +22,5 @@ def test_create_instance():
 
 
 def test_control_input():
-    assert agent.control_input()[0] == 1.0
-    assert agent.control_input()[1] == 2.0
+    assert agent.control_input()[0, 0] == 1.0
+    assert agent.control_input()[1, 0] == 2.0

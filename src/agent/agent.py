@@ -4,6 +4,8 @@ agent.py
 Author: Shisato Yano
 """
 
+import numpy as np
+
 class Agent:
     """
     Agent class
@@ -14,4 +16,4 @@ class Agent:
         self.yaw_rate_rps = yaw_rate_rps # rad/s
 
     def control_input(self):
-        return self.speed_mps, self.yaw_rate_rps
+        return np.array([[self.speed_mps], [self.yaw_rate_rps]])
