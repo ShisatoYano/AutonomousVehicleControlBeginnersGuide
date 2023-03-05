@@ -13,10 +13,12 @@ class GlobalXYVisualizer:
     Visualization class for global 2D X-Y plot
     """
     
-    def __init__(self, min_lim=-5, max_lim=5):
+    def __init__(self, min_lim=-5, max_lim=5, time_span_s=10, time_interval_s=0.1):
         self.objects = [] # register objects here
         self.min_lim = min_lim
         self.max_lim = max_lim
+        self.time_span_s = time_span_s
+        self.time_interval_s = time_interval_s
         self.show_plot = True
     
     def add_object(self, obj):
@@ -31,8 +33,11 @@ class GlobalXYVisualizer:
 
     def one_step(self, i, elems, axes):
         while elems: elems.pop().remove()
-        elems.append(axes.text(-4.4, 4.5, "t = "+str(i)+"[s]", fontsize=15))
-        for obj in self.objects: obj.draw(axes, elems)
+        time_str = "t = {0:.2f}[s]".format(self.time_interval_s * i)
+        elems.append(axes.text(-4.4, 4.5, time_str, fontsize=15))
+        for obj in self.objects:
+            obj.draw(axes, elems)
+            if hasattr(obj, "one_step"): obj.one_step(self.time_interval_s)
 
     def draw(self):
         # setting
@@ -48,7 +53,9 @@ class GlobalXYVisualizer:
 
         if self.show_plot:
             self.anime = anm.FuncAnimation(figure, self.one_step, fargs=(elems, axes),
-                                           frames=10, interval=1000, repeat=False)
+                                           frames=int(self.time_span_s / self.time_interval_s)+1, 
+                                           interval=int(self.time_interval_s * 1000), 
+                                           repeat=False)
             plt.show()
         else:
             for i in range(1000): self.one_step(i, elems, axes)

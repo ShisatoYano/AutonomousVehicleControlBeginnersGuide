@@ -22,7 +22,10 @@ class MockObject:
     def __init__(self):
         pass
 
-    def draw(self, a_axes, elems):
+    def one_step(self, time_interval_s):
+        pass
+
+    def draw(self, axes, elems):
         pass
 
 
@@ -30,6 +33,8 @@ def test_create_instance():
     assert len(vis.objects) == 0
     assert vis.min_lim == -5
     assert vis.max_lim == 5
+    assert vis.time_span_s == 10
+    assert vis.time_interval_s == 0.1
     assert vis.show_plot == True
 
 
