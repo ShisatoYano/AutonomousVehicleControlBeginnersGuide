@@ -15,5 +15,5 @@ class Agent:
         self.speed_mps = speed_mps # m/s
         self.yaw_rate_rps = yaw_rate_rps # rad/s
 
-    def control_input(self):
+    def control_order(self):
         return np.array([[self.speed_mps], [self.yaw_rate_rps]])

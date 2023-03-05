@@ -21,6 +21,6 @@ def test_create_instance():
     assert agent.yaw_rate_rps == 2.0
 
 
-def test_control_input():
-    assert agent.control_input()[0, 0] == 1.0
-    assert agent.control_input()[1, 0] == 2.0
+def test_control_order():
+    assert agent.control_order()[0, 0] == 1.0
+    assert agent.control_order()[1, 0] == 2.0
