@@ -13,7 +13,7 @@ class GlobalXYVisualizer:
     Visualization class for global 2D X-Y plot
     """
     
-    def __init__(self, min_lim=-5, max_lim=5, time_span_s=10, time_interval_s=0.1):
+    def __init__(self, min_lim=0, max_lim=30, time_span_s=10, time_interval_s=0.1):
         self.objects = [] # register objects here
         self.min_lim = min_lim
         self.max_lim = max_lim
@@ -34,7 +34,7 @@ class GlobalXYVisualizer:
     def one_step(self, i, elems, axes):
         while elems: elems.pop().remove()
         time_str = "t = {0:.2f}[s]".format(self.time_interval_s * i)
-        elems.append(axes.text(-4.4, 4.5, time_str, fontsize=15))
+        elems.append(axes.text(2, 28, time_str, fontsize=15))
         for obj in self.objects:
             obj.draw(axes, elems)
             if hasattr(obj, "one_step"): obj.one_step(self.time_interval_s)
