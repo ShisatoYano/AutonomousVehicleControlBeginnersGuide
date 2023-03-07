@@ -17,29 +17,45 @@ def test_rotation():
     points = np.array([[1.0], [0.0]])
 
     rotated_points = Transformation.rotation(points, np.deg2rad(90))
-    assert int(rotated_points[0, 0]) == 0.0
-    assert int(rotated_points[1, 0]) == 1.0
+    assert round(rotated_points[0, 0], 1) == 0.0
+    assert round(rotated_points[1, 0], 1) == 1.0
 
     rotated_points = Transformation.rotation(points, np.deg2rad(180))
-    assert int(rotated_points[0, 0]) == -1.0
-    assert int(rotated_points[1, 0]) == 0.0
+    assert round(rotated_points[0, 0], 1) == -1.0
+    assert round(rotated_points[1, 0], 1) == 0.0
 
     rotated_points = Transformation.rotation(points, np.deg2rad(270))
-    assert int(rotated_points[0, 0]) == 0.0
-    assert int(rotated_points[1, 0]) == -1.0
+    assert round(rotated_points[0, 0], 1) == 0.0
+    assert round(rotated_points[1, 0], 1) == -1.0
 
 
 def test_translation():
     points = np.array([[1.0], [0.0]])
 
     translated_points = Transformation.translation(points, 1.0, 0.0)
-    assert int(translated_points[0, 0]) == 2.0
-    assert int(translated_points[1, 0]) == 0.0
+    assert round(translated_points[0, 0], 1) == 2.0
+    assert round(translated_points[1, 0], 1) == 0.0
 
     translated_points = Transformation.translation(points, 0.0, 1.0)
-    assert int(translated_points[0, 0]) == 1.0
-    assert int(translated_points[1, 0]) == 1.0
+    assert round(translated_points[0, 0], 1) == 1.0
+    assert round(translated_points[1, 0], 1) == 1.0
 
     translated_points = Transformation.translation(points, -1.0, -1.0)
-    assert int(translated_points[0, 0]) == 0.0
-    assert int(translated_points[1, 0]) == -1.0
+    assert round(translated_points[0, 0], 1) == 0.0
+    assert round(translated_points[1, 0], 1) == -1.0
+
+
+def test_homogeneous_transformation():
+    points = np.array([[1.0], [0.0]])
+
+    transformed_points = Transformation.homogeneous_transformation(points, np.array([[1.0], [-1.0], [np.deg2rad(90)]]))
+    assert round(transformed_points[0, 0], 1) == 1.0
+    assert round(transformed_points[1, 0], 1) == 0.0
+
+    transformed_points = Transformation.homogeneous_transformation(points, np.array([[1.0], [-1.0], [np.deg2rad(180)]]))
+    assert round(transformed_points[0, 0], 1) == 0.0
+    assert round(transformed_points[1, 0], 1) == -1.0
+
+    transformed_points = Transformation.homogeneous_transformation(points, np.array([[1.0], [-1.0], [np.deg2rad(270)]]))
+    assert round(transformed_points[0, 0], 1) == 1.0
+    assert round(transformed_points[1, 0], 1) == -2.0
