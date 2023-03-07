@@ -27,3 +27,19 @@ def test_rotation():
     rotated_points = Transformation.rotation(points, np.deg2rad(270))
     assert int(rotated_points[0, 0]) == 0.0
     assert int(rotated_points[1, 0]) == -1.0
+
+
+def test_translation():
+    points = np.array([[1.0], [0.0]])
+
+    translated_points = Transformation.translation(points, 1.0, 0.0)
+    assert int(translated_points[0, 0]) == 2.0
+    assert int(translated_points[1, 0]) == 0.0
+
+    translated_points = Transformation.translation(points, 0.0, 1.0)
+    assert int(translated_points[0, 0]) == 1.0
+    assert int(translated_points[1, 0]) == 1.0
+
+    translated_points = Transformation.translation(points, -1.0, -1.0)
+    assert int(translated_points[0, 0]) == 0.0
+    assert int(translated_points[1, 0]) == -1.0
