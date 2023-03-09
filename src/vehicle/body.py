@@ -6,6 +6,11 @@ Author: Shisato Yano
 
 import numpy as np
 import matplotlib.pyplot as plt
+import sys
+import os
+
+sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../common")
+from transformation import Transformation
 
 
 class Body:
@@ -34,5 +39,10 @@ class Body:
             [self.width_m, self.width_m, -self.width_m, -self.width_m, self.width_m]
         ])
 
-    def draw(self, axes):
-        return axes.plot(self.points[0, :], self.points[1, :], lw=self.line_w, color=self.color, ls=self.line_type)
+    def draw(self, axes, pose):
+        transformed_points = Transformation.homogeneous_transformation(self.points, pose)
+        return axes.plot(transformed_points[0, :], 
+                         transformed_points[1, :], 
+                         lw=self.line_w, 
+                         color=self.color, 
+                         ls=self.line_type)
