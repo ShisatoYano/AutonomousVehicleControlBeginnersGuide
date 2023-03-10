@@ -39,11 +39,13 @@ class Tire:
             [self.w_m, self.w_m, -self.w_m, -self.w_m, self.w_m]
         ])
 
-        self.points[0, :] += self.x_m
-        self.points[1, :] += self.y_m
+        self.points[0, :]
+        self.points[1, :]
     
-    def draw(self, axes, pose):
-        transformed_points = Transformation.homogeneous_transformation(self.points, pose)
+    def draw(self, axes, pose, steer_rad):
+        base_steer = np.array([[self.x_m], [self.y_m], [steer_rad]])
+        transformed_points = Transformation.homogeneous_transformation(self.points, base_steer)
+        transformed_points = Transformation.homogeneous_transformation(transformed_points, pose)
         return axes.plot(transformed_points[0, :], 
                          transformed_points[1, :], 
                          lw=self.line_w, 

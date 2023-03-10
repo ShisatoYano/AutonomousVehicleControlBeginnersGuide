@@ -5,7 +5,7 @@ Author: Shisato Yano
 """
 
 import numpy as np
-from math import cos, sin
+from math import cos, sin, asin
 
 
 class MotionModel:
@@ -21,3 +21,6 @@ class MotionModel:
         return pose + np.array([[cos(yaw_rad) * time_interval_s, 0.0],
                                 [sin(yaw_rad) * time_interval_s, 0.0],
                                 [0.0, time_interval_s]]) @ order
+    
+    def steering_angle_rad(self, order):
+        return asin(self.spec.wheel_base_m * order[1, 0] / order[0, 0])

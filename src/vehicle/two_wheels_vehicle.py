@@ -37,6 +37,7 @@ class TwoWheelsVehicle:
         """
         
         self.pose = pose
+        self.steer_rad = 0.0
         self.spec = spec
         self.body = Body(spec)
         self.chassis = Chassis(spec)
@@ -50,14 +51,13 @@ class TwoWheelsVehicle:
         if not self.agent or not self.motion: return
         order = self.agent.control_order()
         self.pose = self.motion.state_transition(self.pose, order, time_interval_s)
+        self.steer_rad = self.motion.steering_angle_rad(order)
     
     def draw(self, axes, elems):
-        x_m, y_m, yaw_rad = self.pose
-
         elems += self.body.draw(axes, self.pose)
         elems += self.chassis.draw(axes, self.pose)
-        elems += self.front_tire.draw(axes, self.pose)
-        elems += self.rear_tire.draw(axes, self.pose)
+        elems += self.front_tire.draw(axes, self.pose, self.steer_rad)
+        elems += self.rear_tire.draw(axes, self.pose, 0.0)
 
         self.poses.append(self.pose)
         elems += axes.plot([p[0, 0] for p in self.poses], [p[1, 0] for p in self.poses], linewidth=0, marker=".", color=self.spec.color)
