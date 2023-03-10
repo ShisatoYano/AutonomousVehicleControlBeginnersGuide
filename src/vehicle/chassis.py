@@ -6,6 +6,11 @@ Author: Shisato Yano
 
 import numpy as np
 import matplotlib.pyplot as plt
+import sys
+import os
+
+sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../common")
+from transformation import Transformation
 
 
 class Chassis:
@@ -30,5 +35,5 @@ class Chassis:
             [0.0, 0.0]
         ])
     
-    def draw_object(self, axes):
+    def draw(self, axes):
         return axes.plot(self.points[0, :], self.points[1, :], lw=self.line_w, color=self.color, ls=self.line_type)

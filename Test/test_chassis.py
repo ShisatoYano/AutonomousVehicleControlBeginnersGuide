@@ -47,8 +47,7 @@ def test_points():
     assert chassis.points[1, 1] == 0.0
 
 
-def test_draw_object():
-    # plt.clf()
+def test_draw():
     figure = plt.figure(figsize=(8, 8))
     axes = figure.add_subplot(111)
-    chassis.draw_object(axes)
+    chassis.draw(axes)
