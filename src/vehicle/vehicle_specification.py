@@ -24,6 +24,7 @@ class VehicleSpecification:
 
         self.f_len_m = f_len_m
         self.r_len_m = r_len_m
+        self.wheel_base_m = f_len_m + r_len_m
         
         self.tire_r_m = tire_r_m
         self.tire_w_m = tire_w_m

@@ -19,6 +19,7 @@ spec = VehicleSpecification()
 def test_create_instance():
     assert spec.f_len_m == 2.0
     assert spec.r_len_m == 0.0
+    assert spec.wheel_base_m == 2.0
     assert spec.tire_r_m == 0.3
     assert spec.tire_w_m == 0.12
     assert spec.color == 'k'

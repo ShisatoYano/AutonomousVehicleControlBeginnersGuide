@@ -14,7 +14,7 @@ class MotionModel:
     """
 
     def __init__(self, spec):
-        self.wheel_base_m = spec.f_len_m + spec.r_len_m
+        self.spec = spec
     
     def state_transition(self, pose, order, time_interval_s):
         yaw_rad = pose[2, 0]
