@@ -6,6 +6,7 @@ Author: Shisato Yano
 
 import matplotlib.pyplot as plt
 import numpy as np
+import math
 import sys
 import os
 
@@ -63,12 +64,12 @@ class TwoWheelsVehicle:
 
 
 def main():
-    vis = GlobalXYVisualizer(min_lim=0, max_lim=30)
+    vis = GlobalXYVisualizer(min_lim=0, max_lim=30, time_span_s=20)
 
     spec = VehicleSpecification()
-    agent = Agent(3.0, 0.0)
+    agent = Agent(2.0, 10.0/180*math.pi)
     motion = MotionModel(spec)
-    vehicle = TwoWheelsVehicle(np.array([[0.0], [15.0], [0.0]]),
+    vehicle = TwoWheelsVehicle(np.array([[15.0], [0.0], [0.0]]),
                                spec, agent, motion)
     
     vis.add_object(vehicle)
