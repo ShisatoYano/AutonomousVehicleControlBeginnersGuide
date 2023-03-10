@@ -55,8 +55,8 @@ class TwoWheelsVehicle:
 
         elems += self.body.draw(axes, self.pose)
         elems += self.chassis.draw(axes, self.pose)
-        elems += self.front_tire.draw_object(axes)
-        elems += self.rear_tire.draw_object(axes)
+        elems += self.front_tire.draw(axes, self.pose)
+        elems += self.rear_tire.draw(axes, self.pose)
 
         self.poses.append(self.pose)
         elems += axes.plot([p[0, 0] for p in self.poses], [p[1, 0] for p in self.poses], linewidth=0, marker=".", color=self.spec.color)

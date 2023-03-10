@@ -5,6 +5,7 @@ Author: Shisato Yano
 """
 
 import matplotlib.pyplot as plt
+import numpy as np
 import pytest
 import sys
 import os
@@ -58,4 +59,4 @@ def test_points():
 def test_draw():
     figure = plt.figure(figsize=(8, 8))
     axes = figure.add_subplot(111)
-    tire.draw(axes)
+    tire.draw(axes, np.array([[0.0], [0.0], [0.0]]))
