@@ -35,5 +35,10 @@ class Chassis:
             [0.0, 0.0]
         ])
     
-    def draw(self, axes):
-        return axes.plot(self.points[0, :], self.points[1, :], lw=self.line_w, color=self.color, ls=self.line_type)
+    def draw(self, axes, pose):
+        transformed_points = Transformation.homogeneous_transformation(self.points, pose)
+        return axes.plot(transformed_points[0, :], 
+                         transformed_points[1, :], 
+                         lw=self.line_w, 
+                         color=self.color, 
+                         ls=self.line_type)
