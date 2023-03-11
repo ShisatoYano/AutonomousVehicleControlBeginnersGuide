@@ -10,7 +10,8 @@ class VehicleSpecification:
     """
     
     def __init__(self, f_len_m=2.0, r_len_m=0.0, tire_r_m=0.3,
-                 tire_w_m=0.12, color='k', line_w=1.0, line_type='-'):
+                 tire_w_m=0.12, axle_half_m=0.5, color='k', 
+                 line_w=1.0, line_type='-'):
         """
         Constructor
         f_len_m: length[m] from origin to center of front axle
@@ -28,6 +29,7 @@ class VehicleSpecification:
         
         self.tire_r_m = tire_r_m
         self.tire_w_m = tire_w_m
+        self.axle_half_m = axle_half_m
 
         self.color = color
         self.line_w = line_w

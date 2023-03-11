@@ -22,6 +22,7 @@ def test_create_instance():
     assert spec.wheel_base_m == 2.0
     assert spec.tire_r_m == 0.3
     assert spec.tire_w_m == 0.12
+    assert spec.axle_half_m == 0.5
     assert spec.color == 'k'
     assert spec.line_w == 1.0
     assert spec.line_type == '-'
