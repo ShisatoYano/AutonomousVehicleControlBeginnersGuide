@@ -48,7 +48,7 @@ class TwoWheelsVehicle:
         self.poses = [pose]
 
     def one_step(self, time_interval_s):
-        if not self.agent or not self.motion: return
+        if not self.agent: return
         order = self.agent.control_order()
         self.pose = self.motion.state_transition(self.pose, order, time_interval_s)
         self.steer_rad = self.motion.steering_angle_rad(order)
