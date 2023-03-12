@@ -37,10 +37,8 @@ class Axle:
             [self.y_m, -self.y_m]
         ])
     
-    def draw(self, axes, pose, steer_rad):
-        base_steer = np.array([[self.x_m], [0.0], [steer_rad]])
-        transformed_points = Transformation.homogeneous_transformation(self.points, base_steer)
-        transformed_points = Transformation.homogeneous_transformation(transformed_points, pose)
+    def draw(self, axes, pose):
+        transformed_points = Transformation.homogeneous_transformation(self.points, pose)
         return axes.plot(transformed_points[0, :], 
                          transformed_points[1, :], 
                          lw=self.line_w, 

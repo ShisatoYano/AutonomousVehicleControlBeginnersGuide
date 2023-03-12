@@ -49,5 +49,5 @@ def test_points():
 def test_draw():
     figure = plt.figure(figsize=(8, 8))
     axes = figure.add_subplot(111)
-    axle.draw(axes, np.array([[0.0], [0.0], [0.0]]), 0.0)
+    axle.draw(axes, np.array([[0.0], [0.0], [0.0]]))
 
