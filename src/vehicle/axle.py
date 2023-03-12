@@ -38,7 +38,8 @@ class Axle:
         ])
     
     def draw(self, axes, pose):
-        transformed_points = Transformation.homogeneous_transformation(self.points, pose)
+        translated_points = Transformation.translation(self.points, self.x_m, 0.0)
+        transformed_points = Transformation.homogeneous_transformation(translated_points, pose)
         return axes.plot(transformed_points[0, :], 
                          transformed_points[1, :], 
                          lw=self.line_w, 
