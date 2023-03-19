@@ -38,9 +38,6 @@ class Tire:
             [self.r_m, -self.r_m, -self.r_m, self.r_m, self.r_m],
             [self.w_m, self.w_m, -self.w_m, -self.w_m, self.w_m]
         ])
-
-        self.points[0, :]
-        self.points[1, :]
     
     def draw(self, axes, pose, steer_rad):
         base_steer = np.array([[self.x_m], [self.y_m], [steer_rad]])
