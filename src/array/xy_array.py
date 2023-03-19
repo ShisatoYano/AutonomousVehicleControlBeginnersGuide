@@ -31,3 +31,8 @@ class XYArray:
         rotated_array = rotation_matrix.dot(self.array)
 
         return XYArray(rotated_array)
+    
+    def translation(self, x, y):
+        translated_array = self.array + np.ones(self.array.shape) * np.array([[x], [y]])
+
+        return XYArray(translated_array)
