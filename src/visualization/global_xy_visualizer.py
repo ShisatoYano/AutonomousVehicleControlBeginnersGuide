@@ -33,8 +33,8 @@ class GlobalXYVisualizer:
 
     def one_step(self, i, elems, axes):
         while elems: elems.pop().remove()
-        time_str = "t = {0:.2f}[s]".format(self.time_interval_s * i)
-        elems.append(axes.text(2, 28, time_str, fontsize=15))
+        time_str = "Time = {0:.2f}[s]".format(self.time_interval_s * i)
+        axes.set_title(time_str, fontsize=15)
         for obj in self.objects:
             obj.draw(axes, elems)
             if hasattr(obj, "one_step"): obj.one_step(self.time_interval_s)

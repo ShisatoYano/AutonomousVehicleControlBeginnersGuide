@@ -46,5 +46,4 @@ def test_draw():
     vis.not_show_plot()
     assert vis.show_plot == False
 
-    # plt.clf()
     vis.draw()
