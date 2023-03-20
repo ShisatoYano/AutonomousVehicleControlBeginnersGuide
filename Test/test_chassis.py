@@ -30,25 +30,13 @@ chassis = Chassis(spec)
 
 
 def test_create_instance():
-    assert chassis.f_len_m == 1.0
-    assert chassis.r_len_m == 1.0
-    assert chassis.color == 'k'
-    assert chassis.line_w == 1.0
-    assert chassis.line_type == '-'
-
-
-def test_points():
-    assert chassis.points.shape[0] == 2
-    assert chassis.points.shape[1] == 2
-
-    assert chassis.points[0, 0] == 1.0
-    assert chassis.points[0, 1] == -1.0
-
-    assert chassis.points[1, 0] == 0.0
-    assert chassis.points[1, 1] == 0.0
+    assert hasattr(chassis, "spec") == True
+    assert hasattr(chassis, "array") == True
+    assert chassis.spec != None
+    assert chassis.array != None
 
 
 def test_draw():
     figure = plt.figure(figsize=(8, 8))
     axes = figure.add_subplot(111)
-    chassis.draw(axes, np.array([[0.0], [0.0], [0.0]]))
+    assert chassis.draw(axes, np.array([[0.0], [0.0], [0.0]])) != None

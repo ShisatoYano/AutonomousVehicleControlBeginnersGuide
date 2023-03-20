@@ -5,12 +5,11 @@ Author: Shisato Yano
 """
 
 import numpy as np
-import matplotlib.pyplot as plt
 import sys
 import os
 
-sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../common")
-from transformation import Transformation
+sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../array")
+from xy_array import XYArray
 
 
 class Chassis:
@@ -21,24 +20,19 @@ class Chassis:
     def __init__(self, spec):
         """
         Constructor
-        spec: vehicle specification object
+        spec: object of VehicleSpecification class
         """
         
-        self.f_len_m = spec.f_len_m
-        self.r_len_m = spec.r_len_m
-        self.color = spec.color
-        self.line_w = spec.line_w
-        self.line_type = spec.line_type
+        self.spec = spec
 
-        self.points = np.array([
-            [spec.f_len_m, -spec.r_len_m],
-            [0.0, 0.0]
-        ])
+        contour = np.array([[self.spec.f_len_m, -self.spec.r_len_m],
+                            [0.0, 0.0]])
+        self.array = XYArray(contour)
     
     def draw(self, axes, pose):
-        transformed_points = Transformation.homogeneous_transformation(self.points, pose)
-        return axes.plot(transformed_points[0, :], 
-                         transformed_points[1, :], 
-                         lw=self.line_w, 
-                         color=self.color, 
-                         ls=self.line_type)
+        transformed_array = self.array.homogeneous_transformation(pose[0, 0], pose[1, 0], pose[2, 0])
+        return axes.plot(transformed_array[0, :], 
+                         transformed_array[1, :], 
+                         lw=self.spec.line_w, 
+                         color=self.spec.color, 
+                         ls=self.spec.line_type)
