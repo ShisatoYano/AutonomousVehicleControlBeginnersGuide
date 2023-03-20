@@ -13,7 +13,7 @@ class Body:
     def __init__(self, array):
         """
         Constructor
-        spec: vehicle specification object
+        array: object of XYArray class
         """
 
         self.array = array
