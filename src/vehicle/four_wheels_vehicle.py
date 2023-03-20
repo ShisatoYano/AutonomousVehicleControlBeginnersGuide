@@ -18,7 +18,6 @@ from vehicle_specification import VehicleSpecification
 from body import Body
 from chassis import Chassis
 from tire import Tire
-from axle import Axle
 from front_axle import FrontAxle
 from rear_axle import RearAxle
 from agent import Agent
