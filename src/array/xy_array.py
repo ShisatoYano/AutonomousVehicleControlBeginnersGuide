@@ -35,5 +35,5 @@ class XYArray:
         return XYArray(translated_array)
     
     def draw(self, axes, color, line_width, line_type):
-        return axes.plot(self.array[0, 0], self.array[1, 0],
+        return axes.plot(self.array[0, :], self.array[1, :],
                          color=color, lw=line_width, ls=line_type)
