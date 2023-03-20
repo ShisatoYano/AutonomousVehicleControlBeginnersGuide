@@ -31,7 +31,3 @@ class XYArray:
         rotated_array = rotation_matrix.dot(self.array)
 
         return rotated_array + np.ones(rotated_array.shape) * np.array([[x], [y]])
-    
-    def draw(self, axes, color, line_width, line_type):
-        return axes.plot(self.array[0, :], self.array[1, :],
-                         color=color, lw=line_width, ls=line_type)
