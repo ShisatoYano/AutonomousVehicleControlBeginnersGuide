@@ -20,6 +20,7 @@ from chassis import Chassis
 from tire import Tire
 from axle import Axle
 from front_axle import FrontAxle
+from rear_axle import RearAxle
 from agent import Agent
 from motion_model import MotionModel
 
@@ -48,7 +49,7 @@ class FourWheelsVehicle:
         self.rear_left_tire = Tire(spec, -spec.r_len_m, spec.axle_half_m)
         self.rear_right_tire = Tire(spec, -spec.r_len_m, -spec.axle_half_m)
         self.front_axle = FrontAxle(spec)
-        self.rear_axle = Axle(spec, -spec.r_len_m, spec.axle_half_m)
+        self.rear_axle = RearAxle(spec)
         self.agent = agent
         self.motion = motion
         self.poses = [pose]
