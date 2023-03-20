@@ -15,50 +15,32 @@ from body import Body
 
 
 # mock class
+class MockXYArray:
+    def __init__(self):
+        pass
+    
+    def homogeneous_transformation(self, x, y, angle_rad):
+        return np.array([[1.0, 0.0], [0.0, 1.0]])
+
+
 class MockSpecification:
     def __init__(self):
-        self.f_len_m = 1.0
-        self.r_len_m = 1.0
         self.color = 'k'
         self.line_w = 1.0
         self.line_type = '-'
 
 
 # test instance
-spec = MockSpecification()
-body = Body(spec)
+array = MockXYArray()
+body = Body(array)
 
 
 def test_create_instance():
-    assert body.f_len_m == 0.75
-    assert body.r_len_m == 0.75
-    assert body.tread_m == 0.75
-    assert body.f_edge_m == 1.50
-    assert body.r_edge_m == 1.50
-    assert body.width_m == 0.75
-    assert body.color == 'k'
-    assert body.line_w == 1.0
-    assert body.line_type == '-'
-
-
-def test_points():
-    assert body.points.shape[0] == 2
-    assert body.points.shape[1] == 5
-
-    assert body.points[0, 0] == 1.50
-    assert body.points[0, 1] == -1.50
-    assert body.points[0, 2] == -1.50
-    assert body.points[0, 3] == 1.50
-    assert body.points[0, 4] == 1.50
-
-    assert body.points[1, 0] == 0.75
-    assert body.points[1, 1] == 0.75
-    assert body.points[1, 2] == -0.75
-    assert body.points[1, 3] == -0.75
-    assert body.points[1, 4] == 0.75
+    assert hasattr(body, "array") == True
 
 
 def test_draw():
     figure = plt.figure(figsize=(8, 8))
     axes = figure.add_subplot(111)
-    body.draw(axes, np.array([[0.0], [0.0], [0.0]]))
+    spec = MockSpecification()
+    assert body.draw(axes, spec, np.array([[0.0], [0.0], [0.0]])) != None
