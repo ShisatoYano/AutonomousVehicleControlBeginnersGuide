@@ -15,32 +15,29 @@ from body import Body
 
 
 # mock class
-class MockXYArray:
-    def __init__(self):
-        pass
-    
-    def homogeneous_transformation(self, x, y, angle_rad):
-        return np.array([[1.0, 0.0], [0.0, 1.0]])
-
-
 class MockSpecification:
     def __init__(self):
+        self.f_edge_m = 1.0
+        self.r_edge_m = 1.0
+        self.width_m = 1.0
         self.color = 'k'
         self.line_w = 1.0
         self.line_type = '-'
 
 
 # test instance
-array = MockXYArray()
-body = Body(array)
+spec = MockSpecification()
+body = Body(spec)
 
 
 def test_create_instance():
+    assert hasattr(body, "spec") == True
     assert hasattr(body, "array") == True
+    assert body.spec != None
+    assert body.array != None
 
 
 def test_draw():
     figure = plt.figure(figsize=(8, 8))
     axes = figure.add_subplot(111)
-    spec = MockSpecification()
-    assert body.draw(axes, spec, np.array([[0.0], [0.0], [0.0]])) != None
+    assert body.draw(axes, np.array([[0.0], [0.0], [0.0]])) != None
