@@ -24,8 +24,14 @@ class VehicleSpecification:
         """
 
         self.f_len_m = f_len_m
+        self.f_edge_m = self.f_len_m + 0.5
+
         self.r_len_m = r_len_m
-        self.wheel_base_m = f_len_m + r_len_m
+        self.r_edge_m = self.r_len_m + 0.5
+
+        self.tread_m = 0.25 * (1.0 + self.f_len_m + self.r_len_m)
+        self.width_m = 1.0 * self.tread_m
+        self.wheel_base_m = self.f_len_m + self.r_len_m
         
         self.tire_r_m = tire_r_m
         self.tire_w_m = tire_w_m
