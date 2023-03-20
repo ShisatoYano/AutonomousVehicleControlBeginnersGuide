@@ -13,8 +13,10 @@ import os
 sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../visualization")
 sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../agent")
 sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../motion_model")
+sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../array")
 from global_xy_visualizer import GlobalXYVisualizer
 from vehicle_specification import VehicleSpecification
+from xy_array import XYArray
 from body import Body
 from chassis import Chassis
 from tire import Tire
@@ -40,7 +42,11 @@ class FourWheelsVehicle:
         self.pose = pose
         self.steer_rad = 0.0
         self.spec = spec
-        self.body = Body(spec)
+
+        body_array = np.array([[self.spec.f_edge_m, -self.spec.r_edge_m, -self.spec.r_edge_m, self.spec.f_edge_m, self.spec.f_edge_m],
+                              [self.spec.width_m, self.spec.width_m, -self.spec.width_m, -self.spec.width_m, self.spec.width_m]])
+        self.body = Body(XYArray(body_array))
+        
         self.chassis = Chassis(spec)
         self.front_left_tire = Tire(spec, spec.f_len_m, spec.axle_half_m)
         self.front_right_tire = Tire(spec, spec.f_len_m, -spec.axle_half_m)
@@ -59,7 +65,7 @@ class FourWheelsVehicle:
         self.steer_rad = self.motion.steering_angle_rad(order)
     
     def draw(self, axes, elems):
-        elems += self.body.draw(axes, self.pose)
+        elems += self.body.draw(axes, self.spec, self.pose)
         elems += self.chassis.draw(axes, self.pose)
         elems += self.front_left_tire.draw(axes, self.pose, self.steer_rad)
         elems += self.front_right_tire.draw(axes, self.pose, self.steer_rad)
