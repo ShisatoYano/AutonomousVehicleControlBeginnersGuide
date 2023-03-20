@@ -18,11 +18,19 @@ from four_wheels_vehicle import FourWheelsVehicle
 class MockSpecification:
     def __init__(self):
         self.f_len_m = 2.0
+        self.f_edge_m = self.f_len_m + 0.5
+
         self.r_len_m = 0.0
+        self.r_edge_m = self.r_len_m + 0.5
+
+        self.tread_m = 0.25 * (1.0 + self.f_len_m + self.r_len_m)
+        self.width_m = 1.0 * self.tread_m
         self.wheel_base_m = self.f_len_m + self.r_len_m
+
         self.tire_r_m = 0.3
         self.tire_w_m = 0.12
         self.axle_half_m = 0.5
+        
         self.color = 'k'
         self.line_w = 1.0
         self.line_type = '-'
