@@ -24,7 +24,7 @@ class RearAxle:
         """
 
         self.spec = spec
-        self.offset_x_m = -spec.r_len_m
+        self.offset_x_m = spec.r_len_m
         self.offset_y_m = spec.axle_half_m
 
         contour = np.array([[0.0, 0.0], 
