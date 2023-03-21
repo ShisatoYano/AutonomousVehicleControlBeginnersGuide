@@ -17,10 +17,10 @@ from global_xy_visualizer import GlobalXYVisualizer
 from vehicle_specification import VehicleSpecification
 from body import Body
 from chassis import Chassis
-from tire import Tire
 from front_left_tire import FrontLeftTire
 from front_right_tire import FrontRightTire
 from rear_left_tire import RearLeftTire
+from rear_right_tire import RearRightTire
 from front_axle import FrontAxle
 from rear_axle import RearAxle
 from agent import Agent
@@ -49,7 +49,7 @@ class FourWheelsVehicle:
         self.front_left_tire = FrontLeftTire(spec)
         self.front_right_tire = FrontRightTire(spec)
         self.rear_left_tire = RearLeftTire(spec)
-        self.rear_right_tire = Tire(spec, -spec.r_len_m, -spec.axle_half_m)
+        self.rear_right_tire = RearRightTire(spec)
         self.front_axle = FrontAxle(spec)
         self.rear_axle = RearAxle(spec)
         self.agent = agent
