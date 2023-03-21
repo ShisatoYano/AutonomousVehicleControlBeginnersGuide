@@ -20,6 +20,7 @@ from chassis import Chassis
 from tire import Tire
 from front_left_tire import FrontLeftTire
 from front_right_tire import FrontRightTire
+from rear_left_tire import RearLeftTire
 from front_axle import FrontAxle
 from rear_axle import RearAxle
 from agent import Agent
@@ -47,7 +48,7 @@ class FourWheelsVehicle:
         self.chassis = Chassis(spec)
         self.front_left_tire = FrontLeftTire(spec)
         self.front_right_tire = FrontRightTire(spec)
-        self.rear_left_tire = Tire(spec, -spec.r_len_m, spec.axle_half_m)
+        self.rear_left_tire = RearLeftTire(spec)
         self.rear_right_tire = Tire(spec, -spec.r_len_m, -spec.axle_half_m)
         self.front_axle = FrontAxle(spec)
         self.rear_axle = RearAxle(spec)
