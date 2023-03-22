@@ -13,13 +13,13 @@ class XYArray:
     X-Y 2D array data and logic class
     """
 
-    def __init__(self, array):
+    def __init__(self, data):
         """
         Constructor
-        array: np.array([[x1, x2,..., xn], [y1, y2,..., yn]])
+        data: np.array([[x1, x2,..., xn], [y1, y2,..., yn]])
         """
 
-        self.array = array
+        self.data = data
     
     def homogeneous_transformation(self, x, y, angle_rad):
         angle_cos = cos(angle_rad)
@@ -28,6 +28,11 @@ class XYArray:
         rotation_matrix = np.array([[angle_cos, -angle_sin],
                                     [angle_sin, angle_cos]])
         
-        rotated_array = rotation_matrix.dot(self.array)
+        rotated_data = rotation_matrix.dot(self.data)
 
-        return rotated_array + np.ones(rotated_array.shape) * np.array([[x], [y]])
+        translated_data = rotated_data + np.ones(rotated_data.shape) * np.array([[x], [y]])
+
+        return XYArray(translated_data)
+    
+    def get_data(self):
+        return self.data

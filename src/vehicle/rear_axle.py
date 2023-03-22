@@ -33,10 +33,9 @@ class RearAxle:
     
     def draw(self, axes, pose):
         translated_array = self.array.homogeneous_transformation(self.offset_x_m, 0.0, 0.0)
-        array_instance = XYArray(translated_array)
-        transformed_array = array_instance.homogeneous_transformation(pose[0, 0], pose[1, 0], pose[2, 0])
-        return axes.plot(transformed_array[0, :], 
-                         transformed_array[1, :], 
+        transformed_array = translated_array.homogeneous_transformation(pose[0, 0], pose[1, 0], pose[2, 0])
+        data = transformed_array.get_data()
+        return axes.plot(data[0, :], data[1, :], 
                          lw=self.spec.line_w, 
                          color=self.spec.color, 
                          ls=self.spec.line_type)

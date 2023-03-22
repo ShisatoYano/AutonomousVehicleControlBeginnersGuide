@@ -31,8 +31,8 @@ class Body:
 
     def draw(self, axes, pose):
         transformed_array = self.array.homogeneous_transformation(pose[0, 0], pose[1, 0], pose[2, 0])
-        return axes.plot(transformed_array[0, :], 
-                         transformed_array[1, :], 
+        data = transformed_array.get_data()
+        return axes.plot(data[0, :], data[1, :], 
                          lw=self.spec.line_w, 
                          color=self.spec.color, 
                          ls=self.spec.line_type)
