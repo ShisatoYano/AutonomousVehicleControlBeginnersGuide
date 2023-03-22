@@ -22,6 +22,14 @@ class XYArray:
         self.data = data
     
     def homogeneous_transformation(self, x, y, angle_rad):
+        """
+        Function for homogeneous transformation
+        x: Amount of x-axis translation
+        y: Amount of y-axis translation
+        angle_rad: Rotation angle[rad]
+        Return transformed XYArray object
+        """
+        
         angle_cos = cos(angle_rad)
         angle_sin = sin(angle_rad)
 
@@ -35,4 +43,9 @@ class XYArray:
         return XYArray(translated_data)
     
     def get_data(self):
+        """
+        Return array data
+        Type is ndarray object
+        """
+
         return self.data
