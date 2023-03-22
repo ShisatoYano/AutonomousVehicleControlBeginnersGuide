@@ -36,7 +36,7 @@ class XYArray:
         rotation_matrix = np.array([[angle_cos, -angle_sin],
                                     [angle_sin, angle_cos]])
         
-        rotated_data = rotation_matrix.dot(self.data)
+        rotated_data = rotation_matrix @ self.data
 
         translated_data = rotated_data + np.ones(rotated_data.shape) * np.array([[x], [y]])
 
