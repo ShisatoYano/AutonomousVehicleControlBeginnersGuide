@@ -13,6 +13,7 @@ import os
 sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../visualization")
 sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../agent")
 sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../motion_model")
+sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../state")
 from global_xy_visualizer import GlobalXYVisualizer
 from vehicle_specification import VehicleSpecification
 from body import Body
@@ -25,6 +26,7 @@ from front_axle import FrontAxle
 from rear_axle import RearAxle
 from agent import Agent
 from motion_model import MotionModel
+from state import State
 
 
 class FourWheelsVehicle:
@@ -82,6 +84,7 @@ def main():
     spec = VehicleSpecification()
     agent = Agent(2.0, 10.0/180*math.pi)
     motion = MotionModel(spec)
+    state = State(15.0, 0.0, 0.0, 2.0)
     vehicle = FourWheelsVehicle(np.array([[15.0], [0.0], [0.0]]),
                                 spec, agent, motion)
     
