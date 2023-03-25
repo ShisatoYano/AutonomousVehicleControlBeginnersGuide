@@ -6,6 +6,7 @@ src/agent/__pycache__
 src/array/__pycache__
 src/common/__pycache__
 src/motion_model/__pycache__
+src/state/__pycache__
 src/vehicle/__pycache__
 src/visualization/__pycache__
 test/__pycache__
