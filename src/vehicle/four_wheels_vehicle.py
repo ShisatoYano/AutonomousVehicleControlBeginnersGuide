@@ -30,17 +30,14 @@ class FourWheelsVehicle:
     Four Wheels Vehicle model class
     """
 
-    def __init__(self, pose, spec):
+    def __init__(self, state, spec):
         """
         Constructor
-        pose: vehicle's pose [x[m], y[m], yaw[rad]]
+        state: vehicle's state object
         spec: vehicle's specification object
-        agent: agent to decide control input
-        motion: motion model for state transition
         """
         
-        self.pose = pose
-        self.steer_rad = 0.0
+        self.state = state
         self.spec = spec
         self.body = Body(spec)
         self.chassis = Chassis(spec)
@@ -52,18 +49,19 @@ class FourWheelsVehicle:
         self.rear_axle = RearAxle(spec)
         # self.poses = [pose]
 
-    def one_step(self, time_interval_s):
-        pass
+    def one_step(self, time_s):
+        updated_state = self.state.update(0.0, 0.17, time_s, self.spec.wheel_base_m)
+        self.state = updated_state
     
     def draw(self, axes, elems):
-        elems += self.body.draw(axes, self.pose)
-        elems += self.chassis.draw(axes, self.pose)
-        elems += self.front_left_tire.draw(axes, self.pose, self.steer_rad)
-        elems += self.front_right_tire.draw(axes, self.pose, self.steer_rad)
-        elems += self.rear_left_tire.draw(axes, self.pose, 0.0)
-        elems += self.rear_right_tire.draw(axes, self.pose, 0.0)
-        elems += self.front_axle.draw(axes, self.pose)
-        elems += self.rear_axle.draw(axes, self.pose)
+        elems += self.body.draw(axes, self.state.x_y_yaw())
+        elems += self.chassis.draw(axes, self.state.x_y_yaw())
+        elems += self.front_left_tire.draw(axes, self.state.x_y_yaw(), 0.17)
+        elems += self.front_right_tire.draw(axes, self.state.x_y_yaw(), 0.17)
+        elems += self.rear_left_tire.draw(axes, self.state.x_y_yaw(), 0.0)
+        elems += self.rear_right_tire.draw(axes, self.state.x_y_yaw(), 0.0)
+        elems += self.front_axle.draw(axes, self.state.x_y_yaw())
+        elems += self.rear_axle.draw(axes, self.state.x_y_yaw())
 
         # self.poses.append(self.pose)
         # elems += axes.plot([p[0, 0] for p in self.poses], [p[1, 0] for p in self.poses], linewidth=0, marker=".", color=self.spec.color)
@@ -74,8 +72,7 @@ def main():
 
     spec = VehicleSpecification()
     state = State(15.0, 0.0, 0.0, 2.0)
-    vehicle = FourWheelsVehicle(np.array([[15.0], [0.0], [0.0]]),
-                                spec)
+    vehicle = FourWheelsVehicle(state, spec)
     
     vis.add_object(vehicle)
     vis.draw()

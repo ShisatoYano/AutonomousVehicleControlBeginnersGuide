@@ -5,6 +5,7 @@ Author: Shisato Yano
 """
 
 from math import cos, sin, tan
+import numpy as np
 
 
 class State:
@@ -43,3 +44,6 @@ class State:
         updated_speed_mps = self.speed_mps + accel_mps2 * time_s
 
         return State(updated_x_m, updated_y_m, updated_yaw_rad, updated_speed_mps)
+    
+    def x_y_yaw(self):
+        return np.array([[self.x_m], [self.y_m], [self.yaw_rad]])
