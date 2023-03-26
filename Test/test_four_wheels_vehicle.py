@@ -36,35 +36,25 @@ class MockSpecification:
         self.line_type = '-'
 
 
-class MockAgent:
-    def __init__(self):
-        self.speed_mps =  0.0
-        self.yaw_rate_rps = 0.0
-
-    def control_order(self):
-        return np.array([[self.speed_mps], [self.yaw_rate_rps]])
-
-
-class MockMotionModel:
+class MockState:
     def __init__(self):
         pass
+
+    def update(self, accel_mps2, steer_rad, time_s, wheel_base_m):
+        return MockState()
     
-    def state_transition(self, pose, order, time_interval_s):
+    def x_y_yaw(self):
         return np.array([[0.0], [0.0], [0.0]])
-    
-    def steering_angle_rad(self, order):
-        return 0.0
 
 
 # test instance
 spec = MockSpecification()
-pose = np.array([[0.0], [0.0], [0.0]])
-vehicle = FourWheelsVehicle(pose, spec)
+state = MockState()
+vehicle = FourWheelsVehicle(state, spec)
 
 
 def test_attributes():
-    assert hasattr(vehicle, "pose") == True
-    assert hasattr(vehicle, "steer_rad") == True
+    assert hasattr(vehicle, "state") == True
     assert hasattr(vehicle, "spec") == True
     assert hasattr(vehicle, "body") == True
     assert hasattr(vehicle, "chassis") == True
@@ -74,16 +64,10 @@ def test_attributes():
     assert hasattr(vehicle, "rear_right_tire") == True
     assert hasattr(vehicle, "front_axle") == True
     assert hasattr(vehicle, "rear_axle") == True
-    assert hasattr(vehicle, "agent") == True
-    assert hasattr(vehicle, "motion") == True
-    assert hasattr(vehicle, "poses") == True
 
 
 def test_initialize():
-    assert vehicle.pose[0, 0] == pose[0, 0]
-    assert vehicle.pose[1, 0] == pose[1, 0]
-    assert vehicle.pose[2, 0] == pose[2, 0]
-    assert vehicle.steer_rad == 0.0
+    assert vehicle.state != None
     assert vehicle.spec != None
     assert vehicle.body != None
     assert vehicle.chassis != None
@@ -93,18 +77,6 @@ def test_initialize():
     assert vehicle.rear_right_tire != None
     assert vehicle.front_axle != None
     assert vehicle.rear_axle != None
-    assert vehicle.agent == None
-    assert vehicle.motion == None
-    assert len(vehicle.poses) == 1
-
-
-def test_set_agent_motion():
-    agent = MockAgent()
-    motion = MockMotionModel()
-    vehicle = FourWheelsVehicle(pose, spec, agent=agent, motion=motion)
-
-    assert vehicle.agent != None
-    assert vehicle.motion != None
 
 
 def test_one_step():
