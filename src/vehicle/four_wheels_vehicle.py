@@ -56,7 +56,7 @@ class FourWheelsVehicle:
         self.rear_axle = RearAxle(spec)
         self.agent = agent
         self.motion = motion
-        self.poses = [pose]
+        # self.poses = [pose]
 
     def one_step(self, time_interval_s):
         if not self.agent: return
@@ -74,8 +74,8 @@ class FourWheelsVehicle:
         elems += self.front_axle.draw(axes, self.pose)
         elems += self.rear_axle.draw(axes, self.pose)
 
-        self.poses.append(self.pose)
-        elems += axes.plot([p[0, 0] for p in self.poses], [p[1, 0] for p in self.poses], linewidth=0, marker=".", color=self.spec.color)
+        # self.poses.append(self.pose)
+        # elems += axes.plot([p[0, 0] for p in self.poses], [p[1, 0] for p in self.poses], linewidth=0, marker=".", color=self.spec.color)
 
 
 def main():
