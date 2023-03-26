@@ -11,7 +11,6 @@ import sys
 import os
 
 sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../visualization")
-sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../agent")
 sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../state")
 from global_xy_visualizer import GlobalXYVisualizer
 from vehicle_specification import VehicleSpecification
@@ -23,7 +22,6 @@ from rear_left_tire import RearLeftTire
 from rear_right_tire import RearRightTire
 from front_axle import FrontAxle
 from rear_axle import RearAxle
-from agent import Agent
 from state import State
 
 
@@ -32,7 +30,7 @@ class FourWheelsVehicle:
     Four Wheels Vehicle model class
     """
 
-    def __init__(self, pose, spec, agent=None):
+    def __init__(self, pose, spec):
         """
         Constructor
         pose: vehicle's pose [x[m], y[m], yaw[rad]]
@@ -52,12 +50,10 @@ class FourWheelsVehicle:
         self.rear_right_tire = RearRightTire(spec)
         self.front_axle = FrontAxle(spec)
         self.rear_axle = RearAxle(spec)
-        self.agent = agent
         # self.poses = [pose]
 
     def one_step(self, time_interval_s):
-        if not self.agent: return
-        order = self.agent.control_order()
+        pass
     
     def draw(self, axes, elems):
         elems += self.body.draw(axes, self.pose)
@@ -77,10 +73,9 @@ def main():
     vis = GlobalXYVisualizer(min_lim=0, max_lim=30, time_span_s=20)
 
     spec = VehicleSpecification()
-    agent = Agent(2.0, 10.0/180*math.pi)
     state = State(15.0, 0.0, 0.0, 2.0)
     vehicle = FourWheelsVehicle(np.array([[15.0], [0.0], [0.0]]),
-                                spec, agent)
+                                spec)
     
     vis.add_object(vehicle)
     vis.draw()
