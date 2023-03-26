@@ -23,6 +23,7 @@ from rear_right_tire import RearRightTire
 from front_axle import FrontAxle
 from rear_axle import RearAxle
 from state import State
+from state_history import StateHistory
 
 
 class FourWheelsVehicle:
@@ -30,7 +31,7 @@ class FourWheelsVehicle:
     Four Wheels Vehicle model class
     """
 
-    def __init__(self, state, spec):
+    def __init__(self, state, history, spec):
         """
         Constructor
         state: vehicle's state object
@@ -38,6 +39,8 @@ class FourWheelsVehicle:
         """
         
         self.state = state
+        self.history = history
+
         self.spec = spec
         self.body = Body(spec)
         self.chassis = Chassis(spec)
@@ -47,11 +50,13 @@ class FourWheelsVehicle:
         self.rear_right_tire = RearRightTire(spec)
         self.front_axle = FrontAxle(spec)
         self.rear_axle = RearAxle(spec)
-        # self.poses = [pose]
 
     def one_step(self, time_s):
         updated_state = self.state.update(0.0, 0.17, time_s, self.spec.wheel_base_m)
         self.state = updated_state
+
+        updated_history = self.history.update(updated_state.get_x_m(), updated_state.get_y_m())
+        self.history = updated_history
     
     def draw(self, axes, elems):
         elems += self.body.draw(axes, self.state.x_y_yaw())
@@ -62,9 +67,7 @@ class FourWheelsVehicle:
         elems += self.rear_right_tire.draw(axes, self.state.x_y_yaw(), 0.0)
         elems += self.front_axle.draw(axes, self.state.x_y_yaw())
         elems += self.rear_axle.draw(axes, self.state.x_y_yaw())
-
-        # self.poses.append(self.pose)
-        # elems += axes.plot([p[0, 0] for p in self.poses], [p[1, 0] for p in self.poses], linewidth=0, marker=".", color=self.spec.color)
+        elems += self.history.draw(axes, self.spec.color)
 
 
 def main():
@@ -72,7 +75,8 @@ def main():
 
     spec = VehicleSpecification()
     state = State(15.0, 0.0, 0.0, 2.0)
-    vehicle = FourWheelsVehicle(state, spec)
+    history = StateHistory([state.x_m], [state.y_m])
+    vehicle = FourWheelsVehicle(state, history, spec)
     
     vis.add_object(vehicle)
     vis.draw()
