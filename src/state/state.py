@@ -46,4 +46,8 @@ class State:
         return State(updated_x_m, updated_y_m, updated_yaw_rad, updated_speed_mps)
     
     def x_y_yaw(self):
+        """
+        Function to get x, y, yaw as array
+        """
+        
         return np.array([[self.x_m], [self.y_m], [self.yaw_rad]])
