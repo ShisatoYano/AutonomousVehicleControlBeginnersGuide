@@ -51,3 +51,17 @@ class State:
         """
         
         return np.array([[self.x_m], [self.y_m], [self.yaw_rad]])
+    
+    def get_x_m(self):
+        """
+        Function to get x[m]
+        """
+        
+        return self.x_m
+    
+    def get_y_m(self):
+        """
+        Function to get y[m]
+        """
+
+        return self.y_m
