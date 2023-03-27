@@ -45,16 +45,34 @@ class MockState:
     
     def x_y_yaw(self):
         return np.array([[0.0], [0.0], [0.0]])
+    
+    def get_x_m(self):
+        pass
+
+    def get_y_m(self):
+        pass
+
+class MockStateHistory:
+    def __init__(self):
+        pass
+
+    def update(self, x, y):
+        return MockStateHistory()
+    
+    def draw(self, axes, color):
+        return axes.plot([], [], color=color)
 
 
 # test instance
 spec = MockSpecification()
 state = MockState()
-vehicle = FourWheelsVehicle(state, spec)
+history = MockStateHistory()
+vehicle = FourWheelsVehicle(state, history, spec)
 
 
 def test_attributes():
     assert hasattr(vehicle, "state") == True
+    assert hasattr(vehicle, "history") == True
     assert hasattr(vehicle, "spec") == True
     assert hasattr(vehicle, "body") == True
     assert hasattr(vehicle, "chassis") == True
@@ -68,6 +86,7 @@ def test_attributes():
 
 def test_initialize():
     assert vehicle.state != None
+    assert vehicle.history != None
     assert vehicle.spec != None
     assert vehicle.body != None
     assert vehicle.chassis != None
