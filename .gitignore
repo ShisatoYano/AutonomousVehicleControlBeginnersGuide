@@ -2,9 +2,7 @@ Basis/Sources/transformation/__pycache__
 Localization/Sources/kalman_filter/__pycache__
 Modeling/Sources/motion/__pycache__
 Modeling/Sources/vehicle/__pycache__
-src/agent/__pycache__
 src/array/__pycache__
-src/common/__pycache__
 src/motion_model/__pycache__
 src/state/__pycache__
 src/vehicle/__pycache__
