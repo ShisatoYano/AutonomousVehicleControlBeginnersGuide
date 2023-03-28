@@ -32,8 +32,9 @@ class FourWheelsVehicle:
     def __init__(self, state, history, spec):
         """
         Constructor
-        state: vehicle's state object
-        spec: vehicle's specification object
+        state: Vehicle's state object
+        history: Vehicle's state history object
+        spec: Vehicle's specification object
         """
         
         self.state = state
@@ -73,7 +74,7 @@ def main():
 
     spec = VehicleSpecification()
     state = State(15.0, 0.0, 0.0, 2.0)
-    history = StateHistory([state.x_m], [state.y_m])
+    history = StateHistory([state.get_x_m()], [state.get_y_m()])
     vehicle = FourWheelsVehicle(state, history, spec)
     
     vis.add_object(vehicle)
