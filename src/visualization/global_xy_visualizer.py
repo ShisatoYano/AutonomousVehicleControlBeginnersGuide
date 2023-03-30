@@ -38,14 +38,16 @@ class GlobalXYVisualizer:
         for obj in self.objects:
             obj.draw(axes, elems)
             if hasattr(obj, "one_step"): obj.one_step(self.time_interval_s)
+        
+        if self.time_interval_s * i >= self.time_span_s:
+            axes.set_xlim(self.min_lim, self.max_lim)
+            axes.set_ylim(self.min_lim, self.max_lim)
 
     def draw(self):
         # setting
         figure = plt.figure(figsize=(8, 8))
         axes = figure.add_subplot(111)
         axes.set_aspect("equal")
-        axes.set_xlim(self.min_lim, self.max_lim)
-        axes.set_ylim(self.min_lim, self.max_lim)
         axes.set_xlabel('X[m]', fontsize=20)
         axes.set_ylabel('Y[m]', fontsize=20)
 

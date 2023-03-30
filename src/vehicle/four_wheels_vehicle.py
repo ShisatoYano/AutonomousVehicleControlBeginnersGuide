@@ -29,7 +29,7 @@ class FourWheelsVehicle:
     Four Wheels Vehicle model class
     """
 
-    def __init__(self, state, history, spec):
+    def __init__(self, state, history, spec, width=10.0):
         """
         Constructor
         state: Vehicle's state object
@@ -50,6 +50,8 @@ class FourWheelsVehicle:
         self.front_axle = FrontAxle(spec)
         self.rear_axle = RearAxle(spec)
 
+        self.draw_width = 10.0
+
     def one_step(self, time_s):
         updated_state = self.state.update(0.0, 0.17, time_s, self.spec.wheel_base_m)
         self.state = updated_state
@@ -58,15 +60,22 @@ class FourWheelsVehicle:
         self.history = updated_history
     
     def draw(self, axes, elems):
-        elems += self.body.draw(axes, self.state.x_y_yaw())
-        elems += self.chassis.draw(axes, self.state.x_y_yaw())
-        elems += self.front_left_tire.draw(axes, self.state.x_y_yaw(), 0.17)
-        elems += self.front_right_tire.draw(axes, self.state.x_y_yaw(), 0.17)
-        elems += self.rear_left_tire.draw(axes, self.state.x_y_yaw(), 0.0)
-        elems += self.rear_right_tire.draw(axes, self.state.x_y_yaw(), 0.0)
-        elems += self.front_axle.draw(axes, self.state.x_y_yaw())
-        elems += self.rear_axle.draw(axes, self.state.x_y_yaw())
+        x_y_yaw_array = self.state.x_y_yaw()
+        x_m = self.state.get_x_m()
+        y_m = self.state.get_y_m()
+
+        elems += self.body.draw(axes, x_y_yaw_array)
+        elems += self.chassis.draw(axes, x_y_yaw_array)
+        elems += self.front_left_tire.draw(axes, x_y_yaw_array, 0.17)
+        elems += self.front_right_tire.draw(axes, x_y_yaw_array, 0.17)
+        elems += self.rear_left_tire.draw(axes, x_y_yaw_array, 0.0)
+        elems += self.rear_right_tire.draw(axes, x_y_yaw_array, 0.0)
+        elems += self.front_axle.draw(axes, x_y_yaw_array)
+        elems += self.rear_axle.draw(axes, x_y_yaw_array)
         elems += self.history.draw(axes, self.spec.color)
+
+        axes.set_xlim(x_m - self.draw_width, x_m + self.draw_width)
+        axes.set_ylim(y_m - self.draw_width, y_m + self.draw_width)
 
 
 def main():
