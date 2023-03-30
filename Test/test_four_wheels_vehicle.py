@@ -49,10 +49,10 @@ class MockState:
         return np.array([[0.0], [0.0], [0.0]])
     
     def get_x_m(self):
-        pass
+        return 0.0
 
     def get_y_m(self):
-        pass
+        return 0.0
 
 class MockStateHistory:
     def __init__(self):
