@@ -50,7 +50,7 @@ class FourWheelsVehicle:
         self.front_axle = FrontAxle(spec)
         self.rear_axle = RearAxle(spec)
 
-        self.draw_width = 10.0
+        self.width = width
 
     def one_step(self, time_s):
         updated_state = self.state.update(0.0, 0.17, time_s, self.spec.wheel_base_m)
@@ -74,8 +74,8 @@ class FourWheelsVehicle:
         elems += self.rear_axle.draw(axes, x_y_yaw_array)
         elems += self.history.draw(axes, self.spec.color)
 
-        axes.set_xlim(x_m - self.draw_width, x_m + self.draw_width)
-        axes.set_ylim(y_m - self.draw_width, y_m + self.draw_width)
+        axes.set_xlim(x_m - self.width, x_m + self.width)
+        axes.set_ylim(y_m - self.width, y_m + self.width)
 
 
 def main():
