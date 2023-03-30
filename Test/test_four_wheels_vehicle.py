@@ -84,6 +84,7 @@ def test_attributes():
     assert hasattr(vehicle, "rear_right_tire") == True
     assert hasattr(vehicle, "front_axle") == True
     assert hasattr(vehicle, "rear_axle") == True
+    assert hasattr(vehicle, "draw_width") == True
 
 
 def test_initialize():
@@ -98,6 +99,7 @@ def test_initialize():
     assert vehicle.rear_right_tire != None
     assert vehicle.front_axle != None
     assert vehicle.rear_axle != None
+    assert vehicle.draw_width == 10.0
 
 
 def test_one_step():
