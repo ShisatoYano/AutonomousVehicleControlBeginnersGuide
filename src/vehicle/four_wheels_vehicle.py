@@ -35,6 +35,7 @@ class FourWheelsVehicle:
         state: Vehicle's state object
         history: Vehicle's state history object
         spec: Vehicle's specification object
+        draw_area_width: Drawing area's width around Vehicle
         """
         
         self.state = state
