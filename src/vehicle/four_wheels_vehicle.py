@@ -52,7 +52,7 @@ class FourWheelsVehicle:
 
         self.width = width
 
-    def one_step(self, time_s):
+    def update(self, time_s):
         updated_state = self.state.update(0.0, 0.17, time_s, self.spec.wheel_base_m)
         self.state = updated_state
 

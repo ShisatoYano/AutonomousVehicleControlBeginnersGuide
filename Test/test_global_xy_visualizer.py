@@ -22,7 +22,7 @@ class MockObject:
     def __init__(self):
         pass
 
-    def one_step(self, time_interval_s):
+    def update(self, time_interval_s):
         pass
 
     def draw(self, axes, elems):

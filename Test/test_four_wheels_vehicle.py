@@ -102,8 +102,8 @@ def test_initialize():
     assert vehicle.width == 10.0
 
 
-def test_one_step():
-    vehicle.one_step(1.0)
+def test_update():
+    vehicle.update(1.0)
 
 
 def test_draw():
