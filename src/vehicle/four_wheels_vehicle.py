@@ -29,7 +29,7 @@ class FourWheelsVehicle:
     Four Wheels Vehicle model class
     """
 
-    def __init__(self, state, history, spec, width=10.0):
+    def __init__(self, state, history, spec, draw_area_width=10.0):
         """
         Constructor
         state: Vehicle's state object
@@ -50,7 +50,7 @@ class FourWheelsVehicle:
         self.front_axle = FrontAxle(spec)
         self.rear_axle = RearAxle(spec)
 
-        self.width = width
+        self.draw_area_width = draw_area_width
 
     def update(self, time_s):
         updated_state = self.state.update(0.0, 0.17, time_s, self.spec.wheel_base_m)
@@ -74,8 +74,8 @@ class FourWheelsVehicle:
         elems += self.rear_axle.draw(axes, x_y_yaw_array)
         elems += self.history.draw(axes, self.spec.color)
 
-        axes.set_xlim(x_m - self.width, x_m + self.width)
-        axes.set_ylim(y_m - self.width, y_m + self.width)
+        axes.set_xlim(x_m - self.draw_area_width, x_m + self.draw_area_width)
+        axes.set_ylim(y_m - self.draw_area_width, y_m + self.draw_area_width)
 
 
 def main():
