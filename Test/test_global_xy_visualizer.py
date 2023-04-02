@@ -31,8 +31,10 @@ class MockObject:
 
 def test_create_instance():
     assert len(vis.objects) == 0
-    assert vis.min_lim == 0
-    assert vis.max_lim == 30
+    assert vis.x_min == 0
+    assert vis.x_max == 30
+    assert vis.y_min == -15
+    assert vis.y_max == 15
     assert vis.time_span_s == 10
     assert vis.time_interval_s == 0.1
     assert vis.show_plot == True

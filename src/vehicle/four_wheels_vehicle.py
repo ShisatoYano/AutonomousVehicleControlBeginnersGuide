@@ -30,7 +30,7 @@ class FourWheelsVehicle:
     """
 
     def __init__(self, state, history, spec, draw_area_width=10.0,
-                 controller=None):
+                 trajectory=None, controller=None):
         """
         Constructor
         state: Vehicle's state object
@@ -54,6 +54,7 @@ class FourWheelsVehicle:
 
         self.draw_area_width = draw_area_width
 
+        self.trajectory = trajectory
         self.controller = controller
 
     def update(self, time_s):
@@ -85,7 +86,7 @@ class FourWheelsVehicle:
 
 
 def main():
-    vis = GlobalXYVisualizer(min_lim=0, max_lim=30, time_span_s=20)
+    vis = GlobalXYVisualizer(time_span_s=20)
 
     spec = VehicleSpecification()
     state = State(15.0, 0.0, 0.0, 2.0)
