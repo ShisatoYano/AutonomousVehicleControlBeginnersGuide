@@ -24,7 +24,7 @@ class SinCurveCourse:
 
 
 def main():
-    vis = GlobalXYVisualizer(min_lim=0, max_lim=50, time_span_s=20)
+    vis = GlobalXYVisualizer(x_min=-5, x_max=55, y_min=-20, y_max=25, time_span_s=10)
 
     course = SinCurveCourse(0, 50, 0.5, 20)
     vis.add_object(course)
