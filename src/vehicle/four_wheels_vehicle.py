@@ -29,7 +29,8 @@ class FourWheelsVehicle:
     Four Wheels Vehicle model class
     """
 
-    def __init__(self, state, history, spec, draw_area_width=10.0):
+    def __init__(self, state, history, spec, draw_area_width=10.0,
+                 controller=None):
         """
         Constructor
         state: Vehicle's state object
@@ -53,7 +54,11 @@ class FourWheelsVehicle:
 
         self.draw_area_width = draw_area_width
 
+        self.controller = controller
+
     def update(self, time_s):
+        if not self.controller: return
+
         updated_state = self.state.update(0.0, 0.17, time_s, self.spec.wheel_base_m)
         self.state = updated_state
 
