@@ -30,7 +30,7 @@ class FourWheelsVehicle:
     """
 
     def __init__(self, state, history, spec, draw_area_width=10.0,
-                 trajectory=None, controller=None):
+                 course=None, controller=None):
         """
         Constructor
         state: Vehicle's state object
@@ -54,7 +54,7 @@ class FourWheelsVehicle:
 
         self.draw_area_width = draw_area_width
 
-        self.trajectory = trajectory
+        self.course = course
         self.controller = controller
 
     def update(self, time_s):
