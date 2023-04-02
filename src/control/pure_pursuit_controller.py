@@ -6,6 +6,11 @@ Author: Shisato Yano
 
 from math import sin
 import numpy as np
+import sys
+import os
+
+sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../visualization")
+from global_xy_visualizer import GlobalXYVisualizer
 
 
 class SinCurveCourse:
@@ -16,3 +21,16 @@ class SinCurveCourse:
     
     def draw(self, axes, elems):
         elems += axes.plot(self.x_array, self.y_array, linewidth=0, marker='.', color='r')
+
+
+def main():
+    vis = GlobalXYVisualizer(min_lim=0, max_lim=50, time_span_s=20)
+
+    course = SinCurveCourse(0, 50, 0.5, 20)
+    vis.add_object(course)
+
+    vis.draw()
+
+
+if __name__ == "__main__":
+    main()
