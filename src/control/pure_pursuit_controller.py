@@ -10,7 +10,13 @@ import sys
 import os
 
 sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../visualization")
+sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../state")
+sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../vehicle")
 from global_xy_visualizer import GlobalXYVisualizer
+from vehicle_specification import VehicleSpecification
+from state import State
+from state_history import StateHistory
+from four_wheels_vehicle import FourWheelsVehicle
 
 
 class SinCurveCourse:
@@ -28,6 +34,12 @@ def main():
 
     course = SinCurveCourse(0, 50, 0.5, 20)
     vis.add_object(course)
+
+    spec = VehicleSpecification()
+    state = State(0.0, 0.0, 0.0, 0.0)
+    history = StateHistory([state.get_x_m()], [state.get_y_m()])
+    vehicle = FourWheelsVehicle(state, history, spec)
+    vis.add_object(vehicle)
 
     vis.draw()
 
