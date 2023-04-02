@@ -60,7 +60,7 @@ class FourWheelsVehicle:
     def update(self, time_s):
         if not self.controller: return
 
-        updated_state = self.state.update(0.0, 0.17, time_s, self.spec.wheel_base_m)
+        updated_state = self.state.update(0.0, 0.0, time_s, self.spec.wheel_base_m)
         self.state = updated_state
 
         updated_history = self.history.update(updated_state.get_x_m(), updated_state.get_y_m())
@@ -73,8 +73,8 @@ class FourWheelsVehicle:
 
         elems += self.body.draw(axes, x_y_yaw_array)
         elems += self.chassis.draw(axes, x_y_yaw_array)
-        elems += self.front_left_tire.draw(axes, x_y_yaw_array, 0.17)
-        elems += self.front_right_tire.draw(axes, x_y_yaw_array, 0.17)
+        elems += self.front_left_tire.draw(axes, x_y_yaw_array, 0.0)
+        elems += self.front_right_tire.draw(axes, x_y_yaw_array, 0.0)
         elems += self.rear_left_tire.draw(axes, x_y_yaw_array, 0.0)
         elems += self.rear_right_tire.draw(axes, x_y_yaw_array, 0.0)
         elems += self.front_axle.draw(axes, x_y_yaw_array)
