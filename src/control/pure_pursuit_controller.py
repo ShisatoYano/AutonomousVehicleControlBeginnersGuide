@@ -29,6 +29,21 @@ class SinCurveCourse:
         elems += axes.plot(self.x_array, self.y_array, linewidth=0, marker='.', color='r')
 
 
+class PurePursuitController:
+    def __init__(self, spec, course=None):
+        self.MIN_LOOK_AHEAD_DISTANCE_M = 2.0
+        self.LOOK_FORWARD_GAIN = 0.1
+        self.SPEED_PROPORTIONAL_GAIN = 1.0
+        self.WHEEL_BASE_M = spec.wheel_base_m
+
+        self.course = course
+    
+    def accel_steer_input(self, state):
+        if not self.course: return 0.0, 0.0
+        
+        return 0.0, 0.0
+
+
 def main():
     vis = GlobalXYVisualizer(x_min=-5, x_max=55, y_min=-20, y_max=25, time_span_s=10)
 
