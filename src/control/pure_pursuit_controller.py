@@ -25,6 +25,23 @@ class SinCurveCourse:
         self.y_array = [sin(x / 5.0) * (x / 2.0) for x in self.x_array]
         self.speed_array = [(target_speed_kmph / 3.6) for _ in self.x_array]
     
+    def search_nearest_point_index(self, state):
+        vehicle_pos_x_m = state.get_x_m()
+        vehicle_pos_y_m = state.get_y_m()
+
+        diff_x_array = [vehicle_pos_x_m - point_x_m for point_x_m in self.x_array]
+        diff_y_array = [vehicle_pos_y_m - point_y_m for point_y_m in self.y_array]
+        diff_array = np.hypot(diff_x_array, diff_y_array)
+
+        nearest_index = np.argmin(diff_array)
+        print(nearest_index)
+
+    
+    def calculate_distance_from_point(self, vehicle_pos_x_m, vehicle_pos_y_m, point_index):
+        diff_x_m = vehicle_pos_x_m - self.x_array[point_index]
+        diff_y_m = vehicle_pos_y_m - self.y_array[point_index]
+        return np.hypot(diff_x_m, diff_y_m)
+
     def draw(self, axes, elems):
         elems += axes.plot(self.x_array, self.y_array, linewidth=0, marker='.', color='r')
 
@@ -40,7 +57,9 @@ class PurePursuitController:
     
     def accel_steer_input(self, state):
         if not self.course: return 0.0, 0.0
-        
+
+        self.course.search_nearest_point_index(state)
+
         return 0.0, 0.0
 
 
@@ -51,9 +70,12 @@ def main():
     vis.add_object(course)
 
     spec = VehicleSpecification()
-    state = State(0.0, 0.0, 0.0, 0.0)
+    state = State(10.0, 5.0, 0.0, 0.0)
     history = StateHistory([state.get_x_m()], [state.get_y_m()])
-    vehicle = FourWheelsVehicle(state, history, spec)
+    
+    pure_pursuit = PurePursuitController(spec, course)
+
+    vehicle = FourWheelsVehicle(state, history, spec, controller=pure_pursuit)
     vis.add_object(vehicle)
 
     vis.draw()

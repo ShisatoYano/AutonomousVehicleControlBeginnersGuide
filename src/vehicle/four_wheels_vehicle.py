@@ -59,7 +59,9 @@ class FourWheelsVehicle:
     def update(self, time_s):
         if not self.controller: return
 
-        updated_state = self.state.update(0.0, 0.0, time_s, self.spec.wheel_base_m)
+        accel_mps2, steer_rad = self.controller.accel_steer_input(self.state)
+
+        updated_state = self.state.update(accel_mps2, steer_rad, time_s, self.spec.wheel_base_m)
         self.state = updated_state
 
         updated_history = self.history.update(updated_state.get_x_m(), updated_state.get_y_m())
