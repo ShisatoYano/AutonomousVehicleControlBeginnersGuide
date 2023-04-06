@@ -34,7 +34,8 @@ class SinCurveCourse:
         diff_array = np.hypot(diff_x_array, diff_y_array)
 
         nearest_index = np.argmin(diff_array)
-        print(nearest_index)
+        
+        return nearest_index
 
     
     def calculate_distance_from_point(self, vehicle_pos_x_m, vehicle_pos_y_m, point_index):
@@ -58,7 +59,13 @@ class PurePursuitController:
     def accel_steer_input(self, state):
         if not self.course: return 0.0, 0.0
 
-        self.course.search_nearest_point_index(state)
+        nearest_index = self.course.search_nearest_point_index(state)
+
+        # calculate look ahead distance
+        look_ahead_distance_m = self.LOOK_FORWARD_GAIN * state.get_speed_mps() + self.MIN_LOOK_AHEAD_DISTANCE_M
+
+        # search nearest point index farther than look ahead distance
+         
 
         return 0.0, 0.0
 
@@ -70,7 +77,7 @@ def main():
     vis.add_object(course)
 
     spec = VehicleSpecification()
-    state = State(10.0, 5.0, 0.0, 0.0)
+    state = State(0.0, 0.0, 0.0, 0.0)
     history = StateHistory([state.get_x_m()], [state.get_y_m()])
     
     pure_pursuit = PurePursuitController(spec, course)

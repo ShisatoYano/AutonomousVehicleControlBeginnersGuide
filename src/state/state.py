@@ -65,3 +65,10 @@ class State:
         """
 
         return self.y_m
+    
+    def get_speed_mps(self):
+        """
+        Function to get speed[m/s]
+        """
+
+        return self.speed_mps
