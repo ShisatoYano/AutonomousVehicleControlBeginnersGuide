@@ -66,6 +66,13 @@ class State:
 
         return self.y_m
     
+    def get_yaw_rad(self):
+        """
+        Function to get yaw angle[rad]
+        """
+
+        return self.yaw_rad
+    
     def get_speed_mps(self):
         """
         Function to get speed[m/s]

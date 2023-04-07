@@ -4,7 +4,7 @@ pure_pursuit_controller.py
 Author: Shisato Yano
 """
 
-from math import sin
+from math import sin, atan, atan2
 import numpy as np
 import sys
 import os
@@ -38,10 +38,19 @@ class SinCurveCourse:
         return nearest_index
 
     
-    def calculate_distance_from_point(self, vehicle_pos_x_m, vehicle_pos_y_m, point_index):
-        diff_x_m = vehicle_pos_x_m - self.x_array[point_index]
-        diff_y_m = vehicle_pos_y_m - self.y_array[point_index]
+    def calculate_distance_from_point(self, state, point_index):
+        diff_x_m = state.get_x_m() - self.x_array[point_index]
+        diff_y_m = state.get_y_m() - self.y_array[point_index]
         return np.hypot(diff_x_m, diff_y_m)
+    
+    def point_x_m(self, point_index):
+        return self.x_array[point_index]
+    
+    def point_y_m(self, point_index):
+        return self.y_array[point_index]
+    
+    def length(self):
+        return len(self.x_array)
 
     def draw(self, axes, elems):
         elems += axes.plot(self.x_array, self.y_array, linewidth=0, marker='.', color='r')
@@ -65,7 +74,17 @@ class PurePursuitController:
         look_ahead_distance_m = self.LOOK_FORWARD_GAIN * state.get_speed_mps() + self.MIN_LOOK_AHEAD_DISTANCE_M
 
         # search nearest point index farther than look ahead distance
-         
+        while look_ahead_distance_m > self.course.calculate_distance_from_point(state, nearest_index):
+            if nearest_index + 1 >= self.course.length(): break
+            nearest_index += 1
+        
+        # calculate difference angle against course
+        diff_x_m = self.course.point_x_m(nearest_index) - state.get_x_m()
+        diff_y_m = self.course.point_y_m(nearest_index) - state.get_y_m()
+        diff_angle_rad = atan2(diff_y_m, diff_x_m) - state.get_yaw_rad()
+        
+        # calculate target steering angle to course
+        target_steer_angle_rad = atan2((2 * self.WHEEL_BASE_M * sin(diff_angle_rad)), look_ahead_distance_m)
 
         return 0.0, 0.0
 
