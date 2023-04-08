@@ -24,6 +24,7 @@ class SinCurveCourse:
         self.x_array = np.arange(x_min, x_max, resolution)
         self.y_array = [sin(x / 5.0) * (x / 2.0) for x in self.x_array]
         self.speed_array = [(target_speed_kmph / 3.6) for _ in self.x_array]
+        self.speed_array[-1] = 0.0
     
     def search_nearest_point_index(self, state):
         vehicle_pos_x_m = state.get_x_m()
@@ -112,7 +113,7 @@ class PurePursuitController:
 
 
 def main():
-    vis = GlobalXYVisualizer(x_min=-5, x_max=55, y_min=-20, y_max=25, time_span_s=20)
+    vis = GlobalXYVisualizer(x_min=-5, x_max=55, y_min=-20, y_max=25, time_span_s=21)
 
     course = SinCurveCourse(0, 50, 0.5, 20)
     vis.add_object(course)
