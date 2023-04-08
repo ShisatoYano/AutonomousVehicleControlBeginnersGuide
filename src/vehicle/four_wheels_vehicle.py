@@ -74,6 +74,8 @@ class FourWheelsVehicle:
         x_m = self.state.get_x_m()
         y_m = self.state.get_y_m()
 
+        elems += self.controller.draw(axes)
+
         elems += self.body.draw(axes, x_y_yaw_array)
         elems += self.chassis.draw(axes, x_y_yaw_array)
         elems += self.front_left_tire.draw(axes, x_y_yaw_array, self.controller.get_target_steer_rad())
