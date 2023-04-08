@@ -54,6 +54,7 @@ class MockState:
     def get_y_m(self):
         return 0.0
 
+
 class MockStateHistory:
     def __init__(self):
         pass
@@ -65,11 +66,32 @@ class MockStateHistory:
         return axes.plot([], [], color=color)
 
 
+class MockController:
+    def __init__(self):
+        pass
+
+    def update(self, state):
+        pass
+
+    def get_target_accel_mps2(self):
+        return 0.0
+    
+    def get_target_steer_rad(self):
+        return 0.0
+    
+    def get_target_yaw_rate_rps(self):
+        return 0.0
+    
+    def draw(self, axes):
+        return axes.plot(0.0, 0.0, marker='o', color='g')
+
+
 # test instance
 spec = MockSpecification()
 state = MockState()
 history = MockStateHistory()
-vehicle = FourWheelsVehicle(state, history, spec)
+controller = MockController()
+vehicle = FourWheelsVehicle(state, history, spec, controller)
 
 
 def test_attributes():
