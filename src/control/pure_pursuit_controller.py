@@ -63,7 +63,7 @@ class SinCurveCourse:
 class PurePursuitController:
     def __init__(self, spec, course=None):
         self.MIN_LOOK_AHEAD_DISTANCE_M = 2.0
-        self.LOOK_FORWARD_GAIN = 0.1
+        self.LOOK_FORWARD_GAIN = 0.5
         self.SPEED_PROPORTIONAL_GAIN = 0.5
         self.WHEEL_BASE_M = spec.wheel_base_m
 
