@@ -42,7 +42,7 @@ class MockState:
     def __init__(self):
         pass
 
-    def update(self, accel_mps2, steer_rad, time_s, wheel_base_m):
+    def update(self, accel_mps2, yaw_rate_rps, time_s):
         return MockState()
     
     def x_y_yaw(self):
