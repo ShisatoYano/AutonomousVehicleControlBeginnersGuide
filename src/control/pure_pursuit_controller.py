@@ -4,7 +4,7 @@ pure_pursuit_controller.py
 Author: Shisato Yano
 """
 
-from math import sin, atan, atan2
+from math import sin, tan, atan2
 import numpy as np
 import sys
 import os
@@ -49,6 +49,9 @@ class SinCurveCourse:
     def point_y_m(self, point_index):
         return self.y_array[point_index]
     
+    def target_speed_mps(self, point_index):
+        return self.speed_array[point_index]
+    
     def length(self):
         return len(self.x_array)
 
@@ -60,37 +63,56 @@ class PurePursuitController:
     def __init__(self, spec, course=None):
         self.MIN_LOOK_AHEAD_DISTANCE_M = 2.0
         self.LOOK_FORWARD_GAIN = 0.1
-        self.SPEED_PROPORTIONAL_GAIN = 1.0
+        self.SPEED_PROPORTIONAL_GAIN = 0.5
         self.WHEEL_BASE_M = spec.wheel_base_m
 
         self.course = course
+        self.look_ahead_distance_m = self.MIN_LOOK_AHEAD_DISTANCE_M
+        self.target_course_index = 0
+        self.target_accel_mps2 = 0.0
+        self.target_steer_rad = 0.0
+        self.target_yaw_rate_rps = 0.0
     
-    def accel_steer_input(self, state):
-        if not self.course: return 0.0, 0.0
-
-        nearest_index = self.course.search_nearest_point_index(state)
+    def update(self, state):
+        if not self.course: return
 
         # calculate look ahead distance
-        look_ahead_distance_m = self.LOOK_FORWARD_GAIN * state.get_speed_mps() + self.MIN_LOOK_AHEAD_DISTANCE_M
+        self.look_ahead_distance_m = self.LOOK_FORWARD_GAIN * state.get_speed_mps() + self.MIN_LOOK_AHEAD_DISTANCE_M
 
-        # search nearest point index farther than look ahead distance
-        while look_ahead_distance_m > self.course.calculate_distance_from_point(state, nearest_index):
+        # calculate target course index
+        nearest_index = self.course.search_nearest_point_index(state)
+        while self.look_ahead_distance_m > self.course.calculate_distance_from_point(state, nearest_index):
             if nearest_index + 1 >= self.course.length(): break
             nearest_index += 1
-        
+        self.target_course_index = nearest_index
+
+        # calculate target acceleration
+        diff_speed_mps = self.course.target_speed_mps(self.target_course_index) - state.get_speed_mps()
+        self.target_accel_mps2 = self.SPEED_PROPORTIONAL_GAIN * diff_speed_mps
+
         # calculate difference angle against course
         diff_x_m = self.course.point_x_m(nearest_index) - state.get_x_m()
         diff_y_m = self.course.point_y_m(nearest_index) - state.get_y_m()
         diff_angle_rad = atan2(diff_y_m, diff_x_m) - state.get_yaw_rad()
-        
-        # calculate target steering angle to course
-        target_steer_angle_rad = atan2((2 * self.WHEEL_BASE_M * sin(diff_angle_rad)), look_ahead_distance_m)
 
-        return 0.0, 0.0
+        # calculate target steering angle to course
+        self.target_steer_rad = atan2((2 * self.WHEEL_BASE_M * sin(diff_angle_rad)), self.look_ahead_distance_m)
+
+        # calculate target yaw rate to course
+        self.target_yaw_rate_rps = state.get_speed_mps() * tan(self.target_steer_rad) / self.WHEEL_BASE_M
+    
+    def get_target_accel_mps2(self):
+        return self.target_accel_mps2
+    
+    def get_target_steer_rad(self):
+        return self.target_steer_rad
+
+    def get_target_yaw_rate_rps(self):
+        return self.target_yaw_rate_rps
 
 
 def main():
-    vis = GlobalXYVisualizer(x_min=-5, x_max=55, y_min=-20, y_max=25, time_span_s=10)
+    vis = GlobalXYVisualizer(x_min=-5, x_max=55, y_min=-20, y_max=25, time_span_s=20)
 
     course = SinCurveCourse(0, 50, 0.5, 20)
     vis.add_object(course)

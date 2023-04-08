@@ -27,7 +27,7 @@ class State:
         self.yaw_rad = yaw_rad
         self.speed_mps = speed_mps
     
-    def update(self, accel_mps2, steer_rad, time_s, wheel_base_m):
+    def update(self, accel_mps2, yaw_rate_rps, time_s):
         """
         Function to update state
         accel_mps2: Acceleration[m/s^2]
@@ -38,8 +38,8 @@ class State:
         updated_x_m = self.x_m + self.speed_mps * cos(self.yaw_rad) * time_s
         updated_y_m = self.y_m + self.speed_mps * sin(self.yaw_rad) * time_s
 
-        yaw_rate_rad = self.speed_mps * tan(steer_rad) / wheel_base_m
-        updated_yaw_rad = self.yaw_rad + yaw_rate_rad * time_s
+        # yaw_rate_rad = self.speed_mps * tan(steer_rad) / wheel_base_m
+        updated_yaw_rad = self.yaw_rad + yaw_rate_rps * time_s
 
         updated_speed_mps = self.speed_mps + accel_mps2 * time_s
 
