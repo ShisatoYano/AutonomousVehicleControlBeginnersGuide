@@ -22,6 +22,8 @@ class State:
         speed_mps: Vehicle's speed[m/s]
         """
 
+        self.STOP_SPEED_MPS = 0.5 / 3.6
+
         self.x_m = x_m
         self.y_m = y_m
         self.yaw_rad = yaw_rad
@@ -41,6 +43,7 @@ class State:
         updated_yaw_rad = self.yaw_rad + yaw_rate_rps * time_s
 
         updated_speed_mps = self.speed_mps + accel_mps2 * time_s
+        if abs(updated_speed_mps) < self.STOP_SPEED_MPS: updated_speed_mps = 0.0
 
         return State(updated_x_m, updated_y_m, updated_yaw_rad, updated_speed_mps)
     
