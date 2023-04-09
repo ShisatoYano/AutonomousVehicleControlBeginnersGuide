@@ -57,7 +57,7 @@ class SinCurveCourse:
         return len(self.x_array)
 
     def draw(self, axes, elems):
-        elems += axes.plot(self.x_array, self.y_array, linewidth=0, marker='.', color='r')
+        elems += axes.plot(self.x_array, self.y_array, linewidth=0, marker='.', color='r', label="Course")
 
 
 class PurePursuitController:
