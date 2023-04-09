@@ -46,6 +46,11 @@ class SinCurveCourse:
     def calculate_speed_difference_mps(self, state, point_index):
         return self.speed_array[point_index] - state.get_speed_mps()
     
+    def calculate_angle_difference_rad(self, state, point_index):
+        diff_x_m = self.x_array[point_index] - state.get_x_m()
+        diff_y_m = self.y_array[point_index] - state.get_y_m()
+        return atan2(diff_y_m, diff_x_m) - state.get_yaw_rad()
+    
     def point_x_m(self, point_index):
         return self.x_array[point_index]
     
@@ -94,9 +99,7 @@ class PurePursuitController:
         self.target_accel_mps2 = self.SPEED_PROPORTIONAL_GAIN * diff_speed_mps
 
         # calculate difference angle against course
-        diff_x_m = self.course.point_x_m(nearest_index) - state.get_x_m()
-        diff_y_m = self.course.point_y_m(nearest_index) - state.get_y_m()
-        diff_angle_rad = atan2(diff_y_m, diff_x_m) - state.get_yaw_rad()
+        diff_angle_rad = self.course.calculate_angle_difference_rad(state, self.target_course_index)
 
         # calculate target steering angle to course
         self.target_steer_rad = atan2((2 * self.WHEEL_BASE_M * sin(diff_angle_rad)), self.look_ahead_distance_m)
