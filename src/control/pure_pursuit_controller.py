@@ -131,7 +131,7 @@ class PurePursuitController:
 
 
 def main():
-    vis = GlobalXYVisualizer(x_min=-5, x_max=55, y_min=-20, y_max=25, time_span_s=30)
+    vis = GlobalXYVisualizer(x_min=-5, x_max=55, y_min=-20, y_max=25, time_span_s=25)
 
     course = SinCurveCourse(0, 50, 0.5, 20)
     vis.add_object(course)
