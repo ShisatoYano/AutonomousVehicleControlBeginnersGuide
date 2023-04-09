@@ -37,12 +37,14 @@ class SinCurveCourse:
         nearest_index = np.argmin(diff_array)
         
         return nearest_index
-
     
     def calculate_distance_from_point(self, state, point_index):
         diff_x_m = state.get_x_m() - self.x_array[point_index]
         diff_y_m = state.get_y_m() - self.y_array[point_index]
         return np.hypot(diff_x_m, diff_y_m)
+    
+    def calculate_speed_difference_mps(self, state, point_index):
+        return self.speed_array[point_index] - state.get_speed_mps()
     
     def point_x_m(self, point_index):
         return self.x_array[point_index]
@@ -88,7 +90,7 @@ class PurePursuitController:
         self.target_course_index = nearest_index
 
         # calculate target acceleration
-        diff_speed_mps = self.course.target_speed_mps(self.target_course_index) - state.get_speed_mps()
+        diff_speed_mps = self.course.calculate_speed_difference_mps(state, self.target_course_index)
         self.target_accel_mps2 = self.SPEED_PROPORTIONAL_GAIN * diff_speed_mps
 
         # calculate difference angle against course
