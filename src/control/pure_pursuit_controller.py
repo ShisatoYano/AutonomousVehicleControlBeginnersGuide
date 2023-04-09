@@ -81,6 +81,9 @@ class PurePursuitController:
         self.target_steer_rad = 0.0
         self.target_yaw_rate_rps = 0.0
     
+    def calculate_look_ahead_distance(self, state):
+        self.look_ahead_distance_m = self.LOOK_FORWARD_GAIN * state.get_speed_mps() + self.MIN_LOOK_AHEAD_DISTANCE_M
+
     def calculate_target_course_index(self, state):
         nearest_index = self.course.search_nearest_point_index(state)
         while self.look_ahead_distance_m > self.course.calculate_distance_from_point(state, nearest_index):
@@ -91,10 +94,8 @@ class PurePursuitController:
     def update(self, state):
         if not self.course: return
 
-        # calculate look ahead distance
-        self.look_ahead_distance_m = self.LOOK_FORWARD_GAIN * state.get_speed_mps() + self.MIN_LOOK_AHEAD_DISTANCE_M
-
-        # calculate target course index
+        self.calculate_look_ahead_distance(state)
+        
         self.calculate_target_course_index(state)
 
         # calculate target acceleration
