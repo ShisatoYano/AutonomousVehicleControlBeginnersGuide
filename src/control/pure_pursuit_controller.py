@@ -114,7 +114,7 @@ class PurePursuitController:
     def draw(self, axes, elems):
         elems += axes.plot(self.course.point_x_m(self.target_course_index), 
                            self.course.point_y_m(self.target_course_index), 
-                           marker='o', color='g')
+                           marker='o', color='g', label="Target Point")
 
 
 def main():
