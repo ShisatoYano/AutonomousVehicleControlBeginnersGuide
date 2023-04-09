@@ -99,6 +99,9 @@ class PurePursuitController:
         diff_angle_rad = self.course.calculate_angle_difference_rad(state, self.target_course_index)
         self.target_steer_rad = atan2((2 * self.WHEEL_BASE_M * sin(diff_angle_rad)), self.look_ahead_distance_m)
 
+    def calculate_target_yaw_rate_rps(self, state):
+        self.target_yaw_rate_rps = state.get_speed_mps() * tan(self.target_steer_rad) / self.WHEEL_BASE_M
+
     def update(self, state):
         if not self.course: return
 
@@ -110,8 +113,7 @@ class PurePursuitController:
 
         self.calculate_target_steer_angle_rad(state)
 
-        # calculate target yaw rate to course
-        self.target_yaw_rate_rps = state.get_speed_mps() * tan(self.target_steer_rad) / self.WHEEL_BASE_M
+        self.calculate_target_yaw_rate_rps(state)
     
     def get_target_accel_mps2(self):
         return self.target_accel_mps2
