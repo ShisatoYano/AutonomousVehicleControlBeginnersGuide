@@ -87,7 +87,7 @@ class FourWheelsVehicle:
         self.rear_right_tire.draw(axes, x_y_yaw_array, elems)
         self.front_axle.draw(axes, x_y_yaw_array, elems)
         self.rear_axle.draw(axes, x_y_yaw_array, elems)
-        self.history.draw(axes, self.spec.color, elems)
+        self.history.draw(axes, elems)
 
         axes.set_xlim(x_m - self.draw_area_width, x_m + self.draw_area_width)
         axes.set_ylim(y_m - self.draw_area_width, y_m + self.draw_area_width)
@@ -98,7 +98,7 @@ def main():
 
     spec = VehicleSpecification()
     state = State(15.0, 0.0, 0.0, 2.0)
-    history = StateHistory([state.get_x_m()], [state.get_y_m()])
+    history = StateHistory([state.get_x_m()], [state.get_y_m()], spec.color)
     vehicle = FourWheelsVehicle(state, history, spec)
     
     vis.add_object(vehicle)

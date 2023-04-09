@@ -62,8 +62,8 @@ class MockStateHistory:
     def update(self, x, y):
         return MockStateHistory()
     
-    def draw(self, axes, color, elems):
-        elems += axes.plot([], [], color=color)
+    def draw(self, axes, elems):
+        elems += axes.plot([], [], color='k')
 
 
 class MockController:

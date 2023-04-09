@@ -125,7 +125,7 @@ def main():
 
     spec = VehicleSpecification()
     state = State(0.0, 0.0, 0.0, 0.0)
-    history = StateHistory([state.get_x_m()], [state.get_y_m()])
+    history = StateHistory([state.get_x_m()], [state.get_y_m()], spec.color)
     
     pure_pursuit = PurePursuitController(spec, course)
 

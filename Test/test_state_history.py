@@ -13,8 +13,15 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../src/state")
 from state_history import StateHistory
 
 
+# mock class
+class MockSpecification:
+    def __init__(self):
+        self.color = 'k'
+
+
 # test instance
-history = StateHistory([0.0], [1.0])
+spec = MockSpecification()
+history = StateHistory([0.0], [1.0], spec.color)
 
 
 def test_initialization():
@@ -40,5 +47,5 @@ def test_update():
 def test_draw():
     figure = plt.figure(figsize=(8, 8))
     axes = figure.add_subplot(111)
-    history.draw(axes, 'k', [])
+    history.draw(axes, [])
 
