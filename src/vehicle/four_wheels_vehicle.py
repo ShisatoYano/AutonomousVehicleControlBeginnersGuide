@@ -29,7 +29,7 @@ class FourWheelsVehicle:
     Four Wheels Vehicle model class
     """
 
-    def __init__(self, state, history, spec, controller, draw_area_width=10.0):
+    def __init__(self, state, history, spec, controller=None, draw_area_width=10.0):
         """
         Constructor
         state: Vehicle's state object
@@ -56,6 +56,8 @@ class FourWheelsVehicle:
         self.controller = controller
 
     def update(self, time_s):
+        if not self.controller: return
+
         self.controller.update(self.state)
 
         updated_state = self.state.update(self.controller.get_target_accel_mps2(), 
@@ -71,12 +73,16 @@ class FourWheelsVehicle:
         x_m = self.state.get_x_m()
         y_m = self.state.get_y_m()
 
-        elems += self.controller.draw(axes)
+        if self.controller:
+            elems += self.controller.draw(axes)
+            steer_rad = self.controller.get_target_steer_rad()
+        else:
+            steer_rad = 0.0
 
         elems += self.body.draw(axes, x_y_yaw_array)
         elems += self.chassis.draw(axes, x_y_yaw_array)
-        elems += self.front_left_tire.draw(axes, x_y_yaw_array, self.controller.get_target_steer_rad())
-        elems += self.front_right_tire.draw(axes, x_y_yaw_array, self.controller.get_target_steer_rad())
+        elems += self.front_left_tire.draw(axes, x_y_yaw_array, steer_rad)
+        elems += self.front_right_tire.draw(axes, x_y_yaw_array, steer_rad)
         elems += self.rear_left_tire.draw(axes, x_y_yaw_array, 0.0)
         elems += self.rear_right_tire.draw(axes, x_y_yaw_array, 0.0)
         elems += self.front_axle.draw(axes, x_y_yaw_array)
