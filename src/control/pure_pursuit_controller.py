@@ -111,10 +111,10 @@ class PurePursuitController:
     def get_target_yaw_rate_rps(self):
         return self.target_yaw_rate_rps
     
-    def draw(self, axes):
-        return axes.plot(self.course.point_x_m(self.target_course_index), 
-                         self.course.point_y_m(self.target_course_index), 
-                         marker='o', color='g')
+    def draw(self, axes, elems):
+        elems += axes.plot(self.course.point_x_m(self.target_course_index), 
+                           self.course.point_y_m(self.target_course_index), 
+                           marker='o', color='g')
 
 
 def main():

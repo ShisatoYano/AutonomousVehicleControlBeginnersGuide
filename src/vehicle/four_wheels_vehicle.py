@@ -74,7 +74,7 @@ class FourWheelsVehicle:
         y_m = self.state.get_y_m()
 
         if self.controller:
-            elems += self.controller.draw(axes)
+            self.controller.draw(axes, elems)
             steer_rad = self.controller.get_target_steer_rad()
         else:
             steer_rad = 0.0
