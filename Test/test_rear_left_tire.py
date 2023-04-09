@@ -45,4 +45,4 @@ def test_create_instance():
 def test_draw():
     figure = plt.figure(figsize=(8, 8))
     axes = figure.add_subplot(111)
-    tire.draw(axes, np.array([[0.0], [0.0], [0.0]]), 0.0, [])
+    tire.draw(axes, np.array([[0.0], [0.0], [0.0]]), [])
