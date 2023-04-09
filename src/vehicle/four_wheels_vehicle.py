@@ -86,7 +86,7 @@ class FourWheelsVehicle:
         self.rear_left_tire.draw(axes, x_y_yaw_array, elems)
         self.rear_right_tire.draw(axes, x_y_yaw_array, elems)
         self.front_axle.draw(axes, x_y_yaw_array, elems)
-        elems += self.rear_axle.draw(axes, x_y_yaw_array)
+        self.rear_axle.draw(axes, x_y_yaw_array, elems)
         elems += self.history.draw(axes, self.spec.color)
 
         axes.set_xlim(x_m - self.draw_area_width, x_m + self.draw_area_width)
