@@ -33,9 +33,9 @@ class StateHistory:
 
         return StateHistory(updated_x_history, updated_y_history)
     
-    def draw(self, axes, color):
+    def draw(self, axes, color, elems):
         """
         Function draw x-y history's trajectory
         """
         
-        return axes.plot(self.x_history, self.y_history, linewidth=0, marker='.', color=color)
+        elems += axes.plot(self.x_history, self.y_history, linewidth=0, marker='.', color=color)

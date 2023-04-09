@@ -40,5 +40,5 @@ def test_update():
 def test_draw():
     figure = plt.figure(figsize=(8, 8))
     axes = figure.add_subplot(111)
-    assert history.draw(axes, 'k') != None
+    history.draw(axes, 'k', [])
 
