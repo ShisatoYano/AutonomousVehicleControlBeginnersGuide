@@ -41,4 +41,4 @@ def test_create_instance():
 def test_draw():
     figure = plt.figure(figsize=(8, 8))
     axes = figure.add_subplot(111)
-    assert chassis.draw(axes, np.array([[0.0], [0.0], [0.0]])) != None
+    chassis.draw(axes, np.array([[0.0], [0.0], [0.0]]), [])

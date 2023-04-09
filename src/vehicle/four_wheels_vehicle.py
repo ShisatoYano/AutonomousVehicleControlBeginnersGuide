@@ -80,7 +80,7 @@ class FourWheelsVehicle:
             steer_rad = 0.0
 
         self.body.draw(axes, x_y_yaw_array, elems)
-        elems += self.chassis.draw(axes, x_y_yaw_array)
+        self.chassis.draw(axes, x_y_yaw_array, elems)
         elems += self.front_left_tire.draw(axes, x_y_yaw_array, steer_rad)
         elems += self.front_right_tire.draw(axes, x_y_yaw_array, steer_rad)
         elems += self.rear_left_tire.draw(axes, x_y_yaw_array, 0.0)
