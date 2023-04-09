@@ -63,8 +63,8 @@ class SinCurveCourse:
 class PurePursuitController:
     def __init__(self, spec, course=None):
         self.MIN_LOOK_AHEAD_DISTANCE_M = 2.0
-        self.LOOK_FORWARD_GAIN = 0.5
-        self.SPEED_PROPORTIONAL_GAIN = 0.5
+        self.LOOK_FORWARD_GAIN = 0.3
+        self.SPEED_PROPORTIONAL_GAIN = 1.0
         self.WHEEL_BASE_M = spec.wheel_base_m
 
         self.course = course
@@ -118,7 +118,7 @@ class PurePursuitController:
 
 
 def main():
-    vis = GlobalXYVisualizer(x_min=-5, x_max=55, y_min=-20, y_max=25, time_span_s=21)
+    vis = GlobalXYVisualizer(x_min=-5, x_max=55, y_min=-20, y_max=25, time_span_s=30)
 
     course = SinCurveCourse(0, 50, 0.5, 20)
     vis.add_object(course)
