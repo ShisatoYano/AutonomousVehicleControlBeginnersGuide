@@ -82,8 +82,8 @@ class MockController:
     def get_target_yaw_rate_rps(self):
         return 0.0
     
-    def draw(self, axes):
-        return axes.plot(0.0, 0.0, marker='o', color='g')
+    def draw(self, axes, elems):
+        elems += axes.plot(0.0, 0.0, marker='o', color='g')
 
 
 # test instance
