@@ -91,6 +91,10 @@ class PurePursuitController:
             nearest_index += 1
         self.target_course_index = nearest_index
 
+    def calculate_target_acceleration_mps2(self, state):
+        diff_speed_mps = self.course.calculate_speed_difference_mps(state, self.target_course_index)
+        self.target_accel_mps2 = self.SPEED_PROPORTIONAL_GAIN * diff_speed_mps
+
     def update(self, state):
         if not self.course: return
 
@@ -98,9 +102,7 @@ class PurePursuitController:
         
         self.calculate_target_course_index(state)
 
-        # calculate target acceleration
-        diff_speed_mps = self.course.calculate_speed_difference_mps(state, self.target_course_index)
-        self.target_accel_mps2 = self.SPEED_PROPORTIONAL_GAIN * diff_speed_mps
+        self.calculate_target_acceleration_mps2(state)
 
         # calculate difference angle against course
         diff_angle_rad = self.course.calculate_angle_difference_rad(state, self.target_course_index)
