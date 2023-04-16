@@ -63,7 +63,8 @@ class GlobalXYVisualizer:
                                            frames=int(self.time_span_s / self.time_interval_s)+1, 
                                            interval=int(self.time_interval_s * 1000), 
                                            repeat=False)
-            plt.show()
+            self.anime.save("pure_pursuit_path_tracking.gif", writer="pillow")
+            # plt.show()
         else:
             for i in range(1000): self.update(i, elems, axes)
 
