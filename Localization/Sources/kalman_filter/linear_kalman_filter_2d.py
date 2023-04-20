@@ -132,7 +132,7 @@ class LinearKalmanFilter2D:
     
     def calculate_innovation(self, z, x_pred):
         """
-        Function to calculate observation prediction error variance
+        Function to calculate innovation
         dz = z_{t+1} - H * x_{t+1}
 
         x_pred: predicted position with previous data, x_{t+1}
