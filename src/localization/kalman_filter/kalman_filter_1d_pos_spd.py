@@ -1,5 +1,5 @@
 """
-Linear Kalman Filter sample program to estimate 2 dimensional position and velocity.
+Linear Kalman Filter sample program to estimate 1 dimensional position and speed.
 
 A vehicle drives at a velocity, v.
 The velocity, v is accelerated by acceleration, a.
@@ -29,7 +29,7 @@ show_plot = True
 
 class MotionModel:
     """
-    Class to predict 2 dimensional state (position and velocity) by Linear Motion Model
+    Class to predict state (position and speed) by Linear Motion Model
     """
 
     def __init__(self, interval_sec, input_noise_variance):
@@ -55,11 +55,11 @@ class MotionModel:
     def calculate_state(self, x_prev, u):
         """
         Function of state equation
-        This is used to predict vehicle's position and velocity at next time
+        This is used to predict vehicle's position and speed at next time
         by using acceleration input
         x_{t+1} = F * x_t + G * u_t
 
-        x_prev: position and velocity at previous time, x_t
+        x_prev: position and speed at previous time, x_t
         u: acceleration input, u_t
         """
 
@@ -68,7 +68,7 @@ class MotionModel:
     
     def calculate_covariance(self, p_prev):
         """
-        Function to predict covariance of position and velocity
+        Function to predict covariance of position and speed
         p_{t+1} = F * p^_t * F^T + G * Q * G^T
 
         p_prev: estimated covariance at previous time, p^_t
@@ -115,9 +115,9 @@ class ObservationModel:
         return z_pred
 
 
-class LinearKalmanFilter2D:
+class KalmanFilter1dPosSpd:
     """
-    Class to estimate 2 dimensional state (position and velocity) by Linear Kalman Filter
+    Class to estimate state (position and speed) by Linear Kalman Filter
     """
 
     def __init__(self, motion_model, observation_model):
@@ -166,10 +166,10 @@ class LinearKalmanFilter2D:
     
     def calculate_state(self, x_pred, delta_z, kalman_gain):
         """
-        Function to calculate position and velocity
+        Function to calculate position and speed
         x^_{t+1} = x_{t+1} + k_{t+1} * dz
 
-        x_pred: predicted position and velocity with previous data, x^_{t+1}
+        x_pred: predicted position and speed with previous data, x^_{t+1}
         delta_z: difference between observation and predicted observation, dz
         kalman_gain: kalman gain to update position and velocity, k_{t+1}
         """
@@ -179,11 +179,11 @@ class LinearKalmanFilter2D:
     
     def calculate_covariance(self, p_pred, kalman_gain, p_obsrv_pred_err):
         """
-        Function to calculate covariane of position and velocity
+        Function to calculate covariane of position and speed
         p^_{t+1} = p_{t+1} - k_{t+1} * s_{t+1} * k_{t+1}^T
 
         p_pred: predicted covariance with previous data, p^_{t+1}
-        kalman_gain: kalman gain to calculate position and velocity, k_{t+1}
+        kalman_gain: kalman gain to calculate position and speed, k_{t+1}
         p_obsrv_pred_err: observation prediction error variance, s_{t+1}
         """
 
@@ -219,7 +219,7 @@ class LinearKalmanFilter2D:
 def decide_input_accel(elapsed_time_sec):
     """
     Function to decide acceleration input
-    Increasing velocity until time limit passed
+    Increasing speed until time limit passed
     elapsed_time_sec: current elapsed time[sec]
     """
 
@@ -251,7 +251,7 @@ def main():
     # generate instances
     mm = MotionModel(interval_sec=INTERVAL_SEC, input_noise_variance=INPUT_NOISE_VARIANCE)
     om = ObservationModel(observation_noise_variance=OBSERVATION_NOISE_VARIANCE)
-    kf = LinearKalmanFilter2D(motion_model=mm, observation_model=om)
+    kf = KalmanFilter1dPosSpd(motion_model=mm, observation_model=om)
 
     # initialize data
     input_accel_ms2 = 0.0
@@ -279,12 +279,12 @@ def main():
     # velocity plot
     ax_veloicity = fig.add_subplot(2, 2, 3)
     ax_veloicity.set_xlabel("Time[s]")
-    ax_veloicity.set_ylabel("Velocity[m/s]")
+    ax_veloicity.set_ylabel("Speed[m/s]")
     ax_veloicity.grid(True)
     # velocity variance plot
     ax_vel_var = fig.add_subplot(2, 2, 4)
     ax_vel_var.set_xlabel("Time[s]")
-    ax_vel_var.set_ylabel("Vel Var")
+    ax_vel_var.set_ylabel("Spd Var")
     ax_vel_var.grid(True)
 
     # simulate
@@ -316,13 +316,13 @@ def main():
     ax_position.plot(time_list, true_pos_list, color='b', lw=2, label="True Position")
     ax_position.plot(time_list, est_pos_list, color='r', lw=2, label="Estimated Position")
     ax_position.legend()
-    ax_veloicity.plot(time_list, pred_vel_list, color='m', lw=2, label="Pred Velocity")
-    ax_veloicity.plot(time_list, true_vel_list, color='b', lw=2, label="True Velocity")
-    ax_veloicity.plot(time_list, est_vel_list, color='r', lw=2, label="Estimated Velocity")
+    ax_veloicity.plot(time_list, pred_vel_list, color='m', lw=2, label="Pred Speed")
+    ax_veloicity.plot(time_list, true_vel_list, color='b', lw=2, label="True Speed")
+    ax_veloicity.plot(time_list, est_vel_list, color='r', lw=2, label="Estimated Speed")
     ax_veloicity.legend()
     ax_pos_var.plot(time_list, est_pos_cov_list, color='r', lw=2, label="Est Pos Variance")
     ax_pos_var.legend()
-    ax_vel_var.plot(time_list, est_vel_cov_list, color='r', lw=2, label="Est Vel Variance")
+    ax_vel_var.plot(time_list, est_vel_cov_list, color='r', lw=2, label="Est Spd Variance")
     ax_vel_var.legend()
     fig.tight_layout()
     
