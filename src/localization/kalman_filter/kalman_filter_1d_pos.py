@@ -25,7 +25,7 @@ OBSERVATION_NOISE_VARIANCE = 5.0
 show_plot = True
 
 
-class LinearKalmanFilter1D:
+class KalmanFilter1dPos:
     """
     Class to estimate 1 dimensional position by Linear Kalman Filter.
     """
@@ -208,10 +208,10 @@ def main():
     print(__file__ + " start!!")
 
     # generate instance of kalman filter
-    kf = LinearKalmanFilter1D(interval_sec=INTERVAL_SEC,
-                              input_velocity_ms=INPUT_VELOCITY_MS,
-                              input_noise_variance=INPUT_NOISE_VARIANCE,
-                              observation_noise_variance=OBSERVATION_NOISE_VARIANCE)
+    kf = KalmanFilter1dPos(interval_sec=INTERVAL_SEC,
+                           input_velocity_ms=INPUT_VELOCITY_MS,
+                           input_noise_variance=INPUT_NOISE_VARIANCE,
+                           observation_noise_variance=OBSERVATION_NOISE_VARIANCE)
     
     # initialize data
     elapsed_time_sec, true_pos, obsrv_pos, pred_pos = 0.0, 0.0, 0.0, 0.0
