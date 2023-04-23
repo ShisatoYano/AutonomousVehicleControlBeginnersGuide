@@ -4,14 +4,6 @@ four_wheels_vehicle.py
 Author: Shisato Yano
 """
 
-import numpy as np
-import sys
-import os
-
-sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../visualization")
-sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../state")
-from global_xy_visualizer import GlobalXYVisualizer
-from vehicle_specification import VehicleSpecification
 from body import Body
 from chassis import Chassis
 from front_left_tire import FrontLeftTire
@@ -20,8 +12,6 @@ from rear_left_tire import RearLeftTire
 from rear_right_tire import RearRightTire
 from front_axle import FrontAxle
 from rear_axle import RearAxle
-from state import State
-from state_history import StateHistory
 
 
 class FourWheelsVehicle:
@@ -91,19 +81,3 @@ class FourWheelsVehicle:
 
         axes.set_xlim(x_m - self.draw_area_width, x_m + self.draw_area_width)
         axes.set_ylim(y_m - self.draw_area_width, y_m + self.draw_area_width)
-
-
-def main():
-    vis = GlobalXYVisualizer(time_span_s=20)
-
-    spec = VehicleSpecification()
-    state = State(15.0, 0.0, 0.0, 2.0)
-    history = StateHistory([state.get_x_m()], [state.get_y_m()], spec.color)
-    vehicle = FourWheelsVehicle(state, history, spec)
-    
-    vis.add_object(vehicle)
-    vis.draw()
-
-
-if __name__ == "__main__":
-    main()
