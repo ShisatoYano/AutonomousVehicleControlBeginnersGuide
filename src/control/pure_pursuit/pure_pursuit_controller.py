@@ -9,9 +9,9 @@ import numpy as np
 import sys
 import os
 
-sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../visualization")
-sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../state")
-sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../vehicle")
+sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../../visualization")
+sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../../state")
+sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../../vehicle")
 from global_xy_visualizer import GlobalXYVisualizer
 from vehicle_specification import VehicleSpecification
 from state import State
