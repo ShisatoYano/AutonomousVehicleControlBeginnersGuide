@@ -14,7 +14,7 @@ class GlobalXYVisualizer:
     """
     
     def __init__(self, x_min=0, x_max=30, y_min=-15, y_max=15, 
-                 time_span_s=10, time_interval_s=0.1):
+                 time_span_s=10, time_interval_s=0.1, save_gif_name=None):
         self.objects = [] # register objects here
         self.x_min = x_min
         self.x_max = x_max
@@ -22,6 +22,7 @@ class GlobalXYVisualizer:
         self.y_max = y_max
         self.time_span_s = time_span_s
         self.time_interval_s = time_interval_s
+        self.save_gif_name = save_gif_name
         self.show_plot = True
     
     def add_object(self, obj):
@@ -63,8 +64,9 @@ class GlobalXYVisualizer:
                                            frames=int(self.time_span_s / self.time_interval_s)+1, 
                                            interval=int(self.time_interval_s * 1000), 
                                            repeat=False)
-            self.anime.save("pure_pursuit_path_tracking.gif", writer="pillow")
-            # plt.show()
+            
+            if self.save_gif_name: self.anime.save(self.save_gif_name, writer="pillow")
+            else: plt.show()
         else:
             for i in range(1000): self.update(i, elems, axes)
 
