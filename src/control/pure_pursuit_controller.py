@@ -145,7 +145,8 @@ def main():
     
     pure_pursuit = PurePursuitController(spec, course)
 
-    vehicle = FourWheelsVehicle(state, history, spec, controller=pure_pursuit)
+    vehicle = FourWheelsVehicle(state, history, spec, controller=pure_pursuit,
+                                draw_area_width=20.0)
     vis.add_object(vehicle)
 
     vis.draw()
