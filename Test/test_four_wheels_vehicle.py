@@ -107,6 +107,7 @@ def test_attributes():
     assert hasattr(vehicle, "front_axle") == True
     assert hasattr(vehicle, "rear_axle") == True
     assert hasattr(vehicle, "draw_area_width") == True
+    assert hasattr(vehicle, "controller") == True
 
 
 def test_initialize():
@@ -122,6 +123,7 @@ def test_initialize():
     assert vehicle.front_axle != None
     assert vehicle.rear_axle != None
     assert vehicle.draw_area_width == 10.0
+    assert vehicle.controller != None
 
 
 def test_update():
