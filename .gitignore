@@ -1,4 +1,5 @@
 src/array/__pycache__
+src/control/pure_pursuit/__pycache__
 src/course/sin_curve_course/__pycache__
 src/state/__pycache__
 src/vehicle/__pycache__
