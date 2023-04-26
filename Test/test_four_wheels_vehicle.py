@@ -53,6 +53,9 @@ class MockState:
 
     def get_y_m(self):
         return 0.0
+    
+    def get_speed_kmph(self):
+        return 0.0
 
 
 class MockStateHistory:
