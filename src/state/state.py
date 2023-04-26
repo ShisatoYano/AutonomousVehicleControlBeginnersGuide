@@ -81,3 +81,10 @@ class State:
         """
 
         return self.speed_mps
+    
+    def get_speed_kmph(self):
+        """
+        Function to get speed[km/h]
+        """
+
+        return self.speed_mps * 3.6
