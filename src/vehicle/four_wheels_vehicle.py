@@ -62,12 +62,15 @@ class FourWheelsVehicle:
         x_y_yaw_array = self.state.x_y_yaw()
         x_m = self.state.get_x_m()
         y_m = self.state.get_y_m()
+        speed_kmph = self.state.get_speed_kmph()
 
         if self.controller:
             self.controller.draw(axes, elems)
             steer_rad = self.controller.get_target_steer_rad()
         else:
             steer_rad = 0.0
+        
+        elems.append(axes.text(x_m, y_m + 2, "Speed: " + str(round(speed_kmph, 1)) + "[km/h]", fontsize=10))
 
         self.body.draw(axes, x_y_yaw_array, elems)
         self.chassis.draw(axes, x_y_yaw_array, elems)
