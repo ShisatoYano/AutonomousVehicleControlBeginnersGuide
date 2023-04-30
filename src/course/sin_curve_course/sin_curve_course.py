@@ -53,4 +53,5 @@ class SinCurveCourse:
         return len(self.x_array)
 
     def draw(self, axes, elems):
-        elems += axes.plot(self.x_array, self.y_array, linewidth=0, marker='.', color='r', label="Course")
+        course_plot, = axes.plot(self.x_array, self.y_array, linewidth=0, marker='.', color='r', label="Course")
+        elems.append(course_plot)
