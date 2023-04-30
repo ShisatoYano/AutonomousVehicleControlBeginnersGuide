@@ -90,3 +90,36 @@ def test_calculate_speed_difference_mps():
     assert course.calculate_speed_difference_mps(state_x_init, INIT_INDEX) == 0.0
     assert course.calculate_speed_difference_mps(state_x_mid, MID_INDEX) == 0.0
     assert course.calculate_speed_difference_mps(state_x_end, END_INDEX) == 0.0
+
+
+def test_calculate_angle_difference_rad():
+    assert course.calculate_angle_difference_rad(state_x_init, INIT_INDEX) == 0.0
+    assert course.calculate_angle_difference_rad(state_x_mid, MID_INDEX) == 0.0
+    assert course.calculate_angle_difference_rad(state_x_end, END_INDEX) == 0.0
+
+
+def test_point_xy_m():
+    assert round(course.point_x_m(INIT_INDEX), 1) == 0.0
+    assert round(course.point_y_m(INIT_INDEX), 1) == 0.0
+
+    assert round(course.point_x_m(MID_INDEX), 1) == 24.0
+    assert round(course.point_y_m(MID_INDEX), 1) == -12.0
+
+    assert round(course.point_x_m(END_INDEX), 1) == 49.0
+    assert round(course.point_y_m(END_INDEX), 1) == -9.0
+
+
+def test_target_speed_mps():
+    assert round(course.target_speed_mps(INIT_INDEX), 1) == 5.6
+    assert round(course.target_speed_mps(MID_INDEX), 1) == 5.6
+    assert round(course.target_speed_mps(END_INDEX), 1) == 0.0
+
+
+def test_length():
+    assert course.length() == 50
+
+
+def test_draw():
+    figure = plt.figure(figsize=(8, 8))
+    axes = figure.add_subplot(111)
+    course.draw(axes, [])
