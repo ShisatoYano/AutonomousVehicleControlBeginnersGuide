@@ -42,8 +42,35 @@ class MockState:
         return self.speed_mps
 
 
+class MockCourse:
+    def __init__(self):
+        pass
+
+    def search_nearest_point_index(self, state):
+        return 0
+    
+    def calculate_distance_from_point(self, state, point_index):
+        return 5.0
+    
+    def calculate_speed_difference_mps(self, state, point_index):
+        return 1.0
+    
+    def calculate_angle_difference_rad(self, state, point_index):
+        return 2.0
+    
+    def point_x_m(self, point_index):
+        return 3.0
+    
+    def point_y_m(self, point_index):
+        return 4.0
+    
+    def length(self):
+        return 10
+
+
 # mock instance
 spec = MockVehicleSpecification()
+course = MockCourse()
 
 
 def test_without_course_data():
@@ -63,3 +90,21 @@ def test_without_course_data():
     assert controller.get_target_accel_mps2() == 0.0
     assert controller.get_target_steer_rad() == 0.0
     assert controller.get_target_yaw_rate_rps() == 0.0
+
+
+def test_with_course_data():
+    controller = PurePursuitController(spec, course)
+    state = MockState(0.0, 1.0, 2.0, 3.0)
+
+    controller.update(state)
+
+    assert round(controller.get_target_accel_mps2(), 1) == 1.0
+    assert round(controller.get_target_steer_rad(), 1) == 0.9
+    assert round(controller.get_target_yaw_rate_rps(), 1) == 1.9
+
+
+def test_draw():
+    controller = PurePursuitController(spec, course)
+    figure = plt.figure(figsize=(8, 8))
+    axes = figure.add_subplot(111)
+    controller.draw(axes, [])
