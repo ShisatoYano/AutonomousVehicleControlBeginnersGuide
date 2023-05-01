@@ -7,9 +7,9 @@ Author: Shisato Yano
 import matplotlib.pyplot as plt
 import pytest
 import sys
-import os
+from pathlib import Path
 
-sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../src/visualization")
+sys.path.append(str(Path(__file__).absolute().parent) + "/../src/visualization")
 from global_xy_visualizer import GlobalXYVisualizer
 
 
