@@ -11,9 +11,9 @@ import numpy as np
 from math import sin
 import pytest
 import sys
-import os
+from pathlib import Path
 
-sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../src/control/pure_pursuit")
+sys.path.append(str(Path(__file__).absolute().parent) + "/../src/control/pure_pursuit")
 from pure_pursuit_controller import PurePursuitController
 
 # mock class
