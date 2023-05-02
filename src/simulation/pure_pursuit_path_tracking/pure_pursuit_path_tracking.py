@@ -22,6 +22,9 @@ from sin_curve_course import SinCurveCourse
 from pure_pursuit_controller import PurePursuitController
 
 
+show_plot = True
+
+
 def main():
     vis = GlobalXYVisualizer(x_min=-5, x_max=55, y_min=-20, y_max=25, time_span_s=25)
 
@@ -37,6 +40,8 @@ def main():
     vehicle = FourWheelsVehicle(state, history, spec, controller=pure_pursuit,
                                 draw_area_width=20.0)
     vis.add_object(vehicle)
+
+    if not show_plot: vis.not_show_plot()
 
     vis.draw()
 
