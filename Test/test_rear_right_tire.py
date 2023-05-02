@@ -10,9 +10,9 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pytest
 import sys
-import os
+from pathlib import Path
 
-sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../src/vehicle")
+sys.path.append(str(Path(__file__).absolute().parent) + "/../src/vehicle")
 from rear_right_tire import RearRightTire
 
 
