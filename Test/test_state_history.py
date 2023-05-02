@@ -6,10 +6,10 @@ Author: Shisato Yano
 
 import pytest
 import sys
-import os
 import matplotlib.pyplot as plt
+from pathlib import Path
 
-sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../src/state")
+sys.path.append(str(Path(__file__).absolute().parent) + "/../src/state")
 from state_history import StateHistory
 
 
