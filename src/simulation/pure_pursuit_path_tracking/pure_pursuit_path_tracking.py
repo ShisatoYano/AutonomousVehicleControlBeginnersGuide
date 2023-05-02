@@ -5,13 +5,14 @@ Author: Shisato Yano
 """
 
 import sys
-import os
+from pathlib import Path
 
-sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../../visualization")
-sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../../state")
-sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../../vehicle")
-sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../../course/sin_curve_course")
-sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../../control/pure_pursuit")
+abs_dir_path = str(Path(__file__).absolute().parent)
+sys.path.append(abs_dir_path + "/../../visualization")
+sys.path.append(abs_dir_path + "/../../state")
+sys.path.append(abs_dir_path + "/../../vehicle")
+sys.path.append(abs_dir_path + "/../../course/sin_curve_course")
+sys.path.append(abs_dir_path + "/../../control/pure_pursuit")
 from global_xy_visualizer import GlobalXYVisualizer
 from vehicle_specification import VehicleSpecification
 from state import State
