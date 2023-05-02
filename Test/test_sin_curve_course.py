@@ -11,9 +11,9 @@ import numpy as np
 from math import sin
 import pytest
 import sys
-import os
+from pathlib import Path
 
-sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../src/course/sin_curve_course")
+sys.path.append(str(Path(__file__).absolute().parent) + "/../src/course/sin_curve_course")
 from sin_curve_course import SinCurveCourse
 
 # mock class
