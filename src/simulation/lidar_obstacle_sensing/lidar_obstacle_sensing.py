@@ -26,11 +26,20 @@ show_plot = True
 
 
 def main():
-    vis = GlobalXYVisualizer(x_min=-30, x_max=30, y_min=-30, y_max=30, time_span_s=20)
+    vis = GlobalXYVisualizer(x_min=-30, x_max=30, y_min=-30, y_max=30, time_span_s=20,
+                             save_gif_name="lidar_obstacle_sensing.gif")
 
-    obst_state = State(5.0, 10.0, 0.0, 2.0)
-    obstacle = Obstacle(obst_state, yaw_rate_rps=np.deg2rad(10))
-    vis.add_object(obstacle)
+    obst1_state = State(-5.0, 15.0, 0.0, 1.0)
+    obst1 = Obstacle(obst1_state, yaw_rate_rps=np.deg2rad(10), width_m=1.0)
+    vis.add_object(obst1)
+
+    obst2_state = State(-15.0, -15.0, 0.0, 0.0)
+    obst2 = Obstacle(obst2_state, length_m=10.0, width_m=5.0)
+    vis.add_object(obst2)
+
+    obst3_state = State(20.0, 0.0, 0.0, 0.0)
+    obst3 = Obstacle(obst3_state, yaw_rate_rps=np.deg2rad(15))
+    vis.add_object(obst3)
 
     # vehicle instance
     spec = VehicleSpecification()
