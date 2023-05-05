@@ -22,7 +22,9 @@ class State:
         speed_mps: Vehicle's speed[m/s]
         """
 
-        self.STOP_SPEED_MPS = 0.5 / 3.6
+        self.STOP_SPEED_MPS = 0.5 / 3.6 # 0.5[km/h]
+        self.MAX_SPEED_MPS = 60 / 3.6 # 60[km/h]
+        self.MIN_SPEED_MSP = -10 / 3.6 # -10[km/h]
 
         self.x_m = x_m
         self.y_m = y_m
@@ -44,6 +46,8 @@ class State:
 
         updated_speed_mps = self.speed_mps + accel_mps2 * time_s
         if abs(updated_speed_mps) < self.STOP_SPEED_MPS: updated_speed_mps = 0.0
+        if updated_speed_mps > self.MAX_SPEED_MPS: updated_speed_mps = self.MAX_SPEED_MPS
+        if updated_speed_mps < self.MIN_SPEED_MSP: updated_speed_mps = self.MIN_SPEED_MSP
 
         return State(updated_x_m, updated_y_m, updated_yaw_rad, updated_speed_mps)
     

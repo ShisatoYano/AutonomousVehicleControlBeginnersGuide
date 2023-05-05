@@ -45,3 +45,21 @@ def test_update():
     assert round(updated_x_y_yaw[2, 0], 1) == round(np.deg2rad(90), 1)
     assert round(updated_array.get_speed_mps(), 1) == 4.0
     assert round(updated_array.get_speed_kmph(), 1) == 14.4
+
+
+def test_stop_speed():
+    updated_array = state.update(-2.9, 0.0, 1.0)
+    assert round(updated_array.get_speed_mps(), 1) == 0.0
+    assert round(updated_array.get_speed_kmph(), 1) == 0.0
+
+
+def test_max_speed():
+    updated_array = state.update(14.0, 0.0, 1.0)
+    assert round(updated_array.get_speed_mps(), 1) == 16.7
+    assert round(updated_array.get_speed_kmph(), 1) == 60.0
+
+
+def test_min_speed():
+    updated_array = state.update(-5.9, 0.0, 1.0)
+    assert round(updated_array.get_speed_mps(), 1) == -2.8
+    assert round(updated_array.get_speed_kmph(), 1) == -10.0
