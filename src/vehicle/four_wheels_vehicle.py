@@ -19,7 +19,7 @@ class FourWheelsVehicle:
     Four Wheels Vehicle model class
     """
 
-    def __init__(self, state, history, spec, controller=None, draw_area_width=10.0):
+    def __init__(self, state, history, spec, controller=None, sensor=None, draw_area_width=10.0):
         """
         Constructor
         state: Vehicle's state object
