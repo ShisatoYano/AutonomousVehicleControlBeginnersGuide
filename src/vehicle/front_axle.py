@@ -34,6 +34,6 @@ class FrontAxle:
     def draw(self, axes, pose, elems):
         translated_array = self.array.homogeneous_transformation(self.offset_x_m, 0.0, 0.0)
         transformed_array = translated_array.homogeneous_transformation(pose[0, 0], pose[1, 0], pose[2, 0])
-        data = transformed_array.get_data()
-        axle_plot, = axes.plot(data[0, :], data[1, :], lw=self.spec.line_w, color=self.spec.color, ls=self.spec.line_type)
+        axle_plot, = axes.plot(transformed_array.get_x_data(), transformed_array.get_y_data(), 
+                               lw=self.spec.line_w, color=self.spec.color, ls=self.spec.line_type)
         elems.append(axle_plot)

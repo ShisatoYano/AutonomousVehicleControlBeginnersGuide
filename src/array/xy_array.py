@@ -49,3 +49,19 @@ class XYArray:
         """
 
         return self.data
+    
+    def get_x_data(self):
+        """
+        Return x array data
+        Type is ndarray object
+        """
+
+        return self.data[0, :]
+    
+    def get_y_data(self):
+        """
+        Return y array data
+        Type is ndarray object
+        """
+
+        return self.data[1, :]

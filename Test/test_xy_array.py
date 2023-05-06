@@ -22,6 +22,8 @@ def test_data():
     data = array.get_data()
     assert round(data[0, 0], 1) == 1.0
     assert round(data[1, 0], 1) == 0.0
+    assert array.get_x_data() == [1.0]
+    assert array.get_y_data() == [0.0]
 
 
 def test_homogeneous_transformation():

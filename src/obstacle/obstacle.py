@@ -33,6 +33,7 @@ class Obstacle:
         yaw_rad = self.state.get_yaw_rad()
 
         transformed_array = self.array.homogeneous_transformation(x_m, y_m, yaw_rad)
-        data = transformed_array.get_data()
-        obstacle_plot, = axes.plot(data[0, :], data[1, :], lw=1.0, color='k', ls='-')
+        obstacle_plot, = axes.plot(transformed_array.get_x_data(), 
+                                   transformed_array.get_y_data(), 
+                                   lw=1.0, color='k', ls='-')
         elems.append(obstacle_plot)
