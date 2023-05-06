@@ -9,10 +9,10 @@ import sys
 from pathlib import Path
 
 abs_dir_path = str(Path(__file__).absolute().parent)
-sys.path.append(abs_dir_path + "/../../visualization")
-sys.path.append(abs_dir_path + "/../../state")
-sys.path.append(abs_dir_path + "/../../vehicle")
-sys.path.append(abs_dir_path + "/../../obstacle")
+sys.path.append(abs_dir_path + "/../../../visualization")
+sys.path.append(abs_dir_path + "/../../../state")
+sys.path.append(abs_dir_path + "/../../../vehicle")
+sys.path.append(abs_dir_path + "/../../../obstacle")
 
 from global_xy_visualizer import GlobalXYVisualizer
 from vehicle_specification import VehicleSpecification
