@@ -56,17 +56,17 @@ class OmniDirectionalLidar:
 
         distance_list, angle_list = [], []
         for obst in self.obst_list.get_list():
-            contour_x, contour_y = obst.contour_xy()
-            for vertex_x, vertex_y in zip(contour_x, contour_y):
-                diff_x = vertex_x - self.inst_lon_list[0]
-                diff_y = vertex_y - self.inst_lat_list[0]
-                distance_m = np.hypot(diff_x, diff_y)
-                angle_rad = atan2(diff_y, diff_x) - pose[2, 0]
-                if self.isVisible(distance_m):
-                    distance_list.append(distance_m)
-                    angle_list.append(angle_rad)
+            vertex_x, vertex_y = obst.vertex_xy()
+        #     for vertex_x, vertex_y in zip(contour_x, contour_y):
+        #         diff_x = vertex_x - self.inst_lon_list[0]
+        #         diff_y = vertex_y - self.inst_lat_list[0]
+        #         distance_m = np.hypot(diff_x, diff_y)
+        #         angle_rad = atan2(diff_y, diff_x) - pose[2, 0]
+        #         if self.isVisible(distance_m):
+        #             distance_list.append(distance_m)
+        #             angle_list.append(angle_rad)
         
-        self.ray_casting_filter(distance_list, angle_list)
+        # self.ray_casting_filter(distance_list, angle_list)
     
     def draw(self, axes, elems):
         inst_pos_plot, = axes.plot(self.inst_lon_list, self.inst_lat_list, marker='.', color='b')

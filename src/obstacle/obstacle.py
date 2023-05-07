@@ -38,11 +38,11 @@ class Obstacle:
                                    lw=1.0, color='k', ls='-')
         elems.append(obstacle_plot)
     
-    def contour_xy(self):
+    def vertex_xy(self):
         x_m = self.state.get_x_m()
         y_m = self.state.get_y_m()
         yaw_rad = self.state.get_yaw_rad()
 
         transformed_array = self.array.homogeneous_transformation(x_m, y_m, yaw_rad)
 
-        return transformed_array.get_x_data()[:-1], transformed_array.get_y_data()[:-1]
+        return transformed_array.get_x_data(), transformed_array.get_y_data()
