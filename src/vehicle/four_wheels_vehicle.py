@@ -47,9 +47,9 @@ class FourWheelsVehicle:
         self.sensor = sensor
 
     def update(self, time_s):
-        if not self.controller: return
-
         if self.sensor: self.sensor.update(self.state.x_y_yaw())
+
+        if not self.controller: return
 
         self.controller.update(self.state)
 
