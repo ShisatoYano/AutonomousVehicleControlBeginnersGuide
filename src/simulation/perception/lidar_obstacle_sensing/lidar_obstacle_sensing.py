@@ -13,6 +13,7 @@ sys.path.append(abs_dir_path + "/../../../visualization")
 sys.path.append(abs_dir_path + "/../../../state")
 sys.path.append(abs_dir_path + "/../../../vehicle")
 sys.path.append(abs_dir_path + "/../../../obstacle")
+sys.path.append(abs_dir_path + "/../../../sensor/lidar")
 
 from global_xy_visualizer import GlobalXYVisualizer
 from vehicle_specification import VehicleSpecification
@@ -21,6 +22,7 @@ from state_history import StateHistory
 from four_wheels_vehicle import FourWheelsVehicle
 from obstacle import Obstacle
 from obstacle_list import ObstacleList
+from omni_directional_lidar import OmniDirectionalLidar
 
 
 show_plot = True
@@ -43,7 +45,9 @@ def main():
     spec = VehicleSpecification()
     vehicle_state = State(0.0, 0.0, 0.0, 0.0)
     history = StateHistory([vehicle_state.get_x_m()], [vehicle_state.get_y_m()], spec.color)
+    lidar = OmniDirectionalLidar(obst_list, inst_lon_m=spec.wheel_base_m/2)
     vehicle = FourWheelsVehicle(vehicle_state, history, spec,
+                                sensor=lidar,
                                 draw_area_width=30.0)
     vis.add_object(vehicle)
 
