@@ -44,9 +44,12 @@ class FourWheelsVehicle:
         self.draw_area_width = draw_area_width
 
         self.controller = controller
+        self.sensor = sensor
 
     def update(self, time_s):
         if not self.controller: return
+
+        if self.sensor: self.sensor.update(self.state.x_y_yaw())
 
         self.controller.update(self.state)
 
@@ -63,6 +66,8 @@ class FourWheelsVehicle:
         x_m = self.state.get_x_m()
         y_m = self.state.get_y_m()
         speed_kmph = self.state.get_speed_kmph()
+
+        if self.sensor: self.sensor.draw(axes, elems)
 
         if self.controller:
             self.controller.draw(axes, elems)
