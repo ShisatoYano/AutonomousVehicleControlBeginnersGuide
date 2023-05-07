@@ -16,3 +16,6 @@ class ObstacleList:
     
     def draw(self, axes, elems):
         for obst in self.list: obst.draw(axes, elems)
+    
+    def get_list(self):
+        return self.list
