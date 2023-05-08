@@ -67,7 +67,7 @@ class FourWheelsVehicle:
         y_m = self.state.get_y_m()
         speed_kmph = self.state.get_speed_kmph()
 
-        if self.sensor: self.sensor.draw(axes, elems)
+        if self.sensor: self.sensor.draw(axes, x_y_yaw_array, elems)
 
         if self.controller:
             self.controller.draw(axes, elems)
