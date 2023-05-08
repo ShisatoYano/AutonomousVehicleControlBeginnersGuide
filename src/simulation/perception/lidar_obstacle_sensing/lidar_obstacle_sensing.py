@@ -29,7 +29,7 @@ show_plot = True
 
 
 def main():
-    vis = GlobalXYVisualizer(x_min=-30, x_max=30, y_min=-30, y_max=30, time_span_s=20)
+    vis = GlobalXYVisualizer(x_min=-30, x_max=30, y_min=-30, y_max=30, time_span_s=40)
 
     # obstacle instances
     obst_list = ObstacleList()
