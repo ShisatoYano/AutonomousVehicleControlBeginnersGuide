@@ -9,6 +9,7 @@ import matplotlib.patches as ptc
 import sys
 from pathlib import Path
 from math import atan2, sin, cos
+from scipy.stats import norm
 
 sys.path.append(str(Path(__file__).absolute().parent) + "/../../array")
 from xy_array import XYArray
@@ -16,7 +17,7 @@ from scan_point import ScanPoint
 
 class OmniDirectionalLidar:
     def __init__(self, obst_list, inst_lon_m=0.0, inst_lat_m=0.0, 
-                 min_range_m=0.5, max_range_m=20, resolution_rad=np.deg2rad(1.0)):
+                 min_range_m=0.5, max_range_m=40, resolution_rad=np.deg2rad(2.0)):
         self.obst_list = obst_list
         self.inst_lon_list = [inst_lon_m]
         self.inst_lat_list = [inst_lat_m]
@@ -52,12 +53,14 @@ class OmniDirectionalLidar:
         
         for i in range(len(dist_db)):
             angle_rad = i * self.RESOLUTION_RAD
-            normalized_angle_pi_2_pi = self._normalize_angle_pi_2_pi(angle_rad)
+            angle_pi_2_pi = self._normalize_angle_pi_2_pi(angle_rad)
             distance_m = dist_db[i]
             if (distance_m != self.MAX_DB_VALUE) and self._visible(distance_m):
-                x_m = distance_m * cos(normalized_angle_pi_2_pi)
-                y_m = distance_m * sin(normalized_angle_pi_2_pi)
-                point_cloud.append(ScanPoint(distance_m, normalized_angle_pi_2_pi, x_m, y_m))
+                angle_with_noise = norm.rvs(loc=angle_pi_2_pi, scale=0.01)
+                dist_with_noise = norm.rvs(loc=distance_m, scale=0.005*distance_m)
+                x_m = dist_with_noise * cos(angle_with_noise)
+                y_m = dist_with_noise * sin(angle_with_noise)
+                point_cloud.append(ScanPoint(dist_with_noise, angle_with_noise, x_m, y_m))
         
         self.latest_point_cloud = point_cloud
     
