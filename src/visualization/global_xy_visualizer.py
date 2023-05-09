@@ -42,8 +42,6 @@ class GlobalXYVisualizer:
         for obj in self.objects:
             obj.draw(axes, elems)
             if hasattr(obj, "update"): obj.update(self.time_interval_s)
-        
-        axes.legend()
 
         if self.time_interval_s * i >= self.time_span_s:
             axes.set_xlim(self.x_min, self.x_max)
