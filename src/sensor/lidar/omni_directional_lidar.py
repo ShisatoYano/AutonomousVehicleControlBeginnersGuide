@@ -16,7 +16,7 @@ from scan_point import ScanPoint
 
 class OmniDirectionalLidar:
     def __init__(self, obst_list, inst_lon_m=0.0, inst_lat_m=0.0, 
-                 min_range_m=0.5, max_range_m=20, resolution_rad=np.deg2rad(2.0)):
+                 min_range_m=0.5, max_range_m=20, resolution_rad=np.deg2rad(1.0)):
         self.obst_list = obst_list
         self.inst_lon_list = [inst_lon_m]
         self.inst_lat_list = [inst_lat_m]
@@ -26,7 +26,7 @@ class OmniDirectionalLidar:
         self.RESOLUTION_RAD = resolution_rad
         self.DIST_DB_SIZE = int(np.floor((np.pi * 2.0) / self.RESOLUTION_RAD)) + 1
         self.MAX_DB_VALUE = float("inf")
-        self.DELTA_LIST = np.arange(0.0, 1.0, 0.05)
+        self.DELTA_LIST = np.arange(0.0, 1.0, 0.008)
         self.latest_point_cloud = []
     
     def _visible(self, distance_m):
@@ -34,6 +34,10 @@ class OmniDirectionalLidar:
     
     def _normalize_angle_until_2pi(self, angle_rad):
         if 0.0 > angle_rad: return (angle_rad + np.pi * 2.0)
+        else: return angle_rad
+    
+    def _normalize_angle_pi_2_pi(self, angle_rad):
+        if angle_rad > np.pi: return (angle_rad - np.pi * 2.0)
         else: return angle_rad
     
     def _ray_casting_filter(self, distance_list, angle_list):
@@ -48,10 +52,12 @@ class OmniDirectionalLidar:
         
         for i in range(len(dist_db)):
             angle_rad = i * self.RESOLUTION_RAD
-            if dist_db[i] != self.MAX_DB_VALUE:
-                x_m = dist_db[i] * cos(angle_rad)
-                y_m = dist_db[i] * sin(angle_rad)
-                point_cloud.append(ScanPoint(dist_db[i], angle_rad, x_m, y_m))
+            normalized_angle_pi_2_pi = self._normalize_angle_pi_2_pi(angle_rad)
+            distance_m = dist_db[i]
+            if (distance_m != self.MAX_DB_VALUE) and self._visible(distance_m):
+                x_m = distance_m * cos(normalized_angle_pi_2_pi)
+                y_m = distance_m * sin(normalized_angle_pi_2_pi)
+                point_cloud.append(ScanPoint(distance_m, normalized_angle_pi_2_pi, x_m, y_m))
         
         self.latest_point_cloud = point_cloud
     
@@ -85,20 +91,14 @@ class OmniDirectionalLidar:
                 diff_y = y - self.inst_lat_list[0]
                 distance_m = np.hypot(diff_x, diff_y)
                 angle_rad = atan2(diff_y, diff_x) - pose[2, 0]
-                if self._visible(distance_m):
-                    distance_list.append(distance_m)
-                    angle_list.append(angle_rad)
+                distance_list.append(distance_m)
+                angle_list.append(angle_rad)
         
         self._ray_casting_filter(distance_list, angle_list)
     
     def draw(self, axes, pose, elems):
         inst_pos_plot, = axes.plot(self.inst_lon_list, self.inst_lat_list, marker='.', color='b')
         elems.append(inst_pos_plot)
-
-        circle = ptc.Circle(xy=(self.inst_lon_list[0], self.inst_lat_list[0]),
-                            radius=self.MAX_RANGE_M, fill=False, color='b',
-                            label="Lidar Range")
-        elems.append(axes.add_patch(circle))
 
         for point in self.latest_point_cloud:
             point.draw(axes, self.inst_lon_list[0], self.inst_lat_list[0], pose[2, 0], elems)
