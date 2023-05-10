@@ -34,3 +34,4 @@ def test_create_instance():
     assert spec.color == 'k'
     assert spec.line_w == 1.0
     assert spec.line_type == '-'
+    assert spec.area_size == 10.0

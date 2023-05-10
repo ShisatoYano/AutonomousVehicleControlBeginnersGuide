@@ -11,7 +11,7 @@ class VehicleSpecification:
     
     def __init__(self, f_len_m=2.0, r_len_m=0.0, tire_r_m=0.3,
                  tire_w_m=0.12, axle_half_m=0.5, color='k', 
-                 line_w=1.0, line_type='-'):
+                 line_w=1.0, line_type='-', area_size=10.0):
         """
         Constructor
         f_len_m: length[m] from origin to center of front axle
@@ -21,6 +21,7 @@ class VehicleSpecification:
         color: vehicle's color
         line_w: plot line's width
         line_type: plot line's type
+        area_size: plot area size[m]
         """
 
         self.f_len_m = f_len_m
@@ -40,3 +41,4 @@ class VehicleSpecification:
         self.color = color
         self.line_w = line_w
         self.line_type = line_type
+        self.area_size = area_size
