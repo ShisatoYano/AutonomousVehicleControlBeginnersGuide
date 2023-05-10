@@ -32,14 +32,13 @@ def main():
     course = SinCurveCourse(0, 50, 0.5, 20)
     vis.add_object(course)
 
-    spec = VehicleSpecification()
+    spec = VehicleSpecification(area_size=20.0)
     state = State(0.0, 0.0, 0.0, 0.0)
     history = StateHistory([state.get_x_m()], [state.get_y_m()], spec.color)
     
     pure_pursuit = PurePursuitController(spec, course)
 
-    vehicle = FourWheelsVehicle(state, history, spec, controller=pure_pursuit,
-                                draw_area_width=20.0)
+    vehicle = FourWheelsVehicle(state, history, spec, controller=pure_pursuit)
     vis.add_object(vehicle)
 
     if not show_plot: vis.not_show_plot()
