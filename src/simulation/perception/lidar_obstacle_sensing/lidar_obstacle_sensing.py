@@ -43,13 +43,11 @@ def main():
     vis.add_object(obst_list)
 
     # vehicle instance
-    spec = VehicleSpecification()
+    spec = VehicleSpecification(area_size=30.0)
     vehicle_state = State(0.0, 0.0, 0.0, 0.0)
     history = StateHistory([vehicle_state.get_x_m()], [vehicle_state.get_y_m()], spec.color)
     lidar = OmniDirectionalLidar(obst_list, inst_lon_m=spec.wheel_base_m/2)
-    vehicle = FourWheelsVehicle(vehicle_state, history, spec,
-                                sensor=lidar,
-                                draw_area_width=30.0)
+    vehicle = FourWheelsVehicle(vehicle_state, history, spec, sensor=lidar)
     vis.add_object(vehicle)
 
     if not show_plot: vis.not_show_plot()
