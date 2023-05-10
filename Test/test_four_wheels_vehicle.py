@@ -36,6 +36,7 @@ class MockSpecification:
         self.color = 'k'
         self.line_w = 1.0
         self.line_type = '-'
+        self.area_size = 10.0
 
 
 class MockState:
@@ -109,7 +110,6 @@ def test_attributes():
     assert hasattr(vehicle, "rear_right_tire") == True
     assert hasattr(vehicle, "front_axle") == True
     assert hasattr(vehicle, "rear_axle") == True
-    assert hasattr(vehicle, "draw_area_width") == True
     assert hasattr(vehicle, "controller") == True
 
 
@@ -125,7 +125,6 @@ def test_initialize():
     assert vehicle.rear_right_tire != None
     assert vehicle.front_axle != None
     assert vehicle.rear_axle != None
-    assert vehicle.draw_area_width == 10.0
     assert vehicle.controller != None
 
 
