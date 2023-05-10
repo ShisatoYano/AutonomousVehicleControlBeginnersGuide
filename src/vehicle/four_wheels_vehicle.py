@@ -19,7 +19,7 @@ class FourWheelsVehicle:
     Four Wheels Vehicle model class
     """
 
-    def __init__(self, state, history, spec, controller=None, sensor=None, draw_area_width=10.0):
+    def __init__(self, state, history, spec, controller=None, sensor=None):
         """
         Constructor
         state: Vehicle's state object
@@ -32,6 +32,7 @@ class FourWheelsVehicle:
         self.history = history
 
         self.spec = spec
+
         self.body = Body(spec)
         self.chassis = Chassis(spec)
         self.front_left_tire = FrontLeftTire(spec)
@@ -40,8 +41,6 @@ class FourWheelsVehicle:
         self.rear_right_tire = RearRightTire(spec)
         self.front_axle = FrontAxle(spec)
         self.rear_axle = RearAxle(spec)
-
-        self.draw_area_width = draw_area_width
 
         self.controller = controller
         self.sensor = sensor
@@ -87,5 +86,5 @@ class FourWheelsVehicle:
         self.rear_axle.draw(axes, x_y_yaw_array, elems)
         self.history.draw(axes, elems)
 
-        axes.set_xlim(x_m - self.draw_area_width, x_m + self.draw_area_width)
-        axes.set_ylim(y_m - self.draw_area_width, y_m + self.draw_area_width)
+        axes.set_xlim(x_m - self.spec.area_size, x_m + self.spec.area_size)
+        axes.set_ylim(y_m - self.spec.area_size, y_m + self.spec.area_size)
