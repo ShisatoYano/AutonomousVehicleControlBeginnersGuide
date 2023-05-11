@@ -17,7 +17,6 @@ sys.path.append(abs_dir_path + relative_path + "control/pure_pursuit")
 from global_xy_visualizer import GlobalXYVisualizer
 from vehicle_specification import VehicleSpecification
 from state import State
-from state_history import StateHistory
 from four_wheels_vehicle import FourWheelsVehicle
 from sin_curve_course import SinCurveCourse
 from pure_pursuit_controller import PurePursuitController
@@ -33,12 +32,11 @@ def main():
     vis.add_object(course)
 
     spec = VehicleSpecification(area_size=20.0)
-    state = State(0.0, 0.0, 0.0, 0.0)
-    history = StateHistory([state.get_x_m()], [state.get_y_m()], spec.color)
+    state = State(color=spec.color)
     
     pure_pursuit = PurePursuitController(spec, course)
 
-    vehicle = FourWheelsVehicle(state, history, spec, controller=pure_pursuit)
+    vehicle = FourWheelsVehicle(state, spec, controller=pure_pursuit)
     vis.add_object(vehicle)
 
     if not show_plot: vis.not_show_plot()
