@@ -24,8 +24,7 @@ class Obstacle:
         self.array = XYArray(contour)
     
     def update(self, time_s):
-        updated_state = self.state.update(self.accel_mps2, self.yaw_rate_rps, time_s)
-        self.state = updated_state
+        self.state.update(self.accel_mps2, self.yaw_rate_rps, time_s)
     
     def draw(self, axes, elems):
         x_m = self.state.get_x_m()
