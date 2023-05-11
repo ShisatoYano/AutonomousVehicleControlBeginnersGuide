@@ -19,17 +19,15 @@ class FourWheelsVehicle:
     Four Wheels Vehicle model class
     """
 
-    def __init__(self, state, history, spec, controller=None, sensor=None):
+    def __init__(self, state, spec, controller=None, sensor=None):
         """
         Constructor
         state: Vehicle's state object
-        history: Vehicle's state history object
         spec: Vehicle's specification object
         draw_area_width: Drawing area's width around Vehicle
         """
         
         self.state = state
-        self.history = history
 
         self.spec = spec
 
@@ -52,19 +50,15 @@ class FourWheelsVehicle:
 
         self.controller.update(self.state)
 
-        updated_state = self.state.update(self.controller.get_target_accel_mps2(), 
-                                          self.controller.get_target_yaw_rate_rps(), 
-                                          time_s)
-        self.state = updated_state
-
-        updated_history = self.history.update(updated_state.get_x_m(), updated_state.get_y_m())
-        self.history = updated_history
+        self.state.update(self.controller.get_target_accel_mps2(), 
+                          self.controller.get_target_yaw_rate_rps(), 
+                          time_s)
     
     def draw(self, axes, elems):
+        self.state.draw(axes, elems)
         x_y_yaw_array = self.state.x_y_yaw()
         x_m = self.state.get_x_m()
         y_m = self.state.get_y_m()
-        speed_kmph = self.state.get_speed_kmph()
 
         if self.sensor: self.sensor.draw(axes, x_y_yaw_array, elems)
 
@@ -74,8 +68,6 @@ class FourWheelsVehicle:
         else:
             steer_rad = 0.0
         
-        elems.append(axes.text(x_m, y_m + 2, "Speed: " + str(round(speed_kmph, 1)) + "[km/h]", fontsize=10))
-
         self.body.draw(axes, x_y_yaw_array, elems)
         self.chassis.draw(axes, x_y_yaw_array, elems)
         self.front_left_tire.draw(axes, x_y_yaw_array, steer_rad, elems)
@@ -84,7 +76,6 @@ class FourWheelsVehicle:
         self.rear_right_tire.draw(axes, x_y_yaw_array, elems)
         self.front_axle.draw(axes, x_y_yaw_array, elems)
         self.rear_axle.draw(axes, x_y_yaw_array, elems)
-        self.history.draw(axes, elems)
 
         axes.set_xlim(x_m - self.spec.area_size, x_m + self.spec.area_size)
         axes.set_ylim(y_m - self.spec.area_size, y_m + self.spec.area_size)
