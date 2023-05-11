@@ -44,7 +44,7 @@ class MockState:
         pass
 
     def update(self, accel_mps2, yaw_rate_rps, time_s):
-        return MockState()
+        pass
     
     def x_y_yaw(self):
         return np.array([[0.0], [0.0], [0.0]])
@@ -57,17 +57,9 @@ class MockState:
     
     def get_speed_kmph(self):
         return 0.0
-
-
-class MockStateHistory:
-    def __init__(self):
-        pass
-
-    def update(self, x, y):
-        return MockStateHistory()
     
     def draw(self, axes, elems):
-        elems += axes.plot([], [], color='k')
+        pass
 
 
 class MockController:
@@ -93,14 +85,12 @@ class MockController:
 # test instance
 spec = MockSpecification()
 state = MockState()
-history = MockStateHistory()
 controller = MockController()
-vehicle = FourWheelsVehicle(state, history, spec, controller)
+vehicle = FourWheelsVehicle(state, spec, controller)
 
 
 def test_attributes():
     assert hasattr(vehicle, "state") == True
-    assert hasattr(vehicle, "history") == True
     assert hasattr(vehicle, "spec") == True
     assert hasattr(vehicle, "body") == True
     assert hasattr(vehicle, "chassis") == True
@@ -115,7 +105,6 @@ def test_attributes():
 
 def test_initialize():
     assert vehicle.state != None
-    assert vehicle.history != None
     assert vehicle.spec != None
     assert vehicle.body != None
     assert vehicle.chassis != None
