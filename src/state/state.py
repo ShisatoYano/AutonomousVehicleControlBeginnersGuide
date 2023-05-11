@@ -13,7 +13,7 @@ class State:
     Vehicle state(x, y, yaw, speed) data and logic class
     """
 
-    def __init__(self, x_m, y_m, yaw_rad, speed_mps):
+    def __init__(self, x_m=0.0, y_m=0.0, yaw_rad=0.0, speed_mps=0.0, color='k'):
         """
         Constructor
         x_m: Vehicle's position, x[m]
@@ -25,11 +25,15 @@ class State:
         self.STOP_SPEED_MPS = 0.5 / 3.6 # 0.5[km/h]
         self.MAX_SPEED_MPS = 60 / 3.6 # 60[km/h]
         self.MIN_SPEED_MSP = -10 / 3.6 # -10[km/h]
+        self.DRAW_COLOR = color
 
         self.x_m = x_m
         self.y_m = y_m
         self.yaw_rad = yaw_rad
         self.speed_mps = speed_mps
+
+        self.x_history = [self.x_m]
+        self.y_history = [self.y_m]
     
     def update(self, accel_mps2, yaw_rate_rps, time_s):
         """
@@ -37,19 +41,18 @@ class State:
         accel_mps2: Acceleration[m/s^2]
         steer_rad: Steering angle[rad]
         time_s: Time interval per cycle[sec]
-        wheel_base_m: Wheel base's length[m]
         """
-        updated_x_m = self.x_m + self.speed_mps * cos(self.yaw_rad) * time_s
-        updated_y_m = self.y_m + self.speed_mps * sin(self.yaw_rad) * time_s
+        self.x_m += self.speed_mps * cos(self.yaw_rad) * time_s
+        self.y_m += self.speed_mps * sin(self.yaw_rad) * time_s
+        self.yaw_rad += yaw_rate_rps * time_s
+        self.speed_mps += accel_mps2 * time_s
+        
+        if abs(self.speed_mps) < self.STOP_SPEED_MPS: self.speed_mps = 0.0
+        if self.speed_mps > self.MAX_SPEED_MPS: self.speed_mps = self.MAX_SPEED_MPS
+        if self.speed_mps < self.MIN_SPEED_MSP: self.speed_mps = self.MIN_SPEED_MSP
 
-        updated_yaw_rad = self.yaw_rad + yaw_rate_rps * time_s
-
-        updated_speed_mps = self.speed_mps + accel_mps2 * time_s
-        if abs(updated_speed_mps) < self.STOP_SPEED_MPS: updated_speed_mps = 0.0
-        if updated_speed_mps > self.MAX_SPEED_MPS: updated_speed_mps = self.MAX_SPEED_MPS
-        if updated_speed_mps < self.MIN_SPEED_MSP: updated_speed_mps = self.MIN_SPEED_MSP
-
-        return State(updated_x_m, updated_y_m, updated_yaw_rad, updated_speed_mps)
+        self.x_history.append(self.x_m)
+        self.y_history.append(self.y_m)
     
     def x_y_yaw(self):
         """
@@ -92,3 +95,13 @@ class State:
         """
 
         return self.speed_mps * 3.6
+    
+    def draw(self, axes, elems):
+        """
+        Function to draw x-y history and speed
+        """
+        
+        hist_plot, = axes.plot(self.x_history, self.y_history, linewidth=0, marker='.', color=self.DRAW_COLOR)
+        elems.append(hist_plot)
+
+        elems.append(axes.text(self.x_m, self.y_m + 2, "Speed: " + str(round(self.speed_mps * 3.6, 1)) + "[km/h]", fontsize=10))
