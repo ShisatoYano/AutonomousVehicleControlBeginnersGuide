@@ -24,7 +24,7 @@ class State:
 
         self.STOP_SPEED_MPS = 0.5 / 3.6 # 0.5[km/h]
         self.MAX_SPEED_MPS = 60 / 3.6 # 60[km/h]
-        self.MIN_SPEED_MSP = -10 / 3.6 # -10[km/h]
+        self.MIN_SPEED_MPS = -10 / 3.6 # -10[km/h]
         self.DRAW_COLOR = color
 
         self.x_m = x_m
@@ -49,7 +49,7 @@ class State:
         
         if abs(self.speed_mps) < self.STOP_SPEED_MPS: self.speed_mps = 0.0
         if self.speed_mps > self.MAX_SPEED_MPS: self.speed_mps = self.MAX_SPEED_MPS
-        if self.speed_mps < self.MIN_SPEED_MSP: self.speed_mps = self.MIN_SPEED_MSP
+        if self.speed_mps < self.MIN_SPEED_MPS: self.speed_mps = self.MIN_SPEED_MPS
 
         self.x_history.append(self.x_m)
         self.y_history.append(self.y_m)
