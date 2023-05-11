@@ -19,7 +19,6 @@ sys.path.append(abs_dir_path + relative_path + "sensor/lidar")
 from global_xy_visualizer import GlobalXYVisualizer
 from vehicle_specification import VehicleSpecification
 from state import State
-from state_history import StateHistory
 from four_wheels_vehicle import FourWheelsVehicle
 from obstacle import Obstacle
 from obstacle_list import ObstacleList
@@ -34,20 +33,19 @@ def main():
 
     # obstacle instances
     obst_list = ObstacleList()
-    obst1 = Obstacle(State(-5.0, 15.0, 0.0, 1.0), yaw_rate_rps=np.deg2rad(10), width_m=1.0)
+    obst1 = Obstacle(State(x_m=-5.0, y_m=15.0, speed_mps=1.0), yaw_rate_rps=np.deg2rad(10), width_m=1.0)
     obst_list.add_obstacle(obst1)
-    obst2 = Obstacle(State(-15.0, -15.0, 0.0, 0.0), length_m=10.0, width_m=5.0)
+    obst2 = Obstacle(State(x_m=-15.0, y_m=-15.0), length_m=10.0, width_m=5.0)
     obst_list.add_obstacle(obst2)
-    obst3 = Obstacle(State(20.0, 0.0, 0.0, 0.0), yaw_rate_rps=np.deg2rad(15))
+    obst3 = Obstacle(State(x_m=20.0), yaw_rate_rps=np.deg2rad(15))
     obst_list.add_obstacle(obst3)
     vis.add_object(obst_list)
 
     # vehicle instance
     spec = VehicleSpecification(area_size=30.0)
-    vehicle_state = State(0.0, 0.0, 0.0, 0.0)
-    history = StateHistory([vehicle_state.get_x_m()], [vehicle_state.get_y_m()], spec.color)
+    vehicle_state = State(color=spec.color)
     lidar = OmniDirectionalLidar(obst_list, inst_lon_m=spec.wheel_base_m/2)
-    vehicle = FourWheelsVehicle(vehicle_state, history, spec, sensor=lidar)
+    vehicle = FourWheelsVehicle(vehicle_state, spec, sensor=lidar)
     vis.add_object(vehicle)
 
     if not show_plot: vis.not_show_plot()
