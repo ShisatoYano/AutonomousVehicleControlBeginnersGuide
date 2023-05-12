@@ -17,6 +17,7 @@ sys.path.append(abs_dir_path + relative_path + "obstacle")
 sys.path.append(abs_dir_path + relative_path + "sensor/lidar")
 
 from global_xy_visualizer import GlobalXYVisualizer
+from x_lim import XLim
 from vehicle_specification import VehicleSpecification
 from state import State
 from four_wheels_vehicle import FourWheelsVehicle
@@ -29,7 +30,7 @@ show_plot = True
 
 
 def main():
-    vis = GlobalXYVisualizer(x_min=-30, x_max=30, y_min=-30, y_max=30, time_span_s=20)
+    vis = GlobalXYVisualizer(XLim(-30, 30), y_min=-30, y_max=30, time_span_s=20)
 
     # obstacle instances
     obst_list = ObstacleList()
