@@ -9,12 +9,15 @@ from pathlib import Path
 
 abs_dir_path = str(Path(__file__).absolute().parent)
 relative_path = "/../../../"
+
 sys.path.append(abs_dir_path + relative_path + "visualization")
 sys.path.append(abs_dir_path + relative_path + "state")
 sys.path.append(abs_dir_path + relative_path + "vehicle")
 sys.path.append(abs_dir_path + relative_path + "course/sin_curve_course")
 sys.path.append(abs_dir_path + relative_path + "control/pure_pursuit")
+
 from global_xy_visualizer import GlobalXYVisualizer
+from x_lim import XLim
 from vehicle_specification import VehicleSpecification
 from state import State
 from four_wheels_vehicle import FourWheelsVehicle
@@ -26,7 +29,7 @@ show_plot = True
 
 
 def main():
-    vis = GlobalXYVisualizer(x_min=-5, x_max=55, y_min=-20, y_max=25, time_span_s=25)
+    vis = GlobalXYVisualizer(XLim(-5, 55), y_min=-20, y_max=25, time_span_s=25)
 
     course = SinCurveCourse(0, 50, 0.5, 20)
     vis.add_object(course)
