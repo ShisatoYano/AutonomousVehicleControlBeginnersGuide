@@ -13,12 +13,11 @@ class GlobalXYVisualizer:
     Visualization class for global 2D X-Y plot
     """
     
-    def __init__(self, x_lim, y_min=-15, y_max=15, 
+    def __init__(self, x_lim, y_lim, 
                  time_span_s=10, time_interval_s=0.1, save_gif_name=None):
         self.objects = [] # register objects here
         self.x_lim = x_lim
-        self.y_min = y_min
-        self.y_max = y_max
+        self.y_lim = y_lim
         self.time_span_s = time_span_s
         self.time_interval_s = time_interval_s
         self.save_gif_name = save_gif_name
@@ -44,7 +43,7 @@ class GlobalXYVisualizer:
 
         if self.time_interval_s * i >= self.time_span_s:
             axes.set_xlim(self.x_lim.min_value(), self.x_lim.max_value())
-            axes.set_ylim(self.y_min, self.y_max)
+            axes.set_ylim(self.y_lim.min_value(), self.y_lim.max_value())
 
     def draw(self):
         # setting

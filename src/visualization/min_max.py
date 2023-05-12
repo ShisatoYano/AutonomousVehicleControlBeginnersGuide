@@ -1,12 +1,12 @@
 """
-x_lim.py
+min_max.py
 
 Author: Shisato Yano
 """
 
-class XLim:
+class MinMax:
     """
-    Limitation values class of x axis
+    Limitation values class of axis
     """
 
     def __init__(self, min=0, max=10):
