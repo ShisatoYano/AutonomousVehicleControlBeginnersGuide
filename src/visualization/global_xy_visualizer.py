@@ -13,12 +13,12 @@ class GlobalXYVisualizer:
     Visualization class for global 2D X-Y plot
     """
     
-    def __init__(self, x_lim, y_lim, time_params, save_gif_name=None):
+    def __init__(self, x_lim, y_lim, time_params, gif_name=None):
         self.objects = [] # register objects here
         self.x_lim = x_lim
         self.y_lim = y_lim
         self.time_params = time_params
-        self.save_gif_name = save_gif_name
+        self.gif_name = gif_name
         self.show_plot = True
     
     def add_object(self, obj):
@@ -60,7 +60,7 @@ class GlobalXYVisualizer:
                                            interval=self.time_params.get_interval_msec(), 
                                            repeat=False)
             
-            if self.save_gif_name: self.anime.save(self.save_gif_name, writer="pillow")
+            if self.gif_name: self.anime.save(self.gif_name, writer="pillow")
             else: plt.show()
         else:
             for i in range(1000): self.update(i, elems, axes)
