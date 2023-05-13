@@ -13,13 +13,11 @@ class GlobalXYVisualizer:
     Visualization class for global 2D X-Y plot
     """
     
-    def __init__(self, x_lim, y_lim, 
-                 time_span_s=10, time_interval_s=0.1, save_gif_name=None):
+    def __init__(self, x_lim, y_lim, time_params, save_gif_name=None):
         self.objects = [] # register objects here
         self.x_lim = x_lim
         self.y_lim = y_lim
-        self.time_span_s = time_span_s
-        self.time_interval_s = time_interval_s
+        self.time_params = time_params
         self.save_gif_name = save_gif_name
         self.show_plot = True
     
@@ -35,13 +33,15 @@ class GlobalXYVisualizer:
 
     def update(self, i, elems, axes):
         while elems: elems.pop().remove()
-        time_str = "Time = {0:.2f}[s]".format(self.time_interval_s * i)
+
+        time_str = "Time = {0:.2f}[s]".format(self.time_params.current_sec(i))
         axes.set_title(time_str, fontsize=15)
+        
         for obj in self.objects:
             obj.draw(axes, elems)
-            if hasattr(obj, "update"): obj.update(self.time_interval_s)
+            if hasattr(obj, "update"): obj.update(self.time_params.get_interval_sec())
 
-        if self.time_interval_s * i >= self.time_span_s:
+        if self.time_params.simulation_finished(i):
             axes.set_xlim(self.x_lim.min_value(), self.x_lim.max_value())
             axes.set_ylim(self.y_lim.min_value(), self.y_lim.max_value())
 
@@ -54,11 +54,10 @@ class GlobalXYVisualizer:
         axes.set_ylabel('Y[m]', fontsize=20)
 
         elems = []
-
         if self.show_plot:
             self.anime = anm.FuncAnimation(figure, self.update, fargs=(elems, axes),
-                                           frames=int(self.time_span_s / self.time_interval_s)+1, 
-                                           interval=int(self.time_interval_s * 1000), 
+                                           frames=self.time_params.get_frame_num(), 
+                                           interval=self.time_params.get_interval_msec(), 
                                            repeat=False)
             
             if self.save_gif_name: self.anime.save(self.save_gif_name, writer="pillow")

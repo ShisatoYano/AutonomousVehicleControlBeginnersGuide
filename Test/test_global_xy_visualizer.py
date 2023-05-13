@@ -37,40 +37,54 @@ class MockMinMax:
         return self.max
 
 
+class MockTimeParameters:
+    def __init__(self):
+        self.span_sec = 10
+        self.interval_sec = 0.1
+        self.interval_msec = 100
+        self.frame_num = 101
+    
+    def get_interval_sec(self):
+        return self.interval_sec
+    
+    def get_interval_msec(self):
+        return self.interval_msec
+    
+    def get_frame_num(self):
+        return self.frame_num
+    
+    def current_sec(self, index):
+        return self.interval_sec * index
+    
+    def simulation_finished(self, index):
+        return (self.interval_sec * index >= self.span_sec)
+
+
 def test_initialize():
     x_lim, y_lim = MockMinMax(), MockMinMax()
-    vis = GlobalXYVisualizer(x_lim, y_lim)
+    vis = GlobalXYVisualizer(x_lim, y_lim, MockTimeParameters())
     assert len(vis.objects) == 0
     assert vis.x_lim != None
     assert vis.y_lim != None
-    assert vis.time_span_s == 10
-    assert vis.time_interval_s == 0.1
+    assert vis.time_params != None
     assert vis.save_gif_name == None
     assert vis.show_plot == True
 
 
-def test_set_parameters():
+def test_gif_name():
     test_gif_name = "test.gif"
 
     x_lim, y_lim = MockMinMax(), MockMinMax()
-    vis = GlobalXYVisualizer(x_lim, y_lim,
-                             time_span_s=20, time_interval_s=0.05,
+    vis = GlobalXYVisualizer(x_lim, y_lim, MockTimeParameters(),
                              save_gif_name=test_gif_name)
-    assert vis.x_lim.min_value() == 0
-    assert vis.x_lim.max_value() == 10
-    assert vis.y_lim.min_value() == 0
-    assert vis.y_lim.max_value() == 10
-    assert vis.time_span_s == 20
-    assert vis.time_interval_s == 0.05
     assert vis.save_gif_name == test_gif_name
-    assert vis.show_plot == True
 
 
 def test_draw():
     mock = MockObject()
 
     x_lim, y_lim = MockMinMax(), MockMinMax()
-    vis = GlobalXYVisualizer(x_lim, y_lim)
+    vis = GlobalXYVisualizer(x_lim, y_lim, MockTimeParameters())
 
     vis.add_object(mock)
     assert len(vis.objects) == 1

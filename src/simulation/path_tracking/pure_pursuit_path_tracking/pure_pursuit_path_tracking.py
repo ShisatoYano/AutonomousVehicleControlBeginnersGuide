@@ -18,6 +18,7 @@ sys.path.append(abs_dir_path + relative_path + "control/pure_pursuit")
 
 from global_xy_visualizer import GlobalXYVisualizer
 from min_max import MinMax
+from time_parameters import TimeParameters
 from vehicle_specification import VehicleSpecification
 from state import State
 from four_wheels_vehicle import FourWheelsVehicle
@@ -30,7 +31,7 @@ show_plot = True
 
 def main():
     x_lim, y_lim = MinMax(-5, 55), MinMax(-20, 25)
-    vis = GlobalXYVisualizer(x_lim, y_lim, time_span_s=25)
+    vis = GlobalXYVisualizer(x_lim, y_lim, TimeParameters(span_sec=25))
 
     course = SinCurveCourse(0, 50, 0.5, 20)
     vis.add_object(course)

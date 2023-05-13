@@ -18,6 +18,7 @@ sys.path.append(abs_dir_path + relative_path + "sensor/lidar")
 
 from global_xy_visualizer import GlobalXYVisualizer
 from min_max import MinMax
+from time_parameters import TimeParameters
 from vehicle_specification import VehicleSpecification
 from state import State
 from four_wheels_vehicle import FourWheelsVehicle
@@ -31,7 +32,7 @@ show_plot = True
 
 def main():
     x_lim, y_lim = MinMax(-30, 30), MinMax(-30, 30)
-    vis = GlobalXYVisualizer(x_lim, y_lim, time_span_s=20)
+    vis = GlobalXYVisualizer(x_lim, y_lim, TimeParameters(span_sec=20))
 
     # obstacle instances
     obst_list = ObstacleList()
