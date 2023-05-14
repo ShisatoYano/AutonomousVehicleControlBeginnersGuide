@@ -46,13 +46,15 @@ class FourWheelsVehicle:
     def update(self, time_s):
         if self.sensor: self.sensor.update(self.state.x_y_yaw())
 
-        if not self.controller: return
+        if self.controller:
+            self.controller.update(self.state)
+            target_accel = self.controller.get_target_accel_mps2()
+            target_yaw_rate = self.controller.get_target_yaw_rate_rps()
+        else:
+            target_accel = 0.0
+            target_yaw_rate = 0.0
 
-        self.controller.update(self.state)
-
-        self.state.update(self.controller.get_target_accel_mps2(), 
-                          self.controller.get_target_yaw_rate_rps(), 
-                          time_s)
+        self.state.update(target_accel, target_yaw_rate, time_s)
     
     def draw(self, axes, elems):
         self.state.draw(axes, elems)
