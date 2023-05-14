@@ -2,7 +2,7 @@ src/array/__pycache__
 src/control/pure_pursuit/__pycache__
 src/course/sin_curve_course/__pycache__
 src/obstacle/__pycache__
-src/sensors/pytest_cache
+src/sensors/__pycache__
 src/sensors/lidar/__pycache__
 src/simulation/path_tracking/pure_pursuit_path_tracking/__pycache__
 src/state/__pycache__
