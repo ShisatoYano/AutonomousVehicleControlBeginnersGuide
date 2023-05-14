@@ -26,6 +26,7 @@ from four_wheels_vehicle import FourWheelsVehicle
 from obstacle import Obstacle
 from obstacle_list import ObstacleList
 from sensors import Sensors
+from sensor_parameters import SensorParameters
 from omni_directional_lidar import OmniDirectionalLidar
 
 
@@ -48,9 +49,9 @@ def main():
 
     # vehicle instance
     spec = VehicleSpecification(area_size=30.0)
-    vehicle_state = State(color=spec.color)
-    lidar = OmniDirectionalLidar(obst_list, inst_lon_m=spec.wheel_base_m/2)
-    vehicle = FourWheelsVehicle(vehicle_state, spec, sensor=lidar)
+    # sensors
+    lidar = OmniDirectionalLidar(obst_list, SensorParameters(lon_m=spec.wheel_base_m/2))
+    vehicle = FourWheelsVehicle(State(color=spec.color), spec, sensors=Sensors(lidar=lidar))
     vis.add_object(vehicle)
 
     if not show_plot: vis.not_show_plot()
