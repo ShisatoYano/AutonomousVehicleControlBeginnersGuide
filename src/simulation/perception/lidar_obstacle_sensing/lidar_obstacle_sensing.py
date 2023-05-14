@@ -14,7 +14,7 @@ sys.path.append(abs_dir_path + relative_path + "visualization")
 sys.path.append(abs_dir_path + relative_path + "state")
 sys.path.append(abs_dir_path + relative_path + "vehicle")
 sys.path.append(abs_dir_path + relative_path + "obstacle")
-sys.path.append(abs_dir_path + relative_path + "sensor/lidar")
+sys.path.append(abs_dir_path + relative_path + "sensors/lidar")
 
 from global_xy_visualizer import GlobalXYVisualizer
 from min_max import MinMax
