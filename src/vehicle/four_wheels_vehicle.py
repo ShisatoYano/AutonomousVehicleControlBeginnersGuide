@@ -19,12 +19,13 @@ class FourWheelsVehicle:
     Four Wheels Vehicle model class
     """
 
-    def __init__(self, state, spec, controller=None, sensor=None):
+    def __init__(self, state, spec, controller=None, sensors=None):
         """
         Constructor
         state: Vehicle's state object
         spec: Vehicle's specification object
-        draw_area_width: Drawing area's width around Vehicle
+        controller: Controller object
+        sensors: Sencors object
         """
         
         self.state = state
@@ -41,9 +42,42 @@ class FourWheelsVehicle:
         self.rear_axle = RearAxle(spec)
 
         self.controller = controller
-        self.sensor = sensor
+
+        self.sensors = sensors
+        self._install_sensors(self.state)
+
+    def _install_sensors(self, state):
+        """
+        Private function to calculate each sensor's installation position on vehicle
+        state: Vehicle's state object
+        """
+
+        if self.sensors: self.sensors.install(state)
+    
+    def _update_sensors_data(self, state):
+        """
+        Private function to update each sensor's data
+        state: Vehicle's state object
+        """
+
+        if self.sensors: self.sensors.update_data(state)
+    
+    def _draw_sensors_data(self, axes, elems, state):
+        """
+        Private function to draw each sensor's data
+        axes: Axes object of figure
+        elems: List of plot object
+        state: Vehicle's state object
+        """
+
+        if self.sensors: self.sensors.draw_data(axes, elems, state)
 
     def update(self, time_s):
+        """
+        Function to update each member objects
+        time_s: Simulation interval time[sec]
+        """
+
         if self.controller:
             self.controller.update(self.state)
             target_accel = self.controller.get_target_accel_mps2()
@@ -54,9 +88,15 @@ class FourWheelsVehicle:
 
         self.state.update(target_accel, target_yaw_rate, time_s)
 
-        if self.sensor: self.sensor.update(self.state.x_y_yaw())
+        self._update_sensors_data(self.state)
     
     def draw(self, axes, elems):
+        """
+        Function to draw each member object's data
+        axes: Axes object of figure
+        elems: List of plot object
+        """
+
         self.state.draw(axes, elems)
         x_y_yaw_array = self.state.x_y_yaw()
         x_m = self.state.get_x_m()
@@ -77,7 +117,7 @@ class FourWheelsVehicle:
         self.front_axle.draw(axes, x_y_yaw_array, elems)
         self.rear_axle.draw(axes, x_y_yaw_array, elems)
 
-        if self.sensor: self.sensor.draw(axes, x_y_yaw_array, elems)
+        self._draw_sensors_data(axes, elems, self.state)
 
         axes.set_xlim(x_m - self.spec.area_size, x_m + self.spec.area_size)
         axes.set_ylim(y_m - self.spec.area_size, y_m + self.spec.area_size)
