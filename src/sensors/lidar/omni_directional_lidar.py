@@ -5,33 +5,25 @@ Author: Shisato Yano
 """
 
 import numpy as np
-import matplotlib.patches as ptc
-import sys
-from pathlib import Path
 from math import atan2, sin, cos
 from scipy.stats import norm
 
-sys.path.append(str(Path(__file__).absolute().parent) + "/../../array")
-from xy_array import XYArray
 from scan_point import ScanPoint
 
 class OmniDirectionalLidar:
-    def __init__(self, obst_list, inst_lon_m=0.0, inst_lat_m=0.0, 
-                 min_range_m=0.5, max_range_m=40, resolution_rad=np.deg2rad(2.0)):
+    def __init__(self, obst_list, params):
         self.obst_list = obst_list
-        self.inst_lon_list = [inst_lon_m]
-        self.inst_lat_list = [inst_lat_m]
-        self.inst_pos_array = XYArray(np.array([self.inst_lon_list, self.inst_lat_list]))
-        self.MIN_RANGE_M = min_range_m
-        self.MAX_RANGE_M = max_range_m
-        self.RESOLUTION_RAD = resolution_rad
-        self.DIST_DB_SIZE = int(np.floor((np.pi * 2.0) / self.RESOLUTION_RAD)) + 1
+        self.params = params
+        self.DIST_DB_SIZE = int(np.floor((np.pi * 2.0) / self.params.RESO_RAD)) + 1
         self.MAX_DB_VALUE = float("inf")
         self.DELTA_LIST = np.arange(0.0, 1.0, 0.008)
         self.latest_point_cloud = []
     
+    def install(self, state):
+        self.params.calculate_global_pos(state)
+
     def _visible(self, distance_m):
-        return (self.MIN_RANGE_M <= distance_m <= self.MAX_RANGE_M)
+        return (self.params.MIN_RANGE_M <= distance_m <= self.params.MAX_RANGE_M)
     
     def _normalize_angle_until_2pi(self, angle_rad):
         if 0.0 > angle_rad: return (angle_rad + np.pi * 2.0)
@@ -47,17 +39,17 @@ class OmniDirectionalLidar:
 
         for i in range(len(angle_list)):
             normalized_angle_2pi = self._normalize_angle_until_2pi(angle_list[i])
-            angle_id = int(round(normalized_angle_2pi / self.RESOLUTION_RAD)) % self.DIST_DB_SIZE
+            angle_id = int(round(normalized_angle_2pi / self.params.RESO_RAD)) % self.DIST_DB_SIZE
             if dist_db[angle_id] > distance_list[i]:
                 dist_db[angle_id] = distance_list[i]
         
         for i in range(len(dist_db)):
-            angle_rad = i * self.RESOLUTION_RAD
+            angle_rad = i * self.params.RESO_RAD
             angle_pi_2_pi = self._normalize_angle_pi_2_pi(angle_rad)
             distance_m = dist_db[i]
             if (distance_m != self.MAX_DB_VALUE) and self._visible(distance_m):
-                angle_with_noise = norm.rvs(loc=angle_pi_2_pi, scale=0.01)
-                dist_with_noise = norm.rvs(loc=distance_m, scale=0.005*distance_m)
+                angle_with_noise = norm.rvs(loc=angle_pi_2_pi, scale=self.params.ANGLE_STD_SCALE)
+                dist_with_noise = norm.rvs(loc=distance_m, scale=self.params.DIST_STD_RATE*distance_m)
                 x_m = dist_with_noise * cos(angle_with_noise)
                 y_m = dist_with_noise * sin(angle_with_noise)
                 point_cloud.append(ScanPoint(dist_with_noise, angle_with_noise, x_m, y_m))
@@ -80,28 +72,29 @@ class OmniDirectionalLidar:
 
         return contour_x, contour_y
 
-    def update(self, pose):
-        transformed_array = self.inst_pos_array.homogeneous_transformation(pose[0, 0], pose[1, 0], pose[2, 0])
-        self.inst_lon_list = transformed_array.get_x_data()
-        self.inst_lat_list = transformed_array.get_y_data()
+    def update(self, state):
+        self.params.calculate_global_pos(state)
 
         distance_list, angle_list = [], []
         for obst in self.obst_list.get_list():
             vertex_x, vertex_y = obst.vertex_xy()
             contour_x, contour_y = self._calculate_contour_xy(vertex_x, vertex_y)
             for x, y in zip(contour_x, contour_y):
-                diff_x = x - self.inst_lon_list[0]
-                diff_y = y - self.inst_lat_list[0]
+                diff_x = x - self.params.get_global_x_m()
+                diff_y = y - self.params.get_global_y_m()
                 distance_m = np.hypot(diff_x, diff_y)
-                angle_rad = atan2(diff_y, diff_x) - pose[2, 0]
+                angle_rad = atan2(diff_y, diff_x) - state.get_yaw_rad()
                 distance_list.append(distance_m)
                 angle_list.append(angle_rad)
         
         self._ray_casting_filter(distance_list, angle_list)
     
-    def draw(self, axes, pose, elems):
-        inst_pos_plot, = axes.plot(self.inst_lon_list, self.inst_lat_list, marker='.', color='b')
-        elems.append(inst_pos_plot)
+    def draw(self, axes, elems, state):
+        self.params.draw_pos(axes, elems)
 
         for point in self.latest_point_cloud:
-            point.draw(axes, self.inst_lon_list[0], self.inst_lat_list[0], pose[2, 0], elems)
+            point.draw(axes, 
+                       self.params.get_global_x_m(), 
+                       self.params.get_global_y_m(), 
+                       state.get_yaw_rad(), 
+                       elems)
