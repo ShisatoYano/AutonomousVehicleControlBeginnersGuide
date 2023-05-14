@@ -44,8 +44,6 @@ class FourWheelsVehicle:
         self.sensor = sensor
 
     def update(self, time_s):
-        if self.sensor: self.sensor.update(self.state.x_y_yaw())
-
         if self.controller:
             self.controller.update(self.state)
             target_accel = self.controller.get_target_accel_mps2()
@@ -55,14 +53,14 @@ class FourWheelsVehicle:
             target_yaw_rate = 0.0
 
         self.state.update(target_accel, target_yaw_rate, time_s)
+
+        if self.sensor: self.sensor.update(self.state.x_y_yaw())
     
     def draw(self, axes, elems):
         self.state.draw(axes, elems)
         x_y_yaw_array = self.state.x_y_yaw()
         x_m = self.state.get_x_m()
         y_m = self.state.get_y_m()
-
-        if self.sensor: self.sensor.draw(axes, x_y_yaw_array, elems)
 
         if self.controller:
             self.controller.draw(axes, elems)
@@ -78,6 +76,8 @@ class FourWheelsVehicle:
         self.rear_right_tire.draw(axes, x_y_yaw_array, elems)
         self.front_axle.draw(axes, x_y_yaw_array, elems)
         self.rear_axle.draw(axes, x_y_yaw_array, elems)
+
+        if self.sensor: self.sensor.draw(axes, x_y_yaw_array, elems)
 
         axes.set_xlim(x_m - self.spec.area_size, x_m + self.spec.area_size)
         axes.set_ylim(y_m - self.spec.area_size, y_m + self.spec.area_size)
