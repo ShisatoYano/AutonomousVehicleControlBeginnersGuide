@@ -14,6 +14,7 @@ sys.path.append(abs_dir_path + relative_path + "visualization")
 sys.path.append(abs_dir_path + relative_path + "state")
 sys.path.append(abs_dir_path + relative_path + "vehicle")
 sys.path.append(abs_dir_path + relative_path + "obstacle")
+sys.path.append(abs_dir_path + relative_path + "sensors")
 sys.path.append(abs_dir_path + relative_path + "sensors/lidar")
 
 from global_xy_visualizer import GlobalXYVisualizer
@@ -24,6 +25,7 @@ from state import State
 from four_wheels_vehicle import FourWheelsVehicle
 from obstacle import Obstacle
 from obstacle_list import ObstacleList
+from sensors import Sensors
 from omni_directional_lidar import OmniDirectionalLidar
 
 
