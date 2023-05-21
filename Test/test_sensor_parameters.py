@@ -13,6 +13,14 @@ sys.path.append(str(Path(__file__).absolute().parent) + "/../src/sensors")
 from sensor_parameters import SensorParameters
 
 
+class MockState:
+    def __init__(self):
+        pass
+    
+    def x_y_yaw(self):
+        return np.array([[1.0], [1.0], [np.deg2rad(90)]])
+
+
 def test_initialize():
     param = SensorParameters()
 
@@ -39,3 +47,13 @@ def test_set_arguments():
     assert param.RESO_RAD == np.deg2rad(5.0)
     assert param.ANGLE_STD_SCALE == 6.0
     assert param.DIST_STD_RATE == 7.0
+
+
+def test_global_pos():
+    param = SensorParameters(lon_m=1.0)
+    state = MockState()
+
+    param.calculate_global_pos(state)
+
+    assert round(param.get_global_x_m(), 1) == 1.0
+    assert round(param.get_global_y_m(), 1) == 2.0
