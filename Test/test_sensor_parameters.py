@@ -4,6 +4,9 @@ Unit test of SensorParameters
 Author: Shisato Yano
 """
 
+import matplotlib as mpl
+mpl.use("Agg")
+import matplotlib.pyplot as plt
 import numpy as np
 import pytest
 import sys
@@ -57,3 +60,14 @@ def test_global_pos():
 
     assert round(param.get_global_x_m(), 1) == 1.0
     assert round(param.get_global_y_m(), 1) == 2.0
+
+
+def test_draw_pos():
+    figure = plt.figure(figsize=(8, 8))
+    axes = figure.add_subplot(111)
+
+    param = SensorParameters()
+    state = MockState()
+    param.calculate_global_pos(state)
+
+    param.draw_pos(axes, [])
