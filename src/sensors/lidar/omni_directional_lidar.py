@@ -11,7 +11,17 @@ from scipy.stats import norm
 from scan_point import ScanPoint
 
 class OmniDirectionalLidar:
+    """
+    Sensing simulation class with Omni directional LiDAR
+    """
+    
     def __init__(self, obst_list, params):
+        """
+        Constructor
+        obst_list: List of Obstacle objects
+        params: Sensor parameters object
+        """
+        
         self.obst_list = obst_list
         self.params = params
         self.DIST_DB_SIZE = int(np.floor((np.pi * 2.0) / self.params.RESO_RAD)) + 1
@@ -20,20 +30,46 @@ class OmniDirectionalLidar:
         self.latest_point_cloud = []
     
     def install(self, state):
+        """
+        Function to calculate installed position on global coordinate
+        state: Vehicle's state object 
+        """
+        
         self.params.calculate_global_pos(state)
 
     def _visible(self, distance_m):
+        """
+        Private function to check object is visible according to sensing distance
+        distance_m: Sensing distance[m]
+        """
+        
         return (self.params.MIN_RANGE_M <= distance_m <= self.params.MAX_RANGE_M)
     
     def _normalize_angle_until_2pi(self, angle_rad):
+        """
+        Private function to normalize sensing angle between 0 and 360 deg
+        angle_rad: Sensing angle[rad]
+        """
+
         if 0.0 > angle_rad: return (angle_rad + np.pi * 2.0)
         else: return angle_rad
     
     def _normalize_angle_pi_2_pi(self, angle_rad):
+        """
+        Private function to normalize sensing angle between -180 and 180 deg
+        angle_rad: Sensing angle[rad]
+        """
+
         if angle_rad > np.pi: return (angle_rad - np.pi * 2.0)
         else: return angle_rad
     
     def _ray_casting_filter(self, distance_list, angle_list):
+        """
+        Private function to filter point cloud by Ray casting
+        distance_list: List of sensing distance[m]
+        angle_list: List of sensing angle[rad]
+        """
+
         point_cloud = []
         dist_db = [self.MAX_DB_VALUE for _ in range(self.DIST_DB_SIZE)]
 
@@ -57,9 +93,22 @@ class OmniDirectionalLidar:
         self.latest_point_cloud = point_cloud
     
     def _interpolate(self, x_1, x_2, delta):
+        """
+        Private function to interpolate between two values
+        x_1: value 1
+        x_2: value 2
+        delta: resolution between value 1 and 2
+        """
+
         return ((1.0 - delta) * x_1 + delta * x_2)
 
     def _calculate_contour_xy(self, vertex_x, vertex_y):
+        """
+        Private function to calculate contour coordinates x-y
+        vertex_x: List of vertex's x coordinate
+        vertex_y: List of vertex's y coordinate
+        """
+
         contour_x, contour_y = [], []
         len_vertex = len(vertex_x)
 
@@ -73,6 +122,11 @@ class OmniDirectionalLidar:
         return contour_x, contour_y
 
     def update(self, state):
+        """
+        Function to update sensed point cloud data
+        state: Vehicle's state
+        """
+        
         self.params.calculate_global_pos(state)
 
         distance_list, angle_list = [], []
@@ -90,6 +144,13 @@ class OmniDirectionalLidar:
         self._ray_casting_filter(distance_list, angle_list)
     
     def draw(self, axes, elems, state):
+        """
+        Function to draw sensed point cloud data
+        axes: Axes object of figure
+        elems: List of plot objects
+        state: Vehicle's state object
+        """
+
         self.params.draw_pos(axes, elems)
 
         for point in self.latest_point_cloud:
