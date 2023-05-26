@@ -26,6 +26,14 @@ class MockObstacle:
         return [0.0, 1.0, 2.0, 3.0, 4.0], [0.0, 1.0, 2.0, 3.0, 4.0]
 
 
+class MockObstacleList:
+    def __init__(self):
+        self.list = []
+    
+    def get_list(self):
+        return self.list
+
+
 class MockXYArray:
     def __init__(self, data):
         self.data = data
@@ -87,3 +95,24 @@ class MockState:
     
     def get_yaw_rad(self):
         return 0.0
+
+
+# test instance
+obst1, obst2 = MockObstacle(), MockObstacle()
+obst_list = MockObstacleList()
+obst_list.list.append(obst1)
+obst_list.list.append(obst2)
+
+params = MockSensorParameters()
+
+lidar = OmniDirectionalLidar(obst_list, params)
+
+
+def test_initialize():
+    assert len(lidar.obst_list.get_list()) == 2
+    assert lidar.params != None
+    assert lidar.DIST_DB_SIZE == 181
+    assert lidar.MAX_DB_VALUE == float("inf")
+    assert lidar.DELTA_LIST[0] == 0.0
+    assert lidar.DELTA_LIST[-1] == 0.992
+    assert len(lidar.latest_point_cloud) == 0
