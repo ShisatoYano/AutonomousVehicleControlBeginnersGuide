@@ -32,6 +32,14 @@ class FrontLeftTire:
         self.array = XYArray(contour)
     
     def draw(self, axes, pose, steer_rad, elems):
+        """
+        Function to plot vehicle's front left tire's lines
+        axes: Axes object of figure
+        pose: Vehicle's pose vector
+        steer_rad: Tire's steering angle[rad]
+        elems: List of plot objects
+        """
+
         translated_array = self.array.homogeneous_transformation(self.offset_x_m, self.offset_y_m, steer_rad)
         transformed_array = translated_array.homogeneous_transformation(pose[0, 0], pose[1, 0], pose[2, 0])
         tire_plot, = axes.plot(transformed_array.get_x_data(), transformed_array.get_y_data(), 
