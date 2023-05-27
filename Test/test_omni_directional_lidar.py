@@ -111,6 +111,8 @@ obst_list.list.append(obst)
 
 params = MockSensorParameters()
 
+state = MockState()
+
 lidar = OmniDirectionalLidar(obst_list, params)
 
 
@@ -125,9 +127,15 @@ def test_initialize():
 
 
 def test_update():
-    state = MockState()
     lidar.update(state)
     latest_point_cloud = lidar.get_point_cloud()
 
     assert len(latest_point_cloud) == 162
     assert type(latest_point_cloud[0]) == ScanPoint
+
+
+def test_draw():
+    figure = plt.figure(figsize=(8, 8))
+    axes = figure.add_subplot(111)
+
+    lidar.draw(axes, [], state)
