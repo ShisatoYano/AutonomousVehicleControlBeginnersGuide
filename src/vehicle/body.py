@@ -30,6 +30,13 @@ class Body:
         self.array = XYArray(contour)
 
     def draw(self, axes, pose, elems):
+        """
+        Function to plot vehicle's body lines
+        axes: Axes object of figure
+        pose: Vehicle's pose vector
+        elems: List of plot objects
+        """
+
         transformed_array = self.array.homogeneous_transformation(pose[0, 0], pose[1, 0], pose[2, 0])
         body_plot, = axes.plot(transformed_array.get_x_data(), transformed_array.get_y_data(), 
                                lw=self.spec.line_w, color=self.spec.color, ls=self.spec.line_type)
