@@ -18,7 +18,7 @@ sys.path.append(abs_dir_path + relative_path + "course/sin_curve_course")
 sys.path.append(abs_dir_path + relative_path + "control/pure_pursuit")
 
 
-# import element modules
+# import component modules
 from global_xy_visualizer import GlobalXYVisualizer
 from min_max import MinMax
 from time_parameters import TimeParameters
