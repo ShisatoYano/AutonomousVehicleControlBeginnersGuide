@@ -32,6 +32,13 @@ class RearRightTire:
         self.array = XYArray(contour)
     
     def draw(self, axes, pose, elems):
+        """
+        Function to plot vehicle's rear right tire's lines
+        axes: Axes object of figure
+        pose: Vehicle's pose vector
+        elems: List of plot objects
+        """
+        
         translated_array = self.array.homogeneous_transformation(self.offset_x_m, self.offset_y_m, 0.0)
         transformed_array = translated_array.homogeneous_transformation(pose[0, 0], pose[1, 0], pose[2, 0])
         tire_plot, = axes.plot(transformed_array.get_x_data(), transformed_array.get_y_data(), 
