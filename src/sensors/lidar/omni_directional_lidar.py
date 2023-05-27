@@ -159,3 +159,11 @@ class OmniDirectionalLidar:
                        self.params.get_global_y_m(), 
                        state.get_yaw_rad(), 
                        elems)
+
+    def get_point_cloud(self):
+        """
+        Function to get latest point cloud data
+        Each points are calculated on sensor coordinate system
+        """
+
+        return self.latest_point_cloud                
