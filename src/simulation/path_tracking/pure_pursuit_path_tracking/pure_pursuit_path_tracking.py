@@ -4,6 +4,7 @@ pure_pursuit_path_tracking.py
 Author: Shisato Yano
 """
 
+# import path setting
 import sys
 from pathlib import Path
 
@@ -16,6 +17,8 @@ sys.path.append(abs_dir_path + relative_path + "vehicle")
 sys.path.append(abs_dir_path + relative_path + "course/sin_curve_course")
 sys.path.append(abs_dir_path + relative_path + "control/pure_pursuit")
 
+
+# import element modules
 from global_xy_visualizer import GlobalXYVisualizer
 from min_max import MinMax
 from time_parameters import TimeParameters
@@ -26,28 +29,45 @@ from sin_curve_course import SinCurveCourse
 from pure_pursuit_controller import PurePursuitController
 
 
+# flag to show plot figure
+# when executed as unit test, this flag is set as false
 show_plot = True
 
 
 def main():
+    """
+    Main process function
+    """
+    
+    # set simulation parameters
     x_lim, y_lim = MinMax(-5, 55), MinMax(-20, 25)
     vis = GlobalXYVisualizer(x_lim, y_lim, TimeParameters(span_sec=25))
 
+    # create course data instance
     course = SinCurveCourse(0, 50, 0.5, 20)
     vis.add_object(course)
 
+    # create vehicle's spec instance
     spec = VehicleSpecification(area_size=20.0)
+    
+    # create vehicle's state instance
     state = State(color=spec.color)
     
+    # create controller instance
     pure_pursuit = PurePursuitController(spec, course)
 
+    # create vehicle instance
+    # set state, spec, controller instances as arguments
     vehicle = FourWheelsVehicle(state, spec, controller=pure_pursuit)
     vis.add_object(vehicle)
 
+    # plot figure is not shown when executed as unit test
     if not show_plot: vis.not_show_plot()
 
+    # show plot figure
     vis.draw()
 
 
+# execute main process
 if __name__ == "__main__":
     main()
