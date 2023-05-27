@@ -14,6 +14,7 @@ from pathlib import Path
 from math import sin, cos
 
 sys.path.append(str(Path(__file__).absolute().parent) + "/../src/sensors/lidar")
+from scan_point import ScanPoint
 from omni_directional_lidar import OmniDirectionalLidar
 
 
@@ -23,7 +24,7 @@ class MockObstacle:
         pass
 
     def vertex_xy(self):
-        return [0.0, 1.0, 2.0, 3.0, 4.0], [0.0, 1.0, 2.0, 3.0, 4.0]
+        return [25.0, -15.0, -15.0, 15.0, 25.0], [5.0, 5.0, -5.0, -5.0, 5.0]
 
 
 class MockObstacleList:
@@ -50,6 +51,12 @@ class MockXYArray:
         translated_data = rotated_data + np.ones(rotated_data.shape) * np.array([[x], [y]])
 
         return MockXYArray(translated_data)
+    
+    def get_x_data(self):
+        return self.data[0, :]
+    
+    def get_y_data(self):
+        return self.data[1, :]
 
 
 class MockSensorParameters:
@@ -98,10 +105,9 @@ class MockState:
 
 
 # test instance
-obst1, obst2 = MockObstacle(), MockObstacle()
+obst = MockObstacle()
 obst_list = MockObstacleList()
-obst_list.list.append(obst1)
-obst_list.list.append(obst2)
+obst_list.list.append(obst)
 
 params = MockSensorParameters()
 
@@ -109,10 +115,19 @@ lidar = OmniDirectionalLidar(obst_list, params)
 
 
 def test_initialize():
-    assert len(lidar.obst_list.get_list()) == 2
+    assert len(lidar.obst_list.get_list()) == 1
     assert lidar.params != None
     assert lidar.DIST_DB_SIZE == 181
     assert lidar.MAX_DB_VALUE == float("inf")
     assert lidar.DELTA_LIST[0] == 0.0
     assert lidar.DELTA_LIST[-1] == 0.992
     assert len(lidar.latest_point_cloud) == 0
+
+
+def test_update():
+    state = MockState()
+    lidar.update(state)
+    latest_point_cloud = lidar.get_point_cloud()
+
+    assert len(latest_point_cloud) == 162
+    assert type(latest_point_cloud[0]) == ScanPoint
