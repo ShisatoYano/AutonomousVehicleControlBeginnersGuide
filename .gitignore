@@ -4,7 +4,7 @@ src/course/sin_curve_course/__pycache__
 src/obstacle/__pycache__
 src/sensors/__pycache__
 src/sensors/lidar/__pycache__
-src/simulation/path_tracking/pure_pursuit_path_tracking/__pycache__
+src/simulations/path_tracking/pure_pursuit_path_tracking/__pycache__
 src/state/__pycache__
 src/vehicle/__pycache__
 src/visualization/__pycache__
