@@ -105,6 +105,10 @@ def test_with_course_data():
 
 def test_draw():
     controller = PurePursuitController(spec, course)
+
+    plt.clf()
+    plt.close()
+    
     figure = plt.figure(figsize=(8, 8))
     axes = figure.add_subplot(111)
     controller.draw(axes, [])
