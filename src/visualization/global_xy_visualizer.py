@@ -76,6 +76,10 @@ class GlobalXYVisualizer:
         """
         Function to define animation's main process
         """
+
+        # clear existing plot and close existing figure
+        plt.clf()
+        plt.close()
         
         # setting figure and axes
         figure = plt.figure(figsize=(8, 8))
