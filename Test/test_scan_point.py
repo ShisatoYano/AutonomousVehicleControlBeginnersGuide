@@ -27,6 +27,9 @@ def test_initialize():
 
 
 def test_draw():
+    plt.clf()
+    plt.close()
+    
     figure = plt.figure(figsize=(8, 8))
     axes = figure.add_subplot(111)
     point.draw(axes, 1.0, 2.0, 3.0, [])

@@ -63,6 +63,9 @@ def test_global_pos():
 
 
 def test_draw_pos():
+    plt.clf()
+    plt.close()
+    
     figure = plt.figure(figsize=(8, 8))
     axes = figure.add_subplot(111)
 

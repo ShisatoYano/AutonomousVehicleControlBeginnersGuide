@@ -74,6 +74,9 @@ def test_update_data():
 
 
 def test_draw():
+    plt.clf()
+    plt.close()
+    
     figure = plt.figure(figsize=(8, 8))
     axes = figure.add_subplot(111)
 
