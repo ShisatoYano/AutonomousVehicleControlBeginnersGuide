@@ -57,6 +57,9 @@ def test_draw():
     obst1 = MockObstacle()
     obsts.add_obstacle(obst1)
 
+    plt.clf()
+    plt.close()
+
     figure = plt.figure(figsize=(8, 8))
     axes = figure.add_subplot(111)
 
