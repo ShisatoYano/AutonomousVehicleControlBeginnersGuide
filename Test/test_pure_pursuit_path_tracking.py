@@ -8,7 +8,7 @@ from pathlib import Path
 import sys
 import pytest
 
-sys.path.append(str(Path(__file__).absolute().parent) + "/../src/simulation/path_tracking/pure_pursuit_path_tracking")
+sys.path.append(str(Path(__file__).absolute().parent) + "/../src/simulations/path_tracking/pure_pursuit_path_tracking")
 import pure_pursuit_path_tracking
 
 
