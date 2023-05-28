@@ -16,16 +16,37 @@ class TimeParameters:
         self.frame_num = int(span_sec / interval_sec) + 1
     
     def get_interval_sec(self):
+        """
+        Function to get interval time parameter[sec]
+        """
+        
         return self.interval_sec
     
     def get_interval_msec(self):
+        """
+        Function to get interval time parameter[msec]
+        """
+        
         return self.interval_msec
     
     def get_frame_num(self):
+        """
+        Function to get number of simulation's frames
+        """
+        
         return self.frame_num
     
     def current_sec(self, index):
+        """
+        Function to get current time[sec] in simulation
+        index: Index of simulation's frame
+        """
         return self.interval_sec * index
     
     def simulation_finished(self, index):
+        """
+        Function to check simulation was finished
+        index: Index of simulation's frame
+        """
+        
         return (self.interval_sec * index >= self.span_sec)
