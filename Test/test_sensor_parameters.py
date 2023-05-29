@@ -12,7 +12,7 @@ import pytest
 import sys
 from pathlib import Path
 
-sys.path.append(str(Path(__file__).absolute().parent) + "/../src/sensors")
+sys.path.append(str(Path(__file__).absolute().parent) + "/../src/components/sensors")
 from sensor_parameters import SensorParameters
 
 

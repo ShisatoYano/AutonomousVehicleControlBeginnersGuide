@@ -11,7 +11,7 @@ import pytest
 import sys
 from pathlib import Path
 
-sys.path.append(str(Path(__file__).absolute().parent) + "/../src/obstacle")
+sys.path.append(str(Path(__file__).absolute().parent) + "/../src/components/obstacle")
 from obstacle_list import ObstacleList
 
 

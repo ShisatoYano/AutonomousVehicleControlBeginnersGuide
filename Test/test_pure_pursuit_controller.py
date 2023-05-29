@@ -13,7 +13,7 @@ import pytest
 import sys
 from pathlib import Path
 
-sys.path.append(str(Path(__file__).absolute().parent) + "/../src/control/pure_pursuit")
+sys.path.append(str(Path(__file__).absolute().parent) + "/../src/components/control/pure_pursuit")
 from pure_pursuit_controller import PurePursuitController
 
 # mock class

@@ -13,7 +13,7 @@ import sys
 from pathlib import Path
 from math import sin, cos
 
-sys.path.append(str(Path(__file__).absolute().parent) + "/../src/sensors/lidar")
+sys.path.append(str(Path(__file__).absolute().parent) + "/../src/components/sensors/lidar")
 from scan_point import ScanPoint
 from omni_directional_lidar import OmniDirectionalLidar
 

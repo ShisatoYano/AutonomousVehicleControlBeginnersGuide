@@ -13,7 +13,7 @@ import pytest
 import sys
 from pathlib import Path
 
-sys.path.append(str(Path(__file__).absolute().parent) + "/../src/course/sin_curve_course")
+sys.path.append(str(Path(__file__).absolute().parent) + "/../src/components/course/sin_curve_course")
 from sin_curve_course import SinCurveCourse
 
 # mock class

@@ -12,7 +12,7 @@ import pytest
 import sys
 from pathlib import Path
 
-sys.path.append(str(Path(__file__).absolute().parent) + "/../src/sensors/lidar")
+sys.path.append(str(Path(__file__).absolute().parent) + "/../src/components/sensors/lidar")
 from scan_point import ScanPoint
 
 

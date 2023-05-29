@@ -8,7 +8,7 @@ import pytest
 import sys
 from pathlib import Path
 
-sys.path.append(str(Path(__file__).absolute().parent) + "/../src/visualization")
+sys.path.append(str(Path(__file__).absolute().parent) + "/../src/components/visualization")
 from time_parameters import TimeParameters
 
 

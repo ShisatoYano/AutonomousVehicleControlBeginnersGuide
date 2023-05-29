@@ -9,7 +9,7 @@ import sys
 import os
 import numpy as np
 
-sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../src/array")
+sys.path.append(os.path.dirname(os.path.abspath(__file__)) + "/../src/components/array")
 from xy_array import XYArray
 
 
