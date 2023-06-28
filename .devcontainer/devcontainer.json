@@ -39,5 +39,7 @@
 
     "runArgs": [
         "--privileged"
-    ]
+    ],
+
+    "workspaceFolder": "/home/dev-user/workspace"
 }
