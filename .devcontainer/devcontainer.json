@@ -1,0 +1,45 @@
+{
+    "name": "AutonomousVehicleControlBeginnersGuide",
+
+    "dockerComposeFile": "docker-compose.yml",
+
+    "build": {
+        "args": {
+            "UID": "1000",
+            "GID": "1000"
+        }
+    },
+
+    "service": "simulation",
+
+    "settings": {
+        "workbench.editor.enablePreview": false,
+        "python.linting.pylintEnabled": false,
+        "python.linting.flake8Enabled": true,
+        "python.linting.flake8Args": [
+            "--ignore=E402,E501"
+        ],
+        "python.formatting.provider": "autopep8",
+        "python.formatting.autopep8Args": [
+            "--ignore",
+            "E405,E501",
+            "--max-line-length",
+            "150"
+        ]
+    },
+
+    "extensions": [
+        "mhutchie.git-graph",
+        "eamodio.gitlens",
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "CoenraadS.bracket-pair-colorizer-2",
+        "shd101wyy.markdown-preview-enhanced"
+    ],
+
+    "runArgs": [
+        "--privileged"
+    ],
+
+    "workspaceFolder": "/home/dev-user/workspace"
+}
