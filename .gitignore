@@ -10,5 +10,6 @@ src/components/visualization/__pycache__
 src/simulations/path_tracking/pure_pursuit_path_tracking/__pycache__
 src/simulations/perception/lidar_obstacle_sensing/__pycache__
 test/__pycache__
+Test/__pycache__
 .pytest_cache
 .coverage
