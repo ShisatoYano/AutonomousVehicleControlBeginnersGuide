@@ -37,9 +37,5 @@
         "shd101wyy.markdown-preview-enhanced"
     ],
 
-    "runArgs": [
-        "--privileged"
-    ],
-
     "workspaceFolder": "/home/dev-user/workspace"
 }
