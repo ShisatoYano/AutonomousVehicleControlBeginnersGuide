@@ -36,7 +36,8 @@
         "ms-python.python",
         "ms-python.vscode-pylance",
         "CoenraadS.bracket-pair-colorizer-2",
-        "shd101wyy.markdown-preview-enhanced"
+        "shd101wyy.markdown-preview-enhanced",
+        "ms-azuretools.vscode-docker"
     ],
 
     "workspaceFolder": "/home/dev-user/workspace"
