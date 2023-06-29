@@ -16,10 +16,11 @@ wget \
 && useradd -m -d /home/dev-user -s /bin/bash -u $UID -g $GID dev-user
 
 RUN mkdir -p /home/dev-user/workspace
-WORKDIR /home/dev-user/workspace
 COPY ../requirements.txt /home/dev-user/workspace
+WORKDIR /home/dev-user/workspace
 
-RUN python -m pip intall --upgrade pip
+RUN pip install --upgrade pip
+RUN pip install --upgrade setuptools
 RUN pip install -r requirements.txt
 
 USER dev-user
