@@ -14,6 +14,8 @@
 
     "settings": {
         "workbench.editor.enablePreview": false,
+        "editor.minimap.enabled": false,
+        "workbench.colorTheme": "Monokai",
         "python.linting.pylintEnabled": false,
         "python.linting.flake8Enabled": true,
         "python.linting.flake8Args": [
