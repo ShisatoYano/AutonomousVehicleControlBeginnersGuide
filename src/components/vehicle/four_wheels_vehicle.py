@@ -86,9 +86,9 @@ class FourWheelsVehicle:
             target_accel = 0.0
             target_yaw_rate = 0.0
 
-        self.state.update(target_accel, target_yaw_rate, time_s)
-
         self._update_sensors_data(self.state)
+
+        self.state.update(target_accel, target_yaw_rate, time_s)
     
     def draw(self, axes, elems):
         """
