@@ -6,5 +6,4 @@ echo "Run test suites!! "
 # -l (--showlocals); show local variables when test failed
 # -Werror: warning as error
 # --durations=0: show ranking of test durations
-# --cov -v: show test coverage
-pytest -l -Werror --durations=0 --cov -v
+pytest -l -Werror --durations=0
