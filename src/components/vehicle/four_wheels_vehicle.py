@@ -71,6 +71,21 @@ class FourWheelsVehicle:
         """
 
         if self.sensors: self.sensors.draw_data(axes, elems, state)
+    
+    def _update_control_data(self):
+        if self.controller:
+            self.controller.update(self.state)
+            return self.controller.get_target_accel_mps2(), \
+                self.controller.get_target_yaw_rate_rps()
+        else:
+            return 0.0, 0.0
+    
+    def _draw_control_data(self, axes, elems):
+        if self.controller:
+            self.controller.draw(axes, elems)
+            return self.controller.get_target_steer_rad()
+        else:
+            return 0.0
 
     def update(self, time_s):
         """
@@ -80,13 +95,7 @@ class FourWheelsVehicle:
 
         self._update_sensors_data(self.state)
 
-        if self.controller:
-            self.controller.update(self.state)
-            target_accel = self.controller.get_target_accel_mps2()
-            target_yaw_rate = self.controller.get_target_yaw_rate_rps()
-        else:
-            target_accel = 0.0
-            target_yaw_rate = 0.0
+        target_accel, target_yaw_rate = self._update_control_data()
 
         self.state.update(target_accel, target_yaw_rate, time_s)
     
@@ -99,11 +108,7 @@ class FourWheelsVehicle:
 
         self._draw_sensors_data(axes, elems, self.state)
 
-        if self.controller:
-            self.controller.draw(axes, elems)
-            steer_rad = self.controller.get_target_steer_rad()
-        else:
-            steer_rad = 0.0
+        steer_rad = self._draw_control_data(axes, elems)
 
         self.state.draw(axes, elems)
         x_y_yaw_array = self.state.x_y_yaw()
