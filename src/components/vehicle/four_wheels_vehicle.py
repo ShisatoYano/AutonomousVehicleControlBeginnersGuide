@@ -78,6 +78,8 @@ class FourWheelsVehicle:
         time_s: Simulation interval time[sec]
         """
 
+        self._update_sensors_data(self.state)
+
         if self.controller:
             self.controller.update(self.state)
             target_accel = self.controller.get_target_accel_mps2()
@@ -85,8 +87,6 @@ class FourWheelsVehicle:
         else:
             target_accel = 0.0
             target_yaw_rate = 0.0
-
-        self._update_sensors_data(self.state)
 
         self.state.update(target_accel, target_yaw_rate, time_s)
     
@@ -97,16 +97,18 @@ class FourWheelsVehicle:
         elems: List of plot object
         """
 
-        self.state.draw(axes, elems)
-        x_y_yaw_array = self.state.x_y_yaw()
-        x_m = self.state.get_x_m()
-        y_m = self.state.get_y_m()
+        self._draw_sensors_data(axes, elems, self.state)
 
         if self.controller:
             self.controller.draw(axes, elems)
             steer_rad = self.controller.get_target_steer_rad()
         else:
             steer_rad = 0.0
+
+        self.state.draw(axes, elems)
+        x_y_yaw_array = self.state.x_y_yaw()
+        x_m = self.state.get_x_m()
+        y_m = self.state.get_y_m()
         
         self.body.draw(axes, x_y_yaw_array, elems)
         self.chassis.draw(axes, x_y_yaw_array, elems)
@@ -116,8 +118,6 @@ class FourWheelsVehicle:
         self.rear_right_tire.draw(axes, x_y_yaw_array, elems)
         self.front_axle.draw(axes, x_y_yaw_array, elems)
         self.rear_axle.draw(axes, x_y_yaw_array, elems)
-
-        self._draw_sensors_data(axes, elems, self.state)
 
         axes.set_xlim(x_m - self.spec.area_size, x_m + self.spec.area_size)
         axes.set_ylim(y_m - self.spec.area_size, y_m + self.spec.area_size)
