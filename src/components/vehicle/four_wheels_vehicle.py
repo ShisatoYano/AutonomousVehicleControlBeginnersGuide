@@ -73,6 +73,12 @@ class FourWheelsVehicle:
         if self.sensors: self.sensors.draw_data(axes, elems, state)
     
     def _update_control_data(self):
+        """
+        Private function to update controller's data
+        Return 1: Acceleration input[m/s2]
+        Return 2: Yaw rate input[rad/s]
+        """
+        
         if self.controller:
             self.controller.update(self.state)
             return self.controller.get_target_accel_mps2(), \
@@ -81,6 +87,13 @@ class FourWheelsVehicle:
             return 0.0, 0.0
     
     def _draw_control_data(self, axes, elems):
+        """
+        Private function to draw controller's data
+        axes: Axes object of figure
+        elems: List of plot object
+        Return: Steering angle value[rad]
+        """
+        
         if self.controller:
             self.controller.draw(axes, elems)
             return self.controller.get_target_steer_rad()
