@@ -28,7 +28,7 @@ class Node:
         """
         
         self.axis = 0
-        self.location = None
+        self.data = None
         self.left_child = None
         self.right_child = None
 
@@ -64,11 +64,31 @@ class KdTree:
 
         node = Node()
         node.axis = axis
-        node.location = scan_points_list[median]
+        node.data = scan_points_list[median]
         node.left_child = self._build_tree(scan_points_list[0:median], depth+1)
         node.right_child = self._build_tree(scan_points_list[median+1:], depth+1)
 
         return node
+    
+    def search_nearest_neighbor_point(self, target_point):
+        target = target_point.get_point_array()
+
+        nodes_stack = [self.root]
+        while nodes_stack:
+            node = nodes_stack.pop()
+            axis = node.axis
+            
+            print(node.data.get_point_array()[0], node.data.get_point_array()[1])
+            
+            if target[axis] < node.data.get_point_array()[axis]:
+                if node.left_child: nodes_stack.append(node.left_child)
+            else:
+                if node.right_child: nodes_stack.append(node.right_child)
+
+            # if node.left_child:
+            #     nodes_stack.append(node.left_child)
+            # if node.right_child:
+            #     nodes_stack.append(node.right_child)
 
 
 def main():
@@ -77,7 +97,13 @@ def main():
     points_xy = np.random.random((10, 2))
     point_cloud = [ScanPoint(0.0, 0.0, xy[0], xy[1]) for xy in points_xy]
 
+    target_point_1 = ScanPoint(0.0, 0.0, 0.035, 0.51)
+    target_point_2 = ScanPoint(0.0, 0.0, 0.65, 0.70)
+    target_point_3 = ScanPoint(0.0, 0.0, 0.65, 0.03)
+
     kd_tree = KdTree(point_cloud)
+
+    kd_tree.search_nearest_neighbor_point(target_point_1)
 
 
 if __name__ == "__main__":
