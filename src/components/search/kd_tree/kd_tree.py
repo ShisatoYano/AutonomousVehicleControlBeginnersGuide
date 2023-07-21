@@ -18,7 +18,10 @@ from scan_point import ScanPoint
 
 
 def main():
-    print("kd_tree")
+    np.random.seed(20)
+    
+    points_xy = np.random.random((100, 2))
+    point_cloud = [ScanPoint(0.0, 0.0, xy[0], xy[1]) for xy in points_xy]
 
 
 if __name__ == "__main__":
