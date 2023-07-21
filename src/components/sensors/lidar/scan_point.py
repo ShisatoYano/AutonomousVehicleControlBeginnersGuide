@@ -30,6 +30,21 @@ class ScanPoint:
         self.angle_rad = angle_rad
         self.point_array = XYArray(np.array([[x_m], [y_m]]))
     
+    def get_dimension(self):
+        """
+        Return point's x-y array data's dimension value
+        """
+
+        return self.point_array.get_dimension()
+    
+    def get_point_array(self):
+        """
+        Return point's x-y array data
+        Type is ndarray object
+        """
+
+        return self.point_array.get_data()
+    
     def draw(self, axes, x_m, y_m, angle_rad, elems):
         """
         Function to draw scan point's x-y coordinate data
