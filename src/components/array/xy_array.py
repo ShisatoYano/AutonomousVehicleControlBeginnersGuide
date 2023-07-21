@@ -65,3 +65,10 @@ class XYArray:
         """
 
         return self.data[1, :]
+    
+    def get_dimension(self):
+        """
+        Return x-y array data's dimension value
+        """
+
+        return self.data.ndim
