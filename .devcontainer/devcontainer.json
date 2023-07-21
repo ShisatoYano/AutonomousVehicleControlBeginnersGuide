@@ -29,6 +29,7 @@
             "150"
         ],
         "python.analysis.extraPaths": [
+            "/usr/local/lib/python3.11/site-packages",
             "/home/dev-user/workspace/src/components/array",
             "/home/dev-user/workspace/src/components/control/pure_pursuit",
             "/home/dev-user/workspace/src/components/course/sin_curve_course",
