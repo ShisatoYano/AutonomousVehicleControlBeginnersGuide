@@ -45,6 +45,7 @@ class KdTree:
         """
 
         self.root = self._build_tree(scan_points_list)
+        self.stack = []
         
     
     def _build_tree(self, scan_points_list, depth=0):
@@ -70,25 +71,24 @@ class KdTree:
 
         return node
     
-    def search_nearest_neighbor_point(self, target_point):
-        target = target_point.get_point_array()
-
-        nodes_stack = [self.root]
-        while nodes_stack:
-            node = nodes_stack.pop()
+    def _push_stack(self, target_point_array, node):
+        """
+        Private function to push node into stack.
+        Pushed nodes are candidates of nearest neighbor point with target
+        """
+        
+        if node:
+            self.stack.append(node)
             axis = node.axis
-            
-            print(node.data.get_point_array()[0], node.data.get_point_array()[1])
-            
-            if target[axis] < node.data.get_point_array()[axis]:
-                if node.left_child: nodes_stack.append(node.left_child)
+            if target_point_array[axis] < node.data.get_point_array()[axis]:
+                self._push_stack(target_point_array, node.left_child)
             else:
-                if node.right_child: nodes_stack.append(node.right_child)
+                self._push_stack(target_point_array, node.right_child)
 
-            # if node.left_child:
-            #     nodes_stack.append(node.left_child)
-            # if node.right_child:
-            #     nodes_stack.append(node.right_child)
+    def search_nearest_neighbor_point(self, target_point):
+        target_point_array = target_point.get_point_array()
+
+        self._push_stack(target_point_array, self.root)
 
 
 def main():
@@ -98,12 +98,13 @@ def main():
     point_cloud = [ScanPoint(0.0, 0.0, xy[0], xy[1]) for xy in points_xy]
 
     target_point_1 = ScanPoint(0.0, 0.0, 0.035, 0.51)
-    target_point_2 = ScanPoint(0.0, 0.0, 0.65, 0.70)
-    target_point_3 = ScanPoint(0.0, 0.0, 0.65, 0.03)
+    target_point_2 = ScanPoint(0.0, 0.0, 0.05, 0.9)
+    target_point_3 = ScanPoint(0.0, 0.0, 0.6, 0.5)
+    target_point_4 = ScanPoint(0.0, 0.0, 0.8, 0.9)
 
     kd_tree = KdTree(point_cloud)
 
-    kd_tree.search_nearest_neighbor_point(target_point_1)
+    kd_tree.search_nearest_neighbor_point(target_point_4)
 
 
 if __name__ == "__main__":
