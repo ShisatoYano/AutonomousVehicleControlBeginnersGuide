@@ -34,6 +34,7 @@
             "/home/dev-user/workspace/src/components/control/pure_pursuit",
             "/home/dev-user/workspace/src/components/course/sin_curve_course",
             "/home/dev-user/workspace/src/components/obstacle",
+            "/home/dev-user/workspace/src/components/search/kd_tree",
             "/home/dev-user/workspace/src/components/sensors/",
             "/home/dev-user/workspace/src/components/sensors/lidar",
             "/home/dev-user/workspace/src/components/state",
