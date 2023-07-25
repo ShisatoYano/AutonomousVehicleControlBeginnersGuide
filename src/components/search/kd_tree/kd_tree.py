@@ -112,17 +112,57 @@ class KdTree:
                     if min_dist > dist:
                         min_dist = dist
                         nearest_node = node
+                    
+                    if node.left_child:
+                        dist_left = np.linalg.norm(target_point_array - node.left_child.data.get_point_array())
+                        if min_dist > dist_left:
+                            min_dist = dist_left
+                            nearest_node = node.left_child
+                    
+                    if node.right_child:
+                        dist_right = np.linalg.norm(target_point_array - node.right_child.data.get_point_array())
+                        if min_dist > dist_right:
+                            min_dist = dist_right
+                            nearest_node = node.right_child        
 
         return nearest_node.data
+    
+
+    def search_neighbor_points_within_r(self, target_point, r=0.2):
+        target_point_array = target_point.get_point_array()
+
+        self._push_stack(target_point_array, self.root)
+
+        neighbor_points = []
+
+        while self.stack:
+            node = self.stack.pop()
+            axis = node.axis
+            dist = np.linalg.norm(target_point_array - node.data.get_point_array())
+
+            if r >= dist:
+                neighbor_points.append(node.data)
+
+                if node.left_child:
+                    dist_left = np.linalg.norm(target_point_array - node.left_child.data.get_point_array())
+                    if r >= dist_left:
+                        neighbor_points.append(node.left_child.data)
+                
+                if node.right_child:
+                    dist_right = np.linalg.norm(target_point_array - node.right_child.data.get_point_array())
+                    if r >= dist_right:
+                        neighbor_points.append(node.right_child.data)
+
+        return neighbor_points
 
 
 def main():
     np.random.seed(20)
     
-    points_xy = np.random.random((100, 2))
+    points_xy = np.random.random((10, 2))
     point_cloud = [ScanPoint(0.0, 0.0, xy[0], xy[1]) for xy in points_xy]
 
-    targets_xy = np.random.random((5, 2))
+    targets_xy = np.random.random((3, 2))
     target_points = [ScanPoint(0.0, 0.0, xy[0], xy[1]) for xy in targets_xy]
 
     for point in point_cloud:
@@ -137,16 +177,18 @@ def main():
     kd_tree = KdTree(point_cloud)
 
     for target_point in target_points:
-        sta_time = time.perf_counter()
-        nearest_point = kd_tree.search_nearest_neighbor_point(target_point)
-        end_time = time.perf_counter()
-        print(end_time - sta_time)
-        nearest_xy = nearest_point.get_point_array()
+        # nearest_point = kd_tree.search_nearest_neighbor_point(target_point)
+        neighbor_points = kd_tree.search_neighbor_points_within_r(target_point)
+        # nearest_xy = nearest_point.get_point_array()
         
         target_xy = target_point.get_point_array()
         plt.plot(target_xy[0], target_xy[1], "xb")
 
-        plt.plot([nearest_xy[0], target_xy[0]], [nearest_xy[1], target_xy[1]], "-r")
+        for neighbor_point in neighbor_points:
+          neighbor_xy = neighbor_point.get_point_array()
+          plt.plot([neighbor_xy[0], target_xy[0]], [neighbor_xy[1], target_xy[1]], "-r")  
+
+        # plt.plot([nearest_xy[0], target_xy[0]], [nearest_xy[1], target_xy[1]], "-r")
     
     plt.show()
 
