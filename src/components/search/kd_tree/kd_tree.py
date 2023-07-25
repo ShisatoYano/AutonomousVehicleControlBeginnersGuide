@@ -88,6 +88,10 @@ class KdTree:
                 self._push_stack(target_point_array, node.right_child)
 
     def search_nearest_neighbor_point(self, target_point):
+        """
+        Find the nearest neighbor point against target point by kd-tree
+        """
+        
         target_point_array = target_point.get_point_array()
 
         self._push_stack(target_point_array, self.root)
