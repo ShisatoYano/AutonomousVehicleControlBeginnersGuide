@@ -9,8 +9,6 @@ import numpy as np
 import sys
 from pathlib import Path
 import matplotlib.pyplot as plt
-import matplotlib.patches as ptc
-import time
 
 abs_dir_path = str(Path(__file__).absolute().parent)
 sys.path.append(abs_dir_path + "/../../sensors/lidar")
@@ -134,40 +132,3 @@ class KdTree:
                 neighbor_points.append(candidate_node.data)
 
         return neighbor_points
-
-
-def main():
-    np.random.seed(20)
-    
-    points_xy = np.random.random((100, 2))
-    point_cloud = [ScanPoint(0.0, 0.0, xy[0], xy[1]) for xy in points_xy]
-
-    targets_xy = np.random.random((1, 2))
-    target_points = [ScanPoint(0.0, 0.0, xy[0], xy[1]) for xy in targets_xy]
-
-    for point in point_cloud:
-        point_xy = point.get_point_array()
-        plt.plot(point_xy[0], point_xy[1], "og")
-
-    kd_tree = KdTree(point_cloud)
-
-    for target_point in target_points:
-        # nearest_point = kd_tree.search_nearest_neighbor_point(target_point)
-        # nearest_xy = nearest_point.get_point_array()
-
-        neighbor_points = kd_tree.search_neighbor_points_within_r(target_point)
-        
-        target_xy = target_point.get_point_array()
-        plt.plot(target_xy[0], target_xy[1], "xb")  
-        # plt.plot([nearest_xy[0], target_xy[0]], [nearest_xy[1], target_xy[1]], "-r")
-
-        for neighbor_point in neighbor_points:
-            neighbor_xy = neighbor_point.get_point_array()
-            plt.plot([neighbor_xy[0], target_xy[0]], [neighbor_xy[1], target_xy[1]], "-r")
-    
-    plt.axis("square")
-    plt.show()
-
-
-if __name__ == "__main__":
-    main()
