@@ -39,43 +39,40 @@ class MockScanPoint:
 
 # test data
 test_point_cloud = []
-test_point_cloud.append(MockScanPoint(0.588, 0.897))
-test_point_cloud.append(MockScanPoint(0.035, 0.69))
-test_point_cloud.append(MockScanPoint(0.89, 0.81))
-test_point_cloud.append(MockScanPoint(0.37, 0.51))
-test_point_cloud.append(MockScanPoint(0.27, 0.71))
-test_point_cloud.append(MockScanPoint(0.23, 0.25))
-test_point_cloud.append(MockScanPoint(0.11, 0.75))
-test_point_cloud.append(MockScanPoint(0.77, 0.03))
-test_point_cloud.append(MockScanPoint(0.78, 0.85))
-test_point_cloud.append(MockScanPoint(0.65, 0.19))
+test_point_cloud.append(MockScanPoint(6, 1))
+test_point_cloud.append(MockScanPoint(5, 5))
+test_point_cloud.append(MockScanPoint(7, 4))
+test_point_cloud.append(MockScanPoint(2, 3))
+test_point_cloud.append(MockScanPoint(3, 7))
+test_point_cloud.append(MockScanPoint(9, 3))
+test_point_cloud.append(MockScanPoint(9, 6))
 
 
 def test_search_nearest_neighbor_point():
     # target data
-    target_point_1 = MockScanPoint(0.035, 0.51)
-    target_point_2 = MockScanPoint(0.05, 0.9)
-    target_point_3 = MockScanPoint(0.6, 0.5)
-    target_point_4 = MockScanPoint(0.8, 0.9)
+    target_point_1 = MockScanPoint(7, 5)
+    target_point_2 = MockScanPoint(5, 4)
+    target_point_3 = MockScanPoint(9, 2)
+    target_point_4 = MockScanPoint(3, 6)
 
     kd_tree = KdTree(test_point_cloud)
 
     nearest_point_1 = kd_tree.search_nearest_neighbor_point(target_point_1)
     nearest_xy_1 = nearest_point_1.get_point_array()
-    assert nearest_xy_1[0] == 0.035
-    assert nearest_xy_1[1] == 0.69
+    assert nearest_xy_1[0] == 7
+    assert nearest_xy_1[1] == 4
 
     nearest_point_2 = kd_tree.search_nearest_neighbor_point(target_point_2)
     nearest_xy_2 = nearest_point_2.get_point_array()
-    assert nearest_xy_2[0] == 0.11
-    assert nearest_xy_2[1] == 0.75
+    assert nearest_xy_2[0] == 5
+    assert nearest_xy_2[1] == 5
 
     nearest_point_3 = kd_tree.search_nearest_neighbor_point(target_point_3)
     nearest_xy_3 = nearest_point_3.get_point_array()
-    assert nearest_xy_3[0] == 0.65
-    assert nearest_xy_3[1] == 0.19
+    assert nearest_xy_3[0] == 9
+    assert nearest_xy_3[1] == 3
 
     nearest_point_4 = kd_tree.search_nearest_neighbor_point(target_point_4)
     nearest_xy_4 = nearest_point_4.get_point_array()
-    assert nearest_xy_4[0] == 0.78
-    assert nearest_xy_4[1] == 0.85
+    assert nearest_xy_4[0] == 3
+    assert nearest_xy_4[1] == 7
