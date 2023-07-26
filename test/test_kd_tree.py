@@ -76,3 +76,22 @@ def test_search_nearest_neighbor_point():
     nearest_xy_4 = nearest_point_4.get_point_array()
     assert nearest_xy_4[0] == 3
     assert nearest_xy_4[1] == 7
+
+
+def test_search_neighbor_points_within_r():
+    # target data
+    target_point = MockScanPoint(7, 5)
+
+    kd_tree = KdTree(test_point_cloud)
+
+    neighbor_points = kd_tree.search_neighbor_points_within_r(target_point, r=2)
+    
+    assert len(neighbor_points) == 2
+    
+    neighbor_point_1_xy = neighbor_points[0].get_point_array()
+    assert neighbor_point_1_xy[0] == 7
+    assert neighbor_point_1_xy[1] == 4
+
+    neighbor_point_2_xy = neighbor_points[1].get_point_array()
+    assert neighbor_point_2_xy[0] == 5
+    assert neighbor_point_2_xy[1] == 5
