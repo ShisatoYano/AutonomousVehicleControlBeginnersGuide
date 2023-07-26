@@ -105,7 +105,7 @@ class KdTree:
         if node:
             axis = node.axis
             diff_axis = abs(target_point_array[axis] - node.data.get_point_array()[axis])
-            if search_radius > diff_axis: 
+            if search_radius >= diff_axis: 
                 self.candidates_stack.append(node)
             self._search_nearest_neighbor_candidates(target_point_array, search_radius, node.left_child)
             self._search_nearest_neighbor_candidates(target_point_array, search_radius, node.right_child)
@@ -151,7 +151,7 @@ class KdTree:
         while self.candidates_stack:
             candidate_node = self.candidates_stack.pop()
             candidate_dist = np.linalg.norm(target_point_array - candidate_node.data.get_point_array())
-            if r > candidate_dist:
+            if r >= candidate_dist:
                 neighbor_points.append(candidate_node.data)
 
         return neighbor_points
