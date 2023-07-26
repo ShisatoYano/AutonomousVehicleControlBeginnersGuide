@@ -73,6 +73,13 @@ class KdTree:
         return node
 
     def _search_edge_node(self, target_point_array, node):
+        """
+        Private function to search edge node
+        target_point_array: ndarray of target point's position
+        node: Node of kd-tree
+        Return: Edge node object
+        """
+        
         if not node.left_child and not node.right_child: return node
 
         axis = node.axis
@@ -88,6 +95,13 @@ class KdTree:
                 return node
     
     def _search_nearest_neighbor_candidates(self, target_point_array, search_radius, node):
+        """
+        Private function to search candidates of nearest neighbor node
+        target_point_array: ndarray of target point's position
+        search_radius: radius of search area
+        node: node object of kd-tree
+        """
+        
         if node:
             axis = node.axis
             diff_axis = abs(target_point_array[axis] - node.data.get_point_array()[axis])
@@ -99,6 +113,8 @@ class KdTree:
     def search_nearest_neighbor_point(self, target_point):
         """
         Find the nearest neighbor point against target point by kd-tree
+        target_point: target object of ScanPoint
+        Return nearest neighbor ScanPoint object against target
         """
         
         target_point_array = target_point.get_point_array()
@@ -120,6 +136,13 @@ class KdTree:
         return nearest_neighbor_node.data
 
     def search_neighbor_points_within_r(self, target_point, r=0.2):
+        """
+        Find neighbor points against target point within radius, r
+        target_point: target object of ScanPoint
+        r: radius of searching area
+        Return: list of neighbor points
+        """
+
         target_point_array = target_point.get_point_array()
 
         self._search_nearest_neighbor_candidates(target_point_array, r, self.root)
