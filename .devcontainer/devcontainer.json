@@ -41,7 +41,8 @@
             "/home/dev-user/workspace/src/components/vehicle",
             "/home/dev-user/workspace/src/components/visualization",
             "/home/dev-user/workspace/src/simulations/path_tracking/pure_pursuit_path_tracking",
-            "/home/dev-user/workspace/src/simulations/perception/lidar_obstacle_sensing"
+            "/home/dev-user/workspace/src/simulations/perception/lidar_obstacle_sensing",
+            "/home/dev-user/workspace/src/simulations/perception/point_cloud_search"
         ]
     },
 
