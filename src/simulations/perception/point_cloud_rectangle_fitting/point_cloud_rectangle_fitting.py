@@ -1,5 +1,5 @@
 """
-point_cloud_segmentation.py
+point_cloud_rectangle_fitting.py
 
 Author: Shisato Yano
 """
