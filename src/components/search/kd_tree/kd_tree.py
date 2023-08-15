@@ -14,10 +14,6 @@ abs_dir_path = str(Path(__file__).absolute().parent)
 sys.path.append(abs_dir_path + "/../../sensors/lidar")
 
 
-# import component modules
-from scan_point import ScanPoint
-
-
 class Node:
     """
     Tree's node class
