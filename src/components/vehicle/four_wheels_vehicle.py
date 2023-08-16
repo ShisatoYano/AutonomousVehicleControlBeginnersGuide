@@ -19,13 +19,15 @@ class FourWheelsVehicle:
     Four Wheels Vehicle model class
     """
 
-    def __init__(self, state, spec, controller=None, sensors=None):
+    def __init__(self, state, spec, controller=None, sensors=None,
+                 detector=None):
         """
         Constructor
         state: Vehicle's state object
         spec: Vehicle's specification object
         controller: Controller object
         sensors: Sencors object
+        detector: Detector object
         """
         
         self.state = state
@@ -45,6 +47,8 @@ class FourWheelsVehicle:
 
         self.sensors = sensors
         self._install_sensors(self.state)
+
+        self.detector = detector
 
     def _install_sensors(self, state):
         """
