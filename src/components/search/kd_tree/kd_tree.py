@@ -1,7 +1,7 @@
 """
 kd_tree.py
 
-Ahthor: Shisato Yano
+Author: Shisato Yano
 """
 
 # import path setting
