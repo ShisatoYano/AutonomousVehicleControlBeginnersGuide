@@ -76,6 +76,9 @@ class FourWheelsVehicle:
 
         if self.sensors: self.sensors.draw_data(axes, elems, state)
     
+    def _update_detection_data(self):
+        if self.detector: self.detector.update(self.sensors.get_point_cloud_from_lidar())
+    
     def _update_control_data(self):
         """
         Private function to update controller's data
@@ -111,6 +114,8 @@ class FourWheelsVehicle:
         """
 
         self._update_sensors_data(self.state)
+
+        self._update_detection_data()
 
         target_accel, target_yaw_rate = self._update_control_data()
 

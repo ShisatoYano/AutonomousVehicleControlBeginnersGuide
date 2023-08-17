@@ -18,6 +18,7 @@ sys.path.append(abs_dir_path + relative_path + "vehicle")
 sys.path.append(abs_dir_path + relative_path + "obstacle")
 sys.path.append(abs_dir_path + relative_path + "sensors")
 sys.path.append(abs_dir_path + relative_path + "sensors/lidar")
+sys.path.append(abs_dir_path + relative_path + "detection/l_shape_fitting")
 
 
 # import component modules
@@ -32,6 +33,7 @@ from obstacle_list import ObstacleList
 from sensors import Sensors
 from sensor_parameters import SensorParameters
 from omni_directional_lidar import OmniDirectionalLidar
+from l_shape_fitting_detector import LShapeFittingDetector
 
 
 # flag to show plot figure
@@ -61,7 +63,8 @@ def main():
     # create vehicle instance
     spec = VehicleSpecification(area_size=30.0) # spec instance
     lidar = OmniDirectionalLidar(obst_list, SensorParameters(lon_m=spec.wheel_base_m/2)) # lidar instance
-    vehicle = FourWheelsVehicle(State(color=spec.color), spec, sensors=Sensors(lidar=lidar)) # set state, spec, lidar as arguments
+    detector = LShapeFittingDetector() # detector instance
+    vehicle = FourWheelsVehicle(State(color=spec.color), spec, sensors=Sensors(lidar=lidar), detector=detector) # set state, spec, lidar, detector as arguments
     vis.add_object(vehicle)
 
     # plot figure is not shown when executed as unit test
