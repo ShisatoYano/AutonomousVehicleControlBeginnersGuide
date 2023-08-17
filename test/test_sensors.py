@@ -18,7 +18,7 @@ from sensors import Sensors
 # mock classes
 class MockLidar:
     def __init__(self):
-        pass
+        self.point_cloud = [None]
 
     def install(self, state):
         pass
@@ -28,6 +28,9 @@ class MockLidar:
 
     def draw(self, axes, elems, state):
         pass
+
+    def get_point_cloud(self):
+        return self.point_cloud
 
 
 class MockGnss:
@@ -81,3 +84,10 @@ def test_draw():
     axes = figure.add_subplot(111)
 
     sensors.draw_data(axes, [], state)
+
+
+def test_get_point_cloud_from_lidar():
+    sensors_no_lidar = Sensors(gnss=gnss)
+    assert len(sensors_no_lidar.get_point_cloud_from_lidar()) == 0
+
+    assert len(sensors.get_point_cloud_from_lidar()) == 1

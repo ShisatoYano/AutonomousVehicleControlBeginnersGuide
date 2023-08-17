@@ -44,3 +44,12 @@ class Sensors:
         """
 
         if self.lidar: self.lidar.draw(axes, elems, state)
+    
+    def get_point_cloud_from_lidar(self):
+        """
+        Function to get point cloud list from LiDAR
+        If LiDAR was not installed, would return empty list
+        """
+        
+        if self.lidar: return self.lidar.get_point_cloud()
+        else: return []
