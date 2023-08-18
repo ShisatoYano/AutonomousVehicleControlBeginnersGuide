@@ -26,6 +26,10 @@ def test_initialize():
     assert point.point_array != None
 
 
+def test_get_distance_m():
+    assert point.get_distance_m() == 1.0
+
+
 def test_draw():
     plt.clf()
     plt.close()

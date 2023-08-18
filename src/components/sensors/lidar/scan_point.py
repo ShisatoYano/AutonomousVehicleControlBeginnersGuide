@@ -37,6 +37,13 @@ class ScanPoint:
 
         return self.point_array.get_dimension()
     
+    def get_distance_m(self):
+        """
+        Return point's distance data[m]
+        """
+        
+        return self.distance_m
+    
     def get_point_array(self):
         """
         Return point's x-y array data
