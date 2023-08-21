@@ -5,6 +5,7 @@ Author: Shisato Yano
 """
 
 import sys
+import copy
 from collections import deque
 from pathlib import Path
 
@@ -47,6 +48,15 @@ class LShapeFittingDetector:
         return clusters_list
                 
 
+    def _mearge_clusters(self, cluster_list):
+        mearged_cluster_list = copy.deepcopy(cluster_list)
+
+        return mearged_cluster_list
+
+
     def update(self, point_cloud):
         cluster_list = self._adaptive_range_segmentation(point_cloud)
-        print(len(cluster_list))
+        # print(len(cluster_list))
+
+        mearged_cluster_list = self._mearge_clusters(cluster_list)
+        print(len(mearged_cluster_list))
