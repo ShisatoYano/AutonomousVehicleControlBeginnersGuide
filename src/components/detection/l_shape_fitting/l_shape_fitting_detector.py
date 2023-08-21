@@ -4,7 +4,14 @@ l_shape_fitting_detector.py
 Author: Shisato Yano
 """
 
+import sys
 from collections import deque
+from pathlib import Path
+
+abs_dir_path = str(Path(__file__).absolute().parent)
+sys.path.append(abs_dir_path + "/../../search/kd_tree")
+
+from kd_tree import KdTree
 
 class LShapeFittingDetector:
     """
@@ -23,7 +30,6 @@ class LShapeFittingDetector:
         
         for point in point_cloud:
             if not points_checked[point]:
-                cluster = set()
                 points_queue.append(point)
 
                 while len(points_queue) > 0:
@@ -31,8 +37,16 @@ class LShapeFittingDetector:
                     if not points_checked[popped_point]:
                         point_distance_m = popped_point.get_distance_m()
                         seg_rng_th = self.MIN_RNG_TH_M + self.RNG_TH_RATE * point_distance_m
-                        print(point_distance_m, seg_rng_th)
+                        tree = KdTree(point_cloud)
+                        neighbor_points = tree.search_neighbor_points_within_r(popped_point, r=seg_rng_th)
+                        cluster = set(neighbor_points)
+                        points_checked[popped_point] = True
+                
+                clusters_list.append(cluster)
+        
+        return clusters_list
                 
 
     def update(self, point_cloud):
-        self._adaptive_range_segmentation(point_cloud)
+        cluster_list = self._adaptive_range_segmentation(point_cloud)
+        print(len(cluster_list))
