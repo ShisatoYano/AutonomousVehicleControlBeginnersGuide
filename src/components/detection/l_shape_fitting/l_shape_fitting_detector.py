@@ -47,7 +47,6 @@ class LShapeFittingDetector:
                 clusters_list.append(cluster)
         
         return clusters_list
-                
 
     def _mearge_clusters(self, cluster_list):
         mearged_list = copy.deepcopy(cluster_list)
@@ -66,10 +65,7 @@ class LShapeFittingDetector:
 
         return mearged_list
 
-
     def update(self, point_cloud):
         clusters_list = self._adaptive_range_segmentation(point_cloud)
-        # print(len(cluster_list))
 
         mearged_clusters_list = self._mearge_clusters(clusters_list)
-        # print(len(mearged_clusters_list))
