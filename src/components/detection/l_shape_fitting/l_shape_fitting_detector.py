@@ -65,7 +65,14 @@ class LShapeFittingDetector:
 
         return mearged_list
 
+    def _search_rectangles(self, clusters_list):
+        rectangles_list = []
+
+        return rectangles_list
+
     def update(self, point_cloud):
         clusters_list = self._adaptive_range_segmentation(point_cloud)
 
         mearged_clusters_list = self._mearge_clusters(clusters_list)
+
+        rectangles_list = self._search_rectangles(mearged_clusters_list)
