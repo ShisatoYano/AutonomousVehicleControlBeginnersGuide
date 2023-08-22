@@ -6,6 +6,7 @@ Author: Shisato Yano
 
 import sys
 import copy
+import itertools
 from collections import deque
 from pathlib import Path
 
@@ -49,9 +50,21 @@ class LShapeFittingDetector:
                 
 
     def _mearge_clusters(self, cluster_list):
-        mearged_cluster_list = copy.deepcopy(cluster_list)
+        mearged_list = copy.deepcopy(cluster_list)
 
-        return mearged_cluster_list
+        while True:
+            changed_list = False
+
+            index_perm_list = list(itertools.permutations(range(len(mearged_list)), 2))
+            for (index_1, index_2) in index_perm_list:
+                if mearged_list[index_1] & mearged_list[index_2]:
+                    mearged_list[index_1] = (mearged_list[index_1] | mearged_list.pop(index_2))
+                    changed_list = True
+                    break
+
+            if not changed_list: break
+
+        return mearged_list
 
 
     def update(self, point_cloud):
