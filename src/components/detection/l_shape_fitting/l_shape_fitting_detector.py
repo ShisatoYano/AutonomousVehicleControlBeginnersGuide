@@ -20,7 +20,7 @@ class LShapeFittingDetector:
     Object detection class by L shape fitting algorithm
     """
 
-    def __init__(self, min_rng_th_m=0.5, rng_th_rate=0.1):
+    def __init__(self, min_rng_th_m=3.0, rng_th_rate=0.1):
         self.MIN_RNG_TH_M = min_rng_th_m
         self.RNG_TH_RATE = rng_th_rate
     
@@ -68,8 +68,8 @@ class LShapeFittingDetector:
 
 
     def update(self, point_cloud):
-        cluster_list = self._adaptive_range_segmentation(point_cloud)
+        clusters_list = self._adaptive_range_segmentation(point_cloud)
         # print(len(cluster_list))
 
-        mearged_cluster_list = self._mearge_clusters(cluster_list)
-        print(len(mearged_cluster_list))
+        mearged_clusters_list = self._mearge_clusters(clusters_list)
+        # print(len(mearged_clusters_list))
