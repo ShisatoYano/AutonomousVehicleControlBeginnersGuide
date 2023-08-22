@@ -23,6 +23,7 @@ class LShapeFittingDetector:
     def __init__(self, min_rng_th_m=3.0, rng_th_rate=0.1):
         self.MIN_RNG_TH_M = min_rng_th_m
         self.RNG_TH_RATE = rng_th_rate
+        self.latest_rectangles_list = []
     
     def _adaptive_range_segmentation(self, point_cloud):
         clusters_list = []
@@ -68,11 +69,14 @@ class LShapeFittingDetector:
     def _search_rectangles(self, clusters_list):
         rectangles_list = []
 
-        return rectangles_list
+        for cluster in clusters_list:
+            print(len(cluster))
+
+        self.latest_rectangles_list = rectangles_list
 
     def update(self, point_cloud):
         clusters_list = self._adaptive_range_segmentation(point_cloud)
 
         mearged_clusters_list = self._mearge_clusters(clusters_list)
 
-        rectangles_list = self._search_rectangles(mearged_clusters_list)
+        self._search_rectangles(mearged_clusters_list)
