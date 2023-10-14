@@ -1,0 +1,21 @@
+{
+    "python.analysis.extraPaths": [
+        "C:\\Users\\shisa\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\site-packages",
+        "C:\\Users\\shisa\\AutonomousVehicleControlBeginnersGuide\\src\\components\\array",
+        "C:\\Users\\shisa\\AutonomousVehicleControlBeginnersGuide\\src\\components\\control\\pure_pursuit",
+        "C:\\Users\\shisa\\AutonomousVehicleControlBeginnersGuide\\src\\components\\course\\sin_curve_course",
+        "C:\\Users\\shisa\\AutonomousVehicleControlBeginnersGuide\\src\\components\\detection\\l_shape_fitting",
+        "C:\\Users\\shisa\\AutonomousVehicleControlBeginnersGuide\\src\\components\\obstacle",
+        "C:\\Users\\shisa\\AutonomousVehicleControlBeginnersGuide\\src\\components\\search\\kd_tree",
+        "C:\\Users\\shisa\\AutonomousVehicleControlBeginnersGuide\\src\\components\\sensors",
+        "C:\\Users\\shisa\\AutonomousVehicleControlBeginnersGuide\\src\\components\\sensors\\lidar",
+        "C:\\Users\\shisa\\AutonomousVehicleControlBeginnersGuide\\src\\components\\state",
+        "C:\\Users\\shisa\\AutonomousVehicleControlBeginnersGuide\\src\\components\\vehicle",
+        "C:\\Users\\shisa\\AutonomousVehicleControlBeginnersGuide\\src\\components\\visualization",
+        "C:\\Users\\shisa\\AutonomousVehicleControlBeginnersGuide\\src\\simulations\\path_tracking\\pure_pursuit_path_tracking",
+        "C:\\Users\\shisa\\AutonomousVehicleControlBeginnersGuide\\src\\simulations\\perception\\lidar_obstacle_sensing",
+        "C:\\Users\\shisa\\AutonomousVehicleControlBeginnersGuide\\src\\simulations\\perception\\point_cloud_rectangle_fitting",
+        "C:\\Users\\shisa\\AutonomousVehicleControlBeginnersGuide\\src\\simulations\\perception\\point_cloud_search",
+        "C:\\Users\\shisa\\AutonomousVehicleControlBeginnersGuide\\test"
+    ]
+}
