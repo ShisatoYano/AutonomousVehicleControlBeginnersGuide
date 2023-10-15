@@ -7,6 +7,7 @@ Author: Shisato Yano
 import sys
 import copy
 import itertools
+import numpy as np
 from collections import deque
 from pathlib import Path
 
@@ -20,9 +21,10 @@ class LShapeFittingDetector:
     Object detection class by L shape fitting algorithm
     """
 
-    def __init__(self, min_rng_th_m=3.0, rng_th_rate=0.1):
+    def __init__(self, min_rng_th_m=3.0, rng_th_rate=0.1, change_angle_deg=1.0):
         self.MIN_RNG_TH_M = min_rng_th_m
         self.RNG_TH_RATE = rng_th_rate
+        self.CHANGE_ANGLE_RAD = np.deg2rad(change_angle_deg)
         self.latest_rectangles_list = []
     
     def _adaptive_range_segmentation(self, point_cloud):
@@ -70,7 +72,9 @@ class LShapeFittingDetector:
         rectangles_list = []
 
         for cluster in clusters_list:
-            print(len(cluster))
+            array_list = [point.get_point_array() for point in list(cluster)]
+            integrated_array = np.concatenate(array_list, 1)
+            
 
         self.latest_rectangles_list = rectangles_list
 
