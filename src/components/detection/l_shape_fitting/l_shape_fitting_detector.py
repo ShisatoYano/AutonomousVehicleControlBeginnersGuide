@@ -10,6 +10,7 @@ import itertools
 import numpy as np
 from collections import deque
 from pathlib import Path
+from math import sin, cos
 
 abs_dir_path = str(Path(__file__).absolute().parent)
 sys.path.append(abs_dir_path + "/../../search/kd_tree")
@@ -67,6 +68,42 @@ class LShapeFittingDetector:
             if not changed_list: break
 
         return mearged_list
+    
+    def _rotate_points(self, points_array, angle_rad):
+        angle_cos = cos(angle_rad)
+        angle_sin = sin(angle_rad)
+
+        rotation_matrix = np.array([[angle_cos, angle_sin], 
+                                    [-angle_sin, angle_cos]])
+        
+        return rotation_matrix @ points_array
+
+    def _calculate_variance_criterion(self, points_array):
+        c1 = points_array[0, :]
+        c2 = points_array[1, :]
+
+        c1_min, c1_max = min(c1), max(c1)
+        c2_min, c2_max = min(c2), max(c2)
+        
+        d1 = np.minimum(c1_max - c1, c1 - c1_min)
+        d2 = np.minimum(c2_max - c2, c2 - c2_min)
+        
+        e1, e2 = d1[d1 < d2], d2[d1 >= d2]
+        v1 = np.var(e1) if len(e1) > 0 else 0
+        v2 = np.var(e2) if len(e2) > 0 else 0
+        
+        gamma = (-v1) + (-v2)
+        return gamma
+
+    def _calculate_rectangle(self, points_array):
+        min_cost_angle = (-float("inf"), None)
+        initial_angle_rad = 0.0
+        end_angle_rad = np.pi / 2.0 - self.CHANGE_ANGLE_RAD
+        for angle_rad in np.arange(initial_angle_rad, end_angle_rad, self.CHANGE_ANGLE_RAD):
+            rotated_points = self._rotate_points(points_array, angle_rad)
+            cost = self._calculate_variance_criterion(rotated_points)
+            if min_cost_angle[0] < cost: min_cost_angle = (cost, angle_rad)
+        most_fitting_points = self._rotate_points(points_array, min_cost_angle[1])
 
     def _search_rectangles(self, clusters_list):
         rectangles_list = []
@@ -74,7 +111,7 @@ class LShapeFittingDetector:
         for cluster in clusters_list:
             array_list = [point.get_point_array() for point in list(cluster)]
             integrated_array = np.concatenate(array_list, 1)
-            
+            self._calculate_rectangle(integrated_array)
 
         self.latest_rectangles_list = rectangles_list
 
