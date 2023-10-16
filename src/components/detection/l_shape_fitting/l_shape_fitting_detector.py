@@ -16,6 +16,7 @@ abs_dir_path = str(Path(__file__).absolute().parent)
 sys.path.append(abs_dir_path + "/../../search/kd_tree")
 
 from kd_tree import KdTree
+from rectangle import Rectangle
 
 class LShapeFittingDetector:
     """
@@ -99,11 +100,15 @@ class LShapeFittingDetector:
         min_cost_angle = (-float("inf"), None)
         initial_angle_rad = 0.0
         end_angle_rad = np.pi / 2.0 - self.CHANGE_ANGLE_RAD
+        
         for angle_rad in np.arange(initial_angle_rad, end_angle_rad, self.CHANGE_ANGLE_RAD):
             rotated_points = self._rotate_points(points_array, angle_rad)
             cost = self._calculate_variance_criterion(rotated_points)
             if min_cost_angle[0] < cost: min_cost_angle = (cost, angle_rad)
         most_fitting_points = self._rotate_points(points_array, min_cost_angle[1])
+        
+        rectangle = Rectangle()
+
 
     def _search_rectangles(self, clusters_list):
         rectangles_list = []
