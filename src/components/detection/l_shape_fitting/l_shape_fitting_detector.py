@@ -107,8 +107,14 @@ class LShapeFittingDetector:
             if min_cost_angle[0] < cost: min_cost_angle = (cost, angle_rad)
         most_fitting_points = self._rotate_points(points_array, min_cost_angle[1])
         
-        rectangle = Rectangle()
-
+        # create fitting rectangle object
+        angle_cos, angle_sin = cos(min_cost_angle[1]), sin(min_cost_angle[1])
+        c1, c2 = most_fitting_points[0, :], most_fitting_points[1, :]
+        rectangle = Rectangle(a=[angle_cos, -angle_sin, angle_cos, -angle_sin],
+                              b=[angle_sin, angle_cos, angle_sin, angle_cos],
+                              c=[min(c1), min(c2), max(c1), max(c2)])
+        
+        return rectangle
 
     def _search_rectangles(self, clusters_list):
         rectangles_list = []
@@ -116,7 +122,7 @@ class LShapeFittingDetector:
         for cluster in clusters_list:
             array_list = [point.get_point_array() for point in list(cluster)]
             integrated_array = np.concatenate(array_list, 1)
-            self._calculate_rectangle(integrated_array)
+            rectangles_list.append(self._calculate_rectangle(integrated_array))
 
         self.latest_rectangles_list = rectangles_list
 
