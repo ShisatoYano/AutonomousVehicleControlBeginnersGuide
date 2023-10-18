@@ -167,3 +167,17 @@ class OmniDirectionalLidar:
         """
 
         return self.latest_point_cloud                
+
+    def get_global_x_m(self):
+        """
+        Function to get installation position x in global coordinate[m]
+        """
+        
+        return self.params.get_global_x_m()
+    
+    def get_global_y_m(self):
+        """
+        Function to get installation position y in global coordinate[m]
+        """
+
+        return self.params.get_global_y_m()
