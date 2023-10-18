@@ -77,8 +77,27 @@ class FourWheelsVehicle:
         if self.sensors: self.sensors.draw_data(axes, elems, state)
     
     def _update_detection_data(self):
+        """
+        Private function to update each detected object data
+        """
+        
         if self.detector: self.detector.update(self.sensors.get_point_cloud_from_lidar())
     
+    def _draw_detection_data(self, axes, elems, state):
+        """
+        Private function to draw each detected object data
+        axes: Axes object of figure
+        elems: List of plot object
+        state: Vehicle's state object
+        """
+        
+        if self.detector:
+            self.detector.draw(axes, 
+                               elems,
+                               self.sensors.get_lidar_global_x_m(),
+                               self.sensors.get_lidar_global_y_m(),
+                               state.get_yaw_rad())
+
     def _update_control_data(self):
         """
         Private function to update controller's data
@@ -129,6 +148,8 @@ class FourWheelsVehicle:
         """
 
         self._draw_sensors_data(axes, elems, self.state)
+
+        self._draw_detection_data(axes, elems, self.state)
 
         steer_rad = self._draw_control_data(axes, elems)
 

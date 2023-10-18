@@ -50,3 +50,10 @@ class Rectangle:
         self.contour_x[2], self.contour_y[2] = self._calculate_cross_point(self.a[2:4], self.b[2:4], self.c[2:4])
         self.contour_x[3], self.contour_y[3] = self._calculate_cross_point([self.a[3], self.a[0]], [self.b[3], self.b[0]], [self.c[3], self.c[0]])
         self.contour_x[4], self.contour_y[4] = self.contour_x[0], self.contour_y[0]
+
+    def draw(self, axes, elems, x_m, y_m, angle_rad):
+        transformed_contour = self.contour.homogeneous_transformation(x_m, y_m, angle_rad)
+        rectangle_plot, = axes.plot(transformed_contour.get_x_data(),
+                                    transformed_contour.get_y_data(),
+                                    color='g', ls='-')
+        elems.append(rectangle_plot)

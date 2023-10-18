@@ -132,3 +132,7 @@ class LShapeFittingDetector:
         mearged_clusters_list = self._mearge_clusters(clusters_list)
 
         self._search_rectangles(mearged_clusters_list)
+    
+    def draw(self, axes, elems, x_m, y_m, yaw_rad):
+        for rectangle in self.latest_rectangles_list:
+            rectangle.draw(axes, elems, x_m, y_m, yaw_rad)
