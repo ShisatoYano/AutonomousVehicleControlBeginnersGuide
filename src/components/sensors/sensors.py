@@ -53,3 +53,21 @@ class Sensors:
         
         if self.lidar: return self.lidar.get_point_cloud()
         else: return []
+    
+    def get_lidar_global_x_m(self):
+        """
+        Function to get LiDAR's global position x[m]
+        When LiDAR is not installed, return 0.0
+        """
+        
+        if self.lidar: return self.lidar.get_global_x_m()
+        else: return 0.0
+    
+    def get_lidar_global_y_m(self):
+        """
+        Function to get LiDAR's global position x[m]
+        When LiDAR is not installed, return 0.0
+        """
+
+        if self.lidar: return self.lidar.get_global_y_m()
+        else: return 0.0
