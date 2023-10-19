@@ -55,6 +55,11 @@ class ScanPoint:
     def draw(self, axes, x_m, y_m, angle_rad, elems):
         """
         Function to draw scan point's x-y coordinate data
+        axes: Axes object of figure
+        x_m: Vehicle's position x[m]
+        y_m: Vehicle's position y[m]
+        angle_rad: Vehicle's yaw angle[rad]
+        elems: List of plot objects
         """
 
         transformed_array = self.point_array.homogeneous_transformation(x_m, y_m, angle_rad)
