@@ -37,6 +37,12 @@ class Rectangle:
         self._calculate_contour()
         self.contour = XYArray(np.array([self.contour_x, 
                                          self.contour_y]))
+        
+        # center of point
+        self.center_x = 0.0
+        self.center_y = 0.0
+        self._calculate_center()
+        self.center_xy = XYArray(np.array([[self.center_x], [self.center_y]]))
 
     @staticmethod
     def _calculate_cross_point(a, b, c):
@@ -51,9 +57,24 @@ class Rectangle:
         self.contour_x[3], self.contour_y[3] = self._calculate_cross_point([self.a[3], self.a[0]], [self.b[3], self.b[0]], [self.c[3], self.c[0]])
         self.contour_x[4], self.contour_y[4] = self.contour_x[0], self.contour_y[0]
 
+    def _calculate_center(self):
+        num = len(self.contour_x) - 1
+        sum_x, sum_y = 0.0, 0.0
+        for i in range(num):
+            sum_x += self.contour_x[i]
+            sum_y += self.contour_y[i]
+        self.center_x = sum_x / num
+        self.center_y = sum_y / num
+
     def draw(self, axes, elems, x_m, y_m, angle_rad):
         transformed_contour = self.contour.homogeneous_transformation(x_m, y_m, angle_rad)
         rectangle_plot, = axes.plot(transformed_contour.get_x_data(),
                                     transformed_contour.get_y_data(),
                                     color='g', ls='-')
         elems.append(rectangle_plot)
+
+        transformed_center = self.center_xy.homogeneous_transformation(x_m, y_m, angle_rad)
+        center_plot, = axes.plot(transformed_center.get_x_data(),
+                                 transformed_center.get_y_data(),
+                                 marker='.', color='g')
+        elems.append(center_plot)
