@@ -24,12 +24,25 @@ class LShapeFittingDetector:
     """
 
     def __init__(self, min_rng_th_m=3.0, rng_th_rate=0.1, change_angle_deg=1.0):
+        """
+        Constructor
+        min_rng_th_m: Minimum range threshold between 2 points to segment[m]
+        rng_th_rate: Ratio of range threshold based on distance
+        change_angle_deg: Amount of rectangle direction angle changing to search fitting[deg]
+        """
+        
         self.MIN_RNG_TH_M = min_rng_th_m
         self.RNG_TH_RATE = rng_th_rate
         self.CHANGE_ANGLE_RAD = np.deg2rad(change_angle_deg)
         self.latest_rectangles_list = []
     
     def _adaptive_range_segmentation(self, point_cloud):
+        """
+        Private function to segment each points based on adaptive range
+        point_cloud: Input original point cloud
+        Return list of small clusters
+        """
+        
         clusters_list = []
 
         points_checked = {point: False for point in point_cloud}
@@ -41,12 +54,15 @@ class LShapeFittingDetector:
 
                 while len(points_queue) > 0:
                     popped_point = points_queue.popleft()
+                    
                     if not points_checked[popped_point]:
                         point_distance_m = popped_point.get_distance_m()
                         seg_rng_th = self.MIN_RNG_TH_M + self.RNG_TH_RATE * point_distance_m
+                        
                         tree = KdTree(point_cloud)
                         neighbor_points = tree.search_neighbor_points_within_r(popped_point, r=seg_rng_th)
                         cluster = set(neighbor_points)
+                        
                         points_checked[popped_point] = True
                 
                 clusters_list.append(cluster)
@@ -54,11 +70,18 @@ class LShapeFittingDetector:
         return clusters_list
 
     def _mearge_clusters(self, cluster_list):
+        """
+        Private function to merge small clusters into same large cluster
+        cluster_list: Small clusters list
+        Return list of merged large clusters
+        """
+        
         mearged_list = copy.deepcopy(cluster_list)
 
         while True:
             changed_list = False
 
+            # permutations of 2 clusters combination
             index_perm_list = list(itertools.permutations(range(len(mearged_list)), 2))
             for (index_1, index_2) in index_perm_list:
                 if mearged_list[index_1] & mearged_list[index_2]:
@@ -71,6 +94,13 @@ class LShapeFittingDetector:
         return mearged_list
     
     def _rotate_points(self, points_array, angle_rad):
+        """
+        Private function to rotate points
+        points_array: Input original points
+        angle_rad: Rotation angle
+        Return rotated points array
+        """
+        
         angle_cos = cos(angle_rad)
         angle_sin = sin(angle_rad)
 
@@ -80,6 +110,12 @@ class LShapeFittingDetector:
         return rotation_matrix @ points_array
 
     def _calculate_variance_criterion(self, points_array):
+        """
+        Private function to calculate variance of distance between point and rectangle's edge
+        points_array: Input rotated points
+        Return variance distance as cost
+        """
+        
         c1 = points_array[0, :]
         c2 = points_array[1, :]
 
@@ -97,10 +133,17 @@ class LShapeFittingDetector:
         return gamma
 
     def _calculate_rectangle(self, points_array):
+        """
+        Private function to calculate the most fitted rectangle
+        points_array: Input points in a cluster
+        Return calculated rectangle object
+        """
+        
         min_cost_angle = (-float("inf"), None)
         initial_angle_rad = 0.0
         end_angle_rad = np.pi / 2.0 - self.CHANGE_ANGLE_RAD
         
+        # search the most fitted angle of rectangle's direction
         for angle_rad in np.arange(initial_angle_rad, end_angle_rad, self.CHANGE_ANGLE_RAD):
             rotated_points = self._rotate_points(points_array, angle_rad)
             cost = self._calculate_variance_criterion(rotated_points)
@@ -117,6 +160,11 @@ class LShapeFittingDetector:
         return rectangle
 
     def _search_rectangles(self, clusters_list):
+        """
+        Private function to search the fitted rectangle of each clusters
+        cluster_list: List of large clusters
+        """
+        
         rectangles_list = []
 
         for cluster in clusters_list:
@@ -127,6 +175,11 @@ class LShapeFittingDetector:
         self.latest_rectangles_list = rectangles_list
 
     def update(self, point_cloud):
+        """
+        Function to update each rectangle data
+        point_cloud: Input original point cloud
+        """
+        
         clusters_list = self._adaptive_range_segmentation(point_cloud)
 
         mearged_clusters_list = self._mearge_clusters(clusters_list)
@@ -134,5 +187,14 @@ class LShapeFittingDetector:
         self._search_rectangles(mearged_clusters_list)
     
     def draw(self, axes, elems, x_m, y_m, yaw_rad):
+        """
+        Function to draw rectangle of each clusters
+        axes: Axes object of figure
+        elems: List of plot objects
+        x_m: Vehicle's position x[m]
+        y_m: Vehicle's position y[m]
+        angle_rad: Vehicle's yaw angle[rad]
+        """
+        
         for rectangle in self.latest_rectangles_list:
             rectangle.draw(axes, elems, x_m, y_m, yaw_rad)
