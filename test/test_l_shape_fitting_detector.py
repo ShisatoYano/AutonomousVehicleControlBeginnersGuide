@@ -1,5 +1,5 @@
 """
-Unit test of PurePursuitController
+Unit test of LShapeFittingDetector
 
 Author: Shisato Yano
 """
