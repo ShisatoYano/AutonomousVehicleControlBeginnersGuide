@@ -35,11 +35,17 @@ class MockXYArray:
 
         return MockXYArray(translated_data)
     
+    def get_data(self):
+        return self.data
+    
     def get_x_data(self):
         return self.data[0, :]
     
     def get_y_data(self):
         return self.data[1, :]
+    
+    def get_dimension(self):
+        return self.data.ndim
 
 
 class MockScanPoint:
@@ -48,6 +54,9 @@ class MockScanPoint:
         self.angle_rad = angle_rad
         self.point_array = MockXYArray(np.array([[x_m], [y_m]]))
 
+    def get_dimension(self):
+        return self.point_array.get_dimension()
+    
     def get_distance_m(self):
         return self.distance_m
     
@@ -80,3 +89,14 @@ def test_update():
                    MockScanPoint(30.0, 0.0, 30.0, 0.0), MockScanPoint(30.0, 0.1, 30.0, 0.1), MockScanPoint(30.0, -0.1, 30.0, -0.1)]
 
     detector.update(point_cloud)
+
+    assert len(detector.latest_rectangles_list) == 3
+
+
+def test_draw():
+    plt.clf()
+    plt.close()
+    
+    figure = plt.figure(figsize=(8, 8))
+    axes = figure.add_subplot(111)
+    detector.draw(axes, [], 0.0, 0.0, 0.0)
