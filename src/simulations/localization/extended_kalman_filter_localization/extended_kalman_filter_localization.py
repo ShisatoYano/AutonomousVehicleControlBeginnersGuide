@@ -51,7 +51,7 @@ def main():
     spec = VehicleSpecification(area_size=20.0)
     
     # create vehicle's state instance
-    state = State(color=spec.color)
+    state = State(color='b')
     
     # create controller instance
     pure_pursuit = PurePursuitController(spec, course)
