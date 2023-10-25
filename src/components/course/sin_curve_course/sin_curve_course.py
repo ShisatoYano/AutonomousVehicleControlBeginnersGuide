@@ -20,6 +20,7 @@ class SinCurveCourse:
         x_max: Maximum value of y coordinate
         resolution: Resolution[m] of x coordinates list
         target_speed_kmph: Target speed[km/h] driving on generated course
+        color: Color of drawing course points
         """
 
         self.x_array = np.arange(x_min, x_max, resolution)
