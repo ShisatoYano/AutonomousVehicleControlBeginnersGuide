@@ -54,7 +54,7 @@ def main():
     state = State(color='b')
     
     # create controller instance
-    pure_pursuit = PurePursuitController(spec, course)
+    pure_pursuit = PurePursuitController(spec, course, color='m')
 
     # create vehicle instance
     # set state, spec, controller instances as arguments

@@ -12,17 +12,19 @@ class PurePursuitController:
     Controller class by Pure Pursuit algorithm
     """
     
-    def __init__(self, spec, course=None):
+    def __init__(self, spec, course=None, color='g'):
         """
         Constructor
         spec: Vehicle specification object
         course: Course data and logic object
+        color: Color of drawing target point
         """
         
         self.MIN_LOOK_AHEAD_DISTANCE_M = 2.0
         self.LOOK_FORWARD_GAIN = 0.3
         self.SPEED_PROPORTIONAL_GAIN = 1.0
         self.WHEEL_BASE_M = spec.wheel_base_m
+        self.DRAW_COLOR = color
 
         self.course = course
         self.look_ahead_distance_m = self.MIN_LOOK_AHEAD_DISTANCE_M
@@ -126,7 +128,7 @@ class PurePursuitController:
         target_point_plot, = axes.plot(self.course.point_x_m(self.target_course_index), 
                                        self.course.point_y_m(self.target_course_index), 
                                        marker='o', 
-                                       color='g',
+                                       color=self.DRAW_COLOR,
                                        linewidth=0, 
                                        label="Target Point")
         elems.append(target_point_plot)

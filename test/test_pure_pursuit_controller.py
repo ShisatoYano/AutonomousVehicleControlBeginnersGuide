@@ -81,6 +81,7 @@ def test_without_course_data():
     assert controller.LOOK_FORWARD_GAIN == 0.3
     assert controller.SPEED_PROPORTIONAL_GAIN == 1.0
     assert controller.WHEEL_BASE_M == spec.wheel_base_m
+    assert controller.DRAW_COLOR == 'g'
 
     assert controller.course == None
     assert controller.look_ahead_distance_m == 2.0
