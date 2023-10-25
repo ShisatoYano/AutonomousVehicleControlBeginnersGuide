@@ -13,7 +13,7 @@ class SinCurveCourse:
     Course generation class has sin curve shape
     """
     
-    def __init__(self, x_min, x_max, resolution, target_speed_kmph):
+    def __init__(self, x_min, x_max, resolution, target_speed_kmph, color='r'):
         """
         Constructor
         x_min: Minimum value of x coordinate
@@ -26,6 +26,7 @@ class SinCurveCourse:
         self.y_array = [sin(x / 5.0) * (x / 2.0) for x in self.x_array]
         self.speed_array = [(target_speed_kmph / 3.6) for _ in self.x_array]
         self.speed_array[-1] = 0.0
+        self.color = color
     
     def search_nearest_point_index(self, state):
         """
@@ -113,5 +114,5 @@ class SinCurveCourse:
         elems: List of plot objects
         """
         
-        course_plot, = axes.plot(self.x_array, self.y_array, linewidth=0, marker='.', color='r', label="Course")
+        course_plot, = axes.plot(self.x_array, self.y_array, linewidth=0, marker='.', color=self.color, label="Course")
         elems.append(course_plot)

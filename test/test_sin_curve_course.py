@@ -68,10 +68,12 @@ def test_attributes():
     assert hasattr(course, "x_array") == True
     assert hasattr(course, "y_array") == True
     assert hasattr(course, "speed_array") == True
+    assert hasattr(course, "color") == True
     assert len(course.x_array) == 50
     assert len(course.y_array) == 50
     assert len(course.speed_array) == 50
     assert course.speed_array[-1] == 0.0
+    assert course.color == 'r'
 
 
 def test_search_nearest_point_index():

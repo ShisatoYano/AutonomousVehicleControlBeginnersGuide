@@ -44,7 +44,7 @@ def main():
     vis = GlobalXYVisualizer(x_lim, y_lim, TimeParameters(span_sec=25))
 
     # create course data instance
-    course = SinCurveCourse(0, 50, 0.5, 20)
+    course = SinCurveCourse(0, 50, 0.5, 20, color='k')
     vis.add_object(course)
 
     # create vehicle's spec instance
