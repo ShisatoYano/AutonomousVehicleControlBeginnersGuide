@@ -16,6 +16,8 @@ sys.path.append(abs_dir_path + relative_path + "state")
 sys.path.append(abs_dir_path + relative_path + "vehicle")
 sys.path.append(abs_dir_path + relative_path + "course/sin_curve_course")
 sys.path.append(abs_dir_path + relative_path + "control/pure_pursuit")
+sys.path.append(abs_dir_path + relative_path + "sensors")
+sys.path.append(abs_dir_path + relative_path + "sensors/gnss")
 
 
 # import component modules
@@ -27,6 +29,8 @@ from state import State
 from four_wheels_vehicle import FourWheelsVehicle
 from sin_curve_course import SinCurveCourse
 from pure_pursuit_controller import PurePursuitController
+from sensors import Sensors
+from gnss import Gnss
 
 
 # flag to show plot figure
@@ -58,7 +62,8 @@ def main():
 
     # create vehicle instance
     # set state, spec, controller instances as arguments
-    vehicle = FourWheelsVehicle(state, spec, controller=pure_pursuit)
+    sensors = Sensors(gnss=Gnss())
+    vehicle = FourWheelsVehicle(state, spec, controller=pure_pursuit, sensors=sensors)
     vis.add_object(vehicle)
 
     # plot figure is not shown when executed as unit test

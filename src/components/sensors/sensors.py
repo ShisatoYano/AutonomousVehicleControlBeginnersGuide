@@ -34,6 +34,7 @@ class Sensors:
         """
 
         if self.lidar: self.lidar.update(state)
+        if self.gnss: self.gnss.update(state)
     
     def draw_data(self, axes, elems, state):
         """
@@ -44,6 +45,7 @@ class Sensors:
         """
 
         if self.lidar: self.lidar.draw(axes, elems, state)
+        if self.gnss: self.gnss.draw(axes, elems)
     
     def get_point_cloud_from_lidar(self):
         """
