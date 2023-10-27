@@ -43,7 +43,7 @@ class MockGnss:
     def update(self, state):
         pass
 
-    def draw(self, axes, elems, state):
+    def draw(self, axes, elems):
         pass
 
 
