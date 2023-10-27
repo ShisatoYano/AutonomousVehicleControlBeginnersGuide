@@ -8,7 +8,7 @@ import numpy as np
 
 class Gnss:
     """
-    Position data sensing simulation class with GNSS
+    GNSS position data sensing simulation class
     """
 
     def __init__(self, x_noise_std=0.5, y_noise_std=0.5, color='g'):
@@ -28,6 +28,11 @@ class Gnss:
     
     @staticmethod
     def observation_model(state):
+        """
+        Static function of observation model of vehicle state
+        state: Vehicle's state (x, y, yaw, speed) object
+        """
+        
         H = np.array([[1, 0, 0, 0],
                       [0, 1, 0, 0]])
         
@@ -39,6 +44,11 @@ class Gnss:
         return H @ x
     
     def update(self, state):
+        """
+        Function to update GNSS observation data (x, y)
+        state: Vehicle's state (x, y, yaw, speed) object
+        """
+        
         observed_noise = self.NOISE_VAR_MAT @ np.random.randn(2, 1)
         observed_xy = self.observation_model(state) + observed_noise
         
@@ -47,5 +57,11 @@ class Gnss:
         self.y_history.append(self.latest_observed_xy[1])
     
     def draw(self, axes, elems):
+        """
+        Function to draw GNSS observation position (x, y)
+        axes: Axes object of figure
+        elems: List of plot object
+        """
+        
         hist_plot, = axes.plot(self.x_history, self.y_history, linewidth=0, marker='.', color=self.DRAW_COLOR)
         elems.append(hist_plot)
