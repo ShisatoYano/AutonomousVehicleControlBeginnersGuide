@@ -5,6 +5,7 @@ src/components/detection/l_shape_fitting/__pycache__
 src/components/obstacle/__pycache__
 src/components/search/kd_tree/__pycache__
 src/components/sensors/__pycache__
+src/components/sensors/gnss/__pycache__
 src/components/sensors/lidar/__pycache__
 src/components/state/__pycache__
 src/components/vehicle/__pycache__
