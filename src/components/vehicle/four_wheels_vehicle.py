@@ -20,7 +20,7 @@ class FourWheelsVehicle:
     """
 
     def __init__(self, state, spec, controller=None, sensors=None,
-                 detector=None):
+                 detector=None, localizer=None):
         """
         Constructor
         state: Vehicle's state object
@@ -28,12 +28,12 @@ class FourWheelsVehicle:
         controller: Controller object
         sensors: Sencors object
         detector: Detector object
+        localizer: Localizer object
         """
         
         self.state = state
 
         self.spec = spec
-
         self.body = Body(spec)
         self.chassis = Chassis(spec)
         self.front_left_tire = FrontLeftTire(spec)
@@ -44,11 +44,10 @@ class FourWheelsVehicle:
         self.rear_axle = RearAxle(spec)
 
         self.controller = controller
-
         self.sensors = sensors
         self._install_sensors(self.state)
-
         self.detector = detector
+        self.localizer = localizer
 
     def _install_sensors(self, state):
         """
@@ -138,7 +137,10 @@ class FourWheelsVehicle:
 
         target_accel, target_yaw_rate = self._update_control_data()
 
-        self.state.update(target_accel, target_yaw_rate, time_s)
+        if self.localizer:
+            pass
+        else:
+            self.state.update(target_accel, target_yaw_rate, time_s)
     
     def draw(self, axes, elems):
         """
