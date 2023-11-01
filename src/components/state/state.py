@@ -4,7 +4,7 @@ state.py
 Author: Shisato Yano
 """
 
-from math import cos, sin, tan
+from math import cos, sin
 import numpy as np
 
 
