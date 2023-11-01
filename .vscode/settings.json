@@ -5,6 +5,7 @@
         "C:\\Users\\shisa\\AutonomousVehicleControlBeginnersGuide\\src\\components\\control\\pure_pursuit",
         "C:\\Users\\shisa\\AutonomousVehicleControlBeginnersGuide\\src\\components\\course\\sin_curve_course",
         "C:\\Users\\shisa\\AutonomousVehicleControlBeginnersGuide\\src\\components\\detection\\l_shape_fitting",
+        "C:\\Users\\shisa\\AutonomousVehicleControlBeginnersGuide\\src\\components\\localization\\kalman_filter",
         "C:\\Users\\shisa\\AutonomousVehicleControlBeginnersGuide\\src\\components\\obstacle",
         "C:\\Users\\shisa\\AutonomousVehicleControlBeginnersGuide\\src\\components\\search\\kd_tree",
         "C:\\Users\\shisa\\AutonomousVehicleControlBeginnersGuide\\src\\components\\sensors",
