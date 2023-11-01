@@ -18,6 +18,7 @@ sys.path.append(abs_dir_path + relative_path + "course/sin_curve_course")
 sys.path.append(abs_dir_path + relative_path + "control/pure_pursuit")
 sys.path.append(abs_dir_path + relative_path + "sensors")
 sys.path.append(abs_dir_path + relative_path + "sensors/gnss")
+sys.path.append(abs_dir_path + relative_path + "localization/kalman_filter")
 
 
 # import component modules
@@ -31,6 +32,7 @@ from sin_curve_course import SinCurveCourse
 from pure_pursuit_controller import PurePursuitController
 from sensors import Sensors
 from gnss import Gnss
+from extended_kalman_filter_localizer import ExtendedKalmanFilterLocalizer
 
 
 # flag to show plot figure
@@ -61,9 +63,10 @@ def main():
     pure_pursuit = PurePursuitController(spec, course, color='m')
 
     # create vehicle instance
-    # set state, spec, controller instances as arguments
-    sensors = Sensors(gnss=Gnss())
-    vehicle = FourWheelsVehicle(state, spec, controller=pure_pursuit, sensors=sensors)
+    # set state, spec, controller, sensors and localizer instances as arguments
+    gnss = Sensors(gnss=Gnss())
+    ekf = ExtendedKalmanFilterLocalizer(state)
+    vehicle = FourWheelsVehicle(state, spec, controller=pure_pursuit, sensors=gnss, localizer=ekf)
     vis.add_object(vehicle)
 
     # plot figure is not shown when executed as unit test
