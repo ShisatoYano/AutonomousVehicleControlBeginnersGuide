@@ -65,3 +65,11 @@ class Gnss:
         
         hist_plot, = axes.plot(self.x_history, self.y_history, linewidth=0, marker='.', color=self.DRAW_COLOR)
         elems.append(hist_plot)
+    
+    def get_xy_pos(self):
+        """
+        Function to get observed x-y position.
+        Returned type of data is ndarray [[x], [y]]
+        """
+        
+        return self.latest_observed_xy

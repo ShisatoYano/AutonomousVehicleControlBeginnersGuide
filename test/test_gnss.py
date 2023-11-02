@@ -58,6 +58,10 @@ def test_update():
     assert len(gnss.y_history) != 0
 
 
+def test_get_xy_pos():
+    assert gnss.get_xy_pos().shape == (2, 1)
+
+
 def test_draw():
     plt.clf()
     plt.close()
