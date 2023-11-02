@@ -73,3 +73,12 @@ class Sensors:
 
         if self.lidar: return self.lidar.get_global_y_m()
         else: return 0.0
+    
+    def get_xy_pos_from_gnss(self):
+        """
+        Function to get x-y position observed by GNSS
+        If GNSS was not installed, return None
+        """
+        
+        if self.gnss: return self.gnss.get_xy_pos()
+        else: return None

@@ -7,6 +7,7 @@ Author: Shisato Yano
 import matplotlib as mpl
 mpl.use("Agg")
 import matplotlib.pyplot as plt
+import numpy as np
 import pytest
 import sys
 from pathlib import Path
@@ -45,6 +46,9 @@ class MockGnss:
 
     def draw(self, axes, elems):
         pass
+
+    def get_xy_pos(self):
+        return np.array([[0.0], [0.0]])
 
 
 class MockState:
@@ -91,3 +95,11 @@ def test_get_point_cloud_from_lidar():
     assert len(sensors_no_lidar.get_point_cloud_from_lidar()) == 0
 
     assert len(sensors.get_point_cloud_from_lidar()) == 1
+
+
+def test_get_xy_pos_from_gnss():
+    sensors_no_gnss = Sensors(lidar=lidar)
+    assert sensors_no_gnss.get_xy_pos_from_gnss() == None
+
+    assert sensors.get_xy_pos_from_gnss()[0] == 0.0
+    assert sensors.get_xy_pos_from_gnss()[1] == 0.0
