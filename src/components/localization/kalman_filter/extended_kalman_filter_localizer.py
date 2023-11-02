@@ -26,4 +26,4 @@ class ExtendedKalmanFilterLocalizer:
         self.DRAW_COLOR = color
     
     def update(self, accel_mps2, yaw_rate_rps, time_s, gnss):
-        pass
+        print(gnss)
