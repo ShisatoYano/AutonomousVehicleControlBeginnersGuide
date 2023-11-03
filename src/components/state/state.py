@@ -35,6 +35,13 @@ class State:
         self.x_history = [self.x_m]
         self.y_history = [self.y_m]
     
+    @staticmethod
+    def motion_model(accel_mps2, yaw_rate_rps, time_s):
+        A = np.array([[1, 0, 0, 0],
+                      [0, 1, 0, 0],
+                      [0, 0, 1, 0],
+                      [0, 0, 0, 1]])
+
     def update(self, accel_mps2, yaw_rate_rps, time_s):
         """
         Function to update state
