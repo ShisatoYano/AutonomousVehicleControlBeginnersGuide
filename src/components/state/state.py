@@ -36,11 +36,18 @@ class State:
         self.y_history = [self.y_m]
     
     @staticmethod
-    def motion_model(accel_mps2, yaw_rate_rps, time_s):
-        A = np.array([[1, 0, 0, 0],
-                      [0, 1, 0, 0],
+    def motion_model(state, input, time_s):
+        A = np.array([[1, 0, 0, cos(state[2]) * time_s],
+                      [0, 1, 0, sin(state[2]) * time_s],
                       [0, 0, 1, 0],
                       [0, 0, 0, 1]])
+        
+        B = np.array([[(cos(state[2]) * time_s**2) / 2, 0],
+                      [(sin(state[2]) * time_s**2) / 2, 0],
+                      [0, time_s],
+                      [time_s, 0]])
+        
+        return A @ state + B @ input
 
     def update(self, accel_mps2, yaw_rate_rps, time_s):
         """
@@ -49,10 +56,21 @@ class State:
         steer_rad: Steering angle[rad]
         time_s: Time interval per cycle[sec]
         """
-        self.x_m += self.speed_mps * cos(self.yaw_rad) * time_s
-        self.y_m += self.speed_mps * sin(self.yaw_rad) * time_s
-        self.yaw_rad += yaw_rate_rps * time_s
-        self.speed_mps += accel_mps2 * time_s
+
+        last_state = np.array([[self.x_m],
+                               [self.y_m],
+                               [self.yaw_rad],
+                               [self.speed_mps]])
+        
+        next_input = np.array([[accel_mps2],
+                               [yaw_rate_rps]])
+        
+        next_state = self.motion_model(last_state, next_input, time_s)
+
+        self.x_m = next_state[0, 0]
+        self.y_m = next_state[1, 0]
+        self.yaw_rad = next_state[2, 0]
+        self.speed_mps = next_state[3, 0]
         
         if abs(self.speed_mps) < self.STOP_SPEED_MPS: self.speed_mps = 0.0
         if self.speed_mps > self.MAX_SPEED_MPS: self.speed_mps = self.MAX_SPEED_MPS
