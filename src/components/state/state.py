@@ -37,6 +37,13 @@ class State:
     
     @staticmethod
     def motion_model(state, input, time_s):
+        """
+        Static function of motion model of vehicle state
+        state: Vehicle's state (x, y, yaw, speed) object
+        input: Motion input (acceleration, yaw rate) object
+        time_s: Time interval per cycle[sec]
+        """
+        
         A = np.array([[1, 0, 0, cos(state[2]) * time_s],
                       [0, 1, 0, sin(state[2]) * time_s],
                       [0, 0, 1, 0],

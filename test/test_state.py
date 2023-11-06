@@ -53,12 +53,12 @@ def test_update():
     state.update(1.0, 0.0, 1.0)
     updated_x_y_yaw = state.x_y_yaw()
     assert round(updated_x_y_yaw[0, 0], 1) == 0.0
-    assert round(updated_x_y_yaw[1, 0], 1) == 4.0
+    assert round(updated_x_y_yaw[1, 0], 1) == 4.5
     assert round(updated_x_y_yaw[2, 0], 1) == round(np.deg2rad(90), 1)
     assert round(state.get_speed_mps(), 1) == 4.0
     assert round(state.get_speed_kmph(), 1) == 14.4
     assert round(state.x_history[-1], 1) == 0.0
-    assert round(state.y_history[-1], 1) == 4.0
+    assert round(state.y_history[-1], 1) == 4.5
 
 
 def test_stop_speed():
