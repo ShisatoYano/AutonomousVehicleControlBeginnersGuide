@@ -28,5 +28,15 @@ class ExtendedKalmanFilterLocalizer:
         self.INPUT_NOISE_VAR_MAT = np.diag([accel_noise_std, np.deg2rad(yaw_rate_noise)]) ** 2
         self.DRAW_COLOR = color
     
-    def update(self, accel_mps2, yaw_rate_rps, time_s, gnss):
-        print(gnss)
+    def update(self, state, accel_mps2, yaw_rate_rps, time_s, gnss):
+        last_state = np.array([[state.get_x_m()],
+                               [state.get_y_m()],
+                               [state.get_yaw_rad()],
+                               [state.get_speed_mps()]])
+        
+        next_input = np.array([[accel_mps2],
+                               [yaw_rate_rps]])
+        
+        next_state = State.motion_model(last_state, next_input, time_s)
+
+        return next_state

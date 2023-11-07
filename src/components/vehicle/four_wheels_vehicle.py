@@ -138,8 +138,12 @@ class FourWheelsVehicle:
         target_accel, target_yaw_rate = self._update_control_data()
 
         if self.localizer:
-            self.localizer.update(target_accel, target_yaw_rate, time_s,
-                                  self.sensors.get_xy_pos_from_gnss())
+            updated_state = self.localizer.update(self.state, 
+                                                  target_accel,
+                                                  target_yaw_rate,
+                                                  time_s, 
+                                                  self.sensors.get_xy_pos_from_gnss())
+            self.state.update_by_localizer(updated_state)
         else:
             self.state.update(target_accel, target_yaw_rate, time_s)
     

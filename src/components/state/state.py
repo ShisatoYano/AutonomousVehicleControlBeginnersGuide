@@ -86,6 +86,15 @@ class State:
         self.x_history.append(self.x_m)
         self.y_history.append(self.y_m)
     
+    def update_by_localizer(self, state_from_localizer):
+        self.x_m = state_from_localizer[0, 0]
+        self.y_m = state_from_localizer[1, 0]
+        self.yaw_rad = state_from_localizer[2, 0]
+        self.speed_mps = state_from_localizer[3, 0]
+
+        self.x_history.append(self.x_m)
+        self.y_history.append(self.y_m)
+
     def x_y_yaw(self):
         """
         Function to get x, y, yaw as array
