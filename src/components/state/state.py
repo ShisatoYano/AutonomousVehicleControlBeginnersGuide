@@ -92,6 +92,10 @@ class State:
         self.yaw_rad = state_from_localizer[2, 0]
         self.speed_mps = state_from_localizer[3, 0]
 
+        if abs(self.speed_mps) < self.STOP_SPEED_MPS: self.speed_mps = 0.0
+        if self.speed_mps > self.MAX_SPEED_MPS: self.speed_mps = self.MAX_SPEED_MPS
+        if self.speed_mps < self.MIN_SPEED_MPS: self.speed_mps = self.MIN_SPEED_MPS
+
         self.x_history.append(self.x_m)
         self.y_history.append(self.y_m)
 
