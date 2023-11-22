@@ -26,6 +26,7 @@ class ExtendedKalmanFilterLocalizer:
         """
         
         self.state = state
+        self.cov_mat = np.eye(4)
         self.INPUT_NOISE_VAR_MAT = np.diag([accel_noise, np.deg2rad(yaw_rate_noise)]) ** 2
         self.DRAW_COLOR = color
     
@@ -35,15 +36,19 @@ class ExtendedKalmanFilterLocalizer:
                                [state.get_yaw_rad()],
                                [state.get_speed_mps()]])
         
-        # predict
+        # input with noise
         input_org = np.array([[accel_mps2],
                               [yaw_rate_rps]])
         input_noise = self.INPUT_NOISE_VAR_MAT @ np.random.randn(2, 1)
         next_input = input_org + input_noise
         
+        # predict
         pred_state = State.motion_model(last_state, next_input, time_s)
         jF = self._jacobian_F(pred_state, next_input, time_s)
         jG = self._jacobian_G(pred_state, time_s)
+        Q = self.INPUT_NOISE_VAR_MAT
+        last_cov = self.cov_mat
+        pred_cov = jF @ last_cov @jF.T + jG @ Q @ jG.T
 
         return pred_state
     
@@ -67,8 +72,8 @@ class ExtendedKalmanFilterLocalizer:
         yaw = state[2, 0]
         t = time_s
 
-        jG = np.array([[cos(yaw) * t / 2, 0],
-                       [sin(yaw) * t / 2, 0],
+        jG = np.array([[cos(yaw) * t**2 / 2, 0],
+                       [sin(yaw) * t**2 / 2, 0],
                        [0, t],
                        [t, 0]])
         
