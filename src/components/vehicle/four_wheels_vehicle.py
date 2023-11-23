@@ -125,6 +125,9 @@ class FourWheelsVehicle:
         else:
             return 0.0
 
+    def _draw_localization_data(self, axes, elems, state):
+        if self.localizer: self.localizer.draw(axes, elems, state.x_y_yaw())
+
     def update(self, time_s):
         """
         Function to update each member objects
@@ -159,6 +162,8 @@ class FourWheelsVehicle:
         self._draw_detection_data(axes, elems, self.state)
 
         steer_rad = self._draw_control_data(axes, elems)
+
+        self._draw_localization_data(axes, elems, self.state)
 
         self.state.draw(axes, elems)
         x_y_yaw_array = self.state.x_y_yaw()

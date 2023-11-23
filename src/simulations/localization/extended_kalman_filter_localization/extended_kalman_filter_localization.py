@@ -65,7 +65,7 @@ def main():
     # create vehicle instance
     # set state, spec, controller, sensors and localizer instances as arguments
     gnss = Sensors(gnss=Gnss())
-    ekf = ExtendedKalmanFilterLocalizer(state)
+    ekf = ExtendedKalmanFilterLocalizer()
     vehicle = FourWheelsVehicle(state, spec, controller=pure_pursuit, sensors=gnss, localizer=ekf)
     vis.add_object(vehicle)
 
