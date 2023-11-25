@@ -47,7 +47,7 @@ def main():
     
     # set simulation parameters
     x_lim, y_lim = MinMax(-5, 55), MinMax(-20, 25)
-    vis = GlobalXYVisualizer(x_lim, y_lim, TimeParameters(span_sec=25))
+    vis = GlobalXYVisualizer(x_lim, y_lim, TimeParameters(span_sec=30))
 
     # create course data instance
     course = SinCurveCourse(0, 50, 0.5, 20, color='k')
@@ -64,7 +64,7 @@ def main():
 
     # create vehicle instance
     # set state, spec, controller, sensors and localizer instances as arguments
-    gnss = Sensors(gnss=Gnss())
+    gnss = Sensors(gnss=Gnss(x_noise_std=1.0, y_noise_std=1.0))
     ekf = ExtendedKalmanFilterLocalizer()
     vehicle = FourWheelsVehicle(state, spec, controller=pure_pursuit, sensors=gnss, localizer=ekf)
     vis.add_object(vehicle)
