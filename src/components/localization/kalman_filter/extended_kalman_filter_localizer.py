@@ -7,10 +7,12 @@ Author: Shisato Yano
 import sys
 import numpy as np
 from pathlib import Path
-from math import cos, sin, sqrt, atan2
+from math import cos, sin, sqrt, atan2, pi
 
 sys.path.append(str(Path(__file__).absolute().parent) + "/../../state")
+sys.path.append(str(Path(__file__).absolute().parent) + "/../../array")
 from state import State
+from xy_array import XYArray
 
 class ExtendedKalmanFilterLocalizer:
     """
@@ -59,6 +61,16 @@ class ExtendedKalmanFilterLocalizer:
         else: big_idx, small_idx = 1, 0
         a, b = sqrt(3.0 * eig_val[big_idx]), sqrt(3.0 * eig_val[small_idx])
         angle = atan2(eig_vec[1, big_idx], eig_vec[0, big_idx])
+
+        t = np.arange(0, 2 * pi + 0.1, 0.1)
+        xs = [a * cos(it) for it in t]
+        ys = [b * sin(it) for it in t]
+        xys = np.array([xs, ys])
+        xys_array = XYArray(xys)
+
+        transformed_xys = xys_array.homogeneous_transformation(pose[0, 0], pose[1, 0], angle)
+        elip_plot, = axes.plot(transformed_xys.get_x_data(), transformed_xys.get_y_data(), color=self.DRAW_COLOR)
+        elems.append(elip_plot)        
 
     def _jacobian_F(self, state, input, time_s):
         yaw = state[2, 0]
