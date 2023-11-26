@@ -125,7 +125,32 @@ class FourWheelsVehicle:
         else:
             return 0.0
 
+    def _update_localization_data(self, target_accel, target_yaw_rate, time_s):
+        """
+        Private function to update localizer's data
+        target_accel: Acceleration input from controller
+        target_yaw_rate: Yaw rate input from controller
+        time_s: Simulation interval time[sec]
+        """
+        
+        if self.localizer:
+            updated_state = self.localizer.update(self.state, 
+                                                  target_accel,
+                                                  target_yaw_rate,
+                                                  time_s, 
+                                                  self.sensors.get_xy_pos_from_gnss())
+            self.state.update_by_localizer(updated_state)
+        else:
+            self.state.update(target_accel, target_yaw_rate, time_s)
+
     def _draw_localization_data(self, axes, elems, state):
+        """
+        Private function to draw localizer's data
+        axes: Axes object of figure
+        elems: List of plot object
+        state: Vehicle's state object
+        """
+
         if self.localizer: self.localizer.draw(axes, elems, state.x_y_yaw())
 
     def update(self, time_s):
@@ -140,15 +165,7 @@ class FourWheelsVehicle:
 
         target_accel, target_yaw_rate = self._update_control_data()
 
-        if self.localizer:
-            updated_state = self.localizer.update(self.state, 
-                                                  target_accel,
-                                                  target_yaw_rate,
-                                                  time_s, 
-                                                  self.sensors.get_xy_pos_from_gnss())
-            self.state.update_by_localizer(updated_state)
-        else:
-            self.state.update(target_accel, target_yaw_rate, time_s)
+        self._update_localization_data(target_accel, target_yaw_rate, time_s)
     
     def draw(self, axes, elems):
         """
