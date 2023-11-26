@@ -21,7 +21,7 @@ class ExtendedKalmanFilterLocalizer:
     Self localization by Extended Kalman Filter class
     """
 
-    def __init__(self, accel_noise=0.5, yaw_rate_noise=10.0,
+    def __init__(self, accel_noise=0.2, yaw_rate_noise=10.0,
                  obsrv_x_noise=1.0, obsrv_y_noise=1.0, color='r'):
         """
         Constructor
@@ -37,6 +37,15 @@ class ExtendedKalmanFilterLocalizer:
         self.DRAW_COLOR = color
     
     def update(self, state, accel_mps2, yaw_rate_rps, time_s, gnss):
+        """
+        Function to update data
+        state: Last extimated state data
+        accel_mps2: Acceleration input from controller
+        yaw_rate_rps: Yaw rate input from controller
+        time_s: Simulation interval time[sec]
+        Return: Estimated state data
+        """
+        
         last_state = np.array([[state.get_x_m()],
                                [state.get_y_m()],
                                [state.get_yaw_rad()],
@@ -76,6 +85,13 @@ class ExtendedKalmanFilterLocalizer:
         return est_state
     
     def draw(self, axes, elems, pose):
+        """
+        Function to draw error covariance ellipse
+        axes: Axes objects of figure
+        elems: List of plot object
+        pose: Vehicle's pose[x, y, yaw]
+        """
+        
         eig_val, eig_vec = np.linalg.eig(self.cov_mat)
         if eig_val[0] >= eig_val[1]: big_idx, small_idx = 0, 1
         else: big_idx, small_idx = 1, 0
@@ -93,6 +109,14 @@ class ExtendedKalmanFilterLocalizer:
         elems.append(elip_plot)        
 
     def _jacobian_F(self, state, input, time_s):
+        """
+        Private function to calculate jacobian F
+        state: Predicted state
+        input: Input vector[accel, yaw rate] from controller
+        time_s: Simulation interval time[sec]
+        Return: Jacobian F
+        """
+        
         yaw = state[2, 0]
         spd = state[3, 0]
         acl = input[0, 0]
@@ -109,6 +133,13 @@ class ExtendedKalmanFilterLocalizer:
         return jF
     
     def _jacobian_G(self, state, time_s):
+        """
+        Private function to calculate jacobian G
+        state: Predicted state
+        time_s: Simulation interval time[sec]
+        Return: Jacobian G
+        """
+        
         yaw = state[2, 0]
         t = time_s
 
@@ -120,6 +151,12 @@ class ExtendedKalmanFilterLocalizer:
         return jG
     
     def _observation_model(self, state):
+        """
+        Private function of observation model
+        state: Predicted state
+        Return Predicted observation data
+        """
+        
         H = np.array([[1, 0, 0, 0],
                       [0, 1, 0, 0]])
         
