@@ -11,6 +11,7 @@ src/components/sensors/lidar/__pycache__
 src/components/state/__pycache__
 src/components/vehicle/__pycache__
 src/components/visualization/__pycache__
+src/simulations/localization/extended_kalman_filter_localization/__pycache__
 src/simulations/path_tracking/pure_pursuit_path_tracking/__pycache__
 src/simulations/perception/point_cloud_search/__pycache__
 src/simulations/perception/point_cloud_rectangle_fitting/__pycache__

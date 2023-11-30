@@ -14,6 +14,7 @@
         "C:\\Users\\shisa\\AutonomousVehicleControlBeginnersGuide\\src\\components\\state",
         "C:\\Users\\shisa\\AutonomousVehicleControlBeginnersGuide\\src\\components\\vehicle",
         "C:\\Users\\shisa\\AutonomousVehicleControlBeginnersGuide\\src\\components\\visualization",
+        "C:\\Users\\shisa\\AutonomousVehicleControlBeginnersGuide\\src\\simulations\\localization\\extended_kalman_filter_localization",
         "C:\\Users\\shisa\\AutonomousVehicleControlBeginnersGuide\\src\\simulations\\path_tracking\\pure_pursuit_path_tracking",
         "C:\\Users\\shisa\\AutonomousVehicleControlBeginnersGuide\\src\\simulations\\perception\\lidar_obstacle_sensing",
         "C:\\Users\\shisa\\AutonomousVehicleControlBeginnersGuide\\src\\simulations\\perception\\point_cloud_rectangle_fitting",
