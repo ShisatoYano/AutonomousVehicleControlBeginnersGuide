@@ -62,31 +62,10 @@ class MockState:
         pass
 
 
-class MockController:
-    def __init__(self):
-        pass
-
-    def update(self, state):
-        pass
-
-    def get_target_accel_mps2(self):
-        return 0.0
-    
-    def get_target_steer_rad(self):
-        return 0.0
-    
-    def get_target_yaw_rate_rps(self):
-        return 0.0
-    
-    def draw(self, axes, elems):
-        elems += axes.plot(0.0, 0.0, marker='o', color='g')
-
-
 # test instance
 spec = MockSpecification()
 state = MockState()
-controller = MockController()
-vehicle = FourWheelsVehicle(state, spec, controller)
+vehicle = FourWheelsVehicle(state, spec)
 
 
 def test_attributes():
@@ -118,8 +97,12 @@ def test_initialize():
     assert vehicle.rear_right_tire != None
     assert vehicle.front_axle != None
     assert vehicle.rear_axle != None
-    assert vehicle.controller != None
+    assert vehicle.controller == None
+    assert vehicle.sensors == None
+    assert vehicle.detector == None
+    assert vehicle.localizer == None
     assert vehicle.show_zoom == True
+
 
 def test_show_zoom():
     vehicle_show_zoom = FourWheelsVehicle(state, spec, show_zoom=False)
