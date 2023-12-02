@@ -20,7 +20,7 @@ class FourWheelsVehicle:
     """
 
     def __init__(self, state, spec, controller=None, sensors=None,
-                 detector=None, localizer=None):
+                 detector=None, localizer=None, show_zoom=True):
         """
         Constructor
         state: Vehicle's state object
@@ -29,6 +29,7 @@ class FourWheelsVehicle:
         sensors: Sencors object
         detector: Detector object
         localizer: Localizer object
+        show_zoom: Flag for zoom around vehicle
         """
         
         self.state = state
@@ -48,6 +49,8 @@ class FourWheelsVehicle:
         self._install_sensors(self.state)
         self.detector = detector
         self.localizer = localizer
+
+        self.show_zoom = show_zoom
 
     def _install_sensors(self, state):
         """
@@ -196,5 +199,6 @@ class FourWheelsVehicle:
         self.front_axle.draw(axes, x_y_yaw_array, elems)
         self.rear_axle.draw(axes, x_y_yaw_array, elems)
 
-        axes.set_xlim(x_m - self.spec.area_size, x_m + self.spec.area_size)
-        axes.set_ylim(y_m - self.spec.area_size, y_m + self.spec.area_size)
+        if self.show_zoom:
+            axes.set_xlim(x_m - self.spec.area_size, x_m + self.spec.area_size)
+            axes.set_ylim(y_m - self.spec.area_size, y_m + self.spec.area_size)

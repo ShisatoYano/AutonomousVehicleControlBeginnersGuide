@@ -101,6 +101,10 @@ def test_attributes():
     assert hasattr(vehicle, "front_axle") == True
     assert hasattr(vehicle, "rear_axle") == True
     assert hasattr(vehicle, "controller") == True
+    assert hasattr(vehicle, "sensors") == True
+    assert hasattr(vehicle, "detector") == True
+    assert hasattr(vehicle, "localizer") == True
+    assert hasattr(vehicle, "show_zoom") == True
 
 
 def test_initialize():
@@ -115,6 +119,11 @@ def test_initialize():
     assert vehicle.front_axle != None
     assert vehicle.rear_axle != None
     assert vehicle.controller != None
+    assert vehicle.show_zoom == True
+
+def test_show_zoom():
+    vehicle_show_zoom = FourWheelsVehicle(state, spec, show_zoom=False)
+    assert vehicle_show_zoom.show_zoom == False
 
 
 def test_update():
