@@ -19,6 +19,7 @@
         "C:\\Users\\shisa\\AutonomousVehicleControlBeginnersGuide\\src\\simulations\\perception\\lidar_obstacle_sensing",
         "C:\\Users\\shisa\\AutonomousVehicleControlBeginnersGuide\\src\\simulations\\perception\\point_cloud_rectangle_fitting",
         "C:\\Users\\shisa\\AutonomousVehicleControlBeginnersGuide\\src\\simulations\\perception\\point_cloud_search",
+        "C:\\Users\\shisa\\AutonomousVehicleControlBeginnersGuide\\src\\simulations\\perception\\sensor_auto_calibration",
         "C:\\Users\\shisa\\AutonomousVehicleControlBeginnersGuide\\test"
     ]
 }
