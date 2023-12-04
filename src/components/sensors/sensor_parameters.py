@@ -44,6 +44,8 @@ class SensorParameters:
         self.inst_pos_array = XYArray(np.array([[self.INST_LON_M], [self.INST_LAT_M]]))
         self.global_x_m = None
         self.global_y_m = None
+
+        self.est_inst_array = np.zeros((3, 1))
     
     def calculate_global_pos(self, state):
         """
@@ -79,3 +81,10 @@ class SensorParameters:
 
         pos_plot, = axes.plot(self.global_x_m, self.global_y_m, marker='.', color='b')
         elems.append(pos_plot)
+
+        elems.append(axes.text(self.global_x_m, self.global_y_m + 3,
+                               "Sensor Lon Est:{0:.2f}/True:{1:.2f}[m]".format(self.est_inst_array[0, 0], self.INST_LON_M),
+                               fontsize=10))
+        elems.append(axes.text(self.global_x_m, self.global_y_m + 2.5,
+                               "Sensor Lat Est:{0:.2f}/True:{1:.2f}[m]".format(self.est_inst_array[1, 0], self.INST_LAT_M),
+                               fontsize=10))

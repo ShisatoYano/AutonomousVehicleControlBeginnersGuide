@@ -55,7 +55,7 @@ def main():
     vis.add_object(course)
 
     # create vehicle's spec instance
-    spec = VehicleSpecification(area_size=5.0)
+    spec = VehicleSpecification(area_size=10.0)
     
     # create vehicle's state instance
     state = State(color='b')
