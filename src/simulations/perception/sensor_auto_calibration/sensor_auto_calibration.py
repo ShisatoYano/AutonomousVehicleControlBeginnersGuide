@@ -67,7 +67,7 @@ def main():
     obst_list = ObstacleList()
 
     # create vehicle instance
-    lidar = OmniDirectionalLidar(obst_list, SensorParameters(lon_m=spec.wheel_base_m * 0.75, lat_m=spec.width_m * 0.75)) # lidar instance
+    lidar = OmniDirectionalLidar(obst_list, SensorParameters(lon_m=1.5, lat_m=0.5)) # lidar instance
     vehicle = FourWheelsVehicle(state, spec, controller=pure_pursuit, sensors=Sensors(lidar=lidar))
     vis.add_object(vehicle)
 
