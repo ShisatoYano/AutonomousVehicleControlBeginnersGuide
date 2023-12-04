@@ -50,7 +50,10 @@ class SensorParameters:
         self.est_inst_array = np.zeros((3, 1))
         self.prev_sensor_tf = np.zeros((3, 3))
         self.curr_sensor_tf = np.zeros((3, 3))
-        self.first_odom = True
+        self.prev_vehicle_tf = np.zeros((3, 3))
+        self.curr_vehicle_tf = np.zeros((3, 3))
+        self.first_sensor_pos = True
+        self.first_vehicle_pos = True
     
     def calculate_global_pos(self, state):
         """
@@ -65,10 +68,10 @@ class SensorParameters:
         self.global_y_m = transformed_array.get_y_data()
 
         # convert sensor's global pose to homegeneous transformation matrix
-        if self.first_odom:
+        if self.first_sensor_pos:
             self.prev_sensor_tf = self._hom_mat(self.global_x_m[0], self.global_y_m[0], pose[2, 0])
             self.curr_sensor_tf = self.prev_sensor_tf
-            self.first_odom = False
+            self.first_sensor_pos = False
         else:
             self.prev_sensor_tf = self.curr_sensor_tf
             self.curr_sensor_tf = self._hom_mat(self.global_x_m[0], self.global_y_m[0], pose[2, 0])
@@ -84,9 +87,21 @@ class SensorParameters:
         return mat
 
     def estimate_extrinsic_params(self, state):
+        # current vehicle pose
+        pose = state.x_y_yaw()
         # sensor odometry between 2 steps
         sensor_odom_glb_tf = np.linalg.inv(self.prev_sensor_tf) @ self.curr_sensor_tf
-        sensor_odom_lcl_tf = np.linalg.inv(self._hom_mat(0.0, 0.0, state.x_y_yaw()[2, 0])) @ sensor_odom_glb_tf
+        sensor_odom_lcl_tf = np.linalg.inv(self._hom_mat(0.0, 0.0, pose[2, 0])) @ sensor_odom_glb_tf
+
+        # vehicle odometry between 2 steps
+        if self.first_vehicle_pos:
+            self.prev_vehicle_tf = self._hom_mat(pose[0, 0], pose[1, 0], pose[2, 0])
+            self.curr_vehicle_tf = self.prev_vehicle_tf
+            self.first_vehicle_pos = False
+        else:
+            self.prev_vehicle_tf = self.curr_vehicle_tf
+            self.curr_vehicle_tf = self._hom_mat(pose[0, 0], pose[1, 0], pose[2, 0])
+            vehicle_odom_glb_tf = np.linalg.inv(self.prev_vehicle_tf) @ self.curr_vehicle_tf
 
     def get_global_x_m(self):
         """
