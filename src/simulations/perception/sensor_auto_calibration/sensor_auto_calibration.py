@@ -17,6 +17,8 @@ sys.path.append(abs_dir_path + relative_path + "vehicle")
 sys.path.append(abs_dir_path + relative_path + "course/sin_curve_course")
 sys.path.append(abs_dir_path + relative_path + "control/pure_pursuit")
 sys.path.append(abs_dir_path + relative_path + "sensors")
+sys.path.append(abs_dir_path + relative_path + "sensors/lidar")
+sys.path.append(abs_dir_path + relative_path + "obstacle")
 
 
 # import component modules
@@ -29,6 +31,9 @@ from four_wheels_vehicle import FourWheelsVehicle
 from sin_curve_course import SinCurveCourse
 from pure_pursuit_controller import PurePursuitController
 from sensors import Sensors
+from sensor_parameters import SensorParameters
+from omni_directional_lidar import OmniDirectionalLidar
+from obstacle_list import ObstacleList
 
 
 # flag to show plot figure
@@ -43,14 +48,14 @@ def main():
     
     # set simulation parameters
     x_lim, y_lim = MinMax(-5, 105), MinMax(-50, 50)
-    vis = GlobalXYVisualizer(x_lim, y_lim, TimeParameters(span_sec=130))
+    vis = GlobalXYVisualizer(x_lim, y_lim, TimeParameters(span_sec=50))
 
     # create course data instance
-    course = SinCurveCourse(0, 100, 0.5, 10, color='k')
+    course = SinCurveCourse(0, 100, 0.5, 10, color='k', width_ratio=0.05)
     vis.add_object(course)
 
     # create vehicle's spec instance
-    spec = VehicleSpecification(area_size=20.0)
+    spec = VehicleSpecification(area_size=5.0)
     
     # create vehicle's state instance
     state = State(color='b')
@@ -58,9 +63,12 @@ def main():
     # create controller instance
     pure_pursuit = PurePursuitController(spec, course, color='m')
 
+    # create obstacle instances
+    obst_list = ObstacleList()
+
     # create vehicle instance
-    # set state, spec, controller instances as arguments
-    vehicle = FourWheelsVehicle(state, spec, controller=pure_pursuit)
+    lidar = OmniDirectionalLidar(obst_list, SensorParameters(lon_m=spec.wheel_base_m * 0.75, lat_m=spec.width_m * 0.75)) # lidar instance
+    vehicle = FourWheelsVehicle(state, spec, controller=pure_pursuit, sensors=Sensors(lidar=lidar))
     vis.add_object(vehicle)
 
     # plot figure is not shown when executed as unit test
