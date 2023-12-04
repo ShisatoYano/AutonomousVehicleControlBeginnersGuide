@@ -82,6 +82,9 @@ class MockSensorParameters:
         self.global_x_m = transformed_array.get_x_data()
         self.global_y_m = transformed_array.get_y_data()
     
+    def estimate_extrinsic_params(self, state):
+        pass
+    
     def get_global_x_m(self):
         return self.global_x_m[0]
     

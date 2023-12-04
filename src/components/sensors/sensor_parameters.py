@@ -47,11 +47,16 @@ class SensorParameters:
         self.global_x_m = None
         self.global_y_m = None
 
-        self.est_inst_array = np.zeros((3, 1))
-        self.prev_sensor_tf = np.zeros((3, 3))
-        self.curr_sensor_tf = np.zeros((3, 3))
-        self.prev_vehicle_tf = np.zeros((3, 3))
-        self.curr_vehicle_tf = np.zeros((3, 3))
+        self.DIM_NUM = 3 # state vector[lon, lat, yaw]
+        self.ALPHA = 0.001
+        self.BETA = 2
+        self.KAPPA = 0
+        self.LAMBDA = self.ALPHA**2 * (self.DIM_NUM + self.KAPPA) - self.DIM_NUM
+        self.est_inst_array = np.zeros((self.DIM_NUM, 1))
+        self.prev_sensor_tf = np.zeros((self.DIM_NUM, self.DIM_NUM))
+        self.curr_sensor_tf = np.zeros((self.DIM_NUM, self.DIM_NUM))
+        self.prev_vehicle_tf = np.zeros((self.DIM_NUM, self.DIM_NUM))
+        self.curr_vehicle_tf = np.zeros((self.DIM_NUM, self.DIM_NUM))
         self.first_sensor_pos = True
         self.first_vehicle_pos = True
     
@@ -89,6 +94,7 @@ class SensorParameters:
     def estimate_extrinsic_params(self, state):
         # current vehicle pose
         pose = state.x_y_yaw()
+
         # sensor odometry between 2 steps
         sensor_odom_glb_tf = np.linalg.inv(self.prev_sensor_tf) @ self.curr_sensor_tf
         sensor_odom_lcl_tf = np.linalg.inv(self._hom_mat(0.0, 0.0, pose[2, 0])) @ sensor_odom_glb_tf
