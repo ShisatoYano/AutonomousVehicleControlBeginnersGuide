@@ -8,6 +8,8 @@ import numpy as np
 import sys
 from pathlib import Path
 
+from math import sin, cos
+
 sys.path.append(str(Path(__file__).absolute().parent) + "/../array")
 from xy_array import XYArray
 
@@ -46,6 +48,9 @@ class SensorParameters:
         self.global_y_m = None
 
         self.est_inst_array = np.zeros((3, 1))
+        self.prev_sensor_tf = np.zeros((3, 3))
+        self.curr_sensor_tf = np.zeros((3, 3))
+        self.first_odom = True
     
     def calculate_global_pos(self, state):
         """
@@ -55,9 +60,34 @@ class SensorParameters:
 
         pose = state.x_y_yaw()
         transformed_array = self.inst_pos_array.homogeneous_transformation(pose[0, 0], pose[1, 0], pose[2, 0])
+        
         self.global_x_m = transformed_array.get_x_data()
         self.global_y_m = transformed_array.get_y_data()
+
+        # convert sensor's global pose to homegeneous transformation matrix
+        if self.first_odom:
+            self.prev_sensor_tf = self._hom_mat(self.global_x_m[0], self.global_y_m[0], pose[2, 0])
+            self.curr_sensor_tf = self.prev_sensor_tf
+            self.first_odom = False
+        else:
+            self.prev_sensor_tf = self.curr_sensor_tf
+            self.curr_sensor_tf = self._hom_mat(self.global_x_m[0], self.global_y_m[0], pose[2, 0])
     
+    def _hom_mat(self, x, y, yaw):
+        cos_yaw = cos(yaw)
+        sin_yaw = sin(yaw)
+        
+        mat = np.array([[cos_yaw, -sin_yaw, x],
+                        [sin_yaw, cos_yaw, y],
+                        [0.0, 0.0, 1.0]])
+        
+        return mat
+
+    def estimate_extrinsic_params(self, state):
+        # sensor odometry between 2 steps
+        sensor_odom_glb_tf = np.linalg.inv(self.prev_sensor_tf) @ self.curr_sensor_tf
+        sensor_odom_lcl_tf = np.linalg.inv(self._hom_mat(0.0, 0.0, state.x_y_yaw()[2, 0])) @ sensor_odom_glb_tf
+
     def get_global_x_m(self):
         """
         Getter of sensor's x installation position on global coordinate system

@@ -129,6 +129,8 @@ class OmniDirectionalLidar:
         
         self.params.calculate_global_pos(state)
 
+        self.params.estimate_extrinsic_params(state)
+
         distance_list, angle_list = [], []
         for obst in self.obst_list.get_list():
             vertex_x, vertex_y = obst.vertex_xy()
