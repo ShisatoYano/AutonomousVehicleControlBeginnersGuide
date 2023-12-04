@@ -49,7 +49,7 @@ END_INDEX = 49
 
 # test data
 x_array = np.arange(X_MIN, X_MAX, RESOLUTION)
-y_array = [sin(x / 5.0) * (x / 2.0) for x in x_array]
+y_array = [sin(x * 0.2) * (x * 0.5) for x in x_array]
 speed_array = [(TARGET_SPEED_KMPH / 3.6) for _ in x_array]
 speed_array[-1] = 0.0
 

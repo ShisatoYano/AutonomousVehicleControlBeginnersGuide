@@ -13,7 +13,8 @@ class SinCurveCourse:
     Course generation class has sin curve shape
     """
     
-    def __init__(self, x_min, x_max, resolution, target_speed_kmph, color='r'):
+    def __init__(self, x_min, x_max, resolution, target_speed_kmph, color='r',
+                 sin_ratio=0.2, width_ratio=0.5):
         """
         Constructor
         x_min: Minimum value of x coordinate
@@ -24,7 +25,7 @@ class SinCurveCourse:
         """
 
         self.x_array = np.arange(x_min, x_max, resolution)
-        self.y_array = [sin(x / 5.0) * (x / 2.0) for x in self.x_array]
+        self.y_array = [sin(x * sin_ratio) * (x * width_ratio) for x in self.x_array]
         self.speed_array = [(target_speed_kmph / 3.6) for _ in self.x_array]
         self.speed_array[-1] = 0.0
         self.color = color
