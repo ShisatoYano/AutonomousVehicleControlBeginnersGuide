@@ -9,7 +9,7 @@ import scipy.linalg as spl
 import sys
 from pathlib import Path
 
-from math import sin, cos, sqrt, acos, asin
+from math import sin, cos, sqrt, asin, atan2, pi
 
 sys.path.append(str(Path(__file__).absolute().parent) + "/../array")
 from xy_array import XYArray
@@ -243,7 +243,7 @@ class SensorParameters:
         pos_plot, = axes.plot(self.global_x_m, self.global_y_m, marker='.', color='b')
         elems.append(pos_plot)
 
-        # plot global position
+        # draw global position plot
         pose = state.x_y_yaw()
         global_tf = self._hom_mat(pose[0, 0], pose[1, 0], pose[2, 0])
         state_tf = self._hom_mat(self.state[0, 0], self.state[1, 0], self.state[2, 0])
@@ -251,6 +251,7 @@ class SensorParameters:
         state_plot, = axes.plot(global_state_tf[0, 2], global_state_tf[1, 2], marker='*', color='r')
         elems.append(state_plot)
 
+        # draw calibration result text
         elems.append(axes.text(global_state_tf[0, 2], global_state_tf[1, 2] + 4,
                                "Sensor Lon Est:{0:.2f}/True:{1:.2f}[m]".format(self.state[0, 0], self.INST_LON_M),
                                fontsize=12))
