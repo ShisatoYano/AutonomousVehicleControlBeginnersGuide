@@ -129,6 +129,8 @@ class OmniDirectionalLidar:
         
         self.params.calculate_global_pos(state)
 
+        self.params.calculate_sensor_odometry(state)
+
         self.params.estimate_extrinsic_params(state)
 
         distance_list, angle_list = [], []
@@ -153,7 +155,7 @@ class OmniDirectionalLidar:
         state: Vehicle's state object
         """
 
-        self.params.draw_pos(axes, elems)
+        self.params.draw_pos(axes, elems, state)
 
         for point in self.latest_point_cloud:
             point.draw(axes, 

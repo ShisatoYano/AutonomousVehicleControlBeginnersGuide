@@ -75,6 +75,9 @@ class SensorParameters:
         
         self.global_x_m = transformed_array.get_x_data()
         self.global_y_m = transformed_array.get_y_data()
+    
+    def calculate_sensor_odometry(self, state):
+        pose = state.x_y_yaw()
 
         # convert sensor's global pose to homegeneous transformation matrix
         if self.first_sensor_pos:
@@ -84,7 +87,7 @@ class SensorParameters:
         else:
             self.prev_sensor_tf = self.curr_sensor_tf
             self.curr_sensor_tf = self._hom_mat(self.global_x_m[0], self.global_y_m[0], pose[2, 0])
-    
+
     def _hom_mat(self, x, y, yaw):
         cos_yaw = cos(yaw)
         sin_yaw = sin(yaw)
@@ -229,15 +232,24 @@ class SensorParameters:
 
         return self.global_y_m[0]
     
-    def draw_pos(self, axes, elems):
+    def draw_pos(self, axes, elems, state):
         """
         Function to draw sensor's installation position on vehicle
         axes: axes object of figure
         elems: list of plot object
         """
 
+        self.calculate_global_pos(state)
         pos_plot, = axes.plot(self.global_x_m, self.global_y_m, marker='.', color='b')
         elems.append(pos_plot)
+
+        # plot global position
+        pose = state.x_y_yaw()
+        global_tf = self._hom_mat(pose[0, 0], pose[1, 0], pose[2, 0])
+        state_tf = self._hom_mat(self.state[0, 0], self.state[1, 0], self.state[2, 0])
+        global_state_tf = global_tf @ state_tf
+        state_plot, = axes.plot(global_state_tf[0, 2], global_state_tf[1, 2], marker='*', color='r')
+        elems.append(state_plot)
 
         elems.append(axes.text(self.global_x_m, self.global_y_m + 4,
                                "Sensor Lon Est:{0:.2f}/True:{1:.2f}[m]".format(self.state[0, 0], self.INST_LON_M),
