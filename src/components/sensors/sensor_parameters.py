@@ -9,7 +9,7 @@ import scipy.linalg as spl
 import sys
 from pathlib import Path
 
-from math import sin, cos, sqrt
+from math import sin, cos, sqrt, acos
 
 sys.path.append(str(Path(__file__).absolute().parent) + "/../array")
 from xy_array import XYArray
@@ -140,12 +140,26 @@ class SensorParameters:
             sigmas[:, i:i+1] = self._motion_model(sigmas[:, i:i+1])
         return sigmas
     
-    def _predict_covariance(self, pred_state, pred_sigmas):
+    def _predict_covariance(self, pred_state, pred_sigmas, noise):
         diff = pred_sigmas - pred_state[0:pred_sigmas.shape[0]]
-        pred_cov = self.SYS_NOISE
+        pred_cov = noise
         for i in range(pred_sigmas.shape[1]):
             pred_cov = pred_cov + self.COV_WEIGHTS[0, i] * diff[:, i:i+1] @ diff[:, i:i+1].T
         return pred_cov
+
+    def _observation_model(self, state, vehicle_odom_tf):
+        state_tf = self._hom_mat(state[0, 0], state[1, 0], state[2, 0])
+        return np.linalg.inv(state_tf) @ vehicle_odom_tf @ state_tf
+
+    def _predict_sigmas_observation(self, sigmas, vehicle_odom_tf):
+        sigmas_num = sigmas.shape[1]
+        obv_sigmas = np.zeros((self.DIM_NUM, sigmas_num))
+        for i in range(sigmas_num):
+            sigma_tf = self._observation_model(sigmas[:, i:i+1], vehicle_odom_tf)
+            obv_sigmas[0, i:i+1] = sigma_tf[0, 2]
+            obv_sigmas[1, i:i+1] = sigma_tf[1, 2]
+            obv_sigmas[2, i:i+1] = acos(sigma_tf[0, 0])
+        return obv_sigmas
 
     def estimate_extrinsic_params(self, vehicle_state):
         # current vehicle pose
@@ -168,11 +182,20 @@ class SensorParameters:
             self.curr_vehicle_tf = self._hom_mat(pose[0, 0], pose[1, 0], pose[2, 0])
         vehicle_odom_tf = np.linalg.inv(self.prev_vehicle_tf) @ self.curr_vehicle_tf
 
-        # predict
+        # predict state
         sigmas = self._generate_sigme_points(last_state, last_cov)
         pred_sigmas = self._predict_sigmas_motion(sigmas)
-        pred_state = (self.STATE_WEIGHTS @ sigmas.T).T
-        pred_cov = self._predict_covariance(pred_state, pred_sigmas)
+        pred_state = (self.STATE_WEIGHTS @ pred_sigmas.T).T
+        pred_cov = self._predict_covariance(pred_state, pred_sigmas, self.SYS_NOISE)
+
+        # predict observation
+        sigmas = self._generate_sigme_points(pred_state, pred_cov)
+        pred_obv_sigmas = self._predict_sigmas_observation(sigmas, vehicle_odom_tf)
+        pred_obv = (self.STATE_WEIGHTS @ pred_obv_sigmas.T).T
+        pred_obv_cov = self._predict_covariance(pred_obv, pred_obv_sigmas, self.OBV_NOISE)
+        
+        # update state
+        
 
         self.state = pred_state
         self.cov = pred_cov
