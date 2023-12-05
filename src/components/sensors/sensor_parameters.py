@@ -251,12 +251,12 @@ class SensorParameters:
         state_plot, = axes.plot(global_state_tf[0, 2], global_state_tf[1, 2], marker='*', color='r')
         elems.append(state_plot)
 
-        elems.append(axes.text(self.global_x_m, self.global_y_m + 4,
+        elems.append(axes.text(global_state_tf[0, 2], global_state_tf[1, 2] + 4,
                                "Sensor Lon Est:{0:.2f}/True:{1:.2f}[m]".format(self.state[0, 0], self.INST_LON_M),
                                fontsize=12))
-        elems.append(axes.text(self.global_x_m, self.global_y_m + 3.5,
+        elems.append(axes.text(global_state_tf[0, 2], global_state_tf[1, 2] + 3.5,
                                "Sensor Lat Est:{0:.2f}/True:{1:.2f}[m]".format(self.state[1,0], self.INST_LAT_M),
                                fontsize=12))
-        elems.append(axes.text(self.global_x_m, self.global_y_m + 3.0,
+        elems.append(axes.text(global_state_tf[0, 2], global_state_tf[1, 2] + 3.0,
                                "Sensor Yaw Est:{0:.2f}/True:{1:.2f}[deg]".format(np.rad2deg(self.state[2,0]), 0.0),
                                fontsize=12))
