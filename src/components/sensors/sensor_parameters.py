@@ -62,6 +62,8 @@ class SensorParameters:
         self.first_vehicle_pos = True
         self.state = np.zeros((self.DIM_NUM, 1)) # estimated state vector
         self.cov = np.eye(self.DIM_NUM) # estimated covariance matrix
+        self.SYS_NOISE = np.diag([0.1, 0.1, np.deg2rad(0.1)]) ** 2 # lon, lat, yaw
+        self.OBV_NOISE = np.diag([0.5, 0.5, np.deg2rad(1.0)]) ** 2 # x, y, yaw
     
     def calculate_global_pos(self, state):
         """
@@ -111,22 +113,47 @@ class SensorParameters:
         # for generating sigma points
         self.GAMMA = sqrt(DIM_LAMBDA)
 
-    def _generate_sigme_points(self):
-        sigmas = self.state
-        cov_sqr = spl.sqrtm(self.cov) # standard deviation
+    def _generate_sigme_points(self, state, cov):
+        sigmas = state
+        cov_sqr = spl.sqrtm(cov) # standard deviation matrix
         
         # add each dimension's std to state vector
         # positive direction
         for i in range(self.DIM_NUM):
-            sigmas = np.hstack((sigmas, self.state + self.GAMMA * cov_sqr[:, i:i+1]))
+            sigmas = np.hstack((sigmas, state + self.GAMMA * cov_sqr[:, i:i+1]))
         # negative direction
         for i in range(self.DIM_NUM):
-            sigmas = np.hstack((sigmas, self.state - self.GAMMA * cov_sqr[:, i:i+1]))
+            sigmas = np.hstack((sigmas, state - self.GAMMA * cov_sqr[:, i:i+1]))
         return sigmas
+    
+    def _motion_model(self, state):
+        A = np.array([[1.0, 0.0, 0.0],
+                      [0.0, 1.0, 0.0],
+                      [0.0, 0.0, 1.0]])
+        return A @ state
+    
+    def _predict_sigmas_motion(self, sigmas):
+        for i in range(sigmas.shape[1]):
+            # state vector is parameters
+            # they don't change over time
+            # so, motion model doesn't need to have input argument
+            sigmas[:, i:i+1] = self._motion_model(sigmas[:, i:i+1])
+        return sigmas
+    
+    def _predict_covariance(self, pred_state, pred_sigmas):
+        diff = pred_sigmas - pred_state[0:pred_sigmas.shape[0]]
+        pred_cov = self.SYS_NOISE
+        for i in range(pred_sigmas.shape[1]):
+            pred_cov = pred_cov + self.COV_WEIGHTS[0, i] * diff[:, i:i+1] @ diff[:, i:i+1].T
+        return pred_cov
 
-    def estimate_extrinsic_params(self, state):
+    def estimate_extrinsic_params(self, vehicle_state):
         # current vehicle pose
-        pose = state.x_y_yaw()
+        pose = vehicle_state.x_y_yaw()
+
+        # last estimated state and covariance
+        last_state = self.state
+        last_cov = self.cov
 
         # sensor odometry between 2 steps
         sensor_odom_tf = np.linalg.inv(self.prev_sensor_tf) @ self.curr_sensor_tf
@@ -142,7 +169,13 @@ class SensorParameters:
         vehicle_odom_tf = np.linalg.inv(self.prev_vehicle_tf) @ self.curr_vehicle_tf
 
         # predict
-        sigmas = self._generate_sigme_points()
+        sigmas = self._generate_sigme_points(last_state, last_cov)
+        pred_sigmas = self._predict_sigmas_motion(sigmas)
+        pred_state = (self.STATE_WEIGHTS @ sigmas.T).T
+        pred_cov = self._predict_covariance(pred_state, pred_sigmas)
+
+        self.state = pred_state
+        self.cov = pred_cov
 
     def get_global_x_m(self):
         """
