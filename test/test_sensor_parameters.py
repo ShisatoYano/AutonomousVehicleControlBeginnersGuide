@@ -73,4 +73,4 @@ def test_draw_pos():
     state = MockState()
     param.calculate_global_pos(state)
 
-    param.draw_pos(axes, [])
+    param.draw_pos(axes, [], state)

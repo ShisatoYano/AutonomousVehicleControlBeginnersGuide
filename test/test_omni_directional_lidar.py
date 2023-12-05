@@ -82,6 +82,9 @@ class MockSensorParameters:
         self.global_x_m = transformed_array.get_x_data()
         self.global_y_m = transformed_array.get_y_data()
     
+    def calculate_sensor_odometry(self, state):
+        pass
+    
     def estimate_extrinsic_params(self, state):
         pass
     
@@ -91,7 +94,7 @@ class MockSensorParameters:
     def get_global_y_m(self):
         return self.global_y_m[0]
     
-    def draw_pos(self, axes, elems):
+    def draw_pos(self, axes, elems, state):
         pos_plot, = axes.plot(self.global_x_m, self.global_y_m, marker='.', color='b')
         elems.append(pos_plot)
 
