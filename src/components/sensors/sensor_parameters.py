@@ -9,7 +9,7 @@ import scipy.linalg as spl
 import sys
 from pathlib import Path
 
-from math import sin, cos, sqrt, acos
+from math import sin, cos, sqrt, acos, asin
 
 sys.path.append(str(Path(__file__).absolute().parent) + "/../array")
 from xy_array import XYArray
@@ -53,7 +53,6 @@ class SensorParameters:
         self.BETA = 2
         self.KAPPA = 0
         self._decide_sigma_weights()
-        self.est_inst_array = np.zeros((self.DIM_NUM, 1))
         self.prev_sensor_tf = np.zeros((self.DIM_NUM, self.DIM_NUM))
         self.curr_sensor_tf = np.zeros((self.DIM_NUM, self.DIM_NUM))
         self.prev_vehicle_tf = np.zeros((self.DIM_NUM, self.DIM_NUM))
@@ -63,7 +62,7 @@ class SensorParameters:
         self.state = np.zeros((self.DIM_NUM, 1)) # estimated state vector
         self.cov = np.eye(self.DIM_NUM) # estimated covariance matrix
         self.SYS_NOISE = np.diag([0.1, 0.1, np.deg2rad(0.1)]) ** 2 # lon, lat, yaw
-        self.OBV_NOISE = np.diag([0.5, 0.5, np.deg2rad(1.0)]) ** 2 # x, y, yaw
+        self.OBV_NOISE = np.diag([0.5, 0.5, np.deg2rad(0.5)]) ** 2 # x, y, yaw
     
     def calculate_global_pos(self, state):
         """
@@ -158,8 +157,17 @@ class SensorParameters:
             sigma_tf = self._observation_model(sigmas[:, i:i+1], vehicle_odom_tf)
             obv_sigmas[0, i:i+1] = sigma_tf[0, 2]
             obv_sigmas[1, i:i+1] = sigma_tf[1, 2]
-            obv_sigmas[2, i:i+1] = acos(sigma_tf[0, 0])
+            obv_sigmas[2, i:i+1] = asin(sigma_tf[1, 0])
         return obv_sigmas
+    
+    def _calculate_correlation_matrix(self, pred_state, pred_sigmas, pred_obv, pred_obv_sigmas):
+        sigmas_num = pred_sigmas.shape[1]
+        diff_state = pred_sigmas - pred_state[0:pred_sigmas.shape[0]]
+        diff_obv = pred_obv_sigmas - pred_obv[0:pred_obv_sigmas.shape[0]]
+        corr_mat = np.zeros((diff_state.shape[0], diff_obv.shape[0]))
+        for i in range(sigmas_num):
+            corr_mat = corr_mat + self.COV_WEIGHTS[0, i] * diff_state[:, i:i+1] @ diff_obv[:, i:i+1].T
+        return corr_mat
 
     def estimate_extrinsic_params(self, vehicle_state):
         # current vehicle pose
@@ -171,6 +179,9 @@ class SensorParameters:
 
         # sensor odometry between 2 steps
         sensor_odom_tf = np.linalg.inv(self.prev_sensor_tf) @ self.curr_sensor_tf
+        obv_vec = np.array([[sensor_odom_tf[0, 2]],
+                            [sensor_odom_tf[1, 2]],
+                            [asin(sensor_odom_tf[1, 0])]])
 
         # vehicle odometry between 2 steps
         if self.first_vehicle_pos:
@@ -195,10 +206,14 @@ class SensorParameters:
         pred_obv_cov = self._predict_covariance(pred_obv, pred_obv_sigmas, self.OBV_NOISE)
         
         # update state
-        
+        corr_mat = self._calculate_correlation_matrix(pred_state, pred_sigmas, pred_obv, pred_obv_sigmas)
+        kalman_gain = corr_mat @ np.linalg.inv(pred_obv_cov)
+        innovation = obv_vec - pred_obv
+        upd_state = pred_state + kalman_gain @ innovation
+        upd_cov = pred_cov - kalman_gain @ pred_obv_cov @ kalman_gain.T
 
-        self.state = pred_state
-        self.cov = pred_cov
+        self.state = upd_state
+        self.cov = upd_cov
 
     def get_global_x_m(self):
         """
@@ -224,9 +239,12 @@ class SensorParameters:
         pos_plot, = axes.plot(self.global_x_m, self.global_y_m, marker='.', color='b')
         elems.append(pos_plot)
 
-        elems.append(axes.text(self.global_x_m, self.global_y_m + 3,
-                               "Sensor Lon Est:{0:.2f}/True:{1:.2f}[m]".format(self.est_inst_array[0, 0], self.INST_LON_M),
-                               fontsize=10))
-        elems.append(axes.text(self.global_x_m, self.global_y_m + 2.5,
-                               "Sensor Lat Est:{0:.2f}/True:{1:.2f}[m]".format(self.est_inst_array[1, 0], self.INST_LAT_M),
-                               fontsize=10))
+        elems.append(axes.text(self.global_x_m, self.global_y_m + 4,
+                               "Sensor Lon Est:{0:.2f}/True:{1:.2f}[m]".format(self.state[0, 0], self.INST_LON_M),
+                               fontsize=12))
+        elems.append(axes.text(self.global_x_m, self.global_y_m + 3.5,
+                               "Sensor Lat Est:{0:.2f}/True:{1:.2f}[m]".format(self.state[1,0], self.INST_LAT_M),
+                               fontsize=12))
+        elems.append(axes.text(self.global_x_m, self.global_y_m + 3.0,
+                               "Sensor Yaw Est:{0:.2f}/True:{1:.2f}[deg]".format(np.rad2deg(self.state[2,0]), 0.0),
+                               fontsize=12))
