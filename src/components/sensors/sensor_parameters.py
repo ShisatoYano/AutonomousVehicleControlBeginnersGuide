@@ -96,8 +96,7 @@ class SensorParameters:
         pose = state.x_y_yaw()
 
         # sensor odometry between 2 steps
-        sensor_odom_glb_tf = np.linalg.inv(self.prev_sensor_tf) @ self.curr_sensor_tf
-        sensor_odom_lcl_tf = np.linalg.inv(self._hom_mat(0.0, 0.0, pose[2, 0])) @ sensor_odom_glb_tf
+        sensor_odom_tf = np.linalg.inv(self.prev_sensor_tf) @ self.curr_sensor_tf
 
         # vehicle odometry between 2 steps
         if self.first_vehicle_pos:
@@ -107,7 +106,7 @@ class SensorParameters:
         else:
             self.prev_vehicle_tf = self.curr_vehicle_tf
             self.curr_vehicle_tf = self._hom_mat(pose[0, 0], pose[1, 0], pose[2, 0])
-            vehicle_odom_glb_tf = np.linalg.inv(self.prev_vehicle_tf) @ self.curr_vehicle_tf
+        vehicle_odom_tf = np.linalg.inv(self.prev_vehicle_tf) @ self.curr_vehicle_tf
 
     def get_global_x_m(self):
         """
