@@ -5,6 +5,7 @@ Author: Shisato Yano
 """
 
 import numpy as np
+import scipy.linalg as spl
 import sys
 from pathlib import Path
 
@@ -59,6 +60,8 @@ class SensorParameters:
         self.curr_vehicle_tf = np.zeros((self.DIM_NUM, self.DIM_NUM))
         self.first_sensor_pos = True
         self.first_vehicle_pos = True
+        self.state = np.zeros((self.DIM_NUM, 1)) # estimated state vector
+        self.cov = np.eye(self.DIM_NUM) # estimated covariance matrix
     
     def calculate_global_pos(self, state):
         """
@@ -108,6 +111,19 @@ class SensorParameters:
         # for generating sigma points
         self.GAMMA = sqrt(DIM_LAMBDA)
 
+    def _generate_sigme_points(self):
+        sigmas = self.state
+        cov_sqr = spl.sqrtm(self.cov) # standard deviation
+        
+        # add each dimension's std to state vector
+        # positive direction
+        for i in range(self.DIM_NUM):
+            sigmas = np.hstack((sigmas, self.state + self.GAMMA * cov_sqr[:, i:i+1]))
+        # negative direction
+        for i in range(self.DIM_NUM):
+            sigmas = np.hstack((sigmas, self.state - self.GAMMA * cov_sqr[:, i:i+1]))
+        return sigmas
+
     def estimate_extrinsic_params(self, state):
         # current vehicle pose
         pose = state.x_y_yaw()
@@ -124,6 +140,9 @@ class SensorParameters:
             self.prev_vehicle_tf = self.curr_vehicle_tf
             self.curr_vehicle_tf = self._hom_mat(pose[0, 0], pose[1, 0], pose[2, 0])
         vehicle_odom_tf = np.linalg.inv(self.prev_vehicle_tf) @ self.curr_vehicle_tf
+
+        # predict
+        sigmas = self._generate_sigme_points()
 
     def get_global_x_m(self):
         """
