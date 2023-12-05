@@ -8,7 +8,7 @@ import numpy as np
 import sys
 from pathlib import Path
 
-from math import sin, cos
+from math import sin, cos, sqrt
 
 sys.path.append(str(Path(__file__).absolute().parent) + "/../array")
 from xy_array import XYArray
@@ -51,7 +51,7 @@ class SensorParameters:
         self.ALPHA = 0.001
         self.BETA = 2
         self.KAPPA = 0
-        self.LAMBDA = self.ALPHA**2 * (self.DIM_NUM + self.KAPPA) - self.DIM_NUM
+        self._decide_sigma_weights()
         self.est_inst_array = np.zeros((self.DIM_NUM, 1))
         self.prev_sensor_tf = np.zeros((self.DIM_NUM, self.DIM_NUM))
         self.curr_sensor_tf = np.zeros((self.DIM_NUM, self.DIM_NUM))
@@ -90,6 +90,23 @@ class SensorParameters:
                         [0.0, 0.0, 1.0]])
         
         return mat
+
+    def _decide_sigma_weights(self):
+        self.LAMBDA = self.ALPHA**2 * (self.DIM_NUM + self.KAPPA) - self.DIM_NUM
+
+        # for 2n + 1 sigma points
+        state_weights, cov_weights = [], []
+        DIM_LAMBDA = self.DIM_NUM + self.LAMBDA
+        state_weights.append(self.LAMBDA / DIM_LAMBDA) # i = 0
+        cov_weights.append((self.LAMBDA / DIM_LAMBDA) + (1 - self.ALPHA**2 + self.BETA)) # i = 0
+        for i in range(2 * self.DIM_NUM):
+            state_weights.append(1 / (2 * DIM_LAMBDA))
+            cov_weights.append(1 / (2 * DIM_LAMBDA))
+        self.STATE_WEIGHTS = np.array([state_weights])
+        self.COV_WEIGHTS = np.array([cov_weights])
+        
+        # for generating sigma points
+        self.GAMMA = sqrt(DIM_LAMBDA)
 
     def estimate_extrinsic_params(self, state):
         # current vehicle pose
