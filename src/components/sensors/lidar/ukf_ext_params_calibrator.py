@@ -6,7 +6,7 @@ Author: Shisato Yano
 
 import numpy as np
 import scipy.linalg as spl
-from math import sqrt, asin
+from math import sqrt, sin, cos, asin
 
 
 class UkfExtParamsCalibrator:
@@ -174,6 +174,23 @@ class UkfExtParamsCalibrator:
             corr_mat = corr_mat + self.COV_WEIGHTS[0, i] * diff_state[:, i:i+1] @ diff_obv[:, i:i+1].T
         return corr_mat
 
+    def _hom_mat(self, x, y, yaw):
+        """
+        Function of 3x3 homogeneous transformation matrix
+        x: x direction translation
+        y: y direction translation
+        yaw: yaw direction rotation
+        """
+        
+        cos_yaw = cos(yaw)
+        sin_yaw = sin(yaw)
+        
+        mat = np.array([[cos_yaw, -sin_yaw, x],
+                        [sin_yaw, cos_yaw, y],
+                        [0.0, 0.0, 1.0]])
+        
+        return mat
+    
     def calibrate_extrinsic_params(self, sensor_odom_tf, vehicle_odom_tf):
         """
         sensor_odom_tf: odometry of sensor expressed as 3x3 homogeneous transformation matrix
@@ -206,3 +223,33 @@ class UkfExtParamsCalibrator:
 
         self.state = upd_state
         self.cov = upd_cov
+    
+    def draw_calib_result(self, axes, elems, state, true_lon, true_lat, true_yaw):
+        """
+        Function to draw calibration result
+        axes: axes object of figure
+        elems: list of plot object
+        state: vehicle state object
+        true_lon: true longitudinal parameter
+        true_lat: true lateral parameter
+        true_yaw: true yaw angle parameter
+        """
+        
+        # global position of calibrated sensor
+        pose = state.x_y_yaw()
+        global_tf = self._hom_mat(pose[0, 0], pose[1, 0], pose[2, 0])
+        state_tf = self._hom_mat(self.state[0, 0], self.state[1, 0], self.state[2, 0])
+        global_state_tf = global_tf @ state_tf
+        state_plot, = axes.plot(global_state_tf[0, 2], global_state_tf[1, 2], marker='*', color='r')
+        elems.append(state_plot)
+
+        # values of each calibrated parameters as text
+        elems.append(axes.text(global_state_tf[0, 2], global_state_tf[1, 2] + 4,
+                               "Sensor Lon Est:{0:.2f}/True:{1:.2f}[m]".format(self.state[0, 0], true_lon),
+                               fontsize=12))
+        elems.append(axes.text(global_state_tf[0, 2], global_state_tf[1, 2] + 3.5,
+                               "Sensor Lat Est:{0:.2f}/True:{1:.2f}[m]".format(self.state[1,0], true_lat),
+                               fontsize=12))
+        elems.append(axes.text(global_state_tf[0, 2], global_state_tf[1, 2] + 3.0,
+                               "Sensor Yaw Est:{0:.2f}/True:{1:.2f}[deg]".format(np.rad2deg(self.state[2,0]), true_yaw),
+                               fontsize=12))

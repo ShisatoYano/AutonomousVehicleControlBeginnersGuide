@@ -138,27 +138,16 @@ class SensorParameters:
         Function to draw sensor's installation position on vehicle
         axes: axes object of figure
         elems: list of plot object
+        state: vehicle state object
         """
 
         self.calculate_global_pos(state)
         pos_plot, = axes.plot(self.global_x_m, self.global_y_m, marker='.', color='b')
         elems.append(pos_plot)
 
-        # draw global position plot
-        pose = state.x_y_yaw()
-        global_tf = self._hom_mat(pose[0, 0], pose[1, 0], pose[2, 0])
-        state_tf = self._hom_mat(self.state[0, 0], self.state[1, 0], self.state[2, 0])
-        global_state_tf = global_tf @ state_tf
-        state_plot, = axes.plot(global_state_tf[0, 2], global_state_tf[1, 2], marker='*', color='r')
-        elems.append(state_plot)
-
-        # draw calibration result text
-        elems.append(axes.text(global_state_tf[0, 2], global_state_tf[1, 2] + 4,
-                               "Sensor Lon Est:{0:.2f}/True:{1:.2f}[m]".format(self.state[0, 0], self.INST_LON_M),
-                               fontsize=12))
-        elems.append(axes.text(global_state_tf[0, 2], global_state_tf[1, 2] + 3.5,
-                               "Sensor Lat Est:{0:.2f}/True:{1:.2f}[m]".format(self.state[1,0], self.INST_LAT_M),
-                               fontsize=12))
-        elems.append(axes.text(global_state_tf[0, 2], global_state_tf[1, 2] + 3.0,
-                               "Sensor Yaw Est:{0:.2f}/True:{1:.2f}[deg]".format(np.rad2deg(self.state[2,0]), 0.0),
-                               fontsize=12))
+        # only when calibrator module exists, this process works
+        if self.calibrator:
+            self.calibrator.draw_calib_result(axes, elems, state,
+                                              self.INST_LON_M,
+                                              self.INST_LAT_M,
+                                              0.0)
