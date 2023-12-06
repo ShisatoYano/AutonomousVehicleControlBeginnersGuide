@@ -142,3 +142,9 @@ class UkfExtParamsCalibrator:
         pred_sigmas = self._predict_sigmas_motion(sigmas)
         pred_state = (self.STATE_WEIGHTS @ pred_sigmas.T).T
         pred_cov = self._predict_covariance(pred_state, pred_sigmas, self.SYS_NOISE)
+
+        # predict observation
+        sigmas = self._generate_sigme_points(pred_state, pred_cov)
+        pred_obv_sigmas = self._predict_sigmas_observation(sigmas, vehicle_odom_tf)
+        pred_obv = (self.STATE_WEIGHTS @ pred_obv_sigmas.T).T
+        pred_obv_cov = self._predict_covariance(pred_obv, pred_obv_sigmas, self.OBV_NOISE)

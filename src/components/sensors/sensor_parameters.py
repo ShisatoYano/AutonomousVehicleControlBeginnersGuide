@@ -140,12 +140,6 @@ class SensorParameters:
         obv_vec = np.array([[sensor_odom_tf[0, 2]],
                             [sensor_odom_tf[1, 2]],
                             [asin(sensor_odom_tf[1, 0])]])
-
-        # predict observation
-        sigmas = self._generate_sigme_points(pred_state, pred_cov)
-        pred_obv_sigmas = self._predict_sigmas_observation(sigmas, vehicle_odom_tf)
-        pred_obv = (self.STATE_WEIGHTS @ pred_obv_sigmas.T).T
-        pred_obv_cov = self._predict_covariance(pred_obv, pred_obv_sigmas, self.OBV_NOISE)
         
         # update state
         corr_mat = self._calculate_correlation_matrix(pred_state, pred_sigmas, pred_obv, pred_obv_sigmas)
