@@ -21,7 +21,7 @@ class SensorParameters:
     """
 
     def __init__(self, lon_m=0.0, lat_m=0.0, min_m=0.5, max_m=40, reso_deg=2.0,
-                 angle_std_scale=0.01, dist_std_rate=0.005):
+                 angle_std_scale=0.01, dist_std_rate=0.005, calibrator=None):
         """
         Constructor
         lon_m: longitudinal installation position on vehicle coordinate system[m]
@@ -31,6 +31,7 @@ class SensorParameters:
         reso_deg: resolution of sensing angle[deg]
         angle_std_scale: scale of angle's standard deviation
         dist_std_rate: rate of distance's standard deviation
+        calibrator: instance of calibrator module
         """
         
         self.INST_LON_M = lon_m
@@ -47,6 +48,8 @@ class SensorParameters:
         self.inst_pos_array = XYArray(np.array([[self.INST_LON_M], [self.INST_LAT_M]]))
         self.global_x_m = None
         self.global_y_m = None
+
+        self.calibrator = calibrator
 
         self.DIM_NUM = 3 # state vector[lon, lat, yaw]
         self.ALPHA = 0.001

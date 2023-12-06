@@ -37,6 +37,7 @@ def test_initialize():
     assert param.inst_pos_array != None
     assert param.global_x_m == None
     assert param.global_y_m == None
+    assert param.calibrator == None
 
 
 def test_set_arguments():
