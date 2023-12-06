@@ -48,11 +48,11 @@ def main():
     """
     
     # set simulation parameters
-    x_lim, y_lim = MinMax(-5, 195), MinMax(-50, 50)
-    vis = GlobalXYVisualizer(x_lim, y_lim, TimeParameters(span_sec=120))
+    x_lim, y_lim = MinMax(-5, 175), MinMax(-50, 50)
+    vis = GlobalXYVisualizer(x_lim, y_lim, TimeParameters(span_sec=100))
 
     # create course data instance
-    course = SinCurveCourse(0, 190, 0.5, 10, color='k', width_ratio=0.1)
+    course = SinCurveCourse(0, 170, 0.5, 10, color='k', width_ratio=0.1)
     vis.add_object(course)
 
     # create vehicle's spec instance
