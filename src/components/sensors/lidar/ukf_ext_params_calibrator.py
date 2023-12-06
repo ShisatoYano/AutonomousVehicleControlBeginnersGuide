@@ -12,6 +12,7 @@ from math import sqrt, asin
 class UkfExtParamsCalibrator:
     """
     LiDAR's extrinsic parameters calibration by Unscented Kalman Filter
+    Those parameters are longitudinal, lateral position and yaw angle on vehicle coordinate system
     """
 
     def __init__(self, alpha=0.001, beta=2, kappa=0,
