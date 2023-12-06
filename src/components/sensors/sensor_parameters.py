@@ -95,57 +95,6 @@ class SensorParameters:
         
         return mat
 
-    def _decide_sigma_weights(self):
-        self.LAMBDA = self.ALPHA**2 * (self.DIM_NUM + self.KAPPA) - self.DIM_NUM
-
-        # for 2n + 1 sigma points
-        state_weights, cov_weights = [], []
-        DIM_LAMBDA = self.DIM_NUM + self.LAMBDA
-        state_weights.append(self.LAMBDA / DIM_LAMBDA) # i = 0
-        cov_weights.append((self.LAMBDA / DIM_LAMBDA) + (1 - self.ALPHA**2 + self.BETA)) # i = 0
-        for i in range(2 * self.DIM_NUM):
-            state_weights.append(1 / (2 * DIM_LAMBDA))
-            cov_weights.append(1 / (2 * DIM_LAMBDA))
-        self.STATE_WEIGHTS = np.array([state_weights])
-        self.COV_WEIGHTS = np.array([cov_weights])
-        
-        # for generating sigma points
-        self.GAMMA = sqrt(DIM_LAMBDA)
-
-    def _generate_sigme_points(self, state, cov):
-        sigmas = state
-        cov_sqr = spl.sqrtm(cov) # standard deviation matrix
-        
-        # add each dimension's std to state vector
-        # positive direction
-        for i in range(self.DIM_NUM):
-            sigmas = np.hstack((sigmas, state + self.GAMMA * cov_sqr[:, i:i+1]))
-        # negative direction
-        for i in range(self.DIM_NUM):
-            sigmas = np.hstack((sigmas, state - self.GAMMA * cov_sqr[:, i:i+1]))
-        return sigmas
-    
-    def _motion_model(self, state):
-        A = np.array([[1.0, 0.0, 0.0],
-                      [0.0, 1.0, 0.0],
-                      [0.0, 0.0, 1.0]])
-        return A @ state
-    
-    def _predict_sigmas_motion(self, sigmas):
-        for i in range(sigmas.shape[1]):
-            # state vector is parameters
-            # they don't change over time
-            # so, motion model doesn't need to have input argument
-            sigmas[:, i:i+1] = self._motion_model(sigmas[:, i:i+1])
-        return sigmas
-    
-    def _predict_covariance(self, pred_state, pred_sigmas, noise):
-        diff = pred_sigmas - pred_state[0:pred_sigmas.shape[0]]
-        pred_cov = noise
-        for i in range(pred_sigmas.shape[1]):
-            pred_cov = pred_cov + self.COV_WEIGHTS[0, i] * diff[:, i:i+1] @ diff[:, i:i+1].T
-        return pred_cov
-
     def _observation_model(self, state, vehicle_odom_tf):
         state_tf = self._hom_mat(state[0, 0], state[1, 0], state[2, 0])
         return np.linalg.inv(state_tf) @ vehicle_odom_tf @ state_tf
@@ -170,34 +119,27 @@ class SensorParameters:
         return corr_mat
 
     def estimate_extrinsic_params(self, vehicle_state):
-        # current vehicle pose
-        pose = vehicle_state.x_y_yaw()
+        if self.calibrator:
+            # sensor odometry between 2 steps
+            sensor_odom_tf = np.linalg.inv(self.prev_sensor_tf) @ self.curr_sensor_tf
 
-        # last estimated state and covariance
-        last_state = self.state
-        last_cov = self.cov
+            # vehicle odometry between 2 steps
+            pose = vehicle_state.x_y_yaw()
+            if self.first_vehicle_pos:
+                self.prev_vehicle_tf = self._hom_mat(pose[0, 0], pose[1, 0], pose[2, 0])
+                self.curr_vehicle_tf = self.prev_vehicle_tf
+                self.first_vehicle_pos = False
+            else:
+                self.prev_vehicle_tf = self.curr_vehicle_tf
+                self.curr_vehicle_tf = self._hom_mat(pose[0, 0], pose[1, 0], pose[2, 0])
+            vehicle_odom_tf = np.linalg.inv(self.prev_vehicle_tf) @ self.curr_vehicle_tf
 
-        # sensor odometry between 2 steps
-        sensor_odom_tf = np.linalg.inv(self.prev_sensor_tf) @ self.curr_sensor_tf
+            self.calibrator.calibrate_extrinsic_params(sensor_odom_tf, vehicle_odom_tf)
+
+        
         obv_vec = np.array([[sensor_odom_tf[0, 2]],
                             [sensor_odom_tf[1, 2]],
                             [asin(sensor_odom_tf[1, 0])]])
-
-        # vehicle odometry between 2 steps
-        if self.first_vehicle_pos:
-            self.prev_vehicle_tf = self._hom_mat(pose[0, 0], pose[1, 0], pose[2, 0])
-            self.curr_vehicle_tf = self.prev_vehicle_tf
-            self.first_vehicle_pos = False
-        else:
-            self.prev_vehicle_tf = self.curr_vehicle_tf
-            self.curr_vehicle_tf = self._hom_mat(pose[0, 0], pose[1, 0], pose[2, 0])
-        vehicle_odom_tf = np.linalg.inv(self.prev_vehicle_tf) @ self.curr_vehicle_tf
-
-        # predict state
-        sigmas = self._generate_sigme_points(last_state, last_cov)
-        pred_sigmas = self._predict_sigmas_motion(sigmas)
-        pred_state = (self.STATE_WEIGHTS @ pred_sigmas.T).T
-        pred_cov = self._predict_covariance(pred_state, pred_sigmas, self.SYS_NOISE)
 
         # predict observation
         sigmas = self._generate_sigme_points(pred_state, pred_cov)

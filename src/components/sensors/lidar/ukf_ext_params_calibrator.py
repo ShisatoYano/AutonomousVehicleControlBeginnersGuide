@@ -5,6 +5,7 @@ Author: Shisato Yano
 """
 
 import numpy as np
+import scipy.linalg as spl
 from math import sqrt
 
 
@@ -64,3 +65,80 @@ class UkfExtParamsCalibrator:
         
         # for generating sigma points
         self.GAMMA = sqrt(DIM_LAMBDA)
+    
+    def _generate_sigme_points(self, state, cov):
+        """
+        Private function to generate sigma points
+        state: state vector (lon, lat, yaw)
+        cov: covariance matrix 3x3
+        Return: array of sigma points
+        """
+        
+        sigmas = state
+        cov_sqr = spl.sqrtm(cov) # standard deviation matrix
+        
+        # add each dimension's std to state vector
+        # positive direction
+        for i in range(self.DIM_NUM):
+            sigmas = np.hstack((sigmas, state + self.GAMMA * cov_sqr[:, i:i+1]))
+        # negative direction
+        for i in range(self.DIM_NUM):
+            sigmas = np.hstack((sigmas, state - self.GAMMA * cov_sqr[:, i:i+1]))
+        return sigmas
+
+    def _motion_model(self, state):
+        """
+        Private function of motion model
+        state: state vector (lon, lat, yaw)
+        Return: state vector (lon, lat, yaw)
+        """
+        
+        # this algorithm's purpose to estimate parameters
+        # those don't change overtime
+        # so, this motion model doesn't need to have input part
+        A = np.array([[1.0, 0.0, 0.0],
+                      [0.0, 1.0, 0.0],
+                      [0.0, 0.0, 1.0]])
+        return A @ state
+
+    def _predict_sigmas_motion(self, sigmas):
+        """
+        Private function to predict overtime motion of sigma points
+        sigmas: array of sigma points
+        Return: array of moton predicted sigma points
+        """
+        
+        for i in range(sigmas.shape[1]):
+            sigmas[:, i:i+1] = self._motion_model(sigmas[:, i:i+1])
+        return sigmas
+
+    def _predict_covariance(self, pred_state, pred_sigmas, noise):
+        """
+        Private function to predict motion/observation covariance
+        pred_state: predicted state vector (lon, lat, yaw)
+        pred_sigmas: array of motion predicted sigma points
+        noise: parameters of system/observation noise covariance
+        Return: matrix of predicted system/observation covariance
+        """
+        
+        diff = pred_sigmas - pred_state[0:pred_sigmas.shape[0]]
+        pred_cov = noise
+        for i in range(pred_sigmas.shape[1]):
+            pred_cov = pred_cov + self.COV_WEIGHTS[0, i] * diff[:, i:i+1] @ diff[:, i:i+1].T
+        return pred_cov
+
+    def calibrate_extrinsic_params(self, sensor_odom_tf, vehicle_odom_tf):
+        """
+        sensor_odom_tf: odometry of sensor expressed as 3x3 homogeneous transformation matrix
+        vehicle_odom_tf: odometry of vehicle expressed as 3x3 homogeneous transformation matrix
+        """
+        
+        # last updated state and covariance
+        last_state = self.state
+        last_cov = self.cov
+
+        # predict state
+        sigmas = self._generate_sigme_points(last_state, last_cov)
+        pred_sigmas = self._predict_sigmas_motion(sigmas)
+        pred_state = (self.STATE_WEIGHTS @ pred_sigmas.T).T
+        pred_cov = self._predict_covariance(pred_state, pred_sigmas, self.SYS_NOISE)
