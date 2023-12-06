@@ -49,23 +49,17 @@ class SensorParameters:
         self.global_x_m = None
         self.global_y_m = None
 
-        self.calibrator = calibrator
-
-        self.DIM_NUM = 3 # state vector[lon, lat, yaw]
-        self.ALPHA = 0.001
-        self.BETA = 2
-        self.KAPPA = 0
-        self._decide_sigma_weights()
-        self.prev_sensor_tf = np.zeros((self.DIM_NUM, self.DIM_NUM))
-        self.curr_sensor_tf = np.zeros((self.DIM_NUM, self.DIM_NUM))
-        self.prev_vehicle_tf = np.zeros((self.DIM_NUM, self.DIM_NUM))
-        self.curr_vehicle_tf = np.zeros((self.DIM_NUM, self.DIM_NUM))
+        # 3x3 homogeneous transformation matrix of sensor position and pose
         self.first_sensor_pos = True
+        self.prev_sensor_tf = np.zeros((3, 3)) # at previous time
+        self.curr_sensor_tf = np.zeros((3, 3)) # at current time
+
+        # 3x3 homogeneous transformation matrix of vehicle position and pose
         self.first_vehicle_pos = True
-        self.state = np.zeros((self.DIM_NUM, 1)) # estimated state vector
-        self.cov = np.eye(self.DIM_NUM) # estimated covariance matrix
-        self.SYS_NOISE = np.diag([0.1, 0.1, np.deg2rad(0.1)]) ** 2 # lon, lat, yaw
-        self.OBV_NOISE = np.diag([0.5, 0.5, np.deg2rad(0.5)]) ** 2 # x, y, yaw
+        self.prev_vehicle_tf = np.zeros((3, 3))
+        self.curr_vehicle_tf = np.zeros((3, 3))
+
+        self.calibrator = calibrator
     
     def calculate_global_pos(self, state):
         """

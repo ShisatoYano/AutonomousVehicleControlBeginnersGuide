@@ -34,6 +34,7 @@ from sensors import Sensors
 from sensor_parameters import SensorParameters
 from omni_directional_lidar import OmniDirectionalLidar
 from obstacle_list import ObstacleList
+from ukf_ext_params_calibrator import UkfExtParamsCalibrator
 
 
 # flag to show plot figure
@@ -67,7 +68,8 @@ def main():
     obst_list = ObstacleList()
 
     # create vehicle instance
-    lidar = OmniDirectionalLidar(obst_list, SensorParameters(lon_m=1.5, lat_m=0.5)) # lidar instance
+    sensor_params = SensorParameters(lon_m=1.5, lat_m=0.5, calibrator=UkfExtParamsCalibrator())
+    lidar = OmniDirectionalLidar(obst_list, sensor_params) # lidar instance
     vehicle = FourWheelsVehicle(state, spec, controller=pure_pursuit, sensors=Sensors(lidar=lidar))
     vis.add_object(vehicle)
 
