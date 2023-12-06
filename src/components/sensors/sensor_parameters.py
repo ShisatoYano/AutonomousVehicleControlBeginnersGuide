@@ -95,7 +95,7 @@ class SensorParameters:
         
         return mat
 
-    def estimate_extrinsic_params(self, vehicle_state):
+    def calibrate_extrinsic_params(self, vehicle_state):
         """
         Function to calibrate extrinsic parameters of sensor
         Those parameters are longitudinal, lateral position and yaw angle on vehicle coordinate system

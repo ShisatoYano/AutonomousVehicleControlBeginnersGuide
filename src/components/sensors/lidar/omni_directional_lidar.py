@@ -131,7 +131,7 @@ class OmniDirectionalLidar:
 
         self.params.calculate_sensor_odometry(state)
 
-        self.params.estimate_extrinsic_params(state)
+        self.params.calibrate_extrinsic_params(state)
 
         distance_list, angle_list = [], []
         for obst in self.obst_list.get_list():

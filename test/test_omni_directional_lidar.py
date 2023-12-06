@@ -85,7 +85,7 @@ class MockSensorParameters:
     def calculate_sensor_odometry(self, state):
         pass
     
-    def estimate_extrinsic_params(self, state):
+    def calibrate_extrinsic_params(self, state):
         pass
     
     def get_global_x_m(self):
