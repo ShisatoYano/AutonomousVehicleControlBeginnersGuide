@@ -95,29 +95,6 @@ class SensorParameters:
         
         return mat
 
-    def _observation_model(self, state, vehicle_odom_tf):
-        state_tf = self._hom_mat(state[0, 0], state[1, 0], state[2, 0])
-        return np.linalg.inv(state_tf) @ vehicle_odom_tf @ state_tf
-
-    def _predict_sigmas_observation(self, sigmas, vehicle_odom_tf):
-        sigmas_num = sigmas.shape[1]
-        obv_sigmas = np.zeros((self.DIM_NUM, sigmas_num))
-        for i in range(sigmas_num):
-            sigma_tf = self._observation_model(sigmas[:, i:i+1], vehicle_odom_tf)
-            obv_sigmas[0, i:i+1] = sigma_tf[0, 2]
-            obv_sigmas[1, i:i+1] = sigma_tf[1, 2]
-            obv_sigmas[2, i:i+1] = asin(sigma_tf[1, 0])
-        return obv_sigmas
-    
-    def _calculate_correlation_matrix(self, pred_state, pred_sigmas, pred_obv, pred_obv_sigmas):
-        sigmas_num = pred_sigmas.shape[1]
-        diff_state = pred_sigmas - pred_state[0:pred_sigmas.shape[0]]
-        diff_obv = pred_obv_sigmas - pred_obv[0:pred_obv_sigmas.shape[0]]
-        corr_mat = np.zeros((diff_state.shape[0], diff_obv.shape[0]))
-        for i in range(sigmas_num):
-            corr_mat = corr_mat + self.COV_WEIGHTS[0, i] * diff_state[:, i:i+1] @ diff_obv[:, i:i+1].T
-        return corr_mat
-
     def estimate_extrinsic_params(self, vehicle_state):
         if self.calibrator:
             # sensor odometry between 2 steps
@@ -135,21 +112,6 @@ class SensorParameters:
             vehicle_odom_tf = np.linalg.inv(self.prev_vehicle_tf) @ self.curr_vehicle_tf
 
             self.calibrator.calibrate_extrinsic_params(sensor_odom_tf, vehicle_odom_tf)
-
-        
-        obv_vec = np.array([[sensor_odom_tf[0, 2]],
-                            [sensor_odom_tf[1, 2]],
-                            [asin(sensor_odom_tf[1, 0])]])
-        
-        # update state
-        corr_mat = self._calculate_correlation_matrix(pred_state, pred_sigmas, pred_obv, pred_obv_sigmas)
-        kalman_gain = corr_mat @ np.linalg.inv(pred_obv_cov)
-        innovation = obv_vec - pred_obv
-        upd_state = pred_state + kalman_gain @ innovation
-        upd_cov = pred_cov - kalman_gain @ pred_obv_cov @ kalman_gain.T
-
-        self.state = upd_state
-        self.cov = upd_cov
 
     def get_global_x_m(self):
         """

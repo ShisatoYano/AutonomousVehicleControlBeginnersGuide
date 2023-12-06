@@ -6,7 +6,7 @@ Author: Shisato Yano
 
 import numpy as np
 import scipy.linalg as spl
-from math import sqrt
+from math import sqrt, asin
 
 
 class UkfExtParamsCalibrator:
@@ -127,6 +127,52 @@ class UkfExtParamsCalibrator:
             pred_cov = pred_cov + self.COV_WEIGHTS[0, i] * diff[:, i:i+1] @ diff[:, i:i+1].T
         return pred_cov
 
+    def _observation_model(self, state, vehicle_odom_tf):
+        """
+        Private function of observation model
+        state: state vector (lon, lat, yaw)
+        vehicle_odom_tf: odometry of vehicle expressed as 3x3 homogeneous transformation matrix
+        Return: predicted odometry of sensor expressed as 3x3 homogeneous transformation matrix
+        """
+        
+        state_tf = self._hom_mat(state[0, 0], state[1, 0], state[2, 0])
+        return np.linalg.inv(state_tf) @ vehicle_odom_tf @ state_tf
+
+    def _predict_sigmas_observation(self, sigmas, vehicle_odom_tf):
+        """
+        Private function to predict observation at each sigma points position
+        sigmas: array of sigma points
+        vehicle_odom_tf: odometry of vehicle expressed as 3x3 homogeneous transformation matrix
+        Return: predicted observation vector at each sigma points position
+        """
+
+        sigmas_num = sigmas.shape[1]
+        obv_sigmas = np.zeros((self.DIM_NUM, sigmas_num))
+        for i in range(sigmas_num):
+            sigma_tf = self._observation_model(sigmas[:, i:i+1], vehicle_odom_tf)
+            obv_sigmas[0, i:i+1] = sigma_tf[0, 2]
+            obv_sigmas[1, i:i+1] = sigma_tf[1, 2]
+            obv_sigmas[2, i:i+1] = asin(sigma_tf[1, 0])
+        return obv_sigmas
+
+    def _calculate_correlation_matrix(self, pred_state, pred_sigmas, pred_obv, pred_obv_sigmas):
+        """
+        Private function to calculate correlation matrix between system and observation
+        pred_state: Predicted state vector (lon, lat, yaw)
+        pred_sigmas: motion predicted sigma points
+        pred_obv: Predicted observation vector (x, y, yaw)
+        pred_obv_sigmas: Predicted observation at each pigma points position
+        Return: correlation matrix between system and observation
+        """
+        
+        sigmas_num = pred_sigmas.shape[1]
+        diff_state = pred_sigmas - pred_state[0:pred_sigmas.shape[0]]
+        diff_obv = pred_obv_sigmas - pred_obv[0:pred_obv_sigmas.shape[0]]
+        corr_mat = np.zeros((diff_state.shape[0], diff_obv.shape[0]))
+        for i in range(sigmas_num):
+            corr_mat = corr_mat + self.COV_WEIGHTS[0, i] * diff_state[:, i:i+1] @ diff_obv[:, i:i+1].T
+        return corr_mat
+
     def calibrate_extrinsic_params(self, sensor_odom_tf, vehicle_odom_tf):
         """
         sensor_odom_tf: odometry of sensor expressed as 3x3 homogeneous transformation matrix
@@ -148,3 +194,14 @@ class UkfExtParamsCalibrator:
         pred_obv_sigmas = self._predict_sigmas_observation(sigmas, vehicle_odom_tf)
         pred_obv = (self.STATE_WEIGHTS @ pred_obv_sigmas.T).T
         pred_obv_cov = self._predict_covariance(pred_obv, pred_obv_sigmas, self.OBV_NOISE)
+
+        # update state
+        corr_mat = self._calculate_correlation_matrix(pred_state, pred_sigmas, pred_obv, pred_obv_sigmas)
+        kalman_gain = corr_mat @ np.linalg.inv(pred_obv_cov)
+        obv_vec = np.array([[sensor_odom_tf[0, 2]], [sensor_odom_tf[1, 2]], [asin(sensor_odom_tf[1, 0])]])
+        innovation = obv_vec - pred_obv
+        upd_state = pred_state + kalman_gain @ innovation
+        upd_cov = pred_cov - kalman_gain @ pred_obv_cov @ kalman_gain.T
+
+        self.state = upd_state
+        self.cov = upd_cov
