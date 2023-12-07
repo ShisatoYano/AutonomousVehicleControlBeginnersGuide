@@ -6,7 +6,12 @@ Author: Shisato Yano
 
 import numpy as np
 import scipy.linalg as spl
-from math import sqrt, sin, cos, asin
+import sys
+from pathlib import Path
+from math import sqrt, asin
+
+sys.path.append(str(Path(__file__).absolute().parent) + "/../../common")
+from matrix_lib import hom_mat_33
 
 
 class UkfExtParamsCalibrator:
@@ -136,7 +141,7 @@ class UkfExtParamsCalibrator:
         Return: predicted odometry of sensor expressed as 3x3 homogeneous transformation matrix
         """
         
-        state_tf = self._hom_mat(state[0, 0], state[1, 0], state[2, 0])
+        state_tf = hom_mat_33(state[0, 0], state[1, 0], state[2, 0])
         return np.linalg.inv(state_tf) @ vehicle_odom_tf @ state_tf
 
     def _predict_sigmas_observation(self, sigmas, vehicle_odom_tf):
@@ -173,23 +178,6 @@ class UkfExtParamsCalibrator:
         for i in range(sigmas_num):
             corr_mat = corr_mat + self.COV_WEIGHTS[0, i] * diff_state[:, i:i+1] @ diff_obv[:, i:i+1].T
         return corr_mat
-
-    def _hom_mat(self, x, y, yaw):
-        """
-        Function of 3x3 homogeneous transformation matrix
-        x: x direction translation
-        y: y direction translation
-        yaw: yaw direction rotation
-        """
-        
-        cos_yaw = cos(yaw)
-        sin_yaw = sin(yaw)
-        
-        mat = np.array([[cos_yaw, -sin_yaw, x],
-                        [sin_yaw, cos_yaw, y],
-                        [0.0, 0.0, 1.0]])
-        
-        return mat
     
     def calibrate_extrinsic_params(self, sensor_odom_tf, vehicle_odom_tf):
         """
@@ -237,8 +225,8 @@ class UkfExtParamsCalibrator:
         
         # global position of calibrated sensor
         pose = state.x_y_yaw()
-        global_tf = self._hom_mat(pose[0, 0], pose[1, 0], pose[2, 0])
-        state_tf = self._hom_mat(self.state[0, 0], self.state[1, 0], self.state[2, 0])
+        global_tf = hom_mat_33(pose[0, 0], pose[1, 0], pose[2, 0])
+        state_tf = hom_mat_33(self.state[0, 0], self.state[1, 0], self.state[2, 0])
         global_state_tf = global_tf @ state_tf
         state_plot, = axes.plot(global_state_tf[0, 2], global_state_tf[1, 2], marker='*', color='r')
         elems.append(state_plot)

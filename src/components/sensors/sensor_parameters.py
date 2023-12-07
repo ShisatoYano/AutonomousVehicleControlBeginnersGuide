@@ -5,14 +5,13 @@ Author: Shisato Yano
 """
 
 import numpy as np
-import scipy.linalg as spl
 import sys
 from pathlib import Path
 
-from math import sin, cos, sqrt, asin, atan2, pi
-
 sys.path.append(str(Path(__file__).absolute().parent) + "/../array")
+sys.path.append(str(Path(__file__).absolute().parent) + "/../common")
 from xy_array import XYArray
+from matrix_lib import hom_mat_33
 
 
 class SensorParameters:
@@ -74,26 +73,21 @@ class SensorParameters:
         self.global_y_m = transformed_array.get_y_data()
     
     def calculate_sensor_odometry(self, state):
+        """
+        Function to calculate sensor's odometry
+        state: vehicle's state object
+        """
+
         pose = state.x_y_yaw()
 
         # convert sensor's global pose to homegeneous transformation matrix
         if self.first_sensor_pos:
-            self.prev_sensor_tf = self._hom_mat(self.global_x_m[0], self.global_y_m[0], pose[2, 0])
+            self.prev_sensor_tf = hom_mat_33(self.global_x_m[0], self.global_y_m[0], pose[2, 0])
             self.curr_sensor_tf = self.prev_sensor_tf
             self.first_sensor_pos = False
         else:
             self.prev_sensor_tf = self.curr_sensor_tf
-            self.curr_sensor_tf = self._hom_mat(self.global_x_m[0], self.global_y_m[0], pose[2, 0])
-
-    def _hom_mat(self, x, y, yaw):
-        cos_yaw = cos(yaw)
-        sin_yaw = sin(yaw)
-        
-        mat = np.array([[cos_yaw, -sin_yaw, x],
-                        [sin_yaw, cos_yaw, y],
-                        [0.0, 0.0, 1.0]])
-        
-        return mat
+            self.curr_sensor_tf = hom_mat_33(self.global_x_m[0], self.global_y_m[0], pose[2, 0])
 
     def calibrate_extrinsic_params(self, vehicle_state):
         """
@@ -109,12 +103,12 @@ class SensorParameters:
             # vehicle odometry between 2 steps
             pose = vehicle_state.x_y_yaw()
             if self.first_vehicle_pos:
-                self.prev_vehicle_tf = self._hom_mat(pose[0, 0], pose[1, 0], pose[2, 0])
+                self.prev_vehicle_tf = hom_mat_33(pose[0, 0], pose[1, 0], pose[2, 0])
                 self.curr_vehicle_tf = self.prev_vehicle_tf
                 self.first_vehicle_pos = False
             else:
                 self.prev_vehicle_tf = self.curr_vehicle_tf
-                self.curr_vehicle_tf = self._hom_mat(pose[0, 0], pose[1, 0], pose[2, 0])
+                self.curr_vehicle_tf = hom_mat_33(pose[0, 0], pose[1, 0], pose[2, 0])
             vehicle_odom_tf = np.linalg.inv(self.prev_vehicle_tf) @ self.curr_vehicle_tf
 
             self.calibrator.calibrate_extrinsic_params(sensor_odom_tf, vehicle_odom_tf)
