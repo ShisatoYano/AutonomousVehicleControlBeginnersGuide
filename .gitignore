@@ -1,4 +1,5 @@
 src/components/array/__pycache__
+src/components/common/__pycache__
 src/components/control/pure_pursuit/__pycache__
 src/components/course/sin_curve_course/__pycache__
 src/components/detection/l_shape_fitting/__pycache__

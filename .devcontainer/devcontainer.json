@@ -31,6 +31,7 @@
         "python.analysis.extraPaths": [
             "/usr/local/lib/python3.11/site-packages",
             "/home/dev-user/workspace/src/components/array",
+            "/home/dev-user/workspace/src/components/common",
             "/home/dev-user/workspace/src/components/control/pure_pursuit",
             "/home/dev-user/workspace/src/components/course/sin_curve_course",
             "/home/dev-user/workspace/src/components/detection/l_shape_fitting",
