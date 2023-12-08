@@ -13,7 +13,17 @@ import sys
 from pathlib import Path
 
 sys.path.append(str(Path(__file__).absolute().parent) + "/../src/components/sensors/lidar")
+sys.path.append(str(Path(__file__).absolute().parent) + "/../src/components/common")
 from ukf_ext_params_calibrator import UkfExtParamsCalibrator
+from matrix_lib import hom_mat_33
+
+
+class MockState:
+    def __init__(self):
+        pass
+    
+    def x_y_yaw(self):
+        return np.array([[0.0], [0.0], [0.0]])
 
 
 def test_initialization():
@@ -44,3 +54,29 @@ def test_initialization():
     assert calibrator.cov[0, 0] == 1.0
     assert calibrator.cov[1, 1] == 1.0
     assert calibrator.cov[2, 2] == 1.0
+
+
+def test_calibrate_extrinsic_params():
+    calibrator = UkfExtParamsCalibrator()
+    
+    sensor_odom_tf = hom_mat_33(0.0, 0.0, 0.0)
+    vehicle_odom_tf = hom_mat_33(0.0, 0.0, 0.0)
+    calibrator.calibrate_extrinsic_params(sensor_odom_tf, vehicle_odom_tf)
+
+    assert calibrator.state[0, 0] == 0.0
+    assert calibrator.state[1, 0] == 0.0
+    assert calibrator.state[2, 0] == 0.0
+    assert calibrator.cov[0, 0] != 1.0
+    assert calibrator.cov[1, 1] != 1.0
+    assert calibrator.cov[2, 2] != 1.0
+
+
+def test_draw_calib_result():
+    calibrator = UkfExtParamsCalibrator()
+
+    plt.clf()
+    plt.close()
+    figure = plt.figure(figsize=(8, 8))
+    axes = figure.add_subplot(111)
+
+    calibrator.draw_calib_result(axes, [], MockState(), 0.0, 0.0, 0.0)
