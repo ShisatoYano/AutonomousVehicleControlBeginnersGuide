@@ -18,6 +18,7 @@ sys.path.append(abs_dir_path + relative_path + "vehicle")
 sys.path.append(abs_dir_path + relative_path + "obstacle")
 sys.path.append(abs_dir_path + relative_path + "sensors")
 sys.path.append(abs_dir_path + relative_path + "sensors/lidar")
+sys.path.append(abs_dir_path + relative_path + "mapping/ndt")
 
 
 # import component modules
@@ -32,6 +33,7 @@ from obstacle_list import ObstacleList
 from sensors import Sensors
 from sensor_parameters import SensorParameters
 from omni_directional_lidar import OmniDirectionalLidar
+from ndt_mapper import NdtMapper
 
 
 # flag to show plot figure
@@ -57,7 +59,8 @@ def main():
     # create vehicle instance
     spec = VehicleSpecification()
     lidar = OmniDirectionalLidar(obst_list, SensorParameters(lon_m=spec.wheel_base_m/2, angle_std_scale=0.0, dist_std_rate=0.0))
-    vehicle = FourWheelsVehicle(State(color=spec.color), spec, sensors=Sensors(lidar=lidar), show_zoom=False)
+    mapper = NdtMapper()
+    vehicle = FourWheelsVehicle(State(color=spec.color), spec, sensors=Sensors(lidar=lidar), mapper=mapper, show_zoom=False)
     vis.add_object(vehicle)
 
     # plot figure is not shown when executed as unit test

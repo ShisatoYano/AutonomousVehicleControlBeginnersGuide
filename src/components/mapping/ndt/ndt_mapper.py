@@ -29,12 +29,9 @@ class NdtMapper:
 
         self.width_grids_num = int(round(self.width_m / self.resolution_m))
         self.height_grids_num = int(round(self.height_m / self.resolution_m))
+        self.all_grids_num = self.width_grids_num * self.height_grids_num
 
         self.left_bottom_x_m = self.center_x_m - self.width_m / 2.0
         self.left_bottom_y_m = self.center_y_m - self.height_m / 2.0
 
-        self.map = [[0.0 for ih in range(self.height_grids_num)] for iw in range(self.width_grids_num)]
-
-        print(self.width_grids_num, self.height_grids_num)
-        print(self.left_bottom_x_m, self.left_bottom_y_m)
-        print(self.map)
+        self.map = [0.0] * self.all_grids_num
