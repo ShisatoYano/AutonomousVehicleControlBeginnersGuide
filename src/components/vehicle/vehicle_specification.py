@@ -4,6 +4,12 @@ vehicle_specification.py
 Author: Shisato Yano
 """
 
+import sys
+from pathlib import Path
+
+sys.path.append(str(Path(__file__).absolute().parent) + "/../visualization")
+from min_max import MinMax
+
 class VehicleSpecification:
     """
     Vehicle Specification parameters class
@@ -11,7 +17,8 @@ class VehicleSpecification:
     
     def __init__(self, f_len_m=2.0, r_len_m=0.0, tire_r_m=0.3,
                  tire_w_m=0.12, axle_half_m=0.5, color='k', 
-                 line_w=1.0, line_type='-', area_size=10.0):
+                 line_w=1.0, line_type='-', area_size=10.0,
+                 x_lim=MinMax(-30, 30), y_lim=MinMax(-30, 30)):
         """
         Constructor
         f_len_m: length[m] from origin to center of front axle
@@ -42,3 +49,6 @@ class VehicleSpecification:
         self.line_w = line_w
         self.line_type = line_type
         self.area_size = area_size
+
+        self.x_lim = x_lim
+        self.y_lim = y_lim

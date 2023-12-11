@@ -35,3 +35,8 @@ def test_create_instance():
     assert spec.line_w == 1.0
     assert spec.line_type == '-'
     assert spec.area_size == 10.0
+
+    assert spec.x_lim.min_value() == -30
+    assert spec.x_lim.max_value() == 30
+    assert spec.y_lim.min_value() == -30
+    assert spec.y_lim.max_value() == 30

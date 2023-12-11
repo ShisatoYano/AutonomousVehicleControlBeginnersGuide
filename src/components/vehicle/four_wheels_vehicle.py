@@ -202,3 +202,6 @@ class FourWheelsVehicle:
         if self.show_zoom:
             axes.set_xlim(x_m - self.spec.area_size, x_m + self.spec.area_size)
             axes.set_ylim(y_m - self.spec.area_size, y_m + self.spec.area_size)
+        else:
+            axes.set_xlim(self.spec.x_lim.min_value(), self.spec.x_lim.max_value())
+            axes.set_ylim(self.spec.y_lim.min_value(), self.spec.y_lim.max_value())
