@@ -4,7 +4,11 @@ ndt_mapper.py
 Author: Shisato Yano
 """
 
-from ndt_grid import NdtGrid
+import sys
+from pathlib import Path
+
+sys.path.append(str(Path(__file__).absolute().parent) + "/../grid")
+from grid_mapper import GridMapper
 
 
 class NdtMapper:
@@ -16,24 +20,7 @@ class NdtMapper:
                  center_x_m=0.0, center_y_m=0.0):
         """
         Constructor
-        width_m: Width size of map[m]
-        height_m: Height size of map[m]
-        resolution: Size of each grids[m]
-        center_x_m: Center x position of map[m]
-        center_y_m: Center y position of map[m]
         """
 
-        self.width_m = width_m
-        self.height_m = height_m
-        self.resolution_m = resolution_m
-        self.center_x_m = center_x_m
-        self.center_y_m = center_y_m
-
-        self.width_grids_num = int(round(self.width_m / self.resolution_m))
-        self.height_grids_num = int(round(self.height_m / self.resolution_m))
-        self.all_grids_num = self.width_grids_num * self.height_grids_num
-
-        self.left_bottom_x_m = self.center_x_m - self.width_m / 2.0
-        self.left_bottom_y_m = self.center_y_m - self.height_m / 2.0
-
-        self.map = [0.0] * self.all_grids_num
+        self.map = GridMapper(width_m, height_m, resolution_m, 
+                              center_x_m, center_y_m)
