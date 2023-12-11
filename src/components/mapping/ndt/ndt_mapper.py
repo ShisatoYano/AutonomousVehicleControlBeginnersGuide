@@ -4,6 +4,8 @@ ndt_mapper.py
 Author: Shisato Yano
 """
 
+from ndt_grid import NdtGrid
+
 
 class NdtMapper:
     """
