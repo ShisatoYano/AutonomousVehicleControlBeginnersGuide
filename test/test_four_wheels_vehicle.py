@@ -17,6 +17,17 @@ from four_wheels_vehicle import FourWheelsVehicle
 
 
 # mock class
+class MockMinMax():
+    def __init__(self):
+        pass
+
+    def min_value(self):
+        return -10.0
+    
+    def max_value(self):
+        return 10.0
+
+
 class MockSpecification:
     def __init__(self):
         self.f_len_m = 2.0
@@ -37,6 +48,9 @@ class MockSpecification:
         self.line_w = 1.0
         self.line_type = '-'
         self.area_size = 10.0
+
+        self.x_lim = MockMinMax()
+        self.y_lim = MockMinMax()
 
 
 class MockState:
@@ -104,11 +118,6 @@ def test_initialize():
     assert vehicle.show_zoom == True
 
 
-def test_show_zoom():
-    vehicle_show_zoom = FourWheelsVehicle(state, spec, show_zoom=False)
-    assert vehicle_show_zoom.show_zoom == False
-
-
 def test_update():
     vehicle.update(1.0)
 
@@ -119,3 +128,9 @@ def test_draw():
     figure = plt.figure(figsize=(8, 8))
     axes = figure.add_subplot(111)
     vehicle.draw(axes, [])
+
+
+def test_show_zoom():
+    vehicle_show_zoom = FourWheelsVehicle(state, spec, show_zoom=False)
+    assert vehicle_show_zoom.show_zoom == False
+    test_draw()
