@@ -20,7 +20,7 @@ class FourWheelsVehicle:
     """
 
     def __init__(self, state, spec, controller=None, sensors=None,
-                 detector=None, localizer=None, show_zoom=True):
+                 detector=None, mapper=None, localizer=None, show_zoom=True):
         """
         Constructor
         state: Vehicle's state object
@@ -28,6 +28,7 @@ class FourWheelsVehicle:
         controller: Controller object
         sensors: Sencors object
         detector: Detector object
+        mapper: Mapper object
         localizer: Localizer object
         show_zoom: Flag for zoom around vehicle
         """
@@ -48,6 +49,7 @@ class FourWheelsVehicle:
         self.sensors = sensors
         self._install_sensors(self.state)
         self.detector = detector
+        self.mapper = mapper
         self.localizer = localizer
 
         self.show_zoom = show_zoom
