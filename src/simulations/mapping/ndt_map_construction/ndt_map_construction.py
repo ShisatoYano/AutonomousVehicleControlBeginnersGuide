@@ -55,9 +55,9 @@ def main():
     vis.add_object(obst_list)
 
     # create vehicle instance
-    spec = VehicleSpecification() # spec instance
-    lidar = OmniDirectionalLidar(obst_list, SensorParameters(lon_m=spec.wheel_base_m/2, angle_std_scale=0.0, dist_std_rate=0.0)) # lidar instance
-    vehicle = FourWheelsVehicle(State(color=spec.color), spec, sensors=Sensors(lidar=lidar), show_zoom=False) # set state, spec, lidar as arguments
+    spec = VehicleSpecification()
+    lidar = OmniDirectionalLidar(obst_list, SensorParameters(lon_m=spec.wheel_base_m/2, angle_std_scale=0.0, dist_std_rate=0.0))
+    vehicle = FourWheelsVehicle(State(color=spec.color), spec, sensors=Sensors(lidar=lidar), show_zoom=False)
     vis.add_object(vehicle)
 
     # plot figure is not shown when executed as unit test
