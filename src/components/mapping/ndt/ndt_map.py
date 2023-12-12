@@ -4,6 +4,7 @@ ndt_map.py
 Author: Shisato Yano
 """
 
+import numpy as np
 import sys
 from pathlib import Path
 from collections import defaultdict
@@ -58,3 +59,10 @@ class NdtMap:
         """
         
         grid_points_index_map = self._create_grid_points_index_map(points_xy_list)
+        points_xy_array = np.array(points_xy_list)
+        for grid_idx, points_indices in grid_points_index_map.items():
+            grid = NdtGrid()
+            grid.points_num = len(points_indices)
+            if grid.points_num >= self.MIN_POINTS_NUM:
+                grid.mean_x_m = points_xy_array[points_indices][:, 0].mean()
+                grid.mean_y_m = points_xy_array[points_indices][:, 1].mean()
