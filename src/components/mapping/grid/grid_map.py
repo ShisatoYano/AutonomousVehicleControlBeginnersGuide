@@ -1,5 +1,5 @@
 """
-grid_mapper.py
+grid_map.py
 
 Author: Shisato Yano
 """
@@ -7,9 +7,9 @@ Author: Shisato Yano
 from float_grid import FloatGrid
 
 
-class GridMapper:
+class GridMap:
     """
-    Grid map construnction class
+    Grid map class
     """
 
     def __init__(self, width_m=60.0, height_m=60.0, resolution_m=5.0,
