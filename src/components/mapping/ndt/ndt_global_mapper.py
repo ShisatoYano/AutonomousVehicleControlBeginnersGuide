@@ -26,4 +26,15 @@ class NdtGlobalMapper:
         self.map = NdtMap(width_m, height_m, resolution_m, center_x_m, center_y_m)
     
     def update(self, point_cloud, state):
-        print(len(point_cloud))
+        """
+        Function to update global map
+        point_cloud: List of point objects scanned by LiDAR
+        state: Vehicle's state to transform into global coordinate
+        """
+        
+        vehicle_pose = state.x_y_yaw()
+
+        for point in point_cloud:
+            global_point_xy = point.get_transformed_data(vehicle_pose[0, 0],
+                                                         vehicle_pose[1, 0],
+                                                         vehicle_pose[2, 0])

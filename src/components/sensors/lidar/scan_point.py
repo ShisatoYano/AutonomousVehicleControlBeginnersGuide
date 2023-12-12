@@ -52,6 +52,18 @@ class ScanPoint:
 
         return self.point_array.get_data()
     
+    def get_transformed_data(self, x_m, y_m, angle_rad):
+        """
+        Return transformed x-y array data based on specific coordinate system
+        Type is ndarray object
+        x_m: base x coordinate[m]
+        y_m: base y coordinate[m]
+        angle_rad: base angle[rad]
+        """
+        
+        transformed_array = self.point_array.homogeneous_transformation(x_m, y_m, angle_rad)
+        return transformed_array.get_data()
+    
     def draw(self, axes, x_m, y_m, angle_rad, elems):
         """
         Function to draw scan point's x-y coordinate data
