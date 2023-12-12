@@ -102,6 +102,13 @@ class FourWheelsVehicle:
                                self.sensors.get_lidar_global_y_m(),
                                state.get_yaw_rad())
 
+    def _update_map_data(self):
+        """
+        Private function to update map data
+        """
+
+        if self.mapper: self.mapper.update(self.sensors.get_point_cloud_from_lidar(), self.state)
+
     def _update_control_data(self):
         """
         Private function to update controller's data
@@ -167,6 +174,8 @@ class FourWheelsVehicle:
         self._update_sensors_data(self.state)
 
         self._update_detection_data()
+
+        self._update_map_data()
 
         target_accel, target_yaw_rate = self._update_control_data()
 

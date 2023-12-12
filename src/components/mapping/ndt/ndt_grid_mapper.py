@@ -24,3 +24,6 @@ class NdtGridMapper:
         """
 
         self.map = NdtMap(width_m, height_m, resolution_m, center_x_m, center_y_m)
+    
+    def update(self, point_cloud, state):
+        print(len(point_cloud))
