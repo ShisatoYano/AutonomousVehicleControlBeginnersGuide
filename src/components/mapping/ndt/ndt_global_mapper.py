@@ -1,5 +1,5 @@
 """
-ndt_grid_mapper.py
+ndt_global_mapper.py
 
 Author: Shisato Yano
 """
@@ -7,9 +7,9 @@ Author: Shisato Yano
 from ndt_map import NdtMap
 
 
-class NdtGridMapper:
+class NdtGlobalMapper:
     """
-    NDT grid map construction class
+    NDT global map construction class
     """
 
     def __init__(self, width_m=60.0, height_m=60.0, resolution_m=5.0,
