@@ -42,14 +42,14 @@ class NdtMap:
         Return: Map between grid index and points index
         """
         
-        grid_index_map = defaultdict(list)
+        grid_points_index_map = defaultdict(list)
 
         for i in range(len(points_xy_list)):
             point_xy = points_xy_list[i]
             index = self.map.calculate_vector_index_from_position(point_xy[0, 0], point_xy[1, 0])
-            grid_index_map[index].append(i)
+            grid_points_index_map[index].append(i)
         
-        return grid_index_map
+        return grid_points_index_map
 
     def update_map(self, points_xy_list):
         """
@@ -57,4 +57,4 @@ class NdtMap:
         points_xy_list: List of point cloud x-y coordinates
         """
         
-        grid_index_map = self._create_grid_points_index_map(points_xy_list)
+        grid_points_index_map = self._create_grid_points_index_map(points_xy_list)
