@@ -33,7 +33,7 @@ from obstacle_list import ObstacleList
 from sensors import Sensors
 from sensor_parameters import SensorParameters
 from omni_directional_lidar import OmniDirectionalLidar
-from ndt_map import NdtMap
+from ndt_grid_mapper import NdtGridMapper
 
 
 # flag to show plot figure
@@ -59,7 +59,7 @@ def main():
     # create vehicle instance
     spec = VehicleSpecification()
     lidar = OmniDirectionalLidar(obst_list, SensorParameters(lon_m=spec.wheel_base_m/2, angle_std_scale=0.0, dist_std_rate=0.0))
-    mapper = NdtMap()
+    mapper = NdtGridMapper()
     vehicle = FourWheelsVehicle(State(color=spec.color), spec, sensors=Sensors(lidar=lidar), mapper=mapper, show_zoom=False)
     vis.add_object(vehicle)
 
