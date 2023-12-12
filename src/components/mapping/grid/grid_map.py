@@ -21,6 +21,7 @@ class GridMap:
         resolution: Size of each grids[m]
         center_x_m: Center x position of map[m]
         center_y_m: Center y position of map[m]
+        init_grid: Initial grid object
         """
 
         self.width_m = width_m

@@ -21,6 +21,11 @@ class NdtMap:
                  center_x_m=0.0, center_y_m=0.0):
         """
         Constructor
+        width_m: Width size of map[m]
+        height_m: Height size of map[m]
+        resolution: Size of each grids[m]
+        center_x_m: Center x position of map[m]
+        center_y_m: Center y position of map[m]
         """
 
         self.map = GridMap(width_m, height_m, resolution_m, 
