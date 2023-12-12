@@ -9,6 +9,7 @@ from pathlib import Path
 
 sys.path.append(str(Path(__file__).absolute().parent) + "/../grid")
 from grid_mapper import GridMapper
+from ndt_grid import NdtGrid
 
 
 class NdtMapper:
@@ -23,4 +24,4 @@ class NdtMapper:
         """
 
         self.map = GridMapper(width_m, height_m, resolution_m, 
-                              center_x_m, center_y_m)
+                              center_x_m, center_y_m, init_grid=NdtGrid())
