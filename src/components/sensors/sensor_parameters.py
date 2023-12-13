@@ -19,12 +19,13 @@ class SensorParameters:
     Parameters class for sensor
     """
 
-    def __init__(self, lon_m=0.0, lat_m=0.0, min_m=0.5, max_m=40, reso_deg=2.0,
+    def __init__(self, lon_m=0.0, lat_m=0.0, yaw_deg=0.0, min_m=0.5, max_m=40, reso_deg=2.0,
                  angle_std_scale=0.01, dist_std_rate=0.005, calibrator=None):
         """
         Constructor
         lon_m: longitudinal installation position on vehicle coordinate system[m]
         lat_m: lateral installation position on vehicle coordinate system[m]
+        yaw_deg: yaw angle of installation position on vehicle coordinate system[deg]
         min_m: minimum sensing range[m]
         max_m: maximum sensing range[m]
         reso_deg: resolution of sensing angle[deg]
@@ -35,6 +36,7 @@ class SensorParameters:
         
         self.INST_LON_M = lon_m
         self.INST_LAT_M = lat_m
+        self.INST_YAW_RAD = np.deg2rad(yaw_deg)
 
         self.MIN_RANGE_M = min_m
         self.MAX_RANGE_M = max_m
@@ -144,4 +146,4 @@ class SensorParameters:
             self.calibrator.draw_calib_result(axes, elems, state,
                                               self.INST_LON_M,
                                               self.INST_LAT_M,
-                                              0.0)
+                                              self.INST_YAW_RAD)

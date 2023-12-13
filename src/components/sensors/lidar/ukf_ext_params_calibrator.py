@@ -239,5 +239,5 @@ class UkfExtParamsCalibrator:
                                "Sensor Lat Est:{0:.2f}/True:{1:.2f}[m]".format(self.state[1,0], true_lat),
                                fontsize=12))
         elems.append(axes.text(global_state_tf[0, 2], global_state_tf[1, 2] + 3.0,
-                               "Sensor Yaw Est:{0:.2f}/True:{1:.2f}[deg]".format(np.rad2deg(self.state[2,0]), true_yaw),
+                               "Sensor Yaw Est:{0:.2f}/True:{1:.2f}[deg]".format(np.rad2deg(self.state[2,0]), np.rad2deg(true_yaw)),
                                fontsize=12))

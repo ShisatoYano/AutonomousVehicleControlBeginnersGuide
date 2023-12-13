@@ -40,6 +40,7 @@ def test_initialize():
 
     assert param.INST_LON_M == 0.0
     assert param.INST_LAT_M == 0.0
+    assert param.INST_YAW_RAD == np.deg2rad(0.0)
     assert param.MIN_RANGE_M == 0.5
     assert param.MAX_RANGE_M == 40.0
     assert param.RESO_RAD == np.deg2rad(2.0)
@@ -62,12 +63,13 @@ def test_initialize():
 
 
 def test_set_arguments():
-    param = SensorParameters(lon_m=1.0, lat_m=2.0, min_m=3.0, max_m=4.0,
+    param = SensorParameters(lon_m=1.0, lat_m=2.0, yaw_deg=90, min_m=3.0, max_m=4.0,
                              reso_deg=5.0, angle_std_scale=6.0, dist_std_rate=7.0,
                              calibrator=MockCalibrator())
     
     assert param.INST_LON_M == 1.0
     assert param.INST_LAT_M == 2.0
+    assert param.INST_YAW_RAD == np.deg2rad(90)
     assert param.MIN_RANGE_M == 3.0
     assert param.MAX_RANGE_M == 4.0
     assert param.RESO_RAD == np.deg2rad(5.0)
