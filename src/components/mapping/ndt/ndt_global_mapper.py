@@ -35,11 +35,12 @@ class NdtGlobalMapper:
         
         vehicle_pose = state.x_y_yaw()
 
-        points_xy_list = []
+        points_x_list, points_y_list = [], []
         for point in point_cloud:
             global_point_xy = point.get_transformed_data(vehicle_pose[0, 0],
                                                          vehicle_pose[1, 0],
                                                          vehicle_pose[2, 0])
-            points_xy_list.append(global_point_xy)
+            points_x_list.append(global_point_xy[0, 0])
+            points_y_list.append(global_point_xy[1, 0])
         
-        self.map.update_map(points_xy_list)
+        self.map.update_map(points_x_list, points_y_list)

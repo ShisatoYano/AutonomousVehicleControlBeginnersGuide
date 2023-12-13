@@ -36,34 +36,39 @@ class NdtMap:
         
         self.MIN_POINTS_NUM = min_points_num
     
-    def _create_grid_points_index_map(self, points_xy_list):
+    def _create_grid_points_index_map(self, points_x_array, points_y_array):
         """
         Function to create map between grid index and points index
-        points_xy_list: List of point cloud x-y coordinates
+        points_x_array: ndarray of points x coordinate
+        points_y_array: ndarray of points y coordinate
         Return: Map between grid index and points index
         """
         
         grid_points_index_map = defaultdict(list)
 
-        for i in range(len(points_xy_list)):
-            point_xy = points_xy_list[i]
-            index = self.map.calculate_vector_index_from_position(point_xy[0, 0], point_xy[1, 0])
+        for i in range(len(points_x_array)):
+            index = self.map.calculate_vector_index_from_position(points_x_array[i],
+                                                                  points_y_array[i])
             grid_points_index_map[index].append(i)
         
         return grid_points_index_map
 
-    def update_map(self, points_xy_list):
+    def update_map(self, points_x_list, points_y_list):
         """
         Function to update map
-        points_xy_list: List of point cloud x-y coordinates
+        points_x_list: List of point cloud x coordinates
+        points_y_list: List of point cloud y coordinates
         """
         
-        grid_points_index_map = self._create_grid_points_index_map(points_xy_list)
-        points_xy_array = np.array(points_xy_list)
+        points_x_array, points_y_array = np.array(points_x_list), np.array(points_y_list)
+        grid_points_index_map = self._create_grid_points_index_map(points_x_array, points_y_array)
         for grid_idx, points_indices in grid_points_index_map.items():
             grid = NdtGrid()
             grid.points_num = len(points_indices)
             if grid.points_num >= self.MIN_POINTS_NUM:
-                grid.mean_x_m = points_xy_array[points_indices][:, 0].mean()
-                grid.mean_y_m = points_xy_array[points_indices][:, 1].mean()
+                grid.mean_x_m = points_x_array[points_indices].mean()
+                grid.mean_y_m = points_y_array[points_indices].mean()
                 grid.center_x_m, grid.center_y_m = self.map.calculate_grid_center_xy_pos_from_vector_index(grid_idx)
+                grid.covariance = np.cov(points_x_array[points_indices],
+                                         points_y_array[points_indices])
+                
