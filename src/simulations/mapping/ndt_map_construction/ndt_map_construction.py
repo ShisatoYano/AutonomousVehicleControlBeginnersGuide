@@ -52,14 +52,15 @@ def main():
 
     # create obstacle instances
     obst_list = ObstacleList()
-    obst1 = Obstacle(State(x_m=10.0, y_m=10.0))
+    obst1 = Obstacle(State(x_m=15.0, y_m=15.0), length_m=10, width_m=5)
     obst_list.add_obstacle(obst1)
     vis.add_object(obst_list)
 
     # create vehicle instance
     spec = VehicleSpecification()
-    lidar = OmniDirectionalLidar(obst_list, SensorParameters(lon_m=spec.wheel_base_m/2, angle_std_scale=0.0, dist_std_rate=0.0))
-    mapper = NdtGlobalMapper()
+    sensor_params = SensorParameters(lon_m=spec.wheel_base_m/2)
+    lidar = OmniDirectionalLidar(obst_list, sensor_params)
+    mapper = NdtGlobalMapper(sensor_params=sensor_params)
     vehicle = FourWheelsVehicle(State(color=spec.color), spec, sensors=Sensors(lidar=lidar), mapper=mapper, show_zoom=False)
     vis.add_object(vehicle)
 

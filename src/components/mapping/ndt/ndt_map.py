@@ -10,8 +10,10 @@ from pathlib import Path
 from collections import defaultdict
 
 sys.path.append(str(Path(__file__).absolute().parent) + "/../grid")
+sys.path.append(str(Path(__file__).absolute().parent) + "/../../common")
 from grid_map import GridMap
 from ndt_grid import NdtGrid
+from plot_lib import draw_covariance_ellipse
 
 
 class NdtMap:
@@ -73,3 +75,12 @@ class NdtMap:
                                          points_y_array[points_indices])
                 grid.eigen_values, grid.eigen_vectors = np.linalg.eig(grid.covariance)
                 self.map.set_grid_data(grid_idx, grid)
+
+    def draw_map(self, axes, elems):
+        """
+        Function to draw map data
+        axes: Axes object of figure
+        elems: List of plot object
+        """
+
+        [draw_covariance_ellipse(axes, elems, grid.mean_x_m, grid.mean_y_m, grid.covariance) for grid in self.map.data if grid.points_num > 0]
