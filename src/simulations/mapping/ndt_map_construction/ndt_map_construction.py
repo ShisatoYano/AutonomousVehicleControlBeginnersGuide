@@ -19,6 +19,8 @@ sys.path.append(abs_dir_path + relative_path + "obstacle")
 sys.path.append(abs_dir_path + relative_path + "sensors")
 sys.path.append(abs_dir_path + relative_path + "sensors/lidar")
 sys.path.append(abs_dir_path + relative_path + "mapping/ndt")
+sys.path.append(abs_dir_path + relative_path + "course/sin_curve_course")
+sys.path.append(abs_dir_path + relative_path + "control/pure_pursuit")
 
 
 # import component modules
@@ -34,6 +36,8 @@ from sensors import Sensors
 from sensor_parameters import SensorParameters
 from omni_directional_lidar import OmniDirectionalLidar
 from ndt_global_mapper import NdtGlobalMapper
+from sin_curve_course import SinCurveCourse
+from pure_pursuit_controller import PurePursuitController
 
 
 # flag to show plot figure
@@ -45,23 +49,37 @@ def main():
     """
     Main process function
     """
+
+    # start position
+
     
     # set simulation parameters
-    x_lim, y_lim = MinMax(-30, 30), MinMax(-30, 30)
-    vis = GlobalXYVisualizer(x_lim, y_lim, TimeParameters(span_sec=20))
+    x_lim, y_lim = MinMax(-5, 55), MinMax(-20, 25)
+    vis = GlobalXYVisualizer(x_lim, y_lim, TimeParameters(span_sec=25), show_zoom=False)
+
+    # create course data instance
+    course = SinCurveCourse(0, 50, 0.5, 20)
+    vis.add_object(course)
 
     # create obstacle instances
     obst_list = ObstacleList()
-    obst1 = Obstacle(State(x_m=15.0, y_m=15.0), length_m=10, width_m=5)
-    obst_list.add_obstacle(obst1)
+    obst_list.add_obstacle(Obstacle(State(x_m=10.0, y_m=15.0), length_m=10, width_m=8))
+    obst_list.add_obstacle(Obstacle(State(x_m=40.0, y_m=0.0), length_m=2, width_m=10))
+    obst_list.add_obstacle(Obstacle(State(x_m=10.0, y_m=-10.0, yaw_rad=np.rad2deg(45)), length_m=5, width_m=5))
+    obst_list.add_obstacle(Obstacle(State(x_m=30.0, y_m=15.0, yaw_rad=np.rad2deg(10)), length_m=5, width_m=1))
     vis.add_object(obst_list)
 
     # create vehicle instance
     spec = VehicleSpecification()
-    sensor_params = SensorParameters(lon_m=spec.wheel_base_m/2)
+    pure_pursuit = PurePursuitController(spec, course)
+    sensor_params = SensorParameters(lon_m=spec.wheel_base_m/2, max_m=20)
     lidar = OmniDirectionalLidar(obst_list, sensor_params)
-    mapper = NdtGlobalMapper(sensor_params=sensor_params)
-    vehicle = FourWheelsVehicle(State(color=spec.color), spec, sensors=Sensors(lidar=lidar), mapper=mapper, show_zoom=False)
+    mapper = NdtGlobalMapper(sensor_params=sensor_params, center_x_m=25.0, center_y_m=5.0)
+    vehicle = FourWheelsVehicle(State(color=spec.color), spec,
+                                controller=pure_pursuit,
+                                sensors=Sensors(lidar=lidar),
+                                mapper=mapper,
+                                show_zoom=False)
     vis.add_object(vehicle)
 
     # plot figure is not shown when executed as unit test

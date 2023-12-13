@@ -13,7 +13,7 @@ class GlobalXYVisualizer:
     Visualization class for global 2D X-Y plot
     """
     
-    def __init__(self, x_lim, y_lim, time_params, gif_name=None):
+    def __init__(self, x_lim, y_lim, time_params, show_zoom=True, gif_name=None):
         """
         Constructor
         x_lim: MinMax object of x axis
@@ -30,6 +30,7 @@ class GlobalXYVisualizer:
         self.time_params = time_params
         self.gif_name = gif_name
         self.show_plot = True
+        self.show_zoom = show_zoom
     
     def add_object(self, obj):
         """
@@ -68,7 +69,7 @@ class GlobalXYVisualizer:
             if hasattr(obj, "update"): obj.update(self.time_params.get_interval_sec())
 
         # show data between x-y min and max range
-        if self.time_params.simulation_finished(i):
+        if not self.show_zoom or self.time_params.simulation_finished(i):
             axes.set_xlim(self.x_lim.min_value(), self.x_lim.max_value())
             axes.set_ylim(self.y_lim.min_value(), self.y_lim.max_value())
 
