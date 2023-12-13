@@ -76,4 +76,45 @@ class GridMap:
         x_idx = self.calculate_xy_index_from_position(x_m, self.left_bottom_x_m, self.width_grids_num)
         y_idx = self.calculate_xy_index_from_position(y_m, self.left_bottom_y_m, self.height_grids_num)
         return self.calculate_vector_index_from_xy_index(x_idx, y_idx)
+    
+    def calculate_xy_index_from_vector_index(self, vector_index):
+        """
+        Function to calculate x and y index from 1d vector index
+        vector_index: index of 1d vector
+        Return: x and y index in 2d array
+        """
+        
+        y_idx, x_idx = divmod(vector_index, self.width_grids_num)
+        return x_idx, y_idx
 
+    def calculate_grid_center_pos_from_index(self, index, left_bottom_pos):
+        """
+        Function to calculate center position of a grid
+        index: index of x or y axis
+        left_bottom_pos: left bottom position of x or y axis
+        Return: center position of x or y axis of a grid
+        """
+        
+        return index * self.resolution_m + left_bottom_pos + self.resolution_m/2
+
+    def calculate_grid_center_xy_pos_from_xy_index(self, x_idx, y_idx):
+        """
+        Function to calculate center x-y position of a grid from x-y 2d array index
+        x_idx: index of grid on x axis
+        y_idx: index of grid on y axis
+        Return: center x-y position of a grid
+        """
+        
+        center_x_pos = self.calculate_grid_center_pos_from_index(x_idx, self.left_bottom_x_m)
+        center_y_pos = self.calculate_grid_center_pos_from_index(y_idx, self.left_bottom_y_m)
+        return center_x_pos, center_y_pos
+
+    def calculate_grid_center_xy_pos_from_vector_index(self, vector_index):
+        """
+        Function to calculate center x-y position of a grid from 1d vector index
+        vector_index: index of 1d vector
+        Return: center x-y position of a grid
+        """
+        
+        x_idx, y_idx = self.calculate_xy_index_from_vector_index(vector_index)
+        return self.calculate_grid_center_xy_pos_from_xy_index(x_idx, y_idx)

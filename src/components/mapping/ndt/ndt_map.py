@@ -66,3 +66,4 @@ class NdtMap:
             if grid.points_num >= self.MIN_POINTS_NUM:
                 grid.mean_x_m = points_xy_array[points_indices][:, 0].mean()
                 grid.mean_y_m = points_xy_array[points_indices][:, 1].mean()
+                grid.center_x_m, grid.center_y_m = self.map.calculate_grid_center_xy_pos_from_vector_index(grid_idx)
