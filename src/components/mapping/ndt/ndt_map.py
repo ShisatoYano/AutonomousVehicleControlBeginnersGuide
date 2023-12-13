@@ -71,4 +71,5 @@ class NdtMap:
                 grid.center_x_m, grid.center_y_m = self.map.calculate_grid_center_xy_pos_from_vector_index(grid_idx)
                 grid.covariance = np.cov(points_x_array[points_indices],
                                          points_y_array[points_indices])
-                
+                grid.eigen_values, grid.eigen_vectors = np.linalg.eig(grid.covariance)
+                self.map.set_grid_data(grid_idx, grid)

@@ -39,7 +39,7 @@ class GridMap:
         self.left_bottom_x_m = self.center_x_m - self.width_m / 2.0
         self.left_bottom_y_m = self.center_y_m - self.height_m / 2.0
 
-        self.map = [init_grid] * self.all_grids_num
+        self.data = [init_grid] * self.all_grids_num
     
     def calculate_xy_index_from_position(self, pos, left_bottom_pos, max_index):
         """
@@ -118,3 +118,12 @@ class GridMap:
         
         x_idx, y_idx = self.calculate_xy_index_from_vector_index(vector_index)
         return self.calculate_grid_center_xy_pos_from_xy_index(x_idx, y_idx)
+    
+    def set_grid_data(self, index, grid):
+        """
+        Setter of grid data into map
+        index: index of 1d vector
+        grid: object of grid
+        """
+        
+        self.data[index] = grid
