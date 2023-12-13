@@ -109,6 +109,15 @@ class FourWheelsVehicle:
 
         if self.mapper: self.mapper.update(self.sensors.get_point_cloud_from_lidar(), self.state)
 
+    def _draw_map_data(self, axes, elems):
+        """
+        Private function to draw map data
+        axes: Axes object of figure
+        elems: List of plot object
+        """
+
+        if self.mapper: self.mapper.draw(axes, elems)
+
     def _update_control_data(self):
         """
         Private function to update controller's data
@@ -191,6 +200,8 @@ class FourWheelsVehicle:
         self._draw_sensors_data(axes, elems, self.state)
 
         self._draw_detection_data(axes, elems, self.state)
+
+        self._draw_map_data(axes, elems)
 
         steer_rad = self._draw_control_data(axes, elems)
 

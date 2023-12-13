@@ -44,3 +44,6 @@ class NdtGlobalMapper:
             points_y_list.append(global_point_xy[1, 0])
         
         self.map.update_map(points_x_list, points_y_list)
+    
+    def draw(self, axes, elems):
+        print("draw map")
