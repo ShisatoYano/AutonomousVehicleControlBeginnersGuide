@@ -63,6 +63,7 @@ class MockSensorParameters:
     def __init__(self):
         self.INST_LON_M = 0.0
         self.INST_LAT_M = 0.0
+        self.INST_YAW_RAD = 0.0
 
         self.MIN_RANGE_M = 0.5
         self.MAX_RANGE_M = 40

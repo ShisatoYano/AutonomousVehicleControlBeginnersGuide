@@ -157,12 +157,12 @@ class OmniDirectionalLidar:
 
         self.params.draw_pos(axes, elems, state)
 
+        vehicle_pose = state.x_y_yaw()
+
         for point in self.latest_point_cloud:
-            point.draw(axes, 
-                       self.params.get_global_x_m(), 
-                       self.params.get_global_y_m(), 
-                       state.get_yaw_rad(), 
-                       elems)
+            point.draw(axes, elems,
+                       self.params.INST_LON_M, self.params.INST_LAT_M, self.params.INST_YAW_RAD,
+                       vehicle_pose[0, 0], vehicle_pose[1, 0], vehicle_pose[2, 0])
 
     def get_point_cloud(self):
         """

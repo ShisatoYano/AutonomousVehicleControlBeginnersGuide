@@ -36,4 +36,4 @@ def test_draw():
     
     figure = plt.figure(figsize=(8, 8))
     axes = figure.add_subplot(111)
-    point.draw(axes, 1.0, 2.0, 3.0, [])
+    point.draw(axes, [], 1.0, 2.0, 3.0, 4.0, 5.0, 6.0)

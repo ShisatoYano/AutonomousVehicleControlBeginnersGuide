@@ -45,20 +45,10 @@ class NdtGlobalMapper:
 
         points_x_list, points_y_list = [], []
         for point in point_cloud:
-            # x, y position on sensor coordinate
-            point_xy = point.get_point_array()
-            sensor_tf = hom_mat_33(point_xy[0, 0], point_xy[1, 0], 0.0)
-
-            # transformation matrix into vehicle coordinate
-            vehicle_tf = hom_mat_33(self.params.INST_LON_M, self.params.INST_LAT_M, self.params.INST_YAW_RAD)
-
-            # transformation matrix into global coordinate
-            global_tf = hom_mat_33(vehicle_pose[0, 0], vehicle_pose[1, 0], vehicle_pose[2, 0])
-            
-            # homogeneous transformation into global coordinate
-            global_points_matrix = global_tf @ vehicle_tf @ sensor_tf
-            points_x_list.append(global_points_matrix[0, 2])
-            points_y_list.append(global_points_matrix[1, 2])
+            global_x, global_y = point.get_transformed_data(self.params.INST_LON_M, self.params.INST_LAT_M, self.params.INST_YAW_RAD,
+                                                            vehicle_pose[0, 0], vehicle_pose[1, 0], vehicle_pose[2, 0])
+            points_x_list.append(global_x)
+            points_y_list.append(global_y)
         
         self.map.update_map(points_x_list, points_y_list)
     

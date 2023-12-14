@@ -9,7 +9,9 @@ import sys
 from pathlib import Path
 
 sys.path.append(str(Path(__file__).absolute().parent) + "/../../array")
+sys.path.append(str(Path(__file__).absolute().parent) + "/../../common")
 from xy_array import XYArray
+from matrix_lib import hom_mat_33
 
 
 class ScanPoint:
@@ -52,30 +54,50 @@ class ScanPoint:
 
         return self.point_array.get_data()
     
-    def get_transformed_data(self, x_m, y_m, angle_rad):
+    def get_transformed_data(self, sensor_lon, sensor_lat, sensor_yaw,
+                             vehicle_x, vehicle_y, vehicle_yaw):
         """
         Return transformed x-y array data based on specific coordinate system
         Type is ndarray object
-        x_m: base x coordinate[m]
-        y_m: base y coordinate[m]
-        angle_rad: base angle[rad]
+        sensor_lon: longitudinal position of sensor on vehicle coordinate[m]
+        sensor_lat: lateral position of sensor on vehicle coordinate[m]
+        sensor_yaw: yaw angle of sensor on vehicle coordinate[rad]
+        vehicle_x: x position of vehicle on global coordinate[m]
+        vehicle_y: y position of vehicle on global coordinate[m]
+        vehicle_yaw: yaw angle of vehicle on global coordinate[rad]
         """
-        
-        transformed_array = self.point_array.homogeneous_transformation(x_m, y_m, angle_rad)
-        return transformed_array.get_data()
+
+        # transformation matrix on sensor coordinate
+        point_xy = self.point_array.get_data()
+        sensor_tf = hom_mat_33(point_xy[0, 0], point_xy[1, 0], 0.0)
+
+        # transformation matrix on vehicle coordinate
+        vehicle_tf = hom_mat_33(sensor_lon, sensor_lat, sensor_yaw)
+
+        # transformation matrix on global coordinate
+        global_tf = hom_mat_33(vehicle_x, vehicle_y, vehicle_yaw)
+
+        # homegeneous transformation from sensor to global coordinate
+        transformed_points_matrix = global_tf @ vehicle_tf @ sensor_tf
+
+        return transformed_points_matrix[0, 2], transformed_points_matrix[1, 2]
     
-    def draw(self, axes, x_m, y_m, angle_rad, elems):
+    def draw(self, axes, elems,
+             sensor_lon, sensor_lat, sensor_yaw,
+             vehicle_x, vehicle_y, vehicle_yaw):
         """
         Function to draw scan point's x-y coordinate data
         axes: Axes object of figure
-        x_m: Vehicle's position x[m]
-        y_m: Vehicle's position y[m]
-        angle_rad: Vehicle's yaw angle[rad]
         elems: List of plot objects
+        sensor_lon: longitudinal position of sensor on vehicle coordinate[m]
+        sensor_lat: lateral position of sensor on vehicle coordinate[m]
+        sensor_yaw: yaw angle of sensor on vehicle coordinate[rad]
+        vehicle_x: x position of vehicle on global coordinate[m]
+        vehicle_y: y position of vehicle on global coordinate[m]
+        vehicle_yaw: yaw angle of vehicle on global coordinate[rad]
         """
 
-        transformed_array = self.point_array.homogeneous_transformation(x_m, y_m, angle_rad)
-        point_plot, = axes.plot(transformed_array.get_x_data(), 
-                                transformed_array.get_y_data(), 
-                                marker='.', color='b')
+        transformed_x, transformed_y = self.get_transformed_data(sensor_lon, sensor_lat, sensor_yaw,
+                                                                 vehicle_x, vehicle_y, vehicle_yaw)
+        point_plot, = axes.plot(transformed_x, transformed_y, marker='.', color='b')
         elems.append(point_plot)
