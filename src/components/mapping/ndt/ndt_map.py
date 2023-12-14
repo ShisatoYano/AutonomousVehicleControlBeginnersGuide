@@ -65,9 +65,11 @@ class NdtMap:
         points_x_array, points_y_array = np.array(points_x_list), np.array(points_y_list)
         grid_points_index_map = self._create_grid_points_index_map(points_x_array, points_y_array)
         for grid_idx, points_indices in grid_points_index_map.items():
-            grid = NdtGrid()
-            grid.points_num = len(points_indices)
-            if grid.points_num >= self.MIN_POINTS_NUM:
+            new_points_num = len(points_indices)
+            last_points_num = self.map.get_grid_data(grid_idx).points_num
+            if new_points_num >= self.MIN_POINTS_NUM and new_points_num >= last_points_num:
+                grid = NdtGrid()
+                grid.points_num = len(points_indices)
                 grid.mean_x_m = points_x_array[points_indices].mean()
                 grid.mean_y_m = points_y_array[points_indices].mean()
                 grid.center_x_m, grid.center_y_m = self.map.calculate_grid_center_xy_pos_from_vector_index(grid_idx)

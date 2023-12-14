@@ -66,13 +66,16 @@ def main():
     obst_list.add_obstacle(Obstacle(State(x_m=10.0, y_m=15.0), length_m=10, width_m=8))
     obst_list.add_obstacle(Obstacle(State(x_m=40.0, y_m=0.0), length_m=2, width_m=10))
     obst_list.add_obstacle(Obstacle(State(x_m=10.0, y_m=-10.0, yaw_rad=np.rad2deg(45)), length_m=5, width_m=5))
-    obst_list.add_obstacle(Obstacle(State(x_m=30.0, y_m=15.0, yaw_rad=np.rad2deg(10)), length_m=5, width_m=1))
+    obst_list.add_obstacle(Obstacle(State(x_m=30.0, y_m=15.0, yaw_rad=np.rad2deg(10)), length_m=5, width_m=2))
+    obst_list.add_obstacle(Obstacle(State(x_m=50.0, y_m=15.0, yaw_rad=np.rad2deg(15)), length_m=5, width_m=2))
+    obst_list.add_obstacle(Obstacle(State(x_m=25.0, y_m=0.0), length_m=2, width_m=2))
+    obst_list.add_obstacle(Obstacle(State(x_m=35.0, y_m=-15.0), length_m=7, width_m=2))
     vis.add_object(obst_list)
 
     # create vehicle instance
     spec = VehicleSpecification()
     pure_pursuit = PurePursuitController(spec, course)
-    sensor_params = SensorParameters(lon_m=spec.wheel_base_m/2, max_m=20)
+    sensor_params = SensorParameters(lon_m=spec.wheel_base_m/2, max_m=15)
     lidar = OmniDirectionalLidar(obst_list, sensor_params)
     mapper = NdtGlobalMapper(sensor_params=sensor_params, center_x_m=25.0, center_y_m=5.0)
     vehicle = FourWheelsVehicle(State(color=spec.color), spec,

@@ -127,3 +127,12 @@ class GridMap:
         """
         
         self.data[index] = grid
+    
+    def get_grid_data(self, index):
+        """
+        Getter of grid data in map
+        index: index of 1d vector
+        Return: object of grid
+        """
+        
+        return self.data[index]
