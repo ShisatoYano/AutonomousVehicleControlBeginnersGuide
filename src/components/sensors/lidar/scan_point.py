@@ -100,23 +100,13 @@ class ScanPoint:
             self.get_transformed_data(sensor_lon, sensor_lat, sensor_yaw,
                                       vehicle_x, vehicle_y, vehicle_yaw)
 
-    def draw(self, axes, elems,
-             sensor_lon, sensor_lat, sensor_yaw,
-             vehicle_x, vehicle_y, vehicle_yaw):
+    def draw(self, axes, elems):
         """
         Function to draw scan point's x-y coordinate data
         axes: Axes object of figure
         elems: List of plot objects
-        sensor_lon: longitudinal position of sensor on vehicle coordinate[m]
-        sensor_lat: lateral position of sensor on vehicle coordinate[m]
-        sensor_yaw: yaw angle of sensor on vehicle coordinate[rad]
-        vehicle_x: x position of vehicle on global coordinate[m]
-        vehicle_y: y position of vehicle on global coordinate[m]
-        vehicle_yaw: yaw angle of vehicle on global coordinate[rad]
         """
 
-        # transformed_x, transformed_y = self.get_transformed_data(sensor_lon, sensor_lat, sensor_yaw,
-        #                                                          vehicle_x, vehicle_y, vehicle_yaw)
         if self.transformed_x and self.transformed_y:
             point_plot, = axes.plot(self.transformed_x, self.transformed_y, marker='.', color='b')
             elems.append(point_plot)

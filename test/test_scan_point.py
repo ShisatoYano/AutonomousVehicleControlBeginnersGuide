@@ -24,6 +24,8 @@ def test_initialize():
     assert point.distance_m == 1.0
     assert point.angle_rad == 2.0
     assert point.point_array != None
+    assert point.transformed_x == None
+    assert point.transformed_y == None
 
 
 def test_get_distance_m():
@@ -36,4 +38,4 @@ def test_draw():
     
     figure = plt.figure(figsize=(8, 8))
     axes = figure.add_subplot(111)
-    point.draw(axes, [], 1.0, 2.0, 3.0, 4.0, 5.0, 6.0)
+    point.draw(axes, [])
