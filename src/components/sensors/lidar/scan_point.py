@@ -31,6 +31,8 @@ class ScanPoint:
         self.distance_m = distance_m
         self.angle_rad = angle_rad
         self.point_array = XYArray(np.array([[x_m], [y_m]]))
+        self.transformed_x = None
+        self.transformed_y = None
     
     def get_dimension(self):
         """
@@ -82,6 +84,22 @@ class ScanPoint:
 
         return transformed_points_matrix[0, 2], transformed_points_matrix[1, 2]
     
+    def calculate_transformed_point(self, sensor_lon, sensor_lat, sensor_yaw,
+                                    vehicle_x, vehicle_y, vehicle_yaw):
+        """
+        Function to calculate transformed x-y point based on specific coordinate system
+        sensor_lon: longitudinal position of sensor on vehicle coordinate[m]
+        sensor_lat: lateral position of sensor on vehicle coordinate[m]
+        sensor_yaw: yaw angle of sensor on vehicle coordinate[rad]
+        vehicle_x: x position of vehicle on global coordinate[m]
+        vehicle_y: y position of vehicle on global coordinate[m]
+        vehicle_yaw: yaw angle of vehicle on global coordinate[rad]
+        """
+        
+        self.transformed_x, self.transformed_y = \
+            self.get_transformed_data(sensor_lon, sensor_lat, sensor_yaw,
+                                      vehicle_x, vehicle_y, vehicle_yaw)
+
     def draw(self, axes, elems,
              sensor_lon, sensor_lat, sensor_yaw,
              vehicle_x, vehicle_y, vehicle_yaw):
@@ -97,7 +115,8 @@ class ScanPoint:
         vehicle_yaw: yaw angle of vehicle on global coordinate[rad]
         """
 
-        transformed_x, transformed_y = self.get_transformed_data(sensor_lon, sensor_lat, sensor_yaw,
-                                                                 vehicle_x, vehicle_y, vehicle_yaw)
-        point_plot, = axes.plot(transformed_x, transformed_y, marker='.', color='b')
-        elems.append(point_plot)
+        # transformed_x, transformed_y = self.get_transformed_data(sensor_lon, sensor_lat, sensor_yaw,
+        #                                                          vehicle_x, vehicle_y, vehicle_yaw)
+        if self.transformed_x and self.transformed_y:
+            point_plot, = axes.plot(self.transformed_x, self.transformed_y, marker='.', color='b')
+            elems.append(point_plot)

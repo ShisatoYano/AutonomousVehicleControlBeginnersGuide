@@ -63,7 +63,7 @@ class OmniDirectionalLidar:
         if angle_rad > np.pi: return (angle_rad - np.pi * 2.0)
         else: return angle_rad
     
-    def _ray_casting_filter(self, distance_list, angle_list):
+    def _ray_casting_filter(self, distance_list, angle_list, state):
         """
         Private function to filter point cloud by Ray casting
         distance_list: List of sensing distance[m]
@@ -88,7 +88,11 @@ class OmniDirectionalLidar:
                 dist_with_noise = norm.rvs(loc=distance_m, scale=self.params.DIST_STD_RATE*distance_m)
                 x_m = dist_with_noise * cos(angle_with_noise)
                 y_m = dist_with_noise * sin(angle_with_noise)
-                point_cloud.append(ScanPoint(dist_with_noise, angle_with_noise, x_m, y_m))
+                point = ScanPoint(dist_with_noise, angle_with_noise, x_m, y_m)
+                vehicle_pose = state.x_y_yaw()
+                point.calculate_transformed_point(self.params.INST_LON_M, self.params.INST_LAT_M, self.params.INST_YAW_RAD,
+                                                  vehicle_pose[0, 0], vehicle_pose[1, 0], vehicle_pose[2, 0])
+                point_cloud.append(point)
         
         self.latest_point_cloud = point_cloud
     
@@ -145,7 +149,7 @@ class OmniDirectionalLidar:
                 distance_list.append(distance_m)
                 angle_list.append(angle_rad)
         
-        self._ray_casting_filter(distance_list, angle_list)
+        self._ray_casting_filter(distance_list, angle_list, state)
     
     def draw(self, axes, elems, state):
         """
