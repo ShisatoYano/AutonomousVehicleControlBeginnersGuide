@@ -50,9 +50,6 @@ def main():
     Main process function
     """
 
-    # start position
-
-    
     # set simulation parameters
     x_lim, y_lim = MinMax(-5, 55), MinMax(-20, 25)
     vis = GlobalXYVisualizer(x_lim, y_lim, TimeParameters(span_sec=25), show_zoom=False)
