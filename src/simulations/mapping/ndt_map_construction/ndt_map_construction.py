@@ -72,7 +72,7 @@ def main():
     # create vehicle instance
     spec = VehicleSpecification()
     pure_pursuit = PurePursuitController(spec, course)
-    sensor_params = SensorParameters(lon_m=spec.wheel_base_m/2, max_m=15)
+    sensor_params = SensorParameters(lon_m=spec.wheel_base_m/2, max_m=15, dist_std_rate=0.05)
     lidar = OmniDirectionalLidar(obst_list, sensor_params)
     mapper = NdtGlobalMapper(sensor_params=sensor_params, center_x_m=25.0, center_y_m=5.0)
     vehicle = FourWheelsVehicle(State(color=spec.color), spec,
