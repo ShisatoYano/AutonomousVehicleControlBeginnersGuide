@@ -6,6 +6,7 @@ Python sample codes and documents about Autonomous vehicle control algorithm. In
 
 ## Table of Contents
 * [What is this?](#what-is-this)
+* [Goal of this project](#goal-of-this-project)
 
 
 ## What is this?
@@ -14,3 +15,9 @@ This is a sample codes collections about Autonomous vehicle control algorithm.
 Each source codes are implemented with Python to help your understanding.  
 
 You can fork this repository and use for studying, education or work freely.  
+
+
+## Goal of this project
+I want to release my own technical book about Autonomous Vehicle algorithms.  
+
+The book will include all of codes and documents in this repository as contents.  
