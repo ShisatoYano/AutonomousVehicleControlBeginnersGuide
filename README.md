@@ -8,6 +8,7 @@ Python sample codes and documents about Autonomous vehicle control algorithm. In
 * [What is this?](#what-is-this)
 * [Goal of this project](#goal-of-this-project)
 * [Requirements](#requirements)
+* [How to use](#how-to-use)
 
 
 ## What is this?
@@ -32,3 +33,11 @@ For development:
 For setting up the environment with Docker:
 * [Visual Studio Code](https://code.visualstudio.com/)
 * [Docker](https://www.docker.com/)
+
+
+## How to use
+1. Clone this repository  
+```bash
+$ git clone https://github.com/ShisatoYano/AutonomousVehicleControlBeginnersGuide
+```
+
