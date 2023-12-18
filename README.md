@@ -10,11 +10,7 @@ Python sample codes and documents about Autonomous vehicle control algorithm. In
 
 
 ## What is this?
-This is a sample codes collections about Autonomous vehicle control algorithm.  
-
-Each source codes are implemented with Python to help your understanding.  
-
-You can fork this repository and use for studying, education or work freely.  
+This is a sample codes collections about Autonomous vehicle control algorithm. Each source codes are implemented with Python to help your understanding. You can fork this repository and use for studying, education or work freely.  
 
 
 ## Goal of this project
