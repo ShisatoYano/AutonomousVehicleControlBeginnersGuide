@@ -18,6 +18,4 @@ You can fork this repository and use for studying, education or work freely.
 
 
 ## Goal of this project
-I want to release my own technical book about Autonomous Vehicle algorithms.  
-
-The book will include all of codes and documents in this repository as contents.  
+I want to release my own technical book about Autonomous Vehicle algorithms in the future. The book will include all of codes and documents in this repository as contents.  
