@@ -9,6 +9,16 @@ Python sample codes and documents about Autonomous vehicle control algorithm. In
 * [Goal of this project](#goal-of-this-project)
 * [Requirements](#requirements)
 * [How to use](#how-to-use)
+* [Examples of Simulation](#examples-of-simulation)
+    * [Localization](#localization)
+        * [Extended Kalman Filter Localization](#extended-kalman-filter-localization)
+    * [Mapping](#mapping)
+        * [NDT Map Construction](#ndt-map-construction)
+    * [Path Tracking](#path-tracking)
+        * [Pure pursuit Path Tracking](#pure-pursuit-path-tracking)
+    * [Perception](#perception)
+        * [Rectangle fitting Detection](#rectangle-fitting-detection)
+        * [Sensor's Extrinsic Parameters Estimation](#sensors-extrinsic-parameters-estimation)
 
 
 ## What is this?
@@ -63,3 +73,21 @@ For setting up the environment with Docker:
         $ python src/simulations/localization/extended_kalman_filter_localization/extended_kalman_filter_localization.py
         ```
 5. Add star to this repository if you like it!!
+
+
+## Examples of Simulation
+### Localization
+#### Extended Kalman Filter Localization
+![](src/simulations/localization/extended_kalman_filter_localization/extended_kalman_filter_localization.gif)  
+### Mapping
+#### NDT Map Construction
+![](src/simulations/mapping/ndt_map_construction/ndt_map_construction.gif)  
+### Path Tracking
+#### Pure pursuit Path Tracking
+![](src/simulations/path_tracking/pure_pursuit_path_tracking/pure_pursuit_path_tracking.gif)  
+### Perception
+#### Rectangle fitting Detection
+![](src/simulations/perception/point_cloud_rectangle_fitting/point_cloud_rectangle_fitting.gif)  
+#### Sensor's Extrinsic Parameters Estimation
+Estimation by Unscented Kalman Filter  
+![](src/simulations/perception/sensor_auto_calibration/sensor_auto_calibration.gif)  
