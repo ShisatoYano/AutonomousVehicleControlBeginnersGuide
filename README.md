@@ -20,6 +20,7 @@ Python sample codes and documents about Autonomous vehicle control algorithm. In
         * [Rectangle fitting Detection](#rectangle-fitting-detection)
         * [Sensor's Extrinsic Parameters Estimation](#sensors-extrinsic-parameters-estimation)
 * [License](#license)
+* [Use Case](#use-case)
 
 
 ## What is this?
@@ -96,3 +97,10 @@ Estimation by Unscented Kalman Filter
 
 ## License
 MIT  
+
+
+## Use Case
+I started this project to study an algorithm and software development for Autonomous Vehicle system by myself. You can also use this repo for your own studying, education, researching and development.  
+
+If this project helps your task, please let me know by creating a issue.  
+Any paper, animation, video as your output, always welcome!! It will encourage me to continue this project.  
