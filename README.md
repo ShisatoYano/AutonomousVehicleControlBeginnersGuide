@@ -31,13 +31,35 @@ For development:
 * [pytest-cov](https://github.com/pytest-dev/pytest-cov) (for coverage measurement)
 
 For setting up the environment with Docker:
-* [Visual Studio Code](https://code.visualstudio.com/)
+* [VS Code](https://code.visualstudio.com/)
 * [Docker](https://www.docker.com/)
+* [WSL](https://learn.microsoft.com/en-us/windows/wsl/)
 
 
 ## How to use
 1. Clone this repository  
-```bash
-$ git clone https://github.com/ShisatoYano/AutonomousVehicleControlBeginnersGuide
-```
+    ```bash
+    $ git clone https://github.com/ShisatoYano/AutonomousVehicleControlBeginnersGuide
+    ```
 
+2. Set up the environment for running each codes
+    * Set up on your local directory:
+        ```bash
+        $ pip install .devcontainer/requirements.txt
+        ```
+    * Set up with Docker on WSL:
+        * Before cloning thi repo, [install WSL](https://learn.microsoft.com/en-us/windows/wsl/install) and [Docker](https://docs.docker.com/desktop/install/linux-install/) in advance
+        * Clone this repo following the above Step 1
+        * Open this repo's folder by VSCode
+        * [Create Dev Container](https://code.visualstudio.com/docs/devcontainers/create-dev-container)
+        * And then, all required libraries are installed automatically
+3. Execute unit tests to confirm the environment were installed successfully
+    ```bash
+    $ . run_test_suites.sh
+    ```
+4. Execute a python script at src/simulations directory
+    * For example, when you want to execute localization simulation of Extended Kalman Filter:
+        ```bash
+        $ python src/simulations/localization/extended_kalman_filter_localization/extended_kalman_filter_localization.py
+        ```
+5. Add star to this repository if you like it!!
