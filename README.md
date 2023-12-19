@@ -22,6 +22,7 @@ Python sample codes and documents about Autonomous vehicle control algorithm. In
 * [License](#license)
 * [Use Case](#use-case)
 * [Contribution](#contribution)
+* [Author](#author)
 
 
 ## What is this?
@@ -109,3 +110,7 @@ Any paper, animation, video as your output, always welcome!! It will encourage m
 
 ## Contribution
 Any contribution by creating an issue or sending a pull request is welcome!! Please check [this document about how to contribute](/HOWTOCONTRIBUTE.md).  
+
+
+## Author
+[Shisato Yano](https://github.com/ShisatoYano)  
