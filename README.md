@@ -19,6 +19,7 @@ Python sample codes and documents about Autonomous vehicle control algorithm. In
     * [Perception](#perception)
         * [Rectangle fitting Detection](#rectangle-fitting-detection)
         * [Sensor's Extrinsic Parameters Estimation](#sensors-extrinsic-parameters-estimation)
+* [License](#license)
 
 
 ## What is this?
@@ -91,3 +92,7 @@ For setting up the environment with Docker:
 #### Sensor's Extrinsic Parameters Estimation
 Estimation by Unscented Kalman Filter  
 ![](src/simulations/perception/sensor_auto_calibration/sensor_auto_calibration.gif)  
+
+
+## License
+MIT  
