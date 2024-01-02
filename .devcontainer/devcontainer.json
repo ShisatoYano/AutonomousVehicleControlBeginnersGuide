@@ -1,7 +1,7 @@
 {
     "name": "AutonomousVehicleControlBeginnersGuide",
 
-    "dockerComposeFile": "docker-compose.yml",
+    "dockerComposeFile": "../docker-compose.yml",
 
     "build": {
         "args": {

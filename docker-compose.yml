@@ -7,6 +7,6 @@ services:
       context: .
       dockerfile: Dockerfile
     volumes:
-      - ../:/home/dev-user/workspace
+      - .:/home/dev-user/workspace
     tty: true
     network_mode: "host"
