@@ -44,7 +44,7 @@ class State:
         time_s: Time interval per cycle[sec]
         """
 
-        yaw_rad = state[2]
+        yaw_rad = state.item(2)
         
         A = np.array([[1, 0, 0, cos(yaw_rad) * time_s],
                       [0, 1, 0, sin(yaw_rad) * time_s],
