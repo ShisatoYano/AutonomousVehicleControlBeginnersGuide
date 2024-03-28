@@ -44,7 +44,11 @@ class State:
         time_s: Time interval per cycle[sec]
         """
 
-        yaw_rad = state.item(2)
+        # to fix DeprecationWarning: Conversion of an array with ndim > 0 
+        # to a scalar is deprecated, and will error in future. 
+        # Ensure you extract a single element from your array 
+        # before performing this operation. (Deprecated NumPy 1.25.)
+        yaw_rad = state.item(2) # do not extract an element like state[2]
         
         A = np.array([[1, 0, 0, cos(yaw_rad) * time_s],
                       [0, 1, 0, sin(yaw_rad) * time_s],
