@@ -43,14 +43,16 @@ class State:
         input: Motion input (acceleration, yaw rate) object
         time_s: Time interval per cycle[sec]
         """
+
+        yaw_rad = state[2]
         
-        A = np.array([[1, 0, 0, cos(state[2]) * time_s],
-                      [0, 1, 0, sin(state[2]) * time_s],
+        A = np.array([[1, 0, 0, cos(yaw_rad) * time_s],
+                      [0, 1, 0, sin(yaw_rad) * time_s],
                       [0, 0, 1, 0],
                       [0, 0, 0, 1]])
         
-        B = np.array([[(cos(state[2]) * time_s**2) / 2, 0],
-                      [(sin(state[2]) * time_s**2) / 2, 0],
+        B = np.array([[(cos(yaw_rad) * time_s**2) / 2, 0],
+                      [(sin(yaw_rad) * time_s**2) / 2, 0],
                       [0, time_s],
                       [time_s, 0]])
         
