@@ -21,6 +21,8 @@ When you implement a sample program of an algorithm, please keep the following i
 4. Use only libraries and tools written in Requirements section of README.  
 5. Implement as simple as possible. The main purpose to help a user to understand the algorithm. It is not for practical usage.  
 
+### Step 3: Implement unit test
+
 ## Report and fix defect
 
 ## Add documentation about existing program
