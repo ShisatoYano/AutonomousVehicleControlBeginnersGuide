@@ -59,7 +59,7 @@ For setting up the environment with Docker:
 2. Set up the environment for running each codes
     * Set up on your local directory:
         ```bash
-        $ pip install .devcontainer/requirements.txt
+        $ pip install -r requirements.txt
         ```
     * Set up with Docker on WSL:
         * Before cloning thi repo, [install WSL](https://learn.microsoft.com/en-us/windows/wsl/install) and [Docker](https://docs.docker.com/desktop/install/linux-install/) in advance
