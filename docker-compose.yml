@@ -6,7 +6,11 @@ services:
     build: 
       context: .
       dockerfile: Dockerfile
+    environment:
+      - DISPLAY
+      - QT_X11_NO_MITSHM=1
     volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix
       - .:/home/dev-user/workspace
     tty: true
     network_mode: "host"
