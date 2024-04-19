@@ -22,6 +22,7 @@ When you implement a sample program of an algorithm, please keep the following i
 5. Implement as simple as possible. The main purpose to help a user to understand the algorithm. It is not for practical usage.  
 
 ### Step 3: Implement unit test
+If you added a new sample program, please add a unit test code for it under test directory. When you implement the test code, please refer to the existing code. Additionally, each unit tests should be able to run without animation because test process stops and an exception occurs. After you completed to implement the test code, confirm the test passes by executing the script, run_test_suites.sh/bat.  
 
 ## Report and fix defect
 
