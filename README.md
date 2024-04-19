@@ -34,6 +34,7 @@ I want to release my own technical book about Autonomous Vehicle algorithms in t
 
 
 ## Requirements
+Please satisfy with the following requirements on native or VM Linux in advance.  
 For running each sample codes:  
 * [Python 3.11.x](https://www.python.org/)
 * [Matplotlib](https://matplotlib.org/)
@@ -47,7 +48,6 @@ For development:
 For setting up the environment with Docker:
 * [VS Code](https://code.visualstudio.com/)
 * [Docker](https://www.docker.com/)
-* [WSL](https://learn.microsoft.com/en-us/windows/wsl/)
 
 
 ## How to use
@@ -62,7 +62,7 @@ For setting up the environment with Docker:
         $ pip install -r requirements.txt
         ```
     * Set up with Docker on WSL:
-        * Before cloning thi repo, [install WSL](https://learn.microsoft.com/en-us/windows/wsl/install) and [Docker](https://docs.docker.com/desktop/install/linux-install/) in advance
+        * Before cloning thi repo, [install Docker](https://docs.docker.com/desktop/install/linux-install/) in advance
         * Clone this repo following the above Step 1
         * Open this repo's folder by VSCode
         * [Create Dev Container](https://code.visualstudio.com/docs/devcontainers/create-dev-container)
