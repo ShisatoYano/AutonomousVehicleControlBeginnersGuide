@@ -50,3 +50,5 @@ Adding a documentation about existing programs is also welcome.
 There have not been any rules about documentation yet. If you had any suggestion of how to write documentations, please submit a PR and I will review it.  
 
 ## Support this project
+Supporting this project financially is also a great contribution!!.  
+If you or your company could support this project, please consider [Sponsor @ShisatoYano on GitHub Sponsors](https://github.com/sponsors/ShisatoYano).  
