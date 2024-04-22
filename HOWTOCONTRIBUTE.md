@@ -25,6 +25,12 @@ When you implement a sample program of an algorithm, please keep the following i
 If you added a new sample program, please add a unit test code for it under test directory. When you implement the test code, please refer to the existing code. Additionally, each unit tests should be able to run without animation because test process stops and an exception occurs. After you completed to implement the test code, confirm the test passes by executing the script, run_test_suites.sh/bat.  
 
 ### Step 4: Submit a pull request and modify code based on review
+If your sample program and test were ready, let's create a pull request and submit it. When you create the PR, please write a description about the following items.  
+
+* The overview of your PR  
+* How did you confirm that your program works well  
+
+After you submitted your PR, each unit tests is executed automatically by GitHub Actions. If an error occured and unit tests failed, please investigate the reason and fix it. After all tests passed and any problems were not found by code review, I will allow you to merge your PR into main branch.  
 
 ## Report and fix defect
 
