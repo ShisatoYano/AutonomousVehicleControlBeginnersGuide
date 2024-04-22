@@ -46,5 +46,7 @@ When you report an issue, please provide the following information.
 Additionally, you can see existing reported issues and fix the defect. And then, please don't forget to add a unit test code to check the defect was fixed. After you completed fixing, let's submit a PR following the rule of Step 4.  
 
 ## Add documentation about existing program
+Adding a documentation about existing programs is also welcome.  
+There have not been any rules about documentation yet. If you had any suggestion of how to write documentations, please submit a PR and I will review it.  
 
 ## Support this project
