@@ -27,12 +27,23 @@ If you added a new sample program, please add a unit test code for it under test
 ### Step 4: Submit a pull request and modify code based on review
 If your sample program and test were ready, let's create a pull request and submit it. When you create the PR, please write a description about the following items.  
 
-* The overview of your PR  
-* How did you confirm that your program works well  
+* The overview of your PR.  
+* How did you confirm that your program works well.  
 
 After you submitted your PR, each unit tests is executed automatically by GitHub Actions. If an error occured and unit tests failed, please investigate the reason and fix it. After all tests passed and any problems were not found by code review, I will allow you to merge your PR into main branch.  
 
 ## Report and fix defect
+Reporting and fixing a defect are also welcome.  
+When you report an issue, please provide the following information.  
+
+* A clear and concise description about the defect.  
+* A clear and consice description about your expectation.  
+* Screenshots to help explaining the defect.  
+* OS version.  
+* Python version.  
+* Each libraries version.  
+
+Additionally, you can see existing reported issues and fix the defect. And then, please don't forget to add a unit test code to check the defect was fixed. After you completed fixing, let's submit a PR following the rule of Step 4.  
 
 ## Add documentation about existing program
 
