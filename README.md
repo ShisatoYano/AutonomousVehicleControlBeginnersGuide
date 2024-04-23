@@ -36,7 +36,7 @@ I want to release my own technical book about Autonomous Vehicle algorithms in t
 ## Requirements
 Please satisfy with the following requirements on native or VM Linux in advance.  
 For running each sample codes:  
-* [Python 3.11.x](https://www.python.org/)
+* [Python 3.12.x](https://www.python.org/)
 * [Matplotlib](https://matplotlib.org/)
 * [NumPy](https://numpy.org/)
 * [SciPy](https://scipy.org/)
