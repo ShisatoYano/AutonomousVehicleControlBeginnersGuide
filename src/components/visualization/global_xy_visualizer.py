@@ -13,13 +13,12 @@ class GlobalXYVisualizer:
     Visualization class for global 2D X-Y plot
     """
     
-    def __init__(self, x_lim, y_lim, time_params, show_zoom=True, gif_name=None):
+    def __init__(self, x_lim, y_lim, time_params, show_zoom=True):
         """
         Constructor
         x_lim: MinMax object of x axis
         y_lim: MinMax object of y axis
         time_params: TimeParameters object
-        gif_name: Name of saved gif file as string
         """
         
         self.objects = []
@@ -28,7 +27,6 @@ class GlobalXYVisualizer:
         self.y_lim = y_lim
         
         self.time_params = time_params
-        self.gif_name = gif_name
         self.show_plot = True
         self.show_zoom = show_zoom
     
@@ -92,14 +90,13 @@ class GlobalXYVisualizer:
         # create animation instance
         elems = []
         if self.show_plot:
+            print("Simulation start!!")
             self.anime = anm.FuncAnimation(figure, self.update, fargs=(elems, axes),
                                            frames=self.time_params.get_frame_num(), 
                                            interval=self.time_params.get_interval_msec(), 
                                            repeat=False)
-            # gif file is saved only when file's name as string is set
-            # in this case, animation is not shown
-            if self.gif_name: self.anime.save(self.gif_name, writer="pillow")
-            else: plt.show()
+            self.anime.save("simulation.gif", writer="pillow")
+            print("Simulation finished!!")
         else:
             # only when executed as unit test
             for i in range(1000): self.update(i, elems, axes)

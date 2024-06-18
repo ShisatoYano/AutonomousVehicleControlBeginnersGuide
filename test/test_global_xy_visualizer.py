@@ -67,16 +67,7 @@ def test_initialize():
     assert vis.x_lim != None
     assert vis.y_lim != None
     assert vis.time_params != None
-    assert vis.gif_name == None
     assert vis.show_plot == True
-
-
-def test_gif_name():
-    test_gif_name = "test.gif"
-
-    x_lim, y_lim = MockMinMax(), MockMinMax()
-    vis = GlobalXYVisualizer(x_lim, y_lim, MockTimeParameters(), gif_name=test_gif_name)
-    assert vis.gif_name == test_gif_name
 
 
 def test_draw():
