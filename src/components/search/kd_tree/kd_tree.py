@@ -8,7 +8,6 @@ Author: Shisato Yano
 import numpy as np
 import sys
 from pathlib import Path
-import matplotlib.pyplot as plt
 
 abs_dir_path = str(Path(__file__).absolute().parent)
 sys.path.append(abs_dir_path + "/../../sensors/lidar")
