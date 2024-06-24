@@ -18,3 +18,13 @@ class PidController:
         """
 
         self.WHEEL_BASE_M = spec.wheel_base_m
+
+        self.course = course
+    
+    def update(self, state):
+        """
+        Function to update data for path tracking
+        state: Vehicle's state object
+        """
+
+        if not self.course: return
