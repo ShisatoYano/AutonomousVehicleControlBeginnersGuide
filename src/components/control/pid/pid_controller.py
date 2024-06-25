@@ -25,6 +25,11 @@ class PidController:
         self.WHEEL_BASE_M = spec.wheel_base_m
 
         self.course = course
+        self.look_ahead_distance_m = self.MIN_LOOK_AHEAD_DISTANCE_M
+        self.target_course_index = 0
+        self.target_accel_mps2 = 0.0
+        self.target_steer_rad = 0.0
+        self.target_yaw_rate_rps = 0.0
     
     def update(self, state):
         """
