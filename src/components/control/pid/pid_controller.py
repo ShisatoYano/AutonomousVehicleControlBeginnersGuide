@@ -39,6 +39,18 @@ class PidController:
         
         self.look_ahead_distance_m = self.LOOK_FORWARD_GAIN * state.get_speed_mps() + self.MIN_LOOK_AHEAD_DISTANCE_M
 
+    def _calculate_target_course_index(self, state):
+        """
+        Private function to calculate target point's index on course
+        state: Vehicle's state object
+        """
+        
+        nearest_index = self.course.search_nearest_point_index(state)
+        while self.look_ahead_distance_m > self.course.calculate_distance_from_point(state, nearest_index):
+            if nearest_index + 1 >= self.course.length(): break
+            nearest_index += 1
+        self.target_course_index = nearest_index
+
     def update(self, state):
         """
         Function to update data for path tracking
@@ -48,3 +60,5 @@ class PidController:
         if not self.course: return
 
         self._calculate_look_ahead_distance(state)
+
+        self._calculate_target_course_index(state)
