@@ -19,6 +19,9 @@ class PidController:
         course: Course data and logic object
         """
 
+        self.MIN_LOOK_AHEAD_DISTANCE_M = 2.0
+        self.LOOK_FORWARD_GAIN = 0.3
+        self.SPEED_PROPORTIONAL_GAIN = 1.0
         self.WHEEL_BASE_M = spec.wheel_base_m
 
         self.course = course
