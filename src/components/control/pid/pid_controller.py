@@ -51,6 +51,15 @@ class PidController:
             nearest_index += 1
         self.target_course_index = nearest_index
 
+    def _calculate_target_acceleration_mps2(self, state):
+        """
+        Private function to calculate acceleration input
+        state: Vehicle's state object
+        """
+
+        diff_speed_mps = self.course.calculate_speed_difference_mps(state, self.target_course_index)
+        self.target_accel_mps2 = self.SPEED_PROPORTIONAL_GAIN * diff_speed_mps
+
     def update(self, state):
         """
         Function to update data for path tracking
@@ -62,3 +71,5 @@ class PidController:
         self._calculate_look_ahead_distance(state)
 
         self._calculate_target_course_index(state)
+
+        self._calculate_target_acceleration_mps2(state)
