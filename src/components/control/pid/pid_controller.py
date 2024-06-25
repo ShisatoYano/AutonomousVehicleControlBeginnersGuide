@@ -4,6 +4,8 @@ pid_controller.py
 Author: Shisato Yano
 """
 
+from math import sin, tan, atan2
+
 
 class PidController:
     """
