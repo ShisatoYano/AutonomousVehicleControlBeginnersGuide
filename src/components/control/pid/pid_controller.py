@@ -60,6 +60,23 @@ class PidController:
         diff_speed_mps = self.course.calculate_speed_difference_mps(state, self.target_course_index)
         self.target_accel_mps2 = self.SPEED_PROPORTIONAL_GAIN * diff_speed_mps
 
+    def _calculate_target_steer_angle_rad(self, state):
+        """
+        Private function to calculate steering angle input
+        state: Vehicle's state object
+        """
+        
+        diff_angle_rad = self.course.calculate_angle_difference_rad(state, self.target_course_index)
+        self.target_steer_rad = atan2((2 * self.WHEEL_BASE_M * sin(diff_angle_rad)), self.look_ahead_distance_m)
+
+    def _calculate_target_yaw_rate_rps(self, state):
+        """
+        Private function to calculate yaw rate input
+        state: Vehicle's state object
+        """
+
+        self.target_yaw_rate_rps = state.get_speed_mps() * tan(self.target_steer_rad) / self.WHEEL_BASE_M
+
     def update(self, state):
         """
         Function to update data for path tracking
@@ -73,3 +90,7 @@ class PidController:
         self._calculate_target_course_index(state)
 
         self._calculate_target_acceleration_mps2(state)
+
+        self._calculate_target_steer_angle_rad(state)
+
+        self._calculate_target_yaw_rate_rps(state)
