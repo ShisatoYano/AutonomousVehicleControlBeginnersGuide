@@ -94,3 +94,24 @@ class PidController:
         self._calculate_target_steer_angle_rad(state)
 
         self._calculate_target_yaw_rate_rps(state)
+    
+    def get_target_accel_mps2(self):
+        """
+        Function to get acceleration input[m/s2]
+        """
+        
+        return self.target_accel_mps2
+    
+    def get_target_steer_rad(self):
+        """
+        Function to get steering angle input[rad]
+        """
+        
+        return self.target_steer_rad
+
+    def get_target_yaw_rate_rps(self):
+        """
+        Function to get yaw rate input[rad/s]
+        """
+
+        return self.target_yaw_rate_rps
