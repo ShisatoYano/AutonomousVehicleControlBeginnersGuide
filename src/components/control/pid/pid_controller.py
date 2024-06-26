@@ -115,3 +115,6 @@ class PidController:
         """
 
         return self.target_yaw_rate_rps
+    
+    def draw(self, axes, elems):
+        pass
