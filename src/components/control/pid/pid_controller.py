@@ -20,7 +20,6 @@ class PidController:
         """
 
         self.MIN_LOOK_AHEAD_DISTANCE_M = 2.0
-        self.LOOK_FORWARD_GAIN = 0.3
         self.SPEED_PROPORTIONAL_GAIN = 1.0
         self.WHEEL_BASE_M = spec.wheel_base_m
 
@@ -30,14 +29,6 @@ class PidController:
         self.target_accel_mps2 = 0.0
         self.target_steer_rad = 0.0
         self.target_yaw_rate_rps = 0.0
-    
-    def _calculate_look_ahead_distance(self, state):
-        """
-        Private function to calculate look ahead distance to target point
-        state: Vehicle's state object
-        """
-        
-        self.look_ahead_distance_m = self.LOOK_FORWARD_GAIN * state.get_speed_mps() + self.MIN_LOOK_AHEAD_DISTANCE_M
 
     def _calculate_target_course_index(self, state):
         """
@@ -45,11 +36,7 @@ class PidController:
         state: Vehicle's state object
         """
         
-        nearest_index = self.course.search_nearest_point_index(state)
-        while self.look_ahead_distance_m > self.course.calculate_distance_from_point(state, nearest_index):
-            if nearest_index + 1 >= self.course.length(): break
-            nearest_index += 1
-        self.target_course_index = nearest_index
+        self.target_course_index = self.course.search_nearest_point_index(state)
 
     def _calculate_target_acceleration_mps2(self, state):
         """
@@ -84,8 +71,6 @@ class PidController:
         """
 
         if not self.course: return
-
-        self._calculate_look_ahead_distance(state)
 
         self._calculate_target_course_index(state)
 
