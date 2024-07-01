@@ -117,6 +117,14 @@ class SinCurveCourse:
 
         return self.speed_array[point_index]
     
+    def target_point_curvature(self, point_index):
+        """
+        Function to get curvature at a point on course
+        point_index: index of point on course
+        """
+
+        return self.curvature_array[point_index]
+    
     def length(self):
         """
         Function to get length of course
