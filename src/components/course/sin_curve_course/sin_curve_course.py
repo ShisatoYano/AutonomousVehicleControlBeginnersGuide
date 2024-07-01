@@ -26,8 +26,23 @@ class SinCurveCourse:
 
         self.x_array = np.arange(x_min, x_max, resolution)
         self.y_array = [sin(x * sin_ratio) * (x * width_ratio) for x in self.x_array]
+        
         self.speed_array = [(target_speed_kmph / 3.6) for _ in self.x_array]
         self.speed_array[-1] = 0.0
+
+        self.curvature_array = [0.0] * len(self.x_array)
+        for i in range(1, len(self.curvature_array)-2):
+            p1_x, p1_y = self.x_array[i-1], self.y_array[i-1]
+            p2_x, p2_y = self.x_array[i], self.y_array[i]
+            p3_x, p3_y = self.x_array[i+1], self.y_array[i+1]
+            
+            A_ = ((p2_x-p1_x)*(p3_y-p1_y)-(p2_y-p1_y)*(p3_x-p1_x))/2
+            dist_p12 = np.linalg.norm(np.array([p1_x, p1_y]) - np.array([p2_x, p2_y]))
+            dist_p23 = np.linalg.norm(np.array([p2_x, p2_y]) - np.array([p3_x, p3_y]))
+            dist_p31 = np.linalg.norm(np.array([p3_x, p3_y]) - np.array([p1_x, p1_y]))
+
+            self.curvature_array[i] = 4 * A_ / (dist_p12 * dist_p23 * dist_p31)
+
         self.color = color
     
     def search_nearest_point_index(self, state):
