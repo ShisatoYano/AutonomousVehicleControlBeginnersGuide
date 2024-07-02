@@ -4,7 +4,7 @@ pid_controller.py
 Author: Shisato Yano
 """
 
-from math import sin, tan, atan2
+from math import sin, tan, atan2, atan
 
 
 class PidController:
@@ -53,8 +53,10 @@ class PidController:
         state: Vehicle's state object
         """
         
-        diff_angle_rad = self.course.calculate_angle_difference_rad(state, self.target_course_index)
-        self.target_steer_rad = atan2((2 * self.WHEEL_BASE_M * sin(diff_angle_rad)), self.look_ahead_distance_m)
+        target_curvature = self.course.target_point_curvature(self.target_course_index)
+        self.target_steer_rad = atan(self.WHEEL_BASE_M * target_curvature)        
+        # diff_angle_rad = self.course.calculate_angle_difference_rad(state, self.target_course_index)
+        # self.target_steer_rad = atan2((2 * self.WHEEL_BASE_M * sin(diff_angle_rad)), self.look_ahead_distance_m)
 
     def _calculate_target_yaw_rate_rps(self, state):
         """
@@ -74,9 +76,9 @@ class PidController:
 
         self._calculate_target_course_index(state)
 
-        # self._calculate_target_acceleration_mps2(state)
+        self._calculate_target_steer_angle_rad(state)
 
-        # self._calculate_target_steer_angle_rad(state)
+        # self._calculate_target_acceleration_mps2(state)
 
         # self._calculate_target_yaw_rate_rps(state)
     
