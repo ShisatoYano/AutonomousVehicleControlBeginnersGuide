@@ -74,11 +74,11 @@ class PidController:
 
         self._calculate_target_course_index(state)
 
-        self._calculate_target_acceleration_mps2(state)
+        # self._calculate_target_acceleration_mps2(state)
 
-        self._calculate_target_steer_angle_rad(state)
+        # self._calculate_target_steer_angle_rad(state)
 
-        self._calculate_target_yaw_rate_rps(state)
+        # self._calculate_target_yaw_rate_rps(state)
     
     def get_target_accel_mps2(self):
         """
