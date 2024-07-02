@@ -5,6 +5,7 @@ Author: Shisato Yano
 """
 
 from math import sin, tan, atan2, atan
+import numpy as np
 
 
 class PidController:
@@ -58,6 +59,15 @@ class PidController:
         # diff_angle_rad = self.course.calculate_angle_difference_rad(state, self.target_course_index)
         # self.target_steer_rad = atan2((2 * self.WHEEL_BASE_M * sin(diff_angle_rad)), self.look_ahead_distance_m)
 
+    def _calculate_error_against_course(self, state):
+        target_x_m = self.course.point_x_m(self.target_course_index)
+        target_y_m = self.course.point_y_m(self.target_course_index)
+        current_x_m = state.get_x_m()
+        current_y_m = state.get_y_m()
+        error_xy_m = np.array([[current_x_m - target_x_m],
+                               [current_y_m - target_y_m]])
+
+
     def _calculate_target_yaw_rate_rps(self, state):
         """
         Private function to calculate yaw rate input
@@ -79,6 +89,8 @@ class PidController:
         self._calculate_target_acceleration_mps2(state)
 
         self._calculate_target_steer_angle_rad(state)
+
+        self._calculate_error_against_course(state)
 
         # self._calculate_target_yaw_rate_rps(state)
     
