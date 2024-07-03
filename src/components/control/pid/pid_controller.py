@@ -77,7 +77,7 @@ class PidController:
         current_yaw_rad = state.get_yaw_rad()
         rot_mat = rot_mat_22(-current_yaw_rad)
         error_lonlat_m = rot_mat @ error_xy_m
-        error_yaw_rad = atan2(error_y_m, error_x_m) - current_yaw_rad
+        error_yaw_rad = current_yaw_rad - atan2(error_y_m, error_x_m)
 
 
     def _calculate_target_yaw_rate_rps(self, state):
