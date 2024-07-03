@@ -69,12 +69,15 @@ class PidController:
         target_y_m = self.course.point_y_m(self.target_course_index)
         current_x_m = state.get_x_m()
         current_y_m = state.get_y_m()
-        
-        error_xy_m = np.array([[current_x_m - target_x_m],
-                               [current_y_m - target_y_m]])
+
+        error_x_m = current_x_m - target_x_m
+        error_y_m = current_y_m - target_y_m
+        error_xy_m = np.array([[error_x_m],
+                               [error_y_m]])
         current_yaw_rad = state.get_yaw_rad()
         rot_mat = rot_mat_22(-current_yaw_rad)
         error_lonlat_m = rot_mat @ error_xy_m
+        error_yaw_rad = atan2(error_y_m, error_x_m) - current_yaw_rad
 
 
     def _calculate_target_yaw_rate_rps(self, state):
