@@ -32,6 +32,7 @@ class PidController:
         self.course = course
         self.look_ahead_distance_m = self.MIN_LOOK_AHEAD_DISTANCE_M
         self.target_course_index = 0
+        self.feedforward_steer_rad = 0.0
         self.target_accel_mps2 = 0.0
         self.target_steer_rad = 0.0
         self.target_yaw_rate_rps = 0.0
@@ -53,18 +54,16 @@ class PidController:
         diff_speed_mps = self.course.calculate_speed_difference_mps(state, self.target_course_index)
         self.target_accel_mps2 = self.SPEED_PROPORTIONAL_GAIN * diff_speed_mps
 
-    def _calculate_target_steer_angle_rad(self, state):
+    def _calculate_feedforward_steer_angle_rad(self, state):
         """
         Private function to calculate steering angle input
         state: Vehicle's state object
         """
         
         target_curvature = self.course.target_point_curvature(self.target_course_index)
-        self.target_steer_rad = atan(self.WHEEL_BASE_M * target_curvature)        
-        # diff_angle_rad = self.course.calculate_angle_difference_rad(state, self.target_course_index)
-        # self.target_steer_rad = atan2((2 * self.WHEEL_BASE_M * sin(diff_angle_rad)), self.look_ahead_distance_m)
+        self.feedforward_steer_rad = atan(self.WHEEL_BASE_M * target_curvature)
 
-    def _calculate_error_against_course(self, state):
+    def _calculate_target_steer_rad(self, state):
         target_x_m = self.course.point_x_m(self.target_course_index)
         target_y_m = self.course.point_y_m(self.target_course_index)
         current_x_m = state.get_x_m()
@@ -78,6 +77,8 @@ class PidController:
         rot_mat = rot_mat_22(-current_yaw_rad)
         error_lonlat_m = rot_mat @ error_xy_m
         error_yaw_rad = current_yaw_rad - atan2(error_y_m, error_x_m)
+
+        self.target_steer_rad = -0.3 * error_lonlat_m[1, 0] - 0.5 * error_yaw_rad + self.feedforward_steer_rad
 
 
     def _calculate_target_yaw_rate_rps(self, state):
@@ -100,11 +101,11 @@ class PidController:
 
         self._calculate_target_acceleration_mps2(state)
 
-        self._calculate_target_steer_angle_rad(state)
+        self._calculate_feedforward_steer_angle_rad(state)
 
-        self._calculate_error_against_course(state)
+        self._calculate_target_steer_rad(state)
 
-        # self._calculate_target_yaw_rate_rps(state)
+        self._calculate_target_yaw_rate_rps(state)
     
     def get_target_accel_mps2(self):
         """
