@@ -16,3 +16,8 @@ class CubicSpline:
         h = np.diff(x_points)
         if np.any(h < 0):
             raise ValueError("X coordinate points must be stored in ascending order")
+        
+        self.a, self.b, self.c, self.d = [], [], [], []
+        self.x_points = x_points
+        self.y_points = y_points
+        self.size_x_points = len(self.x_points)
