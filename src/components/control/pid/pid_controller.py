@@ -5,7 +5,7 @@ Author: Shisato Yano
 """
 
 from pathlib import Path
-from math import sin, tan, atan2, atan
+from math import sin, tan, atan2, atan, pi
 import sys
 import numpy as np
 
@@ -78,7 +78,14 @@ class PidController:
         error_lonlat_m = rot_mat @ error_xy_m
         error_yaw_rad = current_yaw_rad - atan2(error_y_m, error_x_m)
 
-        self.target_steer_rad = -0.3 * error_lonlat_m[1, 0] - 0.5 * error_yaw_rad + self.feedforward_steer_rad
+        while (not(-2*pi <= error_yaw_rad <= 2*pi)):
+            if (error_yaw_rad >= 2*pi): error_yaw_rad -= 2*pi
+            elif (error_yaw_rad <= -2*pi): error_yaw_rad += 2*pi
+        if error_yaw_rad > pi: error_yaw_rad -= 2*pi
+        elif error_yaw_rad < -pi: error_yaw_rad += 2*pi
+
+        self.target_steer_rad = -0.2 * error_lonlat_m[1, 0] - 0.4 * error_yaw_rad + self.feedforward_steer_rad
+        print(error_lonlat_m[1, 0])
 
 
     def _calculate_target_yaw_rate_rps(self, state):
