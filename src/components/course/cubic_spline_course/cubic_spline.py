@@ -34,4 +34,3 @@ class CubicSpline:
     
     def _calculate_coefficient_a(self):
         self.a = [y_point for y_point in self.y_points]
-        print(self.a)
