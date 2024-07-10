@@ -31,6 +31,10 @@ class CubicSpline:
         self.size_x_points = len(self.x_points)
 
         self._calculate_coefficient_a()
+        self._calculate_coefficient_c(h)
     
     def _calculate_coefficient_a(self):
         self.a = [y_point for y_point in self.y_points]
+    
+    def _calculate_coefficient_c(self, h):
+        pass
