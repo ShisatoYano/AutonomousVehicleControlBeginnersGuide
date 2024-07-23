@@ -37,7 +37,8 @@ class CubicSpline:
         self.a = [y_point for y_point in self.y_points]
     
     def _calculate_coefficient_c(self, h):
-        A =  self._calculate_matrix_A(h)
+        A = self._calculate_matrix_A(h)
+        B = self._calculate_matrix_B(h, self.a)
 
     def _calculate_matrix_A(self, h):
         A = np.zeros((self.size_x_points, self.size_x_points))
@@ -51,3 +52,10 @@ class CubicSpline:
         A[self.size_x_points - 1, self.size_x_points - 2] = 0.0
         A[self.size_x_points - 1, self.size_x_points - 1] = 1.0
         return A
+    
+    def _calculate_matrix_B(self, h, a):
+        B = np.zeros(self.size_x_points)
+        for i in range(self.size_x_points - 2):
+            B[i + 1] = 3.0 * (a[i + 2] - a[i + 1]) / h[i + 1] \
+                        - 3.0 * (a[i + 1] - a[i]) / h[i]
+        return B
