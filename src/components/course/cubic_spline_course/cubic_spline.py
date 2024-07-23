@@ -39,6 +39,7 @@ class CubicSpline:
     def _calculate_coefficient_c(self, h):
         A = self._calculate_matrix_A(h)
         B = self._calculate_matrix_B(h, self.a)
+        self.c = np.linalg.solve(A, B)
 
     def _calculate_matrix_A(self, h):
         A = np.zeros((self.size_x_points, self.size_x_points))
