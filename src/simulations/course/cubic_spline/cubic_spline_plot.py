@@ -32,7 +32,17 @@ def main():
     x_points = np.arange(5)
     y_points = [1.7, -6, 5, 6.5, 0.0]
 
-    cubic_spline = CubicSpline(x_points, y_points)
+    cs = CubicSpline(x_points, y_points)
+
+    xi = np.linspace(0.0, 5.0)
+    yi = [cs.calculate_y(x) for x in xi]
+    
+    plt.plot(x_points, y_points, "xb", label="Input points")
+    plt.plot(xi, yi, "r", label="Cubic spline interpolation")
+    plt.grid(True)
+    plt.legend()
+
+    if show_plot: plt.savefig("cubic_spline_1d.png")
 
 
 if __name__ == "__main__":

@@ -5,6 +5,7 @@ Author: Shisato Yano
 """
 
 import numpy as np
+import bisect
 
 
 class CubicSpline:
@@ -33,6 +34,20 @@ class CubicSpline:
         self._calculate_coefficient_a()
         self._calculate_coefficient_c(h)
         self._calculate_coefficient_b_d(h)
+    
+    def calculate_y(self, x):
+        if x < self.x_points[0]: return None
+        elif x > self.x_points[-1]: return None
+
+        i_x = self._search_segment_index(x)
+        dx = x - i_x
+        y = self.a[i_x] + self.b[i_x] * dx + \
+            self.c[i_x] * dx ** 2.0 + self.d[i_x] * dx ** 3.0
+        
+        return y
+
+    def _search_segment_index(self, x):
+        return bisect.bisect(self.x_points, x) - 1
     
     def _calculate_coefficient_a(self):
         self.a = [y_point for y_point in self.y_points]
