@@ -19,3 +19,6 @@ class CubicSpline2D:
     def __init__(self, x_points, y_points):
         print(x_points)
         print(y_points)
+    
+    def _calculate_distance_from_start(self, x_points, y_points):
+        pass
