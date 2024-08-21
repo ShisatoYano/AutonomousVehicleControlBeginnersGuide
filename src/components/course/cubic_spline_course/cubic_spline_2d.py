@@ -18,6 +18,8 @@ class CubicSpline2D:
 
     def __init__(self, x_points, y_points):
         self.dists = self._calculate_distance_from_start(x_points, y_points)
+        self.sx = CubicSpline(self.dists, x_points)
+        self.sy = CubicSpline(self.dists, y_points)
     
     def _calculate_distance_from_start(self, x_points, y_points):
         dx = np.diff(x_points)
