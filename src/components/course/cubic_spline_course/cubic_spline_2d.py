@@ -17,8 +17,12 @@ class CubicSpline2D:
     """
 
     def __init__(self, x_points, y_points):
-        print(x_points)
-        print(y_points)
+        self.dists = self._calculate_distance_from_start(x_points, y_points)
     
     def _calculate_distance_from_start(self, x_points, y_points):
-        pass
+        dx = np.diff(x_points)
+        dy = np.diff(y_points)
+        self.ds = np.hypot(dx, dy)
+        dists = [0]
+        dists.extend(np.cumsum(self.ds))
+        return dists
