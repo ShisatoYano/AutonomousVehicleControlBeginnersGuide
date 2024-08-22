@@ -32,7 +32,10 @@ def main():
     x_points = [-2.5, 0.0, 2.5, 5.0, 7.5, 3.0, -1.0]
     y_points = [0.7, -6, 5, 6.5, 0.0, 5.0, -2.0]
 
-    cs_2d = CubicSpline2D(x_points, y_points)
+    ds = 0.1 # distance between 2 interpolated points
+
+    cs = CubicSpline2D(x_points, y_points)
+    s = np.arange(0, cs.s[-1], ds)
 
 
 if __name__ == "__main__":
