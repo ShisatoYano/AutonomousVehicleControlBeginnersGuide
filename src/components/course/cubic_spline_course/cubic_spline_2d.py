@@ -22,7 +22,10 @@ class CubicSpline2D:
         self.sy = CubicSpline(self.s, y_points)
     
     def calc_interpolated_xy(self, s):
-        pass
+        interpolated_x = self.sx.calculate_position(s)
+        interpolated_y = self.sy.calculate_position(s)
+
+        return interpolated_x, interpolated_y
 
     def _calc_base_points(self, x_points, y_points):
         dx = np.diff(x_points)

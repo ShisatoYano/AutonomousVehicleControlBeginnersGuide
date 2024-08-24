@@ -35,7 +35,7 @@ class CubicSpline:
         self._calculate_coefficient_c(h)
         self._calculate_coefficient_b_d(h)
     
-    def calculate_y(self, x):
+    def calculate_position(self, x):
         if x < self.x_points[0]: return None
         elif x > self.x_points[-1]: return None
 

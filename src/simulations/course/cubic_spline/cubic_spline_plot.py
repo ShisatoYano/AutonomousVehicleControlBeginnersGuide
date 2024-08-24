@@ -35,7 +35,7 @@ def main():
     cs = CubicSpline(x_points, y_points)
 
     xi = np.linspace(0.0, 5.0)
-    yi = [cs.calculate_y(x) for x in xi]
+    yi = [cs.calculate_position(x) for x in xi]
     
     plt.plot(x_points, y_points, "xb", label="Input points")
     plt.plot(xi, yi, "r", label="Cubic spline interpolation")
