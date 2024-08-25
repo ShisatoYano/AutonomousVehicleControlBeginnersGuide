@@ -40,7 +40,7 @@ class CubicSpline:
         elif x > self.x_points[-1]: return None
 
         i_x = self._search_segment_index(x)
-        dx = x - i_x
+        dx = x - self.x_points[i_x]
         y = self.a[i_x] + self.b[i_x] * dx + \
             self.c[i_x] * dx ** 2.0 + self.d[i_x] * dx ** 3.0
         
