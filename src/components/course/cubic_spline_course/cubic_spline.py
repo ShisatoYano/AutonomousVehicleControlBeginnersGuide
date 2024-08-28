@@ -46,6 +46,16 @@ class CubicSpline:
         
         return y
 
+    def calculate_first_derivative(self, x):
+        if x < self.x_points[0]: return None
+        elif x > self.x_points[-1]: return None
+
+        i_x = self._search_segment_index(x)
+        dx = x - self.x_points[i_x]
+        dy = self.b[i_x] + 2.0 * self.c[i_x] * dx + 3.0 * self.d[i_x] * dx ** 2.0
+
+        return dy
+
     def _search_segment_index(self, x):
         return bisect.bisect(self.x_points, x) - 1
     

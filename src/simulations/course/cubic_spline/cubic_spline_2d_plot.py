@@ -42,6 +42,7 @@ def main():
         i_x, i_y = cs.calc_interpolated_xy(i_s)
         xs.append(i_x)
         ys.append(i_y)
+        yaws.append(cs.calc_yaw_angle(i_s))
     
     plt.subplots(1)
     plt.plot(x_points, y_points, "xb", label="Input points")
@@ -52,6 +53,14 @@ def main():
     plt.ylabel("Y[m]")
     plt.legend()
     if show_plot: plt.savefig("cubic_spline_2d.png")
+
+    plt.subplots(1)
+    plt.plot(s, [np.rad2deg(yaw) for yaw in yaws], "-r", label="Yaw angle")
+    plt.grid(True)
+    plt.xlabel("Line length[m]")
+    plt.ylabel("Yaw angle[deg]")
+    plt.legend()
+    if show_plot: plt.savefig("cubic_spline_yaw_angle.png")
 
 
 if __name__ == "__main__":

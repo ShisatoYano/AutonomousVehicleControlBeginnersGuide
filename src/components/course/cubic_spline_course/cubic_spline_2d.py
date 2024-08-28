@@ -5,6 +5,7 @@ Author: Shisato Yano
 """
 
 import numpy as np
+import math
 
 from cubic_spline import CubicSpline
 
@@ -26,6 +27,12 @@ class CubicSpline2D:
         interpolated_y = self.sy.calculate_position(s)
 
         return interpolated_x, interpolated_y
+    
+    def calc_yaw_angle(self, s):
+        dx = self.sx.calculate_first_derivative(s)
+        dy = self.sy.calculate_first_derivative(s)
+        yaw_angle = math.atan2(dy, dx)
+        return yaw_angle
 
     def _calc_base_points(self, x_points, y_points):
         dx = np.diff(x_points)
