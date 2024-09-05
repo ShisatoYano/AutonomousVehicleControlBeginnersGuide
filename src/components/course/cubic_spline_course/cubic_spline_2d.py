@@ -41,6 +41,9 @@ class CubicSpline2D:
         dy = self.sy.calculate_first_derivative(s)
         ddy = self.sy.calculate_second_derivative(s)
 
+        curvature = (ddy * dx - ddx * dy) / ((dx ** 2 + dy ** 2) ** (3/2))
+        return curvature
+
     def _calc_base_points(self, x_points, y_points):
         dx = np.diff(x_points)
         dy = np.diff(y_points)
