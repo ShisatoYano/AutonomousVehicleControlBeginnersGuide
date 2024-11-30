@@ -1,73 +1,66 @@
 {
     "name": "AutonomousVehicleControlBeginnersGuide",
-
     "dockerComposeFile": "../docker-compose.yml",
-
-    "build": {
-        "args": {
-            "UID": "1000",
-            "GID": "1000"
-        }
-    },
-
     "service": "simulation",
-
-    "settings": {
-        "workbench.editor.enablePreview": false,
-        "editor.minimap.enabled": false,
-        "workbench.colorTheme": "One Monokai",
-        "python.linting.pylintEnabled": false,
-        "python.linting.flake8Enabled": true,
-        "python.linting.flake8Args": [
-            "--ignore=E402,E501"
-        ],
-        "python.formatting.provider": "autopep8",
-        "python.formatting.autopep8Args": [
-            "--ignore",
-            "E405,E501",
-            "--max-line-length",
-            "150"
-        ],
-        "python.analysis.extraPaths": [
-            "/usr/local/lib/python3.11/site-packages",
-            "/home/dev-user/workspace/src/components/array",
-            "/home/dev-user/workspace/src/components/common",
-            "/home/dev-user/workspace/src/components/control/pure_pursuit",
-            "/home/dev-user/workspace/src/components/control/pid",
-            "/home/dev-user/workspace/src/components/course/cubic_spline_course",
-            "/home/dev-user/workspace/src/components/course/sin_curve_course",
-            "/home/dev-user/workspace/src/components/detection/l_shape_fitting",
-            "/home/dev-user/workspace/src/components/localization/kalman_filter",
-            "/home/dev-user/workspace/src/components/mapping/grid",
-            "/home/dev-user/workspace/src/components/mapping/ndt",
-            "/home/dev-user/workspace/src/components/obstacle",
-            "/home/dev-user/workspace/src/components/search/kd_tree",
-            "/home/dev-user/workspace/src/components/sensors/",
-            "/home/dev-user/workspace/src/components/sensors/lidar",
-            "/home/dev-user/workspace/src/components/sensors/gnss",
-            "/home/dev-user/workspace/src/components/state",
-            "/home/dev-user/workspace/src/components/vehicle",
-            "/home/dev-user/workspace/src/components/visualization",
-            "/home/dev-user/workspace/src/simulations/localization/extended_kalman_filter_localization",
-            "/home/dev-user/workspace/src/simulations/mapping/ndt_map_construction",
-            "/home/dev-user/workspace/src/simulations/path_tracking/pure_pursuit_path_tracking",
-            "/home/dev-user/workspace/src/simulations/perception/lidar_obstacle_sensing",
-            "/home/dev-user/workspace/src/simulations/perception/point_cloud_rectangle_fitting",
-            "/home/dev-user/workspace/src/simulations/perception/point_cloud_search",
-            "/home/dev-user/workspace/src/simulations/perception/sensor_auto_calibration"
-        ]
-    },
-
-    "extensions": [
-        "mhutchie.git-graph",
-        "eamodio.gitlens",
-        "ms-python.python",
-        "ms-python.vscode-pylance",
-        "CoenraadS.bracket-pair-colorizer-2",
-        "shd101wyy.markdown-preview-enhanced",
-        "ms-azuretools.vscode-docker",
-        "azemoh.one-monokai"
-    ],
-
-    "workspaceFolder": "/home/dev-user/workspace"
+    "workspaceFolder": "/home/ubuntu/workspace",
+    "remoteUser": "ubuntu",
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "mhutchie.git-graph",
+                "eamodio.gitlens",
+                "ms-python.python",
+                "ms-python.vscode-pylance",
+                "CoenraadS.bracket-pair-colorizer-2",
+                "shd101wyy.markdown-preview-enhanced",
+                "ms-azuretools.vscode-docker",
+                "azemoh.one-monokai"
+            ],
+            "settings": {
+                "workbench.editor.enablePreview": false,
+                "editor.minimap.enabled": false,
+                "workbench.colorTheme": "One Monokai",
+                "python.linting.pylintEnabled": false,
+                "python.linting.flake8Enabled": true,
+                "python.linting.flake8Args": [
+                    "--ignore=E402,E501"
+                ],
+                "python.formatting.provider": "autopep8",
+                "python.formatting.autopep8Args": [
+                    "--ignore",
+                    "E405,E501",
+                    "--max-line-length",
+                    "150"
+                ],
+                "python.analysis.extraPaths": [
+                    "/usr/local/lib/python3.11/site-packages",
+                    "/home/dev-user/workspace/src/components/array",
+                    "/home/dev-user/workspace/src/components/common",
+                    "/home/dev-user/workspace/src/components/control/pure_pursuit",
+                    "/home/dev-user/workspace/src/components/control/pid",
+                    "/home/dev-user/workspace/src/components/course/cubic_spline_course",
+                    "/home/dev-user/workspace/src/components/course/sin_curve_course",
+                    "/home/dev-user/workspace/src/components/detection/l_shape_fitting",
+                    "/home/dev-user/workspace/src/components/localization/kalman_filter",
+                    "/home/dev-user/workspace/src/components/mapping/grid",
+                    "/home/dev-user/workspace/src/components/mapping/ndt",
+                    "/home/dev-user/workspace/src/components/obstacle",
+                    "/home/dev-user/workspace/src/components/search/kd_tree",
+                    "/home/dev-user/workspace/src/components/sensors/",
+                    "/home/dev-user/workspace/src/components/sensors/lidar",
+                    "/home/dev-user/workspace/src/components/sensors/gnss",
+                    "/home/dev-user/workspace/src/components/state",
+                    "/home/dev-user/workspace/src/components/vehicle",
+                    "/home/dev-user/workspace/src/components/visualization",
+                    "/home/dev-user/workspace/src/simulations/localization/extended_kalman_filter_localization",
+                    "/home/dev-user/workspace/src/simulations/mapping/ndt_map_construction",
+                    "/home/dev-user/workspace/src/simulations/path_tracking/pure_pursuit_path_tracking",
+                    "/home/dev-user/workspace/src/simulations/perception/lidar_obstacle_sensing",
+                    "/home/dev-user/workspace/src/simulations/perception/point_cloud_rectangle_fitting",
+                    "/home/dev-user/workspace/src/simulations/perception/point_cloud_search",
+                    "/home/dev-user/workspace/src/simulations/perception/sensor_auto_calibration"
+                ]
+            }
+        }
+    }
 }
