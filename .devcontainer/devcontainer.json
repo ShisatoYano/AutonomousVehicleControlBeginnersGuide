@@ -2,8 +2,8 @@
     "name": "AutonomousVehicleControlBeginnersGuide",
     "dockerComposeFile": "../docker-compose.yml",
     "service": "simulation",
-    "workspaceFolder": "/home/ubuntu/workspace",
-    "remoteUser": "ubuntu",
+    "workspaceFolder": "/home/dev-user/workspace",
+    "remoteUser": "dev-user",
     "customizations": {
         "vscode": {
             "extensions": [
@@ -33,7 +33,7 @@
                     "150"
                 ],
                 "python.analysis.extraPaths": [
-                    "/usr/local/lib/python3.11/site-packages",
+                    "/usr/local/lib/python3.13/site-packages",
                     "/home/dev-user/workspace/src/components/array",
                     "/home/dev-user/workspace/src/components/common",
                     "/home/dev-user/workspace/src/components/control/pure_pursuit",

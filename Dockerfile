@@ -1,26 +1,34 @@
-FROM python:3.12.3
+FROM python:3.13.0
 
 ARG DEBIAN_FRONTEND=noninteractive
 
-ARG UID=2000
-ARG GID=2000
+ARG USERNAME=dev-user
+ARG GROUPNAME=dev-user
+ARG UID=1000
+ARG GID=1000
+ARG WORKDIR=/home/dev-user/workspace
 
-RUN apt update && apt upgrade -y
-RUN apt install -y \
+RUN groupadd -g $GID $GROUPNAME && \
+    useradd -m -s /bin/bash -u $UID -g $GID $USERNAME
+
+RUN apt update && apt install -y \
 git \
 vim \
 wget \
+sudo \
+graphviz \
+graphviz-dev \
 && apt clean \
-&& rm -rf /var/lib/apt/lists/* \
-&& groupadd -g $GID dev-user \
-&& useradd -m -d /home/dev-user -s /bin/bash -u $UID -g $GID dev-user
+&& rm -rf /var/lib/apt/lists/*
 
-RUN mkdir -p /home/dev-user/workspace
-COPY requirements.txt /home/dev-user/workspace
-WORKDIR /home/dev-user/workspace
+RUN mkdir -p $WORKDIR
+RUN chown -R $UID:$GID $WORKDIR
 
-RUN pip install --upgrade pip
-RUN pip install --upgrade setuptools
-RUN pip install -r requirements.txt
+USER $USERNAME
+WORKDIR $WORKDIR
 
-USER dev-user
+RUN python -m pip install --upgrade --user pip
+RUN python -m pip install --upgrade --user setuptools
+
+COPY requirements.txt $WORKDIR
+RUN python -m pip install --user -r requirements.txt
