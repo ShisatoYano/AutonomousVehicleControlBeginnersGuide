@@ -42,7 +42,7 @@ def main():
     plt.grid(True)
     plt.legend()
 
-    if show_plot: plt.savefig("cubic_spline_1d.png")
+    if show_plot: plt.show()
 
 
 if __name__ == "__main__":

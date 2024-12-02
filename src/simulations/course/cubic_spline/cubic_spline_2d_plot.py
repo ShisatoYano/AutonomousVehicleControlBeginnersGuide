@@ -53,7 +53,7 @@ def main():
     plt.xlabel("X[m]")
     plt.ylabel("Y[m]")
     plt.legend()
-    if show_plot: plt.savefig("cubic_spline_2d.png")
+    # if show_plot: plt.savefig("cubic_spline_2d.png")
 
     plt.subplots(1)
     plt.plot(s, [np.rad2deg(yaw) for yaw in yaws], "-r", label="Yaw angle")
@@ -61,7 +61,7 @@ def main():
     plt.xlabel("Line length[m]")
     plt.ylabel("Yaw angle[deg]")
     plt.legend()
-    if show_plot: plt.savefig("cubic_spline_yaw_angle.png")
+    # if show_plot: plt.savefig("cubic_spline_yaw_angle.png")
 
     plt.subplots(1)
     plt.plot(s, curvs, "-r", label="Curvature")
@@ -69,7 +69,9 @@ def main():
     plt.xlabel("Line length[m]")
     plt.ylabel("Curvature[1/m]")
     plt.legend()
-    if show_plot: plt.savefig("cubic_spline_curvature.png")
+    # if show_plot: plt.savefig("cubic_spline_curvature.png")
+
+    if show_plot: plt.show()
 
 
 if __name__ == "__main__":
