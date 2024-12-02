@@ -13,12 +13,14 @@ class GlobalXYVisualizer:
     Visualization class for global 2D X-Y plot
     """
     
-    def __init__(self, x_lim, y_lim, time_params, show_zoom=True):
+    def __init__(self, x_lim, y_lim, time_params, show_zoom=True, gif_name=None):
         """
         Constructor
         x_lim: MinMax object of x axis
         y_lim: MinMax object of y axis
         time_params: TimeParameters object
+        show_zoom: Zoom around vehicle when this flag is true
+        gif_name: Gif file's name as string
         """
         
         self.objects = []
@@ -27,6 +29,7 @@ class GlobalXYVisualizer:
         self.y_lim = y_lim
         
         self.time_params = time_params
+        self.gif_name = gif_name
         self.show_plot = True
         self.show_zoom = show_zoom
     
@@ -95,7 +98,10 @@ class GlobalXYVisualizer:
                                            frames=self.time_params.get_frame_num(), 
                                            interval=self.time_params.get_interval_msec(), 
                                            repeat=False)
-            self.anime.save("simulation.gif", writer="pillow")
+            if self.gif_name:
+                self.anime.save(self.gif_name, writer="pillow")
+            else:
+                plt.show()
             print("Simulation finished!!")
         else:
             # only when executed as unit test
