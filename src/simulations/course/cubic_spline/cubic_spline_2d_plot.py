@@ -29,8 +29,8 @@ def main():
     Main process function
     """
 
-    x_points = [-2.5, 0.0, 2.5, 5.0, 7.5, 3.0, -1.0]
-    y_points = [0.7, -6, 5, 6.5, 0.0, 5.0, -2.0]
+    x_points = [0.0, 10.0, 25, 40, 50]
+    y_points = [0.0, 4, -12, 20, -13]
 
     ds = 0.1 # distance between 2 interpolated points
 
