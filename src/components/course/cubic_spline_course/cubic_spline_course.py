@@ -50,6 +50,13 @@ class CubicSplineCourse:
         self.speed_array[-1] = 0.0
 
         self.color = color
-
-
-csc = CubicSplineCourse([0.0, 10.0, 25, 40, 50], [0.0, 4, -12, 20, -13], 10)
+    
+    def draw(self, axes, elems):
+        """
+        Function to draw points on course
+        axes: Axes object of figure
+        elems: List of plot objects
+        """
+        
+        course_plot, = axes.plot(self.x_array, self.y_array, linewidth=0, marker='.', color=self.color, label="Course")
+        elems.append(course_plot)
