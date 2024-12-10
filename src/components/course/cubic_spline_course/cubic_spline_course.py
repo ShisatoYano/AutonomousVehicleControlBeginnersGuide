@@ -37,3 +37,19 @@ class CubicSplineCourse:
         cubic_spline = CubicSpline2D(x_ref_points, y_ref_points)
         base_points = np.arange(0, cubic_spline.s[-1], resolution)
 
+        self.x_array, self.y_array = [], []
+        self.yaw_array, self.curvature_array = [], []
+        for base_point in base_points:
+            x, y = cubic_spline.calc_interpolated_xy(base_point)
+            self.x_array.append(x)
+            self.y_array.append(y)
+            self.yaw_array.append(cubic_spline.calc_yaw_angle(base_point))
+            self.curvature_array.append(cubic_spline.calc_curvature(base_point))
+        
+        self.speed_array = [(target_speed_kmph / 3.6) for _ in self.x_array]
+        self.speed_array[-1] = 0.0
+
+        self.color = color
+
+
+csc = CubicSplineCourse([0.0, 10.0, 25, 40, 50], [0.0, 4, -12, 20, -13], 10)
