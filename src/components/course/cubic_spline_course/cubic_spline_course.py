@@ -51,6 +51,23 @@ class CubicSplineCourse:
 
         self.color = color
     
+    def search_nearest_point_index(self, state):
+        """
+        Function to search nearest point's index on course
+        state: Vehicle's state object
+        """
+
+        vehicle_pos_x_m = state.get_x_m()
+        vehicle_pos_y_m = state.get_y_m()
+
+        diff_x_array = [vehicle_pos_x_m - point_x_m for point_x_m in self.x_array]
+        diff_y_array = [vehicle_pos_y_m - point_y_m for point_y_m in self.y_array]
+        diff_array = np.hypot(diff_x_array, diff_y_array)
+
+        nearest_index = np.argmin(diff_array)
+        
+        return nearest_index
+
     def draw(self, axes, elems):
         """
         Function to draw points on course
