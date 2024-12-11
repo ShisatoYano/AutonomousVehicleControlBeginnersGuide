@@ -107,6 +107,22 @@ class CubicSplineCourse:
         diff_y_m = self.y_array[point_index] - state.get_y_m()
         return atan2(diff_y_m, diff_x_m) - state.get_yaw_rad()
 
+    def point_x_m(self, point_index):
+        """
+        Function to get x coordinate[m] of point on course
+        point_index: index of point on course
+        """
+        
+        return self.x_array[point_index]
+    
+    def point_y_m(self, point_index):
+        """
+        Function to get y coordinate[m] of point on course
+        point_index: index of point on course
+        """
+
+        return self.y_array[point_index]
+
     def draw(self, axes, elems):
         """
         Function to draw points on course
