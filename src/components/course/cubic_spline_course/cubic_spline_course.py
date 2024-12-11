@@ -79,6 +79,13 @@ class CubicSplineCourse:
         diff_y_m = state.get_y_m() - self.y_array[point_index]
         return np.hypot(diff_x_m, diff_y_m)
 
+    def length(self):
+        """
+        Function to get length of course
+        """
+        
+        return len(self.x_array)
+
     def draw(self, axes, elems):
         """
         Function to draw points on course
