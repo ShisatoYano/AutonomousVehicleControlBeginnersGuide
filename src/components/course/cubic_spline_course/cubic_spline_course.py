@@ -68,6 +68,17 @@ class CubicSplineCourse:
         
         return nearest_index
 
+    def calculate_distance_from_point(self, state, point_index):
+        """
+        Function to calculate distance from a point on course
+        state: Vehicle's state object
+        point_index: index of point on course
+        """
+        
+        diff_x_m = state.get_x_m() - self.x_array[point_index]
+        diff_y_m = state.get_y_m() - self.y_array[point_index]
+        return np.hypot(diff_x_m, diff_y_m)
+
     def draw(self, axes, elems):
         """
         Function to draw points on course
