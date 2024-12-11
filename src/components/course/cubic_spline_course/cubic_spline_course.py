@@ -7,6 +7,7 @@ Author: Shisato Yano
 # import path setting
 import sys
 from pathlib import Path
+from math import sin, atan2
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -94,6 +95,17 @@ class CubicSplineCourse:
         """
         
         return self.speed_array[point_index] - state.get_speed_mps()
+
+    def calculate_angle_difference_rad(self, state, point_index):
+        """
+        Function to calculate difference between current yaw angle and target point
+        state: Vehicle's state object
+        point_index: index of point on course
+        """
+        
+        diff_x_m = self.x_array[point_index] - state.get_x_m()
+        diff_y_m = self.y_array[point_index] - state.get_y_m()
+        return atan2(diff_y_m, diff_x_m) - state.get_yaw_rad()
 
     def draw(self, axes, elems):
         """
