@@ -86,6 +86,15 @@ class CubicSplineCourse:
         
         return len(self.x_array)
 
+    def calculate_speed_difference_mps(self, state, point_index):
+        """
+        Function to calculate difference between current speed and target speed
+        state: Vehicle's state object
+        point_index: index of point on course
+        """
+        
+        return self.speed_array[point_index] - state.get_speed_mps()
+
     def draw(self, axes, elems):
         """
         Function to draw points on course
