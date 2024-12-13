@@ -17,3 +17,11 @@ class RearWheelFeedbackController:
         """
 
         self.course = course
+    
+    def update(self, state):
+        """
+        Function to update data for path tracking
+        state: Vehicle's state object
+        """
+
+        if not self.course: return
