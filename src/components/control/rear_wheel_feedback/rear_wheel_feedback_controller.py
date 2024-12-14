@@ -10,11 +10,14 @@ class RearWheelFeedbackController:
     Controller class by Rear wheel feedback algorithm
     """
 
-    def __init__(self, course=None):
+    def __init__(self, spec, course=None):
         """
         Constructor
         course: Course data and logic object
         """
+
+        self.SPEED_PROPORTIONAL_GAIN = 1.0
+        self.WHEEL_BASE_M = spec.wheel_base_m
 
         self.course = course
         self.target_course_index = 0
@@ -31,6 +34,15 @@ class RearWheelFeedbackController:
         nearest_index = self.course.search_nearest_point_index(state)
         self.target_course_index = nearest_index
     
+    def _calculate_target_acceleration_mps2(self, state):
+        """
+        Private function to calculate acceleration input
+        state: Vehicle's state object
+        """
+
+        diff_speed_mps = self.course.calculate_speed_difference_mps(state, self.target_course_index)
+        self.target_accel_mps2 = self.SPEED_PROPORTIONAL_GAIN * diff_speed_mps
+
     def _calculate_tracking_error(self, state):
         """
         Private function to calculate tracking error against target point on the course
@@ -50,6 +62,8 @@ class RearWheelFeedbackController:
         if not self.course: return
 
         self._calculate_target_course_index(state)
+
+        self._calculate_target_acceleration_mps2(state)
 
         error_lon_m, error_lat_m, error_yaw_rad = self._calculate_tracking_error(state)
     
