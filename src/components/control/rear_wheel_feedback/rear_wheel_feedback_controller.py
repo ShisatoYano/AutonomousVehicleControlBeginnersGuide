@@ -25,3 +25,12 @@ class RearWheelFeedbackController:
         """
 
         if not self.course: return
+    
+    def draw(self, axes, elems):
+        """
+        Function to draw target point on course
+        axes: Axes object of figure
+        elems: plot object's list
+        """
+
+        pass
