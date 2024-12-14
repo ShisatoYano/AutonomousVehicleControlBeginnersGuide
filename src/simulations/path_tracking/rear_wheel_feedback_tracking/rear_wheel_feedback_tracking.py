@@ -48,6 +48,12 @@ def main():
                                20)
     vis.add_object(course)
 
+    # create vehicle's spec instance
+    spec = VehicleSpecification(area_size=20.0)
+    
+    # create vehicle's state instance
+    state = State(color=spec.color)
+
 
 # execute main process
 if __name__ == "__main__":
