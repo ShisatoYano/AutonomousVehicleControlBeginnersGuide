@@ -7,7 +7,7 @@ Author: Shisato Yano
 # import path setting
 import sys
 from pathlib import Path
-from math import sin, atan2
+from math import sin, cos, atan2
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -15,9 +15,11 @@ abs_dir_path = str(Path(__file__).absolute().parent)
 relative_path = "/../../../components/"
 
 sys.path.append(abs_dir_path + relative_path + "course/cubic_spline_course")
+sys.path.append(abs_dir_path + relative_path + "common")
 
 #import component modules
 from cubic_spline_2d import CubicSpline2D
+from angle_lib import pi_to_pi
 
 
 class CubicSplineCourse:
@@ -107,6 +109,24 @@ class CubicSplineCourse:
         diff_y_m = self.y_array[point_index] - state.get_y_m()
         return atan2(diff_y_m, diff_x_m) - state.get_yaw_rad()
 
+    def calculate_lonlat_error(self, state, point_index):
+        """
+        Function to calculate longitudinal/lateral/yaw angle error against course
+        state: Vehicle's state object
+        point_index: index of point on course
+        """
+        
+        error_x_m = self.x_array[point_index] - state.get_x_m()
+        error_y_m = self.y_array[point_index] - state.get_y_m()
+
+        current_yaw_rad = state.get_yaw_rad()
+        error_yaw_rad = pi_to_pi(self.yaw_array[point_index] - current_yaw_rad)
+
+        error_lon_m = cos(current_yaw_rad) * error_x_m + sin(current_yaw_rad) * error_y_m
+        error_lat_m = -sin(current_yaw_rad) * error_x_m + cos(current_yaw_rad) * error_y_m
+
+        return error_lon_m, error_lat_m, error_yaw_rad
+
     def point_x_m(self, point_index):
         """
         Function to get x coordinate[m] of point on course
@@ -122,6 +142,14 @@ class CubicSplineCourse:
         """
 
         return self.y_array[point_index]
+    
+    def point_yaw_rad(self, point_index):
+        """
+        Function to get yaw angle[rad] of point on course
+        point_index: index of point on course
+        """
+
+        return self.yaw_array[point_index]
 
     def draw(self, axes, elems):
         """
