@@ -17,6 +17,9 @@ class RearWheelFeedbackController:
         """
 
         self.course = course
+        self.target_accel_mps2 = 0.0
+        self.target_yaw_rate_rps = 0.0
+        self.target_steer_rad = 0.0
     
     def update(self, state):
         """
@@ -26,6 +29,27 @@ class RearWheelFeedbackController:
 
         if not self.course: return
     
+    def get_target_accel_mps2(self):
+        """
+        Function to get acceleration input[m/s2]
+        """
+        
+        return self.target_accel_mps2
+
+    def get_target_yaw_rate_rps(self):
+        """
+        Function to get yaw rate input[rad/s]
+        """
+
+        return self.target_yaw_rate_rps
+
+    def get_target_steer_rad(self):
+        """
+        Function to get steering angle input[rad]
+        """
+        
+        return self.target_steer_rad
+
     def draw(self, axes, elems):
         """
         Function to draw target point on course
