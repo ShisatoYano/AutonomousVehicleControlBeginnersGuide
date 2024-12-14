@@ -62,6 +62,9 @@ def main():
     vehicle = FourWheelsVehicle(state, spec, controller=rear_wheel_feedback)
     vis.add_object(vehicle)
 
+    # plot figure is not shown when executed as unit test
+    if not show_plot: vis.not_show_plot()
+
 
 # execute main process
 if __name__ == "__main__":
