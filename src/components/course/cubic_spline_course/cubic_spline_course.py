@@ -150,6 +150,14 @@ class CubicSplineCourse:
         """
 
         return self.yaw_array[point_index]
+    
+    def point_curvature(self, point_index):
+        """
+        Function to get curvature of point on course
+        point_index: index of point on course
+        """
+
+        return self.curvature_array[point_index]
 
     def draw(self, axes, elems):
         """
