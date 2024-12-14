@@ -54,6 +54,14 @@ def main():
     # create vehicle's state instance
     state = State(color=spec.color)
 
+    # create controller instance
+    rear_wheel_feedback = RearWheelFeedbackController(course)
+
+    # create vehicle instance
+    # set state, spec and controller instances as arguments
+    vehicle = FourWheelsVehicle(state, spec, controller=rear_wheel_feedback)
+    vis.add_object(vehicle)
+
 
 # execute main process
 if __name__ == "__main__":
