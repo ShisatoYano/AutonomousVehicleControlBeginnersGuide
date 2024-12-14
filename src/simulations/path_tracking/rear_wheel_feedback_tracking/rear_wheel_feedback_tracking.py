@@ -55,7 +55,7 @@ def main():
     state = State(color=spec.color)
 
     # create controller instance
-    rear_wheel_feedback = RearWheelFeedbackController(course)
+    rear_wheel_feedback = RearWheelFeedbackController(spec, course)
 
     # create vehicle instance
     # set state, spec and controller instances as arguments
