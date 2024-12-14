@@ -4,6 +4,8 @@ rear_wheel_feedback_controller.py
 Author: Shisato Yano
 """
 
+from math import sin, cos
+
 
 class RearWheelFeedbackController:
     """
@@ -17,6 +19,8 @@ class RearWheelFeedbackController:
         """
 
         self.SPEED_PROPORTIONAL_GAIN = 1.0
+        self.YAW_ERROR_GAIN = 1.0
+        self.LAT_ERROR_GAIN = 0.5
         self.WHEEL_BASE_M = spec.wheel_base_m
 
         self.course = course
@@ -51,7 +55,19 @@ class RearWheelFeedbackController:
 
         error_lon_m, error_lat_m, error_yaw_rad = self.course.calculate_lonlat_error(state, self.target_course_index)
         return error_lon_m, error_lat_m, error_yaw_rad
-        
+    
+    def _calculate_target_yaw_rate_rps(self, state, error_lat_m, error_yaw_rad):
+        """
+        Private function to calculate yaw rate input
+        state: Vehicle's state object
+        error_lat_m: Lateral error against reference course[m]
+        error_yaw_rad: Yaw angle error against reference course[rad]
+        """
+
+        curr_spd = state.get_speed_mps()
+        trgt_curv = self.course.point_curvature(self.target_course_index)
+
+        yaw_rate_rps = curr_spd * trgt_curv * cos(error_yaw_rad) / (1.0 - trgt_curv * error_lat_m)
 
     def update(self, state):
         """
@@ -65,7 +81,9 @@ class RearWheelFeedbackController:
 
         self._calculate_target_acceleration_mps2(state)
 
-        error_lon_m, error_lat_m, error_yaw_rad = self._calculate_tracking_error(state)
+        _, error_lat_m, error_yaw_rad = self._calculate_tracking_error(state)
+
+        self._calculate_target_yaw_rate_rps(state, error_lat_m, error_yaw_rad)
     
     def get_target_accel_mps2(self):
         """
