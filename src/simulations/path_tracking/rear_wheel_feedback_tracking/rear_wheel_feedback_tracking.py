@@ -65,6 +65,9 @@ def main():
     # plot figure is not shown when executed as unit test
     if not show_plot: vis.not_show_plot()
 
+    # show plot figure
+    vis.draw()
+
 
 # execute main process
 if __name__ == "__main__":
