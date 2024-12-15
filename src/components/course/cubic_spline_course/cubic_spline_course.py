@@ -116,11 +116,11 @@ class CubicSplineCourse:
         point_index: index of point on course
         """
         
-        error_x_m = self.x_array[point_index] - state.get_x_m()
-        error_y_m = self.y_array[point_index] - state.get_y_m()
+        error_x_m = state.get_x_m() - self.x_array[point_index]
+        error_y_m = state.get_y_m() - self.y_array[point_index]
 
         current_yaw_rad = state.get_yaw_rad()
-        error_yaw_rad = pi_to_pi(self.yaw_array[point_index] - current_yaw_rad)
+        error_yaw_rad = pi_to_pi(current_yaw_rad - self.yaw_array[point_index])
 
         error_lon_m = cos(current_yaw_rad) * error_x_m + sin(current_yaw_rad) * error_y_m
         error_lat_m = -sin(current_yaw_rad) * error_x_m + cos(current_yaw_rad) * error_y_m
