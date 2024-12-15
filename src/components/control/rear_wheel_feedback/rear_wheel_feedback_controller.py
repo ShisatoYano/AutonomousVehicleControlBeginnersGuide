@@ -4,7 +4,7 @@ rear_wheel_feedback_controller.py
 Author: Shisato Yano
 """
 
-from math import sin, cos
+from math import sin, cos, atan2
 
 
 class RearWheelFeedbackController:
@@ -75,6 +75,14 @@ class RearWheelFeedbackController:
                     self.LAT_ERROR_GAIN * curr_spd * sin(error_yaw_rad) * error_lat_m / error_yaw_rad
         self.target_yaw_rate_rps = yaw_rate_rps
 
+    def _calculate_target_steer_angle_rad(self, state):
+        """
+        Private function to calculate steering angle input
+        state: Vehicle's state object
+        """
+
+        self.target_steer_rad = atan2(self.WHEEL_BASE_M * self.target_yaw_rate_rps / state.get_speed_mps(), 1.0)
+
     def update(self, state):
         """
         Function to update data for path tracking
@@ -90,6 +98,8 @@ class RearWheelFeedbackController:
         _, error_lat_m, error_yaw_rad = self._calculate_tracking_error(state)
 
         self._calculate_target_yaw_rate_rps(state, error_lat_m, error_yaw_rad)
+
+        self._calculate_target_steer_angle_rad(state)
     
     def get_target_accel_mps2(self):
         """
