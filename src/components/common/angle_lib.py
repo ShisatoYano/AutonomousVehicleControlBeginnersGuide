@@ -15,10 +15,10 @@ def pi_to_pi(angle_rad):
     
     modified_angle_rad = angle_rad
     
-    while angle_rad >= np.pi:
+    if angle_rad >= np.pi:
         modified_angle_rad -= 2 * np.pi
     
-    while angle_rad < -np.pi:
+    if angle_rad < -np.pi:
         modified_angle_rad += 2 * np.pi
     
     return modified_angle_rad
