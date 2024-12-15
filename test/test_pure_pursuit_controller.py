@@ -87,7 +87,7 @@ def test_without_course_data():
     assert controller.look_ahead_distance_m == 2.0
     assert controller.target_course_index == 0
 
-    assert controller.update(state) == None
+    assert controller.update(state, 0.0) == None
     assert controller.get_target_accel_mps2() == 0.0
     assert controller.get_target_steer_rad() == 0.0
     assert controller.get_target_yaw_rate_rps() == 0.0
@@ -97,7 +97,7 @@ def test_with_course_data():
     controller = PurePursuitController(spec, course)
     state = MockState(0.0, 1.0, 2.0, 3.0)
 
-    controller.update(state)
+    controller.update(state, 0.0)
 
     assert round(controller.get_target_accel_mps2(), 1) == 1.0
     assert round(controller.get_target_steer_rad(), 1) == 0.9
