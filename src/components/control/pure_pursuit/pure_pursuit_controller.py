@@ -79,10 +79,11 @@ class PurePursuitController:
 
         self.target_yaw_rate_rps = state.get_speed_mps() * tan(self.target_steer_rad) / self.WHEEL_BASE_M
 
-    def update(self, state):
+    def update(self, state, time_s):
         """
         Function to update data for path tracking
         state: Vehicle's state object
+        time_s: Simulation interval time[sec]
         """
         
         if not self.course: return
