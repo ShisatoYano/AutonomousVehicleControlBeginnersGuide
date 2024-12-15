@@ -67,7 +67,13 @@ class RearWheelFeedbackController:
         curr_spd = state.get_speed_mps()
         trgt_curv = self.course.point_curvature(self.target_course_index)
 
-        yaw_rate_rps = curr_spd * trgt_curv * cos(error_yaw_rad) / (1.0 - trgt_curv * error_lat_m)
+        if error_yaw_rad == 0.0:
+            yaw_rate_rps = 0.0
+        else:
+            yaw_rate_rps = curr_spd * trgt_curv * cos(error_yaw_rad) / (1.0 - trgt_curv * error_lat_m) - \
+                self.YAW_ERROR_GAIN * abs(curr_spd) * error_yaw_rad - \
+                    self.LAT_ERROR_GAIN * curr_spd * sin(error_yaw_rad) * error_lat_m / error_yaw_rad
+        self.target_yaw_rate_rps = yaw_rate_rps
 
     def update(self, state):
         """
