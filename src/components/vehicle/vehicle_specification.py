@@ -18,7 +18,8 @@ class VehicleSpecification:
     def __init__(self, f_len_m=2.0, r_len_m=0.0, tire_r_m=0.3,
                  tire_w_m=0.12, axle_half_m=0.5, color='k', 
                  line_w=1.0, line_type='-', area_size=10.0,
-                 x_lim=MinMax(-30, 30), y_lim=MinMax(-30, 30)):
+                 x_lim=MinMax(-30, 30), y_lim=MinMax(-30, 30),
+                 max_accel_mps2=3.0):
         """
         Constructor
         f_len_m: length[m] from origin to center of front axle
@@ -29,6 +30,9 @@ class VehicleSpecification:
         line_w: plot line's width
         line_type: plot line's type
         area_size: plot area size[m]
+        x_lim: min/max values of x-axis
+        y_lim: min/max values of y-axis
+        max_accel_mps2: maximum acceleration/deceleration[m/s2]
         """
 
         self.f_len_m = f_len_m
@@ -52,3 +56,5 @@ class VehicleSpecification:
 
         self.x_lim = x_lim
         self.y_lim = y_lim
+
+        self.max_accel_mps2 = max_accel_mps2
