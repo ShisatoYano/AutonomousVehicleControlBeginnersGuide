@@ -118,15 +118,16 @@ class FourWheelsVehicle:
 
         if self.mapper: self.mapper.draw(axes, elems)
 
-    def _update_control_data(self):
+    def _update_control_data(self, time_s):
         """
         Private function to update controller's data
+        time_s: Simulation interval time[sec]
         Return 1: Acceleration input[m/s2]
         Return 2: Yaw rate input[rad/s]
         """
         
         if self.controller:
-            self.controller.update(self.state)
+            self.controller.update(self.state, time_s)
             return self.controller.get_target_accel_mps2(), \
                 self.controller.get_target_yaw_rate_rps()
         else:
@@ -186,7 +187,7 @@ class FourWheelsVehicle:
 
         self._update_map_data()
 
-        target_accel, target_yaw_rate = self._update_control_data()
+        target_accel, target_yaw_rate = self._update_control_data(time_s)
 
         self._update_localization_data(target_accel, target_yaw_rate, time_s)
     
