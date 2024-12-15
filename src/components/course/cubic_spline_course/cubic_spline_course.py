@@ -49,8 +49,10 @@ class CubicSplineCourse:
             self.yaw_array.append(cubic_spline.calc_yaw_angle(base_point))
             self.curvature_array.append(cubic_spline.calc_curvature(base_point))
         
-        self.speed_array = [(target_speed_kmph / 3.6) for _ in self.x_array]
-        self.speed_array[-1] = 0.0
+        self.target_speed_mps = target_speed_kmph / 3.6
+        self.speed_array = [self.target_speed_mps for _ in self.x_array]
+
+        self.length_m = (len(self.x_array) - 1) * resolution
 
         self.color = color
     
@@ -87,7 +89,7 @@ class CubicSplineCourse:
         Function to get length of course
         """
         
-        return len(self.x_array)
+        return self.length_m
 
     def calculate_speed_difference_mps(self, state, point_index):
         """
@@ -151,6 +153,21 @@ class CubicSplineCourse:
 
         return self.yaw_array[point_index]
     
+    def point_speed_mps(self, point_index):
+        """
+        Function to get speed[m/s] of point on course
+        point_index: index of point on course
+        """
+
+        return self.speed_array[point_index]
+
+    def max_speed_mps(self):
+        """
+        Function to get maximum speed[m/s] on course
+        """
+        
+        return self.target_speed_mps
+
     def point_curvature(self, point_index):
         """
         Function to get curvature of point on course
