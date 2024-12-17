@@ -52,7 +52,15 @@ class CubicSplineCourse:
         self.target_speed_mps = target_speed_kmph / 3.6
         self.speed_array = [self.target_speed_mps for _ in self.x_array]
 
-        self.length_m = (len(self.x_array) - 1) * resolution
+        prev_x, prev_y = 0.0, 0.0
+        diff_xy = 0.0
+        self.length_m = 0.0
+        for i, (x, y) in enumerate(zip(self.x_array, self.y_array)):
+            if i > 0:
+                diff_xy = np.hypot(x - prev_x, y - prev_y)
+                self.length_m += diff_xy
+            prev_x = x
+            prev_y = y
 
         self.color = color
     
