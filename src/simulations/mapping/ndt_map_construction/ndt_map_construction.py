@@ -19,7 +19,7 @@ sys.path.append(abs_dir_path + relative_path + "obstacle")
 sys.path.append(abs_dir_path + relative_path + "sensors")
 sys.path.append(abs_dir_path + relative_path + "sensors/lidar")
 sys.path.append(abs_dir_path + relative_path + "mapping/ndt")
-sys.path.append(abs_dir_path + relative_path + "course/sin_curve_course")
+sys.path.append(abs_dir_path + relative_path + "course/cubic_spline_course")
 sys.path.append(abs_dir_path + relative_path + "control/pure_pursuit")
 
 
@@ -36,7 +36,7 @@ from sensors import Sensors
 from sensor_parameters import SensorParameters
 from omni_directional_lidar import OmniDirectionalLidar
 from ndt_global_mapper import NdtGlobalMapper
-from sin_curve_course import SinCurveCourse
+from cubic_spline_course import CubicSplineCourse
 from pure_pursuit_controller import PurePursuitController
 
 
@@ -55,7 +55,9 @@ def main():
     vis = GlobalXYVisualizer(x_lim, y_lim, TimeParameters(span_sec=25), show_zoom=False)
 
     # create course data instance
-    course = SinCurveCourse(0, 50, 0.5, 20)
+    course = CubicSplineCourse([0.0, 10.0, 25, 40, 50],
+                               [0.0, 4, -12, 20, -13],
+                               20)
     vis.add_object(course)
 
     # create obstacle instances

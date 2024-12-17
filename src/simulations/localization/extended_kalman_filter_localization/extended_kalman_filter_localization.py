@@ -14,7 +14,7 @@ relative_path = "/../../../components/"
 sys.path.append(abs_dir_path + relative_path + "visualization")
 sys.path.append(abs_dir_path + relative_path + "state")
 sys.path.append(abs_dir_path + relative_path + "vehicle")
-sys.path.append(abs_dir_path + relative_path + "course/sin_curve_course")
+sys.path.append(abs_dir_path + relative_path + "course/cubic_spline_course")
 sys.path.append(abs_dir_path + relative_path + "control/pure_pursuit")
 sys.path.append(abs_dir_path + relative_path + "sensors")
 sys.path.append(abs_dir_path + relative_path + "sensors/gnss")
@@ -28,7 +28,7 @@ from time_parameters import TimeParameters
 from vehicle_specification import VehicleSpecification
 from state import State
 from four_wheels_vehicle import FourWheelsVehicle
-from sin_curve_course import SinCurveCourse
+from cubic_spline_course import CubicSplineCourse
 from pure_pursuit_controller import PurePursuitController
 from sensors import Sensors
 from gnss import Gnss
@@ -50,7 +50,9 @@ def main():
     vis = GlobalXYVisualizer(x_lim, y_lim, TimeParameters(span_sec=30))
 
     # create course data instance
-    course = SinCurveCourse(0, 50, 0.5, 20, color='k')
+    course = CubicSplineCourse([0.0, 10.0, 25, 40, 50],
+                               [0.0, 4, -12, 20, -13],
+                               20)
     vis.add_object(course)
 
     # create vehicle's spec instance
