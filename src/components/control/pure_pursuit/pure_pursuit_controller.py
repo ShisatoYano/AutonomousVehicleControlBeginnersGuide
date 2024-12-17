@@ -36,12 +36,17 @@ class PurePursuitController:
         self.target_yaw_rate_rps = 0.0
         self.elapsed_time_sec = 0.0
 
-        self.max_spd_mps = self.course.max_speed_mps()
+        if self.course:    
+            self.max_spd_mps = self.course.max_speed_mps()
+            self.course_distance_m = self.course.distance_m()
+        else:
+            self.max_spd_mps = 5.0
+            self.course_distance_m = 10.0
         self.accel_time_s = self.max_spd_mps / self.MAX_ACCEL_MPS2
         self.decel_time_s = self.accel_time_s
         accel_dist_m = self.max_spd_mps * self.accel_time_s / 2
         decel_dist_m = self.max_spd_mps * self.decel_time_s / 2
-        self.const_time_s = (self.course.distance_m() - accel_dist_m - decel_dist_m) / self.max_spd_mps
+        self.const_time_s = (self.course_distance_m - accel_dist_m - decel_dist_m) / self.max_spd_mps
     
     def _calculate_look_ahead_distance(self, state):
         """
