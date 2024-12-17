@@ -24,14 +24,24 @@ class PurePursuitController:
         self.LOOK_FORWARD_GAIN = 0.3
         self.SPEED_PROPORTIONAL_GAIN = 1.0
         self.WHEEL_BASE_M = spec.wheel_base_m
+        self.MAX_ACCEL_MPS2 = spec.max_accel_mps2
         self.DRAW_COLOR = color
 
         self.course = course
         self.look_ahead_distance_m = self.MIN_LOOK_AHEAD_DISTANCE_M
         self.target_course_index = 0
         self.target_accel_mps2 = 0.0
+        self.target_speed_mps = 0.0
         self.target_steer_rad = 0.0
         self.target_yaw_rate_rps = 0.0
+        self.elapsed_time_sec = 0.0
+
+        self.max_spd_mps = self.course.max_speed_mps()
+        self.accel_time_s = self.max_spd_mps / self.MAX_ACCEL_MPS2
+        self.decel_time_s = self.accel_time_s
+        accel_dist_m = self.max_spd_mps * self.accel_time_s / 2
+        decel_dist_m = self.max_spd_mps * self.decel_time_s / 2
+        self.const_time_s = (self.course.distance_m() - accel_dist_m - decel_dist_m) / self.max_spd_mps
     
     def _calculate_look_ahead_distance(self, state):
         """
@@ -53,13 +63,30 @@ class PurePursuitController:
             nearest_index += 1
         self.target_course_index = nearest_index
 
+    def _decide_target_speed_mps(self, time_s):
+        """
+        Private function to decide target speed[m/s]
+        time_s: interval time[sec]
+        """
+        
+        if self.elapsed_time_sec <= self.accel_time_s:
+            self.target_speed_mps += self.MAX_ACCEL_MPS2 * time_s
+            if self.target_speed_mps >= self.max_spd_mps:
+                self.target_speed_mps = self.max_spd_mps
+        elif self.accel_time_s < self.elapsed_time_sec <= (self.accel_time_s + self.const_time_s):
+            self.target_speed_mps = self.max_spd_mps
+        else:
+            self.target_speed_mps -= self.MAX_ACCEL_MPS2 * time_s
+            if self.target_speed_mps <= 0.0:
+                self.target_speed_mps = 0.0
+
     def _calculate_target_acceleration_mps2(self, state):
         """
         Private function to calculate acceleration input
         state: Vehicle's state object
         """
 
-        diff_speed_mps = self.course.calculate_speed_difference_mps(state, self.target_course_index)
+        diff_speed_mps = self.target_speed_mps - state.get_speed_mps()
         self.target_accel_mps2 = self.SPEED_PROPORTIONAL_GAIN * diff_speed_mps
 
     def _calculate_target_steer_angle_rad(self, state):
@@ -92,11 +119,15 @@ class PurePursuitController:
         
         self._calculate_target_course_index(state)
 
+        self._decide_target_speed_mps(time_s)
+
         self._calculate_target_acceleration_mps2(state)
 
         self._calculate_target_steer_angle_rad(state)
 
         self._calculate_target_yaw_rate_rps(state)
+
+        self.elapsed_time_sec += time_s
     
     def get_target_accel_mps2(self):
         """
