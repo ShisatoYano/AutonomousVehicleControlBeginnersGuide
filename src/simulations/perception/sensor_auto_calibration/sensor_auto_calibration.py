@@ -48,12 +48,12 @@ def main():
     """
     
     # set simulation parameters
-    x_lim, y_lim = MinMax(-5, 175), MinMax(-50, 50)
-    vis = GlobalXYVisualizer(x_lim, y_lim, TimeParameters(span_sec=100))
+    x_lim, y_lim = MinMax(-5, 120), MinMax(-50, 50)
+    vis = GlobalXYVisualizer(x_lim, y_lim, TimeParameters(span_sec=55))
 
     # create course data instance
-    course = CubicSplineCourse([0.0, 10.0, 25, 40, 50],
-                               [0.0, 4, -12, 20, -13],
+    course = CubicSplineCourse([0.0, 10.0, 25, 40, 50, 70, 90, 110],
+                               [0.0, 4, -12, 20, -13, 20, -13, 20],
                                20)
     vis.add_object(course)
 
