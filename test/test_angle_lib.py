@@ -17,3 +17,18 @@ def test_lower_than_pi():
     assert pi_to_pi(0.0) == 0.0
     assert pi_to_pi(np.pi / 2) == np.pi / 2
     assert pi_to_pi(np.pi) == -np.pi
+
+
+def test_greater_than_pi():
+    assert pi_to_pi(3 * np.pi / 2) == -np.pi / 2
+    assert pi_to_pi(2 * np.pi) == 0.0
+
+
+def test_lower_than_negative_pi():
+    assert pi_to_pi(-3 * np.pi / 2) == np.pi / 2
+    assert pi_to_pi(-2 * np.pi) == 0.0
+
+
+def test_greater_than_negative_pi():
+    assert pi_to_pi(-np.pi / 2) == -np.pi / 2
+    assert pi_to_pi(-np.pi) == -np.pi
