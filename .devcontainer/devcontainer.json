@@ -39,7 +39,6 @@
                     "/home/dev-user/workspace/src/components/control/pure_pursuit",
                     "/home/dev-user/workspace/src/components/control/rear_wheel_feedback",
                     "/home/dev-user/workspace/src/components/course/cubic_spline_course",
-                    "/home/dev-user/workspace/src/components/course/sin_curve_course",
                     "/home/dev-user/workspace/src/components/detection/l_shape_fitting",
                     "/home/dev-user/workspace/src/components/localization/kalman_filter",
                     "/home/dev-user/workspace/src/components/mapping/grid",

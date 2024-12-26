@@ -1,12 +1,10 @@
 src/components/array/__pycache__
 src/components/common/__pycache__
 src/components/control/__pycache__
-src/components/control/pid/__pycache__
 src/components/control/pure_pursuit/__pycache__
 src/components/control/rear_wheel_feedback/__pycache__
 src/components/course/__pycache__
 src/components/course/cubic_spline_course/__pycache__
-src/components/course/sin_curve_course/__pycache__
 src/components/detection/__pycache__
 src/components/detection/l_shape_fitting/__pycache__
 src/components/localization/__pycache__
