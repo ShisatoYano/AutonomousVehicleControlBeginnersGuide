@@ -21,6 +21,7 @@ src/components/sensors/lidar/__pycache__
 src/components/state/__pycache__
 src/components/vehicle/__pycache__
 src/components/visualization/__pycache__
+src/simulations/course/cubic_spline/__pycache__
 src/simulations/localization/extended_kalman_filter_localization/__pycache__
 src/simulations/mapping/ndt_map_construction/__pycache__
 src/simulations/path_tracking/pure_pursuit_path_tracking/__pycache__

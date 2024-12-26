@@ -52,6 +52,7 @@
                     "/home/dev-user/workspace/src/components/vehicle",
                     "/home/dev-user/workspace/src/components/visualization",
                     "/home/dev-user/workspace/src/simulations/localization/extended_kalman_filter_localization",
+                    "/home/dev-user/workspace/src/simulations/course/cubic_spline",
                     "/home/dev-user/workspace/src/simulations/mapping/ndt_map_construction",
                     "/home/dev-user/workspace/src/simulations/path_tracking/pure_pursuit_path_tracking",
                     "/home/dev-user/workspace/src/simulations/path_tracking/rear_wheel_feedback_tracking",
