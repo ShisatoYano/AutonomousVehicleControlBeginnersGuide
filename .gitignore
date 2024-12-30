@@ -3,6 +3,7 @@ src/components/common/__pycache__
 src/components/control/__pycache__
 src/components/control/pure_pursuit/__pycache__
 src/components/control/rear_wheel_feedback/__pycache__
+src/components/control/speed_profile/__pycache__
 src/components/course/__pycache__
 src/components/course/cubic_spline_course/__pycache__
 src/components/detection/__pycache__
