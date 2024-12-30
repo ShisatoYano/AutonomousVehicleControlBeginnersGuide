@@ -38,6 +38,7 @@
                     "/home/dev-user/workspace/src/components/common",
                     "/home/dev-user/workspace/src/components/control/pure_pursuit",
                     "/home/dev-user/workspace/src/components/control/rear_wheel_feedback",
+                    "/home/dev-user/workspace/src/components/control/speed_profile",
                     "/home/dev-user/workspace/src/components/course/cubic_spline_course",
                     "/home/dev-user/workspace/src/components/detection/l_shape_fitting",
                     "/home/dev-user/workspace/src/components/localization/kalman_filter",
