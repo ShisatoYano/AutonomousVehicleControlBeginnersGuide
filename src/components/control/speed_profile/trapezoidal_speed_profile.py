@@ -31,6 +31,13 @@ class TrapezoidalSpeedProfile:
         self.target_speed_mps = 0.0
 
     def decide_target_speed_mps(self, elapsed_time_sec, delta_time_sec):
+        """
+        Public function to decide target speed[m/s]
+        elapsed_time_sec: Elapsed time[sec], counted by controller module
+        delta_time_sec: Delta time per cycle to update speed[sec]
+        Return decided target speed[m/s]
+        """
+        
         if elapsed_time_sec <= self.accel_time_s:
             self.target_speed_mps += self.max_accel_mps2 * delta_time_sec
             if self.target_speed_mps >= self.max_spd_mps:
