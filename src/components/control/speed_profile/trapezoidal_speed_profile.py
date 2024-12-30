@@ -27,3 +27,18 @@ class TrapezoidalSpeedProfile:
         accel_dist_m = self.max_spd_mps * self.accel_time_s / 2
         decel_dist_m = self.max_spd_mps * self.decel_time_s / 2
         self.const_time_s = (self.distance_m - accel_dist_m - decel_dist_m) / self.max_spd_mps
+
+        self.target_speed_mps = 0.0
+
+    def decide_target_speed_mps(self, elapsed_time_sec, delta_time_sec):
+        if elapsed_time_sec <= self.accel_time_s:
+            self.target_speed_mps += self.max_accel_mps2 * delta_time_sec
+            if self.target_speed_mps >= self.max_spd_mps:
+                self.target_speed_mps = self.max_spd_mps
+        elif self.accel_time_s < elapsed_time_sec <= (self.accel_time_s + self.const_time_s):
+            self.target_speed_mps = self.max_spd_mps
+        else:
+            self.target_speed_mps -= self.max_accel_mps2 * delta_time_sec
+            if self.target_speed_mps <= 0.0:
+                self.target_speed_mps = 0.0
+        return self.target_speed_mps
