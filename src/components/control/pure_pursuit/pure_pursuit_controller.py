@@ -4,7 +4,18 @@ pure_pursuit_controller.py
 Author: Shisato Yano
 """
 
+#import path setting
+import sys
+from pathlib import Path
 from math import sin, tan, atan2
+
+abs_dir_path = str(Path(__file__).absolute().parent)
+relative_path = "/../../../components/"
+
+sys.path.append(abs_dir_path + relative_path + "control/speed_profile")
+
+#import component modules
+from trapezoidal_speed_profile import TrapezoidalSpeedProfile
 
 
 class PurePursuitController:
@@ -36,17 +47,14 @@ class PurePursuitController:
         self.target_yaw_rate_rps = 0.0
         self.elapsed_time_sec = 0.0
 
-        if self.course:    
-            self.max_spd_mps = self.course.max_speed_mps()
-            self.course_distance_m = self.course.distance_m()
+        if self.course:
+            max_spd_mps = self.course.max_speed_mps()
+            distance_m = self.course.distance_m()
         else:
-            self.max_spd_mps = 5.0
-            self.course_distance_m = 10.0
-        self.accel_time_s = self.max_spd_mps / self.MAX_ACCEL_MPS2
-        self.decel_time_s = self.accel_time_s
-        accel_dist_m = self.max_spd_mps * self.accel_time_s / 2
-        decel_dist_m = self.max_spd_mps * self.decel_time_s / 2
-        self.const_time_s = (self.course_distance_m - accel_dist_m - decel_dist_m) / self.max_spd_mps
+            max_spd_mps = 1e-100
+            distance_m = 1e-100
+        
+        self.spd_prf = TrapezoidalSpeedProfile(max_spd_mps, self.MAX_ACCEL_MPS2, distance_m)
     
     def _calculate_look_ahead_distance(self, state):
         """
@@ -74,16 +82,7 @@ class PurePursuitController:
         time_s: interval time[sec]
         """
         
-        if self.elapsed_time_sec <= self.accel_time_s:
-            self.target_speed_mps += self.MAX_ACCEL_MPS2 * time_s
-            if self.target_speed_mps >= self.max_spd_mps:
-                self.target_speed_mps = self.max_spd_mps
-        elif self.accel_time_s < self.elapsed_time_sec <= (self.accel_time_s + self.const_time_s):
-            self.target_speed_mps = self.max_spd_mps
-        else:
-            self.target_speed_mps -= self.MAX_ACCEL_MPS2 * time_s
-            if self.target_speed_mps <= 0.0:
-                self.target_speed_mps = 0.0
+        self.target_speed_mps = self.spd_prf.decide_target_speed_mps(self.elapsed_time_sec, time_s)
 
     def _calculate_target_acceleration_mps2(self, state):
         """
