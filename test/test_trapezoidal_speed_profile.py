@@ -43,3 +43,12 @@ def test_target_speed_const_time():
     assert spd_prf.decide_target_speed_mps(8.0, 1.0) == 10.0
     assert spd_prf.decide_target_speed_mps(9.0, 1.0) == 10.0
     assert spd_prf.decide_target_speed_mps(10.0, 1.0) == 10.0
+
+
+def test_target_speed_decel_time():
+    assert spd_prf.decide_target_speed_mps(11.0, 1.0) == 8.0
+    assert spd_prf.decide_target_speed_mps(12.0, 1.0) == 6.0
+    assert spd_prf.decide_target_speed_mps(13.0, 1.0) == 4.0
+    assert spd_prf.decide_target_speed_mps(14.0, 1.0) == 2.0
+    assert spd_prf.decide_target_speed_mps(15.0, 1.0) == 0.0
+    assert spd_prf.decide_target_speed_mps(16.0, 1.0) == 0.0
