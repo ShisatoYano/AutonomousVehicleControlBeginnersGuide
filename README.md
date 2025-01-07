@@ -57,10 +57,6 @@ For setting up the environment with Docker:
     ```
 
 2. Set up the environment for running each codes
-    * Set up on your local directory:
-        ```bash
-        $ pip install -r requirements.txt
-        ```
     * Set up with Docker on WSL:
         * Before cloning thi repo, [install Docker](https://docs.docker.com/desktop/install/linux-install/) in advance
         * Clone this repo following the above Step 1
