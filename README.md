@@ -16,6 +16,7 @@ Python sample codes and documents about Autonomous vehicle control algorithm. In
         * [NDT Map Construction](#ndt-map-construction)
     * [Path Tracking](#path-tracking)
         * [Pure pursuit Path Tracking](#pure-pursuit-path-tracking)
+        * [Rear wheel Path Tracking](#rear-wheel-feedback-path-tracking)
     * [Perception](#perception)
         * [Rectangle fitting Detection](#rectangle-fitting-detection)
         * [Sensor's Extrinsic Parameters Estimation](#sensors-extrinsic-parameters-estimation)
@@ -85,6 +86,8 @@ For setting up the environment with Docker:
 ### Path Tracking
 #### Pure pursuit Path Tracking
 ![](src/simulations/path_tracking/pure_pursuit_path_tracking/pure_pursuit_path_tracking.gif)  
+#### Rear wheel feedback Path Tracking
+![](src/simulations//path_tracking/rear_wheel_feedback_tracking/rear_wheel_feedback_tracking.gif)  
 ### Perception
 #### Rectangle fitting Detection
 ![](src/simulations/perception/point_cloud_rectangle_fitting/point_cloud_rectangle_fitting.gif)  
