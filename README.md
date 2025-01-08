@@ -16,7 +16,7 @@ Python sample codes and documents about Autonomous vehicle control algorithm. In
         * [NDT Map Construction](#ndt-map-construction)
     * [Path Tracking](#path-tracking)
         * [Pure pursuit Path Tracking](#pure-pursuit-path-tracking)
-        * [Rear wheel Path Tracking](#rear-wheel-feedback-path-tracking)
+        * [Rear wheel feedback Path Tracking](#rear-wheel-feedback-path-tracking)
     * [Perception](#perception)
         * [Rectangle fitting Detection](#rectangle-fitting-detection)
         * [Sensor's Extrinsic Parameters Estimation](#sensors-extrinsic-parameters-estimation)
