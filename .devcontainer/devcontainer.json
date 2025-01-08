@@ -14,7 +14,8 @@
                 "CoenraadS.bracket-pair-colorizer-2",
                 "shd101wyy.markdown-preview-enhanced",
                 "ms-azuretools.vscode-docker",
-                "azemoh.one-monokai"
+                "azemoh.one-monokai",
+                "corschenzi.mermaid-graphical-editor"
             ],
             "settings": {
                 "workbench.editor.enablePreview": false,
