@@ -65,3 +65,31 @@ A member method, "not_show_plot()" is defined not to display the figure window o
         
         self.show_plot = False
 ```
+
+This member method, "update" is used to update each objects's data and draw the animation in the list periodically. For this process, each objects in the list must have "update" method and "draw" method.
+```python
+    def update(self, i, elems, axes):
+        """
+        Function to update each objects and draw
+        i: Index of animation frames
+        elems: List of plot objects
+        axes: Axes of figure
+        """
+
+        # remove each elements in list
+        while elems: elems.pop().remove()
+
+        # show current simulation time[sec] as title
+        time_str = "Time = {0:.2f}[s]".format(self.time_params.current_sec(i))
+        axes.set_title(time_str, fontsize=15)
+        
+        # draw and update each object's data
+        for obj in self.objects:
+            obj.draw(axes, elems)
+            if hasattr(obj, "update"): obj.update(self.time_params.get_interval_sec())
+
+        # show data between x-y min and max range
+        if not self.show_zoom or self.time_params.simulation_finished(i):
+            axes.set_xlim(self.x_lim.min_value(), self.x_lim.max_value())
+            axes.set_ylim(self.y_lim.min_value(), self.y_lim.max_value())
+```
