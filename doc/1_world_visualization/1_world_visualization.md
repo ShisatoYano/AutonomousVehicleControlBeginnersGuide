@@ -82,8 +82,68 @@ class MinMax:
         return self.max
 ```
 
-"time_params" is an object to set the visualization time. "gif_name" is a string object for saving the animation's gif file. A boolean, "show_plot" is used to switch displaying or not displaying the visualization's figure window when unit test is executed. While the test is running, the figure window should not be displayed to continue the test. "show_zoom" is deciding to limit the size of visualization area until around of the vehicle or the maximum size of world.  
+### 1.1.2 TimeParameters class
+"time_params" is an object of TimeParameters class to manage the visualization time.  
+[time_parameters.py](/src/components/visualization/time_parameters.py)
+```python
+"""
+time_parameters.py
 
+Author: Shisato Yano
+"""
+
+class TimeParameters:
+    """
+    Parameters class for visualization time setting
+    """
+
+    def __init__(self, span_sec=10, interval_sec=0.1):
+        self.span_sec = span_sec
+        self.interval_sec = interval_sec
+        self.interval_msec = interval_sec * 1000
+        self.frame_num = int(span_sec / interval_sec) + 1
+    
+    def get_interval_sec(self):
+        """
+        Function to get interval time parameter[sec]
+        """
+        
+        return self.interval_sec
+    
+    def get_interval_msec(self):
+        """
+        Function to get interval time parameter[msec]
+        """
+        
+        return self.interval_msec
+    
+    def get_frame_num(self):
+        """
+        Function to get number of simulation's frames
+        """
+        
+        return self.frame_num
+    
+    def current_sec(self, index):
+        """
+        Function to get current time[sec] in simulation
+        index: Index of simulation's frame
+        """
+        return self.interval_sec * index
+    
+    def simulation_finished(self, index):
+        """
+        Function to check simulation was finished
+        index: Index of simulation's frame
+        """
+        
+        return (self.interval_sec * index >= self.span_sec)
+```
+
+### 1.1.3 Other member variables
+"gif_name" is a string object for saving the animation's gif file. A boolean, "show_plot" is used to switch displaying or not displaying the visualization's figure window when unit test is executed. While the test is running, the figure window should not be displayed to continue the test. "show_zoom" is deciding to limit the size of visualization area until around of the vehicle or the maximum size of world.  
+
+### 1.1.4 Member methods
 A member method, "add_object()" is defined to add each objects which is located in the world. An object can be added to the objects list by calling this method.  
 ```python
     def add_object(self, obj):
