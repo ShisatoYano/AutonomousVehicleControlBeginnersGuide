@@ -3,7 +3,7 @@ In this chapter, I'm gonna explain about a program to define a world coordinate 
 
 ## 1.1 Visualization class
 All classes for world visualization is located at a directory, "src/components/visualization". Firstly, I'm gonna introduce a global x-y coordinate visualization class as follow.  
-[src/components/visualization/global_xy_visualizer.py](/src/components/visualization/global_xy_visualizer.py)  
+[global_xy_visualizer.py](/src/components/visualization/global_xy_visualizer.py)  
 ```python
 """
 global_xy_visualizer.py
@@ -40,7 +40,49 @@ class GlobalXYVisualizer:
         self.show_plot = True
         self.show_zoom = show_zoom
 ```
-This class need to import matplotlib.pyplot and animation to display data plots and an animation. In "__init__" method, an empty "objects" list is defined. Each objects which are located in the world are stored into this list. "x_lim" and "y_lim" are limitation object of x/y axis. These objects are used to set a size of world visualization. "time_params" is an object to set the visualization time. "gif_name" is a string object for saving the animation's gif file. A boolean, "show_plot" is used to switch displaying or not displaying the visualization's figure window when unit test is executed. While the test is running, the figure window should not be displayed to continue the test. "show_zoom" is deciding to limit the size of visualization area until around of the vehicle or the maximum size of world.  
+This class need to import matplotlib.pyplot and animation to display data plots and an animation. In "__init__" method, an empty "objects" list is defined. Each objects which are located in the world are stored into this list.   
+
+### 1.1.1 MinMax class
+"x_lim" and "y_lim" are objects of MinMax class. This class defines limitation  of x/y axis. These objects are used to set a size of world visualization. 
+[min_max.py](/src/components/visualization/min_max.py)  
+```python
+"""
+min_max.py
+
+Author: Shisato Yano
+"""
+
+class MinMax:
+    """
+    Limitation values class of axis
+    """
+
+    def __init__(self, min=0, max=10):
+        """
+        Constructor
+        min: Minimum value of axis
+        max: Maximum value of axis
+        """
+
+        self.min = min
+        self.max = max
+    
+    def min_value(self):
+        """
+        Function to get minimum value
+        """
+        
+        return self.min
+    
+    def max_value(self):
+        """
+        Function to get maximum value
+        """
+        
+        return self.max
+```
+
+"time_params" is an object to set the visualization time. "gif_name" is a string object for saving the animation's gif file. A boolean, "show_plot" is used to switch displaying or not displaying the visualization's figure window when unit test is executed. While the test is running, the figure window should not be displayed to continue the test. "show_zoom" is deciding to limit the size of visualization area until around of the vehicle or the maximum size of world.  
 
 A member method, "add_object()" is defined to add each objects which is located in the world. An object can be added to the objects list by calling this method.  
 ```python
