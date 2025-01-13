@@ -16,3 +16,16 @@ sys.path.append(abs_dir_path + relative_path + "control/speed_profile")
 
 #import component modules
 from trapezoidal_speed_profile import TrapezoidalSpeedProfile
+
+
+class LqrController:
+    """
+    Controller class by LQR(Linear Quadratic Regulator) algorithm
+    """
+
+    def __init__(self, spec, course=None):
+        """
+        Constructor
+        course: Course data and logic object
+        """
+        pass
