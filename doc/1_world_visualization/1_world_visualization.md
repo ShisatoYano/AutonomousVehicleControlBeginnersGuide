@@ -42,4 +42,15 @@ class GlobalXYVisualizer:
         self.show_zoom = show_zoom
 ```
 
-This class need to import matplotlib.pyplot and animation to display data plots and an animation. In "__init__" method, an empty "objects" list is defined. Each objects which are located in the world are stored into this list. "x_lim" and "y_lim" are limitation object of x/y axis. These objects are used to set a size of world visualization. "time_params" is an object to set the visualization time. A boolean, "show_plot" is used to switch displaying or not displaying the visualization's figure window when unit test is executed. While the test is running, the figure window should not be displayed to continue the test. "show_zoom" is deciding to limit the size of visualization area until around of the vehicle or the maximum size of world.
+This class need to import matplotlib.pyplot and animation to display data plots and an animation. In "__init__" method, an empty "objects" list is defined. Each objects which are located in the world are stored into this list. "x_lim" and "y_lim" are limitation object of x/y axis. These objects are used to set a size of world visualization. "time_params" is an object to set the visualization time. A boolean, "show_plot" is used to switch displaying or not displaying the visualization's figure window when unit test is executed. While the test is running, the figure window should not be displayed to continue the test. "show_zoom" is deciding to limit the size of visualization area until around of the vehicle or the maximum size of world.  
+
+A method, "add_object" is defined to add each objects which is located in the world. An object can be added to the objects list by calling this method.  
+```python
+    def add_object(self, obj):
+        """
+        Function to register object which should be visualized
+        Each elements of list need to have update and draw functions
+        """
+
+        self.objects.append(obj)
+```
