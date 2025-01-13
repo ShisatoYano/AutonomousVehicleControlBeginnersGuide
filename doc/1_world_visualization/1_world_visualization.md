@@ -3,8 +3,7 @@ In this chapter, I'm gonna explain about a program to define a world coordinate 
 
 ## 1.1 Visualization class
 All classes for world visualization is located at a directory, "src/components/visualization". Firstly, I'm gonna introduce a global x-y coordinate visualization class as follow.  
-
-src/components/visualization/global_xy_visualizer.py  
+[src/components/visualization/global_xy_visualizer.py](/src/components/visualization/global_xy_visualizer.py)  
 ```python
 """
 global_xy_visualizer.py
@@ -41,8 +40,7 @@ class GlobalXYVisualizer:
         self.show_plot = True
         self.show_zoom = show_zoom
 ```
-
-This class need to import matplotlib.pyplot and animation to display data plots and an animation. In "__init__" method, an empty "objects" list is defined. Each objects which are located in the world are stored into this list. "x_lim" and "y_lim" are limitation object of x/y axis. These objects are used to set a size of world visualization. "time_params" is an object to set the visualization time. A boolean, "show_plot" is used to switch displaying or not displaying the visualization's figure window when unit test is executed. While the test is running, the figure window should not be displayed to continue the test. "show_zoom" is deciding to limit the size of visualization area until around of the vehicle or the maximum size of world.  
+This class need to import matplotlib.pyplot and animation to display data plots and an animation. In "__init__" method, an empty "objects" list is defined. Each objects which are located in the world are stored into this list. "x_lim" and "y_lim" are limitation object of x/y axis. These objects are used to set a size of world visualization. "time_params" is an object to set the visualization time. "gif_name" is a string object for saving the animation's gif file. A boolean, "show_plot" is used to switch displaying or not displaying the visualization's figure window when unit test is executed. While the test is running, the figure window should not be displayed to continue the test. "show_zoom" is deciding to limit the size of visualization area until around of the vehicle or the maximum size of world.  
 
 A member method, "add_object()" is defined to add each objects which is located in the world. An object can be added to the objects list by calling this method.  
 ```python
@@ -92,4 +90,40 @@ This member method, "update" is used to update each objects's data and draw the 
         if not self.show_zoom or self.time_params.simulation_finished(i):
             axes.set_xlim(self.x_lim.min_value(), self.x_lim.max_value())
             axes.set_ylim(self.y_lim.min_value(), self.y_lim.max_value())
+```
+
+Finally, this "draw" method is defined to execute simulation including updating and visualization. If a specific name of gif file is set to "gif_name", the simulation's gif file will be created and saved instead of visualization.
+```python
+    def draw(self):
+        """
+        Function to define animation's main process
+        """
+
+        # clear existing plot and close existing figure
+        plt.clf()
+        plt.close()
+        
+        # setting figure and axes
+        figure = plt.figure(figsize=(8, 8))
+        axes = figure.add_subplot(111)
+        axes.set_aspect("equal")
+        axes.set_xlabel('X[m]', fontsize=20)
+        axes.set_ylabel('Y[m]', fontsize=20)
+
+        # create animation instance
+        elems = []
+        if self.show_plot:
+            print("Simulation start!!")
+            self.anime = anm.FuncAnimation(figure, self.update, fargs=(elems,   axes),
+                                           frames=self.time_params.get_frame_num(), 
+                                           interval=self.time_params.get_interval_msec(), 
+                                           repeat=False)
+            if self.gif_name:
+                self.anime.save(self.gif_name, writer="pillow")
+            else:
+                plt.show()
+            print("Simulation finished!!")
+        else:
+            # only when executed as unit test
+            for i in range(1000): self.update(i, elems, axes)
 ```
