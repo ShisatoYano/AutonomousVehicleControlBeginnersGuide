@@ -127,3 +127,6 @@ Finally, this "draw" method is defined to execute simulation including updating 
             # only when executed as unit test
             for i in range(1000): self.update(i, elems, axes)
 ```
+
+## 1.2 Visualize empty world
+I prepared for [a sample progoram to visualize an empty world](/doc/1_world_visualization/visualize_world.py). You will be able to understand how to use the above world visualization class by reading the code. By executing this, you can see that an empty world simulation is visualized as follow.  
