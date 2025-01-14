@@ -1,5 +1,5 @@
 """
-rear_wheel_feedback_controller.py
+lqr_controller.py
 
 Author: Shisato Yano
 """
