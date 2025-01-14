@@ -1,5 +1,5 @@
 """
-visualize_vehicle_zoom.py
+visualize_vehicle.py
 
 Author: Shisato Yano
 """
@@ -38,11 +38,11 @@ def main():
     
     # set simulation parameters
     x_lim, y_lim = MinMax(-30, 30), MinMax(-30, 30)
-    vis = GlobalXYVisualizer(x_lim, y_lim, TimeParameters(span_sec=20))
+    vis = GlobalXYVisualizer(x_lim, y_lim, TimeParameters(span_sec=20), show_zoom=False)
 
     # create vehicle
     spec = VehicleSpecification() # specification
-    vehicle = FourWheelsVehicle(State(), spec) # set state and spec
+    vehicle = FourWheelsVehicle(State(), spec, show_zoom=False) # set state and spec
 
     # add objects here
     vis.add_object(vehicle)
