@@ -26,6 +26,7 @@ class LqrController:
     def __init__(self, spec, course=None):
         """
         Constructor
+        spec: VehicleSpecification object
         course: Course data and logic object
         """
         pass
