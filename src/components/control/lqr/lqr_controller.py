@@ -29,4 +29,7 @@ class LqrController:
         spec: VehicleSpecification object
         course: Course data and logic object
         """
-        pass
+        
+        self.SPEED_PROPORTIONAL_GAIN = 1.0
+        self.WHEEL_BASE_M = spec.wheel_base_m
+        self.MAX_ACCEL_MPS2 = spec.max_accel_mps2
