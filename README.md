@@ -106,6 +106,8 @@ I started this project to study an algorithm and software development for Autono
 If this project helps your task, please let me know by creating a issue.  
 Any paper, animation, video as your output, always welcome!! It will encourage me to continue this project.  
 
+Your comment and output is added to [this list of user comments](/USERS_COMMENTS.md).  
+
 
 ## Contribution
 Any contribution by creating an issue or sending a pull request is welcome!! Please check [this document about how to contribute](/HOWTOCONTRIBUTE.md).  
