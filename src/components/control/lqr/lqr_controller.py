@@ -41,3 +41,12 @@ class LqrController:
         self.target_yaw_rate_rps = 0.0
         self.target_steer_rad = 0.0
         self.elapsed_time_sec = 0.0
+
+        if self.course:
+            max_spd_mps = self.course.max_speed_mps()
+            distance_m = self.course.distance_m()
+        else:
+            max_spd_mps = 1e-100
+            distance_m = 1e-100
+        
+        self.spd_prf = TrapezoidalSpeedProfile(max_spd_mps, self.MAX_ACCEL_MPS2, distance_m)
