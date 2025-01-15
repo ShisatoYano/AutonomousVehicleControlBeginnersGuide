@@ -31,3 +31,36 @@ from lqr_controller import LqrController
 # flag to show plot figure
 # when executed as unit test, this flag is set as false
 show_plot = True
+
+
+def main():
+    """
+    Main process function
+    """
+
+    # set simulation parameters
+    x_lim, y_lim = MinMax(-5, 55), MinMax(-20, 25)
+    vis = GlobalXYVisualizer(x_lim, y_lim, TimeParameters(span_sec=25))
+
+    # create course data instance
+    course = CubicSplineCourse([0.0, 10.0, 25, 40, 50],
+                               [0.0, 4, -12, 20, -13],
+                               20)
+    vis.add_object(course)
+
+    # create vehicle's spec instance
+    spec = VehicleSpecification(area_size=20.0)
+    
+    # create vehicle's state instance
+    state = State(color=spec.color)
+
+    # plot figure is not shown when executed as unit test
+    if not show_plot: vis.not_show_plot()
+
+    # show plot figure
+    vis.draw()
+
+
+# execute main process
+if __name__ == "__main__":
+    main()
