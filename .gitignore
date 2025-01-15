@@ -1,6 +1,7 @@
 src/components/array/__pycache__
 src/components/common/__pycache__
 src/components/control/__pycache__
+src/components/control/lqr/__pycache__
 src/components/control/pure_pursuit/__pycache__
 src/components/control/rear_wheel_feedback/__pycache__
 src/components/control/speed_profile/__pycache__
