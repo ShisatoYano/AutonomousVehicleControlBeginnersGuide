@@ -1,1 +1,2 @@
 # 2. Vehicle Model
+In this chapter, I'm gonna explain about a vehicle model definition. The vehicle model is defined as a four wheels vehicle based on Kinematics and Geometry. And then, the vehicle is controlled by acceleration input and yaw rate input.  
