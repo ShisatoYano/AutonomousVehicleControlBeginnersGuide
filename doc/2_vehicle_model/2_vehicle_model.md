@@ -51,3 +51,37 @@ class State:
 ```
 
 In this code, an initial state including position (x, y), yaw angle and speed is given to a constructor. Additionally, one more argument, "color" is defined for setting the color of position (x, y) plot. And then, the position is stored into 2 member variables, x_history and y_history to record it at each time steps. Finally, 3 constant values, STOP_SPEED_MPS, MAX_SPEED_MPS and MIN_SPEED_MPS are defined to limit a range of the speed computation.  
+
+## 2.2 Vehicle's motion and State equation
+Secondly, I define the vehicle's motion and a state equation in this section. The vehicle's motion is defined as constant acceleration linear motion model. Then, an input given to the vehicle is acceleration[m/s2] and yaw rate[rad/s]. The vehicle's state can be updated with the input based on the motion model. The positive direction of the vehicle's yaw angle is left direction. This model can be implemented as State class's member methos as follow.  
+
+```python
+    @staticmethod
+    def motion_model(state, input, time_s):
+        """
+        Static function of motion model of vehicle state
+        state: Vehicle's state (x, y, yaw, speed) object
+        input: Motion input (acceleration, yaw rate) object
+        time_s: Time interval per cycle[sec]
+        """
+
+        # to fix DeprecationWarning: Conversion of an array with ndim > 0 
+        # to a scalar is deprecated, and will error in future. 
+        # Ensure you extract a single element from your array 
+        # before performing this operation. (Deprecated NumPy 1.25.)
+        yaw_rad = state.item(2) # do not extract an element like state[2]
+        
+        A = np.array([[1, 0, 0, cos(yaw_rad) * time_s],
+                      [0, 1, 0, sin(yaw_rad) * time_s],
+                      [0, 0, 1, 0],
+                      [0, 0, 0, 1]])
+        
+        B = np.array([[(cos(yaw_rad) * time_s**2) / 2, 0],
+                      [(sin(yaw_rad) * time_s**2) / 2, 0],
+                      [0, time_s],
+                      [time_s, 0]])
+        
+        return A @ state + B @ input
+```
+
+This method is defined as a static method. When you want to use this method, you don't need to generate the State class's object. 2 matrix A and B in this code is to represent multiple state variables as a state equation.  
