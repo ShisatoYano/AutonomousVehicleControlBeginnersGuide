@@ -37,6 +37,7 @@
                     "/usr/local/lib/python3.13/site-packages",
                     "/home/dev-user/workspace/src/components/array",
                     "/home/dev-user/workspace/src/components/common",
+                    "/home/dev-user/workspace/src/components/control/lqr",
                     "/home/dev-user/workspace/src/components/control/pure_pursuit",
                     "/home/dev-user/workspace/src/components/control/rear_wheel_feedback",
                     "/home/dev-user/workspace/src/components/control/speed_profile",
