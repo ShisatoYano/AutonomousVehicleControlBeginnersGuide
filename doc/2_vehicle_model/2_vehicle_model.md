@@ -85,3 +85,40 @@ Secondly, I define the vehicle's motion and a state equation in this section. Th
 ```
 
 This method is defined as a static method. When you want to use this method, you don't need to generate the State class's object. 2 matrix A and B in this code is to represent multiple state variables as a state equation.  
+
+## 2.3 Updating vehicle's state
+Then, I implement a member method of State class, "update" to compute the vehicle's state at the next time step. The input of acceleration, yaw rate and an interval time per cycle[sec] are given as arguments.  
+
+```python
+    def update(self, accel_mps2, yaw_rate_rps, time_s):
+        """
+        Function to update state
+        accel_mps2: Acceleration[m/s^2]
+        steer_rad: Steering angle[rad]
+        time_s: Time interval per cycle[sec]
+        """
+
+        last_state = np.array([[self.x_m],
+                               [self.y_m],
+                               [self.yaw_rad],
+                               [self.speed_mps]])
+        
+        next_input = np.array([[accel_mps2],
+                               [yaw_rate_rps]])
+        
+        next_state = self.motion_model(last_state, next_input, time_s)
+
+        self.x_m = next_state[0, 0]
+        self.y_m = next_state[1, 0]
+        self.yaw_rad = next_state[2, 0]
+        self.speed_mps = next_state[3, 0]
+        
+        if abs(self.speed_mps) < self.STOP_SPEED_MPS: self.speed_mps = 0.0
+        if self.speed_mps > self.MAX_SPEED_MPS: self.speed_mps = self.MAX_SPEED_MPS
+        if self.speed_mps < self.MIN_SPEED_MPS: self.speed_mps = self.MIN_SPEED_MPS
+
+        self.x_history.append(self.x_m)
+        self.y_history.append(self.y_m)
+```
+
+In this code, a new state at the next time step can be computed with the method, "motion_model". If the updated speed was lower than STOP_SPEED_MPS, the speed would be set to 0 to make the vehicle stopped. And then, the speed is limited between MAX_SPEED_MPS and MIN_SPEED_MPS. Finally, the updated position (x, y) is stored to those list of history.  
