@@ -50,3 +50,12 @@ class LqrController:
             distance_m = 1e-100
         
         self.spd_prf = TrapezoidalSpeedProfile(max_spd_mps, self.MAX_ACCEL_MPS2, distance_m)
+
+    def draw(self, axes, elems):
+        """
+        Function to draw target point on course
+        axes: Axes object of figure
+        elems: plot object's list
+        """
+
+        pass
