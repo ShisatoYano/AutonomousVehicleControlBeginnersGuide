@@ -138,3 +138,55 @@ Implementing a member method of State class, "draw" for visualization. In this c
 
         elems.append(axes.text(self.x_m, self.y_m + 2, "Speed: " + str(round(self.speed_mps * 3.6, 1)) + "[km/h]", fontsize=10))
 ```
+
+### 2.4.2 X-Y Array class
+The vehicle's drawing is represented as x-y 2D array. So, I implement X-Y Array class as follow.  
+[xy_array.py](/src/components/array/xy_array.py)  
+
+```python
+"""
+xy_array.py
+
+Author: Shisato Yano
+"""
+
+from math import sin, cos
+import numpy as np
+
+
+class XYArray:
+    """
+    X-Y 2D array data and logic class
+    """
+
+    def __init__(self, data):
+        """
+        Constructor
+        data: np.array([[x1, x2,..., xn], [y1, y2,..., yn]])
+        """
+
+        self.data = data
+    
+    def homogeneous_transformation(self, x, y, angle_rad):
+        """
+        Function for homogeneous transformation
+        x: Amount of x-axis translation
+        y: Amount of y-axis translation
+        angle_rad: Rotation angle[rad]
+        Return transformed XYArray object
+        """
+        
+        angle_cos = cos(angle_rad)
+        angle_sin = sin(angle_rad)
+
+        rotation_matrix = np.array([[angle_cos, -angle_sin],
+                                    [angle_sin, angle_cos]])
+        
+        rotated_data = rotation_matrix @ self.data
+
+        translated_data = rotated_data + np.ones(rotated_data.shape) * np.array([[x], [y]])
+
+        return XYArray(translated_data)
+```
+
+In this code, a given data to Constructor is x-y 2D array. Then, the data can be transformed based on the vehicle's position (x, y) and yaw angle. After the data was transformed, a new XYArray object with the transformed data is returned.  
