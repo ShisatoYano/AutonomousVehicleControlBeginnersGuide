@@ -2,7 +2,7 @@
 In this chapter, I'm gonna explain about a vehicle model definition. The vehicle model is defined as a four wheels vehicle based on Kinematics and Geometry. And then, the vehicle is controlled by acceleration input and yaw rate input.  
 
 ## 2.1 Vehicle's state
-Firstly, an vehicle's state is defined as follow.  
+A vehicle's state is defined as follow.  
 
 * Position (x, y)[m]
 * Yaw angle[rad]
@@ -53,7 +53,7 @@ class State:
 In this code, an initial state including position (x, y), yaw angle and speed is given to a constructor. Additionally, one more argument, "color" is defined for setting the color of position (x, y) plot. And then, the position is stored into 2 member variables, x_history and y_history to record it at each time steps. Finally, 3 constant values, STOP_SPEED_MPS, MAX_SPEED_MPS and MIN_SPEED_MPS are defined to limit a range of the speed computation.  
 
 ## 2.2 Vehicle's motion and State equation
-Secondly, I define the vehicle's motion and a state equation in this section. The vehicle's motion is defined as constant acceleration linear motion model. Then, an input given to the vehicle is acceleration[m/s2] and yaw rate[rad/s]. The vehicle's state can be updated with the input based on the motion model. The positive direction of the vehicle's yaw angle is left direction. This model can be implemented as State class's member methos as follow.  
+I define the vehicle's motion and a state equation in this section. The vehicle's motion is defined as constant acceleration linear motion model. Then, an input given to the vehicle is acceleration[m/s2] and yaw rate[rad/s]. The vehicle's state can be updated with the input based on the motion model. The positive direction of the vehicle's yaw angle is left direction. This model can be implemented as State class's member methos as follow.  
 
 ```python
     @staticmethod
@@ -87,7 +87,7 @@ Secondly, I define the vehicle's motion and a state equation in this section. Th
 This method is defined as a static method. When you want to use this method, you don't need to generate the State class's object. 2 matrix A and B in this code is to represent multiple state variables as a state equation.  
 
 ## 2.3 Updating vehicle's state
-Then, I implement a member method of State class, "update" to compute the vehicle's state at the next time step. The input of acceleration, yaw rate and an interval time per cycle[sec] are given as arguments.  
+I implement a member method of State class, "update" to compute the vehicle's state at the next time step. The input of acceleration, yaw rate and an interval time per cycle[sec] are given as arguments.  
 
 ```python
     def update(self, accel_mps2, yaw_rate_rps, time_s):
@@ -122,3 +122,19 @@ Then, I implement a member method of State class, "update" to compute the vehicl
 ```
 
 In this code, a new state at the next time step can be computed with the method, "motion_model". If the updated speed was lower than STOP_SPEED_MPS, the speed would be set to 0 to make the vehicle stopped. And then, the speed is limited between MAX_SPEED_MPS and MIN_SPEED_MPS. Finally, the updated position (x, y) is stored to those list of history.  
+
+## 2.4 Visualization
+### 2.4.1 Drawing method
+Implementing a member method of State class, "draw" for visualization. In this code, Those lists of x, y history are plot and the current speed is also visualized.  
+
+```python
+    def draw(self, axes, elems):
+        """
+        Function to draw x-y history and speed
+        """
+        
+        hist_plot, = axes.plot(self.x_history, self.y_history, linewidth=0, marker='.', color=self.DRAW_COLOR)
+        elems.append(hist_plot)
+
+        elems.append(axes.text(self.x_m, self.y_m + 2, "Speed: " + str(round(self.speed_mps * 3.6, 1)) + "[km/h]", fontsize=10))
+```
