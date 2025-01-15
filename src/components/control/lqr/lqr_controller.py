@@ -51,6 +51,15 @@ class LqrController:
         
         self.spd_prf = TrapezoidalSpeedProfile(max_spd_mps, self.MAX_ACCEL_MPS2, distance_m)
 
+    def update(self, state, time_s):
+        """
+        Function to update data for path tracking
+        state: Vehicle's state object
+        time_s: Simulation interval time[sec]
+        """
+
+        if not self.course: return
+
     def draw(self, axes, elems):
         """
         Function to draw target point on course
