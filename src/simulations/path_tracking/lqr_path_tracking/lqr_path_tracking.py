@@ -54,6 +54,14 @@ def main():
     # create vehicle's state instance
     state = State(color=spec.color)
 
+    # create controller instance
+    lqr = LqrController(spec, course)
+
+    # create vehicle instance
+    # set state, spec and controller instances as arguments
+    vehicle = FourWheelsVehicle(state, spec, controller=lqr)
+    vis.add_object(vehicle)
+
     # plot figure is not shown when executed as unit test
     if not show_plot: vis.not_show_plot()
 
