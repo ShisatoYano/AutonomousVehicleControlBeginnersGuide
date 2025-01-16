@@ -123,8 +123,8 @@ I implement a member method of State class, "update" to compute the vehicle's st
 
 In this code, a new state at the next time step can be computed with the method, "motion_model". If the updated speed was lower than STOP_SPEED_MPS, the speed would be set to 0 to make the vehicle stopped. And then, the speed is limited between MAX_SPEED_MPS and MIN_SPEED_MPS. Finally, the updated position (x, y) is stored to those list of history.  
 
-## 2.4 Visualization
-This section provides the explanation of visualizing the vehicle. The vehicle is separated into the following multiple parts and those drawing classes are implemented.  
+## 2.4 Vehicle's parts class
+This section provides the explanation of the vehicle's parts class. The vehicle is separated into the following multiple parts and those drawing classes are implemented.  
 
 * Body
 * Chasis
@@ -707,7 +707,7 @@ class RearRightTire:
 ```
 
 ### 2.4.12 Four wheels vehicle class
-FourWheelsVehicle class is implemented by importing the above each parts class. An object of this class can be added to the world and be displayed.  
+FourWheelsVehicle class is implemented by importing the above each parts class.  
 [four_wheels_vehicle.py](/src/components/vehicle/four_wheels_vehicle.py)  
 
 ```python
@@ -790,3 +790,75 @@ class FourWheelsVehicle:
             axes.set_xlim(self.spec.x_lim.min_value(), self.spec.x_lim.max_value())
             axes.set_ylim(self.spec.y_lim.min_value(), self.spec.y_lim.max_value())
 ```
+
+## 2.5 Visualization
+An object of the above FourWheelsVehicle class can be added to the world by executing the following sample programs.  
+
+### 2.5.1 Without zoom
+This program can visualize the vehicle and whole world in global coordinate system.  
+[visualize_vehicle.py](/doc/2_vehicle_model/visualize_vehicle.py)  
+
+```python
+"""
+visualize_vehicle.py
+
+Author: Shisato Yano
+"""
+
+# import path setting
+import numpy as np
+import sys
+from pathlib import Path
+
+abs_dir_path = str(Path(__file__).absolute().parent)
+relative_path = "/../../src/components/"
+
+sys.path.append(abs_dir_path + relative_path + "visualization")
+sys.path.append(abs_dir_path + relative_path + "state")
+sys.path.append(abs_dir_path + relative_path + "vehicle")
+
+
+# import component modules
+from global_xy_visualizer import GlobalXYVisualizer
+from min_max import MinMax
+from time_parameters import TimeParameters
+from vehicle_specification import VehicleSpecification
+from state import State
+from four_wheels_vehicle import FourWheelsVehicle
+
+
+# flag to show plot figure
+# when executed as unit test, this flag is set as false
+show_plot = True
+
+
+def main():
+    """
+    Main process function
+    """
+    
+    # set simulation parameters
+    x_lim, y_lim = MinMax(-30, 30), MinMax(-30, 30)
+    vis = GlobalXYVisualizer(x_lim, y_lim, TimeParameters(span_sec=20), show_zoom=False)
+
+    # create vehicle
+    spec = VehicleSpecification() # specification
+    vehicle = FourWheelsVehicle(State(), spec, show_zoom=False) # set state and spec
+
+    # add objects here
+    vis.add_object(vehicle)
+
+    # plot figure is not shown when executed as unit test
+    if not show_plot: vis.not_show_plot()
+
+    # show plot figure
+    vis.draw()
+
+
+# execute main process
+if __name__ == "__main__":
+    main()
+```
+
+You can see the following animation by executing this program.  
+![](/doc/2_vehicle_model/visualize_vehicle.gif)  
