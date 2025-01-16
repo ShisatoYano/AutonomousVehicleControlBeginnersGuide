@@ -124,6 +124,15 @@ I implement a member method of State class, "update" to compute the vehicle's st
 In this code, a new state at the next time step can be computed with the method, "motion_model". If the updated speed was lower than STOP_SPEED_MPS, the speed would be set to 0 to make the vehicle stopped. And then, the speed is limited between MAX_SPEED_MPS and MIN_SPEED_MPS. Finally, the updated position (x, y) is stored to those list of history.  
 
 ## 2.4 Visualization
+This section provides the explanation of visualizing the vehicle. The vehicle is separated into the following multiple parts and those drawing classes are implemented.  
+
+* Body
+* Chasis
+* Front axle
+* Rear axle
+* Front Right/Left tire
+* Rear Right/Left tire
+
 ### 2.4.1 Drawing method
 Implementing a member method of State class, "draw" for visualization. In this code, Those lists of x, y history are plot and the current speed is also visualized.  
 
@@ -193,6 +202,7 @@ In this code, a given data to Constructor is x-y 2D array. Then, the data can be
 
 ### 2.4.3 Specification class
 Implementing Vehicle's specification class as follow. This class is used to manage each parameters for the vehicle's control.  
+[vehicle_specification.py](/src/components/vehicle/vehicle_specification.py)  
 
 ```python
 """
@@ -257,7 +267,7 @@ class VehicleSpecification:
         self.max_accel_mps2 = max_accel_mps2
 ```
 
-The vehicle has the following parameters as specification.  
+The vehicle has the following parameters as specification. The vehicle is drawn according to the parameters.  
 
 * Length from origin to center of front axle[m]
 * Length from origin to center of rear axle[m]
@@ -275,3 +285,53 @@ The vehicle has the following parameters as specification.
 * Limitation in x axis[m]
 * Limitation in y axis[m]
 * Maximum acceleration[m/s2]
+
+### 2.4.4 Body class
+Vehicle body class is implemented as follow. This class is used for drawing the vehicle's body according to the specification.  
+[body.py](/src/components/vehicle/body.py)  
+
+```python
+"""
+body.py
+
+Author: Shisato Yano
+"""
+
+import numpy as np
+import sys
+from pathlib import Path
+
+sys.path.append(str(Path(__file__).absolute().parent) + "/../array")
+from xy_array import XYArray
+
+
+class Body:
+    """
+    Vehicle Body class
+    """
+
+    def __init__(self, spec):
+        """
+        Constructor
+        spec: object of VehicleSpecification class
+        """
+
+        self.spec = spec
+
+        contour = np.array([[self.spec.f_edge_m, -self.spec.r_edge_m, -self.spec.r_edge_m, self.spec.f_edge_m, self.spec.f_edge_m],
+                            [self.spec.width_m, self.spec.width_m, -self.spec.width_m, -self.spec.width_m, self.spec.width_m]])
+        self.array = XYArray(contour)
+
+    def draw(self, axes, pose, elems):
+        """
+        Function to plot vehicle's body lines
+        axes: Axes object of figure
+        pose: Vehicle's pose vector
+        elems: List of plot objects
+        """
+
+        transformed_array = self.array.homogeneous_transformation(pose[0, 0], pose[1, 0], pose[2, 0])
+        body_plot, = axes.plot(transformed_array.get_x_data(), transformed_array.get_y_data(), 
+                               lw=self.spec.line_w, color=self.spec.color, ls=self.spec.line_type)
+        elems.append(body_plot)
+```
