@@ -705,3 +705,88 @@ class RearRightTire:
                                lw=self.spec.line_w, color=self.spec.color, ls=self.spec.line_type)
         elems.append(tire_plot)
 ```
+
+### 2.4.12 Four wheels vehicle class
+FourWheelsVehicle class is implemented by importing the above each parts class. An object of this class can be added to the world and be displayed.  
+[four_wheels_vehicle.py](/src/components/vehicle/four_wheels_vehicle.py)  
+
+```python
+"""
+four_wheels_vehicle.py
+
+Author: Shisato Yano
+"""
+
+from body import Body
+from chassis import Chassis
+from front_left_tire import FrontLeftTire
+from front_right_tire import FrontRightTire
+from rear_left_tire import RearLeftTire
+from rear_right_tire import RearRightTire
+from front_axle import FrontAxle
+from rear_axle import RearAxle
+
+
+class FourWheelsVehicle:
+    """
+    Four Wheels Vehicle model class
+    """
+
+    def __init__(self, state, spec, show_zoom=True):
+        """
+        Constructor
+        state: Vehicle's state object
+        spec: Vehicle's specification object
+        show_zoom: Flag for zoom around vehicle
+        """
+        
+        self.state = state
+
+        self.spec = spec
+        self.body = Body(spec)
+        self.chassis = Chassis(spec)
+        self.front_left_tire = FrontLeftTire(spec)
+        self.front_right_tire = FrontRightTire(spec)
+        self.rear_left_tire = RearLeftTire(spec)
+        self.rear_right_tire = RearRightTire(spec)
+        self.front_axle = FrontAxle(spec)
+        self.rear_axle = RearAxle(spec)
+
+        self.show_zoom = show_zoom
+
+    def update(self, time_s):
+        """
+        Function to update each member objects
+        time_s: Simulation interval time[sec]
+        """
+
+        self.state.update(0.0, 0.0, time_s)
+    
+    def draw(self, axes, elems):
+        """
+        Function to draw each member object's data
+        axes: Axes object of figure
+        elems: List of plot object
+        """
+
+        self.state.draw(axes, elems)
+        x_y_yaw_array = self.state.x_y_yaw()
+        x_m = self.state.get_x_m()
+        y_m = self.state.get_y_m()
+        
+        self.body.draw(axes, x_y_yaw_array, elems)
+        self.chassis.draw(axes, x_y_yaw_array, elems)
+        self.front_left_tire.draw(axes, x_y_yaw_array, steer_rad, elems)
+        self.front_right_tire.draw(axes, x_y_yaw_array, steer_rad, elems)
+        self.rear_left_tire.draw(axes, x_y_yaw_array, elems)
+        self.rear_right_tire.draw(axes, x_y_yaw_array, elems)
+        self.front_axle.draw(axes, x_y_yaw_array, elems)
+        self.rear_axle.draw(axes, x_y_yaw_array, elems)
+
+        if self.show_zoom:
+            axes.set_xlim(x_m - self.spec.area_size, x_m + self.spec.area_size)
+            axes.set_ylim(y_m - self.spec.area_size, y_m + self.spec.area_size)
+        else:
+            axes.set_xlim(self.spec.x_lim.min_value(), self.spec.x_lim.max_value())
+            axes.set_ylim(self.spec.y_lim.min_value(), self.spec.y_lim.max_value())
+```
