@@ -76,6 +76,18 @@ class LqrController:
 
         self.target_speed_mps = self.spd_prf.decide_target_speed_mps(self.elapsed_time_sec, time_s)
 
+    def _calculate_control_input(self, state, error_lat_m, error_yaw_rad, time_s):
+        """
+        Private function to calculate yaw rate input
+        state: Vehicle's state object
+        error_lat_m: Lateral error against reference course[m]
+        error_yaw_rad: Yaw angle error against reference course[rad]
+        time_s: Simulation interval time[sec]
+        """
+
+        curr_spd = state.get_speed_mps()
+        trgt_curv = self.course.point_curvature(self.target_course_index)
+
     def update(self, state, time_s):
         """
         Function to update data for path tracking
@@ -90,6 +102,8 @@ class LqrController:
         self._decide_target_speed_mps(time_s)
 
         _, error_lat_m, error_yaw_rad = self._calculate_tracking_error(state)
+
+        self._calculate_control_input(state, error_lat_m, error_yaw_rad, time_s)
 
         self.elapsed_time_sec += time_s
 
