@@ -29,8 +29,7 @@ class LqrController:
         spec: VehicleSpecification object
         course: Course data and logic object
         """
-        
-        self.SPEED_PROPORTIONAL_GAIN = 1.0
+
         self.WHEEL_BASE_M = spec.wheel_base_m
         self.MAX_ACCEL_MPS2 = spec.max_accel_mps2
 
@@ -51,6 +50,15 @@ class LqrController:
         
         self.spd_prf = TrapezoidalSpeedProfile(max_spd_mps, self.MAX_ACCEL_MPS2, distance_m)
 
+    def _calculate_target_course_index(self, state):
+        """
+        Private function to calculate target point's index on course
+        state: Vehicle's state object
+        """
+        
+        nearest_index = self.course.search_nearest_point_index(state)
+        self.target_course_index = nearest_index
+
     def update(self, state, time_s):
         """
         Function to update data for path tracking
@@ -59,6 +67,8 @@ class LqrController:
         """
 
         if not self.course: return
+
+        self._calculate_target_course_index(state)
 
     def draw(self, axes, elems):
         """
