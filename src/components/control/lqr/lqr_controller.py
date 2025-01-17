@@ -68,6 +68,14 @@ class LqrController:
         error_lon_m, error_lat_m, error_yaw_rad = self.course.calculate_lonlat_error(state, self.target_course_index)
         return error_lon_m, error_lat_m, error_yaw_rad
 
+    def _decide_target_speed_mps(self, time_s):
+        """
+        Private function to decide target speed[m/s]
+        time_s: interval time[sec]
+        """
+
+        self.target_speed_mps = self.spd_prf.decide_target_speed_mps(self.elapsed_time_sec, time_s)
+
     def update(self, state, time_s):
         """
         Function to update data for path tracking
@@ -79,7 +87,11 @@ class LqrController:
 
         self._calculate_target_course_index(state)
 
+        self._decide_target_speed_mps(time_s)
+
         _, error_lat_m, error_yaw_rad = self._calculate_tracking_error(state)
+
+        self.elapsed_time_sec += time_s
 
     def draw(self, axes, elems):
         """
