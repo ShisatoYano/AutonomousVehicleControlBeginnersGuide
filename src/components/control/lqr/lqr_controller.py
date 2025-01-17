@@ -8,6 +8,7 @@ Author: Shisato Yano
 import sys
 from pathlib import Path
 from math import sin, cos, atan2
+import numpy as np
 
 abs_dir_path = str(Path(__file__).absolute().parent)
 relative_path = "/../../../components/"
@@ -87,6 +88,28 @@ class LqrController:
 
         curr_spd = state.get_speed_mps()
         trgt_curv = self.course.point_curvature(self.target_course_index)
+
+        # A = [1.0, dt, 0.0, 0.0, 0.0
+        #      0.0, 0.0, v, 0.0, 0.0]
+        #      0.0, 0.0, 1.0, dt, 0.0]
+        #      0.0, 0.0, 0.0, 0.0, 0.0]
+        #      0.0, 0.0, 0.0, 0.0, 1.0]
+        A = np.zeros((5, 5))
+        A[0, 0] = 1.0
+        A[0, 1] = time_s
+        A[1, 2] = curr_spd
+        A[2, 2] = 1.0
+        A[2, 3] = time_s
+        A[4, 4] = 1.0
+
+        # B = [0.0, 0.0
+        #     0.0, 0.0
+        #     0.0, 0.0
+        #     v/L, 0.0
+        #     0.0, dt]
+        B = np.zeros((5, 2))
+        B[3, 0] = curr_spd / self.WHEEL_BASE_M
+        B[4, 1] = time_s
 
     def update(self, state, time_s):
         """
