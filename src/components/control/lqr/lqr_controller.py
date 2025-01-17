@@ -59,6 +59,15 @@ class LqrController:
         nearest_index = self.course.search_nearest_point_index(state)
         self.target_course_index = nearest_index
 
+    def _calculate_tracking_error(self, state):
+        """
+        Private function to calculate tracking error against target point on the course
+        state: Vehicle's state object
+        """
+
+        error_lon_m, error_lat_m, error_yaw_rad = self.course.calculate_lonlat_error(state, self.target_course_index)
+        return error_lon_m, error_lat_m, error_yaw_rad
+
     def update(self, state, time_s):
         """
         Function to update data for path tracking
@@ -69,6 +78,8 @@ class LqrController:
         if not self.course: return
 
         self._calculate_target_course_index(state)
+
+        _, error_lat_m, error_yaw_rad = self._calculate_tracking_error(state)
 
     def draw(self, axes, elems):
         """
