@@ -34,6 +34,9 @@ class LqrController:
         self.WHEEL_BASE_M = spec.wheel_base_m
         self.MAX_ACCEL_MPS2 = spec.max_accel_mps2
 
+        self.WEIGHT_MAT_Q = np.eye(5)
+        self.WEIGHT_MAT_R = np.eye(2)
+
         self.course = course
         self.target_course_index = 0
         self.target_accel_mps2 = 0.0
@@ -76,6 +79,22 @@ class LqrController:
         """
 
         self.target_speed_mps = self.spd_prf.decide_target_speed_mps(self.elapsed_time_sec, time_s)
+
+    def _solve_riccati_equation(A, B, Q, R):
+        """
+        Private function to solve discrete algebraic riccati equation
+        """
+
+        pass
+
+    def _calculate_control_gain(A, B, Q, R):
+        """
+        Private function to calculate control gain
+        x[t+1] = A x[t] + B u[t]
+        cost = sum(x[t].T * Q * x[t] + u[t].T * R * u[t])
+        """
+
+        pass
 
     def _calculate_control_input(self, state, error_lat_m, error_yaw_rad, time_s):
         """
