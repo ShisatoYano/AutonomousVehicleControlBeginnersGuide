@@ -7,7 +7,7 @@ Author: Shisato Yano
 #import path setting
 import sys
 from pathlib import Path
-from math import sin, cos, atan2
+from math import tan, atan2
 import numpy as np
 import scipy.linalg as la
 
@@ -15,9 +15,11 @@ abs_dir_path = str(Path(__file__).absolute().parent)
 relative_path = "/../../../components/"
 
 sys.path.append(abs_dir_path + relative_path + "control/speed_profile")
+sys.path.append(abs_dir_path + relative_path + "common")
 
 #import component modules
 from trapezoidal_speed_profile import TrapezoidalSpeedProfile
+from angle_lib import pi_to_pi
 
 
 class LqrController:
@@ -47,6 +49,9 @@ class LqrController:
         self.target_yaw_rate_rps = 0.0
         self.target_steer_rad = 0.0
         self.elapsed_time_sec = 0.0
+
+        self.prev_error_lat_m = 0.0
+        self.prev_error_yaw_rad = 0.0
 
         if self.course:
             max_spd_mps = self.course.max_speed_mps()
@@ -155,6 +160,30 @@ class LqrController:
         B[4, 1] = time_s
 
         gain = self._calculate_control_gain(A, B)
+
+        # state vector
+        x = np.zeros((5, 1))
+        x[0, 0] = error_lat_m # lateral error against course
+        x[1, 0] = (error_lat_m - self.prev_error_lat_m) / time_s # derivative of lateral error
+        x[2, 0] = error_yaw_rad # yaw angle error against course
+        x[3, 0] = (error_yaw_rad - self.prev_error_yaw_rad) / time_s # derivative of yaw angle error
+        x[4, 0] = curr_spd - self.target_speed_mps # speed error against target value
+
+        # feedback input vector
+        # [[steering angle],
+        #  [acceleration]]
+        feedback_input = -gain @ x
+
+        # target steering angle
+        feedforward_steer = atan2(self.WHEEL_BASE_M * trgt_curv, 1)
+        feedback_steer = pi_to_pi(feedback_input[0, 0])
+        self.target_steer_rad = feedforward_steer + feedback_steer
+
+        # target yaw rate
+        self.target_yaw_rate_rps = curr_spd * tan(self.target_steer_rad) / self.WHEEL_BASE_M
+
+        # target acceleration
+        self.target_accel_mps2 = feedback_input[1, 0]
 
     def update(self, state, time_s):
         """
