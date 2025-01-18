@@ -26,6 +26,7 @@ src/components/visualization/__pycache__
 src/simulations/course/cubic_spline/__pycache__
 src/simulations/localization/extended_kalman_filter_localization/__pycache__
 src/simulations/mapping/ndt_map_construction/__pycache__
+src/simulations/path_tracking/lqr_path_tracking/__pycache__
 src/simulations/path_tracking/pure_pursuit_path_tracking/__pycache__
 src/simulations/path_tracking/rear_wheel_feedback_tracking/__pycache__
 src/simulations/perception/point_cloud_search/__pycache__
