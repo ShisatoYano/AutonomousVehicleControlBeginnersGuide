@@ -37,8 +37,9 @@ class LqrController:
         self.WHEEL_BASE_M = spec.wheel_base_m
         self.MAX_ACCEL_MPS2 = spec.max_accel_mps2
 
+        self.SCALE_R = 4.0
         self.WEIGHT_MAT_Q = np.eye(5)
-        self.WEIGHT_MAT_R = np.eye(2)
+        self.WEIGHT_MAT_R = self.SCALE_R * np.eye(2)
         self.MAX_ITERATION = 150
         self.THRESHOLD = 0.01
 
