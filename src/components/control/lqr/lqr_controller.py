@@ -168,6 +168,8 @@ class LqrController:
         x[2, 0] = error_yaw_rad # yaw angle error against course
         x[3, 0] = (error_yaw_rad - self.prev_error_yaw_rad) / time_s # derivative of yaw angle error
         x[4, 0] = curr_spd - self.target_speed_mps # speed error against target value
+        self.prev_error_lat_m = error_lat_m
+        self.prev_error_yaw_rad = error_yaw_rad
 
         # feedback input vector
         # [[steering angle],
@@ -184,6 +186,8 @@ class LqrController:
 
         # target acceleration
         self.target_accel_mps2 = feedback_input[1, 0]
+
+        print(self.target_steer_rad, self.target_yaw_rate_rps, self.target_speed_mps)
 
     def update(self, state, time_s):
         """
