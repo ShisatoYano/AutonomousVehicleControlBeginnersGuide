@@ -9,6 +9,7 @@ import sys
 from pathlib import Path
 from math import sin, cos, atan2
 import numpy as np
+import scipy.linalg as la
 
 abs_dir_path = str(Path(__file__).absolute().parent)
 relative_path = "/../../../components/"
@@ -36,6 +37,8 @@ class LqrController:
 
         self.WEIGHT_MAT_Q = np.eye(5)
         self.WEIGHT_MAT_R = np.eye(2)
+        self.MAX_ITERATION = 150
+        self.THRESHOLD = 0.01
 
         self.course = course
         self.target_course_index = 0
@@ -80,21 +83,40 @@ class LqrController:
 
         self.target_speed_mps = self.spd_prf.decide_target_speed_mps(self.elapsed_time_sec, time_s)
 
-    def _solve_riccati_equation(A, B, Q, R):
+    def _solve_riccati_equation(self, A, B):
         """
         Private function to solve discrete algebraic riccati equation
+        x[t+1] = A x[t] + B u[t]
+        A: Matrix A in state equation
+        B: Matrix B in state equation
         """
 
-        pass
+        x = self.WEIGHT_MAT_Q
+        x_next = self.WEIGHT_MAT_Q
 
-    def _calculate_control_gain(A, B, Q, R):
+        for i in range(self.MAX_ITERATION):
+            x_next = A.T @ x @ A - A.T @ x @ B @ \
+                     la.inv(self.WEIGHT_MAT_R + B.T @ x @ B) @ \
+                     B.T @ x @ A + self.WEIGHT_MAT_Q
+            
+            if (abs(x_next - x)).max() < self.THRESHOLD:
+                break
+
+            x = x_next
+        
+        return x_next
+
+    def _calculate_control_gain(self, A, B):
         """
         Private function to calculate control gain
-        x[t+1] = A x[t] + B u[t]
         cost = sum(x[t].T * Q * x[t] + u[t].T * R * u[t])
+        A: Matrix A in state equation
+        B: Matrix B in state equation
         """
 
-        pass
+        X = self._solve_riccati_equation(A, B)
+
+        print(X)
 
     def _calculate_control_input(self, state, error_lat_m, error_yaw_rad, time_s):
         """
@@ -129,6 +151,8 @@ class LqrController:
         B = np.zeros((5, 2))
         B[3, 0] = curr_spd / self.WHEEL_BASE_M
         B[4, 1] = time_s
+
+        self._calculate_control_gain(A, B)
 
     def update(self, state, time_s):
         """
