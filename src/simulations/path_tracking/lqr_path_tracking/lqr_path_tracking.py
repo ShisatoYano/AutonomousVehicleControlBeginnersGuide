@@ -1,5 +1,5 @@
 """
-rear_wheel_feedback_tracking.py
+lqr_path_tracking.py
 
 Author: Shisato Yano
 """
