@@ -116,7 +116,9 @@ class LqrController:
 
         X = self._solve_riccati_equation(A, B)
 
-        print(X)
+        gain = la.inv(B.T @ X @ B + self.WEIGHT_MAT_R) @ (B.T @ X @ A)
+
+        return gain
 
     def _calculate_control_input(self, state, error_lat_m, error_yaw_rad, time_s):
         """
@@ -152,7 +154,7 @@ class LqrController:
         B[3, 0] = curr_spd / self.WHEEL_BASE_M
         B[4, 1] = time_s
 
-        self._calculate_control_gain(A, B)
+        gain = self._calculate_control_gain(A, B)
 
     def update(self, state, time_s):
         """
@@ -172,6 +174,27 @@ class LqrController:
         self._calculate_control_input(state, error_lat_m, error_yaw_rad, time_s)
 
         self.elapsed_time_sec += time_s
+
+    def get_target_accel_mps2(self):
+        """
+        Function to get acceleration input[m/s2]
+        """
+        
+        return self.target_accel_mps2
+
+    def get_target_yaw_rate_rps(self):
+        """
+        Function to get yaw rate input[rad/s]
+        """
+
+        return self.target_yaw_rate_rps
+
+    def get_target_steer_rad(self):
+        """
+        Function to get steering angle input[rad]
+        """
+        
+        return self.target_steer_rad
 
     def draw(self, axes, elems):
         """
