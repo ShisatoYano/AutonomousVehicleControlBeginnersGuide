@@ -7,7 +7,7 @@ Author: Shisato Yano
 # import path setting
 import sys
 from pathlib import Path
-from math import sin, cos, atan2
+from math import sin, cos, atan2, pi
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -51,6 +51,24 @@ class CubicSplineCourse:
         
         self.target_speed_mps = target_speed_kmph / 3.6
         self.speed_array = [self.target_speed_mps for _ in self.x_array]
+        direction = 1
+        for i in range(len(self.yaw_array) - 1):
+            diff_yaw = abs(self.yaw_array[i + 1] - self.yaw_array[i])
+            
+            switch_back = (pi / 4.0 <= diff_yaw < pi / 2.0)
+            if switch_back:
+                direction *= -1
+            
+            if direction != 1:
+                self.speed_array[i] = -self.target_speed_mps
+            else:
+                self.speed_array[i] = self.target_speed_mps
+            
+            if switch_back:
+                self.speed_array[i] = 0.0
+        print(self.speed_array[len(self.speed_array)-40]/40)
+        for i in range(40):
+            print(len(self.speed_array), len(self.speed_array)-(40-i), self.speed_array[len(self.speed_array)-(40-i)])
 
         prev_x, prev_y = 0.0, 0.0
         diff_xy = 0.0
