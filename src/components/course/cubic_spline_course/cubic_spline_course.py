@@ -67,7 +67,7 @@ class CubicSplineCourse:
             if switch_back:
                 self.speed_array[i] = 0.0
 
-        decel_len = 40
+        decel_len = 100
         init_idx = len(self.speed_array) - decel_len
         init_spd = self.speed_array[init_idx]
         decel = init_spd / decel_len
