@@ -79,10 +79,9 @@ class PurePursuitController:
     def _decide_target_speed_mps(self, time_s):
         """
         Private function to decide target speed[m/s]
-        time_s: interval time[sec]
         """
         
-        self.target_speed_mps = self.spd_prf.decide_target_speed_mps(self.elapsed_time_sec, time_s)
+        self.target_speed_mps = self.course.point_speed_mps(self.target_course_index)
 
     def _calculate_target_acceleration_mps2(self, state):
         """
