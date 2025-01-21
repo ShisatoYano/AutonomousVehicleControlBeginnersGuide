@@ -39,10 +39,9 @@ class RearWheelFeedbackController:
         nearest_index = self.course.search_nearest_point_index(state)
         self.target_course_index = nearest_index
     
-    def _decide_target_speed_mps(self, time_s):
+    def _decide_target_speed_mps(self):
         """
         Private function to decide target speed[m/s]
-        time_s: interval time[sec]
         """
 
         self.target_speed_mps = self.course.point_speed_mps(self.target_course_index)
@@ -106,7 +105,7 @@ class RearWheelFeedbackController:
 
         self._calculate_target_course_index(state)
 
-        self._decide_target_speed_mps(time_s)
+        self._decide_target_speed_mps()
 
         self._calculate_target_acceleration_mps2(state)
 
