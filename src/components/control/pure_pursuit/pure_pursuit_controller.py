@@ -45,7 +45,6 @@ class PurePursuitController:
         self.target_speed_mps = 0.0
         self.target_steer_rad = 0.0
         self.target_yaw_rate_rps = 0.0
-        self.elapsed_time_sec = 0.0
 
         if self.course:
             max_spd_mps = self.course.max_speed_mps()
@@ -76,7 +75,7 @@ class PurePursuitController:
             nearest_index += 1
         self.target_course_index = nearest_index
 
-    def _decide_target_speed_mps(self, time_s):
+    def _decide_target_speed_mps(self):
         """
         Private function to decide target speed[m/s]
         """
@@ -122,15 +121,13 @@ class PurePursuitController:
         
         self._calculate_target_course_index(state)
 
-        self._decide_target_speed_mps(time_s)
+        self._decide_target_speed_mps()
 
         self._calculate_target_acceleration_mps2(state)
 
         self._calculate_target_steer_angle_rad(state)
 
         self._calculate_target_yaw_rate_rps(state)
-
-        self.elapsed_time_sec += time_s
     
     def get_target_accel_mps2(self):
         """
