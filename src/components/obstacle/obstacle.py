@@ -36,6 +36,8 @@ class Obstacle:
                             [width_m, width_m, -width_m, -width_m, width_m]])
         self.array = XYArray(contour)
     
+
+    
     def update(self, time_s):
         """
         Function to update obstacle's state
