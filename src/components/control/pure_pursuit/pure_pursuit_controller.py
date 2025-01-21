@@ -4,18 +4,7 @@ pure_pursuit_controller.py
 Author: Shisato Yano
 """
 
-#import path setting
-import sys
-from pathlib import Path
 from math import sin, tan, atan2
-
-abs_dir_path = str(Path(__file__).absolute().parent)
-relative_path = "/../../../components/"
-
-sys.path.append(abs_dir_path + relative_path + "control/speed_profile")
-
-#import component modules
-from trapezoidal_speed_profile import TrapezoidalSpeedProfile
 
 
 class PurePursuitController:
@@ -35,7 +24,6 @@ class PurePursuitController:
         self.LOOK_FORWARD_GAIN = 0.3
         self.SPEED_PROPORTIONAL_GAIN = 1.0
         self.WHEEL_BASE_M = spec.wheel_base_m
-        self.MAX_ACCEL_MPS2 = spec.max_accel_mps2
         self.DRAW_COLOR = color
 
         self.course = course
@@ -45,15 +33,6 @@ class PurePursuitController:
         self.target_speed_mps = 0.0
         self.target_steer_rad = 0.0
         self.target_yaw_rate_rps = 0.0
-
-        if self.course:
-            max_spd_mps = self.course.max_speed_mps()
-            distance_m = self.course.distance_m()
-        else:
-            max_spd_mps = 1e-100
-            distance_m = 1e-100
-        
-        self.spd_prf = TrapezoidalSpeedProfile(max_spd_mps, self.MAX_ACCEL_MPS2, distance_m)
     
     def _calculate_look_ahead_distance(self, state):
         """
