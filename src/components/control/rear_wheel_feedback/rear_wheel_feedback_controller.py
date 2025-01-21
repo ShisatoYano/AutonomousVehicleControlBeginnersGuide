@@ -41,7 +41,6 @@ class RearWheelFeedbackController:
         self.target_speed_mps = 0.0
         self.target_yaw_rate_rps = 0.0
         self.target_steer_rad = 0.0
-        self.elapsed_time_sec = 0.0
 
         if self.course:
             max_spd_mps = self.course.max_speed_mps()
@@ -137,8 +136,6 @@ class RearWheelFeedbackController:
         self._calculate_target_yaw_rate_rps(state, error_lat_m, error_yaw_rad)
 
         self._calculate_target_steer_angle_rad(state)
-
-        self.elapsed_time_sec += time_s
     
     def get_target_accel_mps2(self):
         """
