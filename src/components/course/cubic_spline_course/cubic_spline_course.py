@@ -66,9 +66,21 @@ class CubicSplineCourse:
             
             if switch_back:
                 self.speed_array[i] = 0.0
-        print(self.speed_array[len(self.speed_array)-40]/40)
-        for i in range(40):
-            print(len(self.speed_array), len(self.speed_array)-(40-i), self.speed_array[len(self.speed_array)-(40-i)])
+
+        decel_len = 40
+        init_idx = len(self.speed_array) - decel_len
+        init_spd = self.speed_array[init_idx]
+        decel = init_spd / decel_len
+        for i in range(decel_len):
+            if self.speed_array[init_idx + i] > 0.0:
+                self.speed_array[init_idx + i] -= decel * (i + 1)
+                if self.speed_array[init_idx + i] <= 0.0:
+                    self.speed_array[init_idx + i] = 0.0
+            elif self.speed_array[init_idx + i] < 0.0:
+                self.speed_array[init_idx + i] += decel * (i + 1)
+                if self.speed_array[init_idx + i] >= 0.0:
+                    self.speed_array[init_idx + i] = 0.0
+            print(len(self.speed_array), init_idx + i, self.speed_array[init_idx + i])
 
         prev_x, prev_y = 0.0, 0.0
         diff_xy = 0.0
