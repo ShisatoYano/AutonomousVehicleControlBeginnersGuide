@@ -49,7 +49,6 @@ class LqrController:
         self.target_speed_mps = 0.0
         self.target_yaw_rate_rps = 0.0
         self.target_steer_rad = 0.0
-        self.elapsed_time_sec = 0.0
 
         self.prev_error_lat_m = 0.0
         self.prev_error_yaw_rad = 0.0
@@ -205,8 +204,6 @@ class LqrController:
         _, error_lat_m, error_yaw_rad = self._calculate_tracking_error(state)
 
         self._calculate_control_input(state, error_lat_m, error_yaw_rad, time_s)
-
-        self.elapsed_time_sec += time_s
 
     def get_target_accel_mps2(self):
         """
