@@ -87,7 +87,7 @@ class LqrController:
         time_s: interval time[sec]
         """
 
-        self.target_speed_mps = self.spd_prf.decide_target_speed_mps(self.elapsed_time_sec, time_s)
+        self.target_speed_mps = self.course.point_speed_mps(self.target_course_index)
 
     def _solve_riccati_equation(self, A, B):
         """
