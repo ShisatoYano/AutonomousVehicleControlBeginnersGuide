@@ -14,11 +14,9 @@ import scipy.linalg as la
 abs_dir_path = str(Path(__file__).absolute().parent)
 relative_path = "/../../../components/"
 
-sys.path.append(abs_dir_path + relative_path + "control/speed_profile")
 sys.path.append(abs_dir_path + relative_path + "common")
 
 #import component modules
-from trapezoidal_speed_profile import TrapezoidalSpeedProfile
 from angle_lib import pi_to_pi
 
 
@@ -35,7 +33,6 @@ class LqrController:
         """
 
         self.WHEEL_BASE_M = spec.wheel_base_m
-        self.MAX_ACCEL_MPS2 = spec.max_accel_mps2
 
         self.SCALE_R = 4.0
         self.WEIGHT_MAT_Q = np.eye(5)
@@ -52,15 +49,6 @@ class LqrController:
 
         self.prev_error_lat_m = 0.0
         self.prev_error_yaw_rad = 0.0
-
-        if self.course:
-            max_spd_mps = self.course.max_speed_mps()
-            distance_m = self.course.distance_m()
-        else:
-            max_spd_mps = 1e-100
-            distance_m = 1e-100
-        
-        self.spd_prf = TrapezoidalSpeedProfile(max_spd_mps, self.MAX_ACCEL_MPS2, distance_m)
 
     def _calculate_target_course_index(self, state):
         """
