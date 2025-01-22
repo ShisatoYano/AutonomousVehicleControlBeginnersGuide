@@ -80,7 +80,6 @@ class CubicSplineCourse:
                 self.speed_array[init_idx + i] += decel * (i + 1)
                 if self.speed_array[init_idx + i] >= 0.0:
                     self.speed_array[init_idx + i] = 0.0
-            print(len(self.speed_array), init_idx + i, self.speed_array[init_idx + i])
 
         prev_x, prev_y = 0.0, 0.0
         diff_xy = 0.0
