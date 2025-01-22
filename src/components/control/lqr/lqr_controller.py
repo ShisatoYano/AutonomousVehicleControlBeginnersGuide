@@ -81,10 +81,9 @@ class LqrController:
         error_lon_m, error_lat_m, error_yaw_rad = self.course.calculate_lonlat_error(state, self.target_course_index)
         return error_lon_m, error_lat_m, error_yaw_rad
 
-    def _decide_target_speed_mps(self, time_s):
+    def _decide_target_speed_mps(self):
         """
         Private function to decide target speed[m/s]
-        time_s: interval time[sec]
         """
 
         self.target_speed_mps = self.course.point_speed_mps(self.target_course_index)
@@ -201,7 +200,7 @@ class LqrController:
 
         self._calculate_target_course_index(state)
 
-        self._decide_target_speed_mps(time_s)
+        self._decide_target_speed_mps()
 
         _, error_lat_m, error_yaw_rad = self._calculate_tracking_error(state)
 
