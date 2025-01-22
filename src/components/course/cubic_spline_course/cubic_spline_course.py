@@ -81,16 +81,6 @@ class CubicSplineCourse:
                 if self.speed_array[init_idx + i] >= 0.0:
                     self.speed_array[init_idx + i] = 0.0
 
-        prev_x, prev_y = 0.0, 0.0
-        diff_xy = 0.0
-        self.dist_m = 0.0
-        for i, (x, y) in enumerate(zip(self.x_array, self.y_array)):
-            if i > 0:
-                diff_xy = np.hypot(x - prev_x, y - prev_y)
-                self.dist_m += diff_xy
-            prev_x = x
-            prev_y = y
-
         self.color = color
     
     def search_nearest_point_index(self, state):
@@ -127,13 +117,6 @@ class CubicSplineCourse:
         """
         
         return len(self.x_array)
-    
-    def distance_m(self):
-        """
-        Function to get distance of course[m]
-        """
-        
-        return self.dist_m
 
     def calculate_speed_difference_mps(self, state, point_index):
         """
