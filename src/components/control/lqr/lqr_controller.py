@@ -174,8 +174,6 @@ class LqrController:
         # target acceleration
         self.target_accel_mps2 = feedback_input[1, 0]
 
-        print(self.target_steer_rad, self.target_yaw_rate_rps, self.target_speed_mps)
-
     def update(self, state, time_s):
         """
         Function to update data for path tracking
