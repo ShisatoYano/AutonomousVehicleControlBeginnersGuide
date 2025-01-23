@@ -26,3 +26,8 @@ from state import State
 from four_wheels_vehicle import FourWheelsVehicle
 from cubic_spline_course import CubicSplineCourse
 from stanley_controller import StanleyController
+
+
+# flag to show plot figure
+# when executed as unit test, this flag is set as false
+show_plot = True
