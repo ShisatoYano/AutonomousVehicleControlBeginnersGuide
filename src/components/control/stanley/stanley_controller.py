@@ -30,7 +30,7 @@ class StanleyController:
         """
 
         self.SPEED_PROPORTIONAL_GAIN = 1.0
-        self.CONTROL_GAIN = 0.1
+        self.CONTROL_GAIN = 0.5
         self.WHEEL_BASE_M = spec.wheel_base_m
 
         self.course = course
@@ -105,7 +105,7 @@ class StanleyController:
         # calculate steering angle input
         curr_spd = state.get_speed_mps()
         error_steer_rad = atan2(self.CONTROL_GAIN * error_lat_m, curr_spd)
-        self.target_steer_rad = error_steer_rad + error_yaw_rad
+        self.target_steer_rad = -1 * (error_steer_rad + error_yaw_rad)
 
         # calculate yaw rate input
         self.target_yaw_rate_rps = curr_spd * tan(self.target_steer_rad) / self.WHEEL_BASE_M
@@ -128,7 +128,6 @@ class StanleyController:
         self._calculate_target_acceleration_mps2(front_axle_state)
 
         _, error_lat_m, error_yaw_rad = self._calculate_tracking_error(front_axle_state)
-        print(error_lat_m, error_yaw_rad)
 
         self._calculate_control_input(front_axle_state, error_lat_m, error_yaw_rad)
 
