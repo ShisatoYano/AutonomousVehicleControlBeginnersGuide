@@ -93,3 +93,61 @@ The method, vertex_xy is used to get the vertexes coordinates (x, y) of the obst
 
         return transformed_array.get_x_data(), transformed_array.get_y_data()
 ```
+
+### 3.1.2 Obstacles list
+ObstacleList class is implemented to execute update and draw the data of multiple obstacles sequencially. An object of this list is given to a visualizer object and a sensor model object.  
+
+[obstacle_list.py](/src/components/obstacle/obstacle_list.py)  
+```python
+"""
+obstacle_list.py
+
+Author: Shisato Yano
+"""
+
+class ObstacleList:
+    """
+    Obstacles list class
+    """
+    
+    def __init__(self):
+        """
+        Constructor
+        """
+        
+        self.list = []
+    
+    def add_obstacle(self, obstacle):
+        """
+        Function to add obstacle object into list
+        obstacle: Obstacle class's object
+        """
+        
+        self.list.append(obstacle)
+    
+    def update(self, times_s):
+        """
+        Function to update each obstacle's state in list
+        time_s: Time interval value[sec]
+        """
+        
+        for obst in self.list: obst.update(times_s)
+    
+    def draw(self, axes, elems):
+        """
+        Function to draw each obstacles in list
+        axes: Axes object of figure
+        elems: List of plot objects
+        """
+        
+        for obst in self.list: obst.draw(axes, elems)
+    
+    def get_list(self):
+        """
+        Function to get obstacle's list
+        """
+        
+        return self.list
+```
+
+This class has a list to store each obstacle objects as a member. Each obstacles can be stored by using a method, add_obstacle. The data of the obstacles can be updated and drawn sequencially by using update and draw methods. Finally, get_list method is implemented to get the list for a sensor model object.  
