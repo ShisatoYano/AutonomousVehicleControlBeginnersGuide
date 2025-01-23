@@ -76,6 +76,15 @@ class StanleyController:
 
         self.target_speed_mps = self.course.point_speed_mps(self.target_course_index)
 
+    def _calculate_target_acceleration_mps2(self, state):
+        """
+        Private function to calculate acceleration input
+        state: State object of vehicle's front axle
+        """
+
+        diff_speed_mps = self.target_speed_mps - state.get_speed_mps()
+        self.target_accel_mps2 = self.SPEED_PROPORTIONAL_GAIN * diff_speed_mps
+
     def update(self, state, time_s):
         """
         Function to update data for path tracking
@@ -90,6 +99,8 @@ class StanleyController:
         self._calculate_target_course_index(front_axle_state)
 
         self._decide_target_speed_mps()
+
+        self._calculate_target_acceleration_mps2(front_axle_state)
 
     def get_target_accel_mps2(self):
         """
