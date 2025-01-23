@@ -44,3 +44,5 @@ class Obstacle:
                             [width_m, width_m, -width_m, -width_m, width_m]])
         self.array = XYArray(contour)
 ```
+
+The given arguments, accel_mps2 and yaw_rate_rps are used for making the obstacle moved as a dynamic obstacle. If these values are default 0.0, the obstacle is represented as a static obstacle. Additionally, length_m and width_m are used for setting the size of the obstacle.  
