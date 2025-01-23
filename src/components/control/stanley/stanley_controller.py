@@ -27,6 +27,27 @@ class StanleyController:
         self.target_yaw_rate_rps = 0.0
         self.target_steer_rad = 0.0
     
+    def get_target_accel_mps2(self):
+        """
+        Function to get acceleration input[m/s2]
+        """
+        
+        return self.target_accel_mps2
+
+    def get_target_yaw_rate_rps(self):
+        """
+        Function to get yaw rate input[rad/s]
+        """
+
+        return self.target_yaw_rate_rps
+
+    def get_target_steer_rad(self):
+        """
+        Function to get steering angle input[rad]
+        """
+        
+        return self.target_steer_rad
+
     def draw(self, axes, elems):
         """
         Function to draw target point on course
