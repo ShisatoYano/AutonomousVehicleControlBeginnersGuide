@@ -57,3 +57,23 @@ The member methods, update, draw and vertex_xy are implemented. The method, upda
         
         self.state.update(self.accel_mps2, self.yaw_rate_rps, time_s)
 ```
+
+The method, draw is used to visualize the obstacle in the world. The vertexes and lines of obstacle are transformed based on the state and visualized.  
+```python
+    def draw(self, axes, elems):
+        """
+        Function to draw obstacle
+        axes: Axes object of figure
+        elems: List of plot objects
+        """
+        
+        x_m = self.state.get_x_m()
+        y_m = self.state.get_y_m()
+        yaw_rad = self.state.get_yaw_rad()
+
+        transformed_array = self.array.homogeneous_transformation(x_m, y_m, yaw_rad)
+        obstacle_plot, = axes.plot(transformed_array.get_x_data(), 
+                                   transformed_array.get_y_data(), 
+                                   lw=1.0, color='k', ls='-')
+        elems.append(obstacle_plot)
+```
