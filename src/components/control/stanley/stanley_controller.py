@@ -27,6 +27,15 @@ class StanleyController:
         self.target_yaw_rate_rps = 0.0
         self.target_steer_rad = 0.0
     
+    def _calculate_target_course_index(self, state):
+        """
+        Private function to calculate target point's index on course
+        state: Vehicle's state object
+        """
+        
+        nearest_index = self.course.search_nearest_point_index(state)
+        self.target_course_index = nearest_index
+
     def update(self, state, time_s):
         """
         Function to update data for path tracking
@@ -35,6 +44,8 @@ class StanleyController:
         """
 
         if not self.course: return
+
+        self._calculate_target_course_index(state)
 
     def get_target_accel_mps2(self):
         """
