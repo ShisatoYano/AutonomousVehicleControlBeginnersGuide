@@ -40,10 +40,11 @@ class StanleyController:
         self.target_yaw_rate_rps = 0.0
         self.target_steer_rad = 0.0
     
-    def _calculate_target_course_index(self, state):
+    def _calculate_front_axle_state(self, state):
         """
-        Private function to calculate target point's index on course
-        state: Vehicle's state object
+        Private function to calculate state of front axle
+        state: State object of vehicle's rear axle
+        Return state object of vehicle's front axle
         """
 
         # current rear axle position and pose
@@ -56,8 +57,16 @@ class StanleyController:
         curr_front_x = curr_rear_x + self.WHEEL_BASE_M * cos(curr_yaw)
         curr_front_y = curr_rear_y + self.WHEEL_BASE_M * sin(curr_yaw)
         curr_front_state = State(curr_front_x, curr_front_y, curr_yaw, curr_spd)
+
+        return curr_front_state
+
+    def _calculate_target_course_index(self, state):
+        """
+        Private function to calculate target point's index on course
+        state: State object of vehicle's front axle
+        """
         
-        nearest_index = self.course.search_nearest_point_index(curr_front_state)
+        nearest_index = self.course.search_nearest_point_index(state)
         self.target_course_index = nearest_index
 
     def _decide_target_speed_mps(self):
@@ -76,7 +85,9 @@ class StanleyController:
 
         if not self.course: return
 
-        self._calculate_target_course_index(state)
+        front_axle_state = self._calculate_front_axle_state(state)
+
+        self._calculate_target_course_index(front_axle_state)
 
         self._decide_target_speed_mps()
 
