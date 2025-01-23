@@ -27,6 +27,15 @@ class StanleyController:
         self.target_yaw_rate_rps = 0.0
         self.target_steer_rad = 0.0
     
+    def update(self, state, time_s):
+        """
+        Function to update data for path tracking
+        state: Vehicle's state object
+        time_s: Simulation interval time[sec]
+        """
+
+        if not self.course: return
+
     def get_target_accel_mps2(self):
         """
         Function to get acceleration input[m/s2]
