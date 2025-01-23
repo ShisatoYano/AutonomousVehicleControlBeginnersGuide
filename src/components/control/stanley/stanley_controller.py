@@ -60,6 +60,13 @@ class StanleyController:
         nearest_index = self.course.search_nearest_point_index(curr_front_state)
         self.target_course_index = nearest_index
 
+    def _decide_target_speed_mps(self):
+        """
+        Private function to decide target speed[m/s]
+        """
+
+        self.target_speed_mps = self.course.point_speed_mps(self.target_course_index)
+
     def update(self, state, time_s):
         """
         Function to update data for path tracking
@@ -70,6 +77,8 @@ class StanleyController:
         if not self.course: return
 
         self._calculate_target_course_index(state)
+
+        self._decide_target_speed_mps()
 
     def get_target_accel_mps2(self):
         """
