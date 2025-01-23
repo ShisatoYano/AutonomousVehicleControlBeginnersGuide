@@ -7,7 +7,7 @@ Author: Shisato Yano
 # import path setting
 import sys
 from pathlib import Path
-from math import sin, cos
+from math import sin, cos, tan, atan2
 
 abs_dir_path = str(Path(__file__).absolute().parent)
 relative_path = "/../../../components/"
@@ -30,7 +30,7 @@ class StanleyController:
         """
 
         self.SPEED_PROPORTIONAL_GAIN = 1.0
-        self.CONTROL_GAIN = 0.5
+        self.CONTROL_GAIN = 0.1
         self.WHEEL_BASE_M = spec.wheel_base_m
 
         self.course = course
@@ -94,6 +94,22 @@ class StanleyController:
         error_lon_m, error_lat_m, error_yaw_rad = self.course.calculate_lonlat_error(state, self.target_course_index)
         return error_lon_m, error_lat_m, error_yaw_rad
 
+    def _calculate_control_input(self, state, error_lat_m, error_yaw_rad):
+        """
+        Private function to calculate yaw rate input
+        state: State object of vehicle's front axle
+        error_lat_m: Lateral error against reference course[m]
+        error_yaw_rad: Yaw angle error against reference course[rad]
+        """
+
+        # calculate steering angle input
+        curr_spd = state.get_speed_mps()
+        error_steer_rad = atan2(self.CONTROL_GAIN * error_lat_m, curr_spd)
+        self.target_steer_rad = error_steer_rad + error_yaw_rad
+
+        # calculate yaw rate input
+        self.target_yaw_rate_rps = curr_spd * tan(self.target_steer_rad) / self.WHEEL_BASE_M
+
     def update(self, state, time_s):
         """
         Function to update data for path tracking
@@ -112,6 +128,9 @@ class StanleyController:
         self._calculate_target_acceleration_mps2(front_axle_state)
 
         _, error_lat_m, error_yaw_rad = self._calculate_tracking_error(front_axle_state)
+        print(error_lat_m, error_yaw_rad)
+
+        self._calculate_control_input(front_axle_state, error_lat_m, error_yaw_rad)
 
     def get_target_accel_mps2(self):
         """
