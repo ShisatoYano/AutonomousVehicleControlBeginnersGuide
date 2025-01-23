@@ -26,3 +26,12 @@ class StanleyController:
         self.target_speed_mps = 0.0
         self.target_yaw_rate_rps = 0.0
         self.target_steer_rad = 0.0
+    
+    def draw(self, axes, elems):
+        """
+        Function to draw target point on course
+        axes: Axes object of figure
+        elems: plot object's list
+        """
+
+        pass
