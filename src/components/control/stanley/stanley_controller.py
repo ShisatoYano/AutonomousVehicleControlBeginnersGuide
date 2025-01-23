@@ -85,6 +85,15 @@ class StanleyController:
         diff_speed_mps = self.target_speed_mps - state.get_speed_mps()
         self.target_accel_mps2 = self.SPEED_PROPORTIONAL_GAIN * diff_speed_mps
 
+    def _calculate_tracking_error(self, state):
+        """
+        Private function to calculate tracking error against target point on the course
+        state: State object of vehicle's front axle
+        """
+
+        error_lon_m, error_lat_m, error_yaw_rad = self.course.calculate_lonlat_error(state, self.target_course_index)
+        return error_lon_m, error_lat_m, error_yaw_rad
+
     def update(self, state, time_s):
         """
         Function to update data for path tracking
@@ -101,6 +110,8 @@ class StanleyController:
         self._decide_target_speed_mps()
 
         self._calculate_target_acceleration_mps2(front_axle_state)
+
+        _, error_lat_m, error_yaw_rad = self._calculate_tracking_error(front_axle_state)
 
     def get_target_accel_mps2(self):
         """
