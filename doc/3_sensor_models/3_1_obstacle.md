@@ -46,3 +46,14 @@ class Obstacle:
 ```
 
 The given arguments, accel_mps2 and yaw_rate_rps are used for making the obstacle moved as a dynamic obstacle. If these values are default 0.0, the obstacle is represented as a static obstacle. Additionally, length_m and width_m are used for setting the size of the obstacle.  
+
+The member methods, update, draw and vertex_xy are implemented. The method, update is used to compute the state including position(x, y) and yaw angle of the obstacle.  
+```python
+    def update(self, time_s):
+        """
+        Function to update obstacle's state
+        time_s: Time interval value[sec]
+        """
+        
+        self.state.update(self.accel_mps2, self.yaw_rate_rps, time_s)
+```
