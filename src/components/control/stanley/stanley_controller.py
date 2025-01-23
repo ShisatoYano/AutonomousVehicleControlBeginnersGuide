@@ -4,6 +4,19 @@ stanley_controller.py
 Author: Shisato Yano
 """
 
+# import path setting
+import sys
+from pathlib import Path
+from math import sin, cos
+
+abs_dir_path = str(Path(__file__).absolute().parent)
+relative_path = "/../../../components/"
+
+sys.path.append(abs_dir_path + relative_path + "state")
+
+#import component modules
+from state import State
+
 
 class StanleyController:
     """
@@ -32,8 +45,19 @@ class StanleyController:
         Private function to calculate target point's index on course
         state: Vehicle's state object
         """
+
+        # current rear axle position and pose
+        curr_rear_x = state.get_x_m()
+        curr_rear_y = state.get_y_m()
+        curr_yaw = state.get_yaw_rad()
+        curr_spd = state.get_speed_mps()
+
+        # calculate front axle position
+        curr_front_x = curr_rear_x + self.WHEEL_BASE_M * cos(curr_yaw)
+        curr_front_y = curr_rear_y + self.WHEEL_BASE_M * sin(curr_yaw)
+        curr_front_state = State(curr_front_x, curr_front_y, curr_yaw, curr_spd)
         
-        nearest_index = self.course.search_nearest_point_index(state)
+        nearest_index = self.course.search_nearest_point_index(curr_front_state)
         self.target_course_index = nearest_index
 
     def update(self, state, time_s):
