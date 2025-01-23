@@ -77,3 +77,19 @@ The method, draw is used to visualize the obstacle in the world. The vertexes an
                                    lw=1.0, color='k', ls='-')
         elems.append(obstacle_plot)
 ```
+
+The method, vertex_xy is used to get the vertexes coordinates (x, y) of the obstacle and to generate a point cloud by the sensor models.  
+```python
+    def vertex_xy(self):
+        """
+        Function to get obstacle's vertex point coordinates
+        """
+        
+        x_m = self.state.get_x_m()
+        y_m = self.state.get_y_m()
+        yaw_rad = self.state.get_yaw_rad()
+
+        transformed_array = self.array.homogeneous_transformation(x_m, y_m, yaw_rad)
+
+        return transformed_array.get_x_data(), transformed_array.get_y_data()
+```
