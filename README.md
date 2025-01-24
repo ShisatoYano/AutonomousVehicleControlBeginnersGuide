@@ -18,6 +18,7 @@ Python sample codes and documents about Autonomous vehicle control algorithm. In
         * [Pure pursuit Path Tracking](#pure-pursuit-path-tracking)
         * [Rear wheel feedback Path Tracking](#rear-wheel-feedback-path-tracking)
         * [LQR(Linear Quadratic Regulator) Path Tracking](#lqrlinear-quadratic-regulator-path-tracking)
+        * [Stanley steering control Path tracking](#stanley-steering-control-path-tracking)
     * [Perception](#perception)
         * [Rectangle fitting Detection](#rectangle-fitting-detection)
         * [Sensor's Extrinsic Parameters Estimation](#sensors-extrinsic-parameters-estimation)
@@ -92,6 +93,8 @@ For setting up the environment with Docker:
 ![](src/simulations//path_tracking/rear_wheel_feedback_tracking/rear_wheel_feedback_tracking.gif)  
 #### LQR(Linear Quadratic Regulator) Path Tracking
 ![](src/simulations/path_tracking/lqr_path_tracking/lqr_path_tracking.gif)  
+#### Stanley steering control Path Tracking
+![](src/simulations/path_tracking/stanley_path_tracking/stanley_path_tracking.gif)  
 ### Perception
 #### Rectangle fitting Detection
 ![](src/simulations/perception/point_cloud_rectangle_fitting/point_cloud_rectangle_fitting.gif)  
