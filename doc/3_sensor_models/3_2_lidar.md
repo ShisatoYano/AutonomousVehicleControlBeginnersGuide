@@ -158,3 +158,43 @@ ScanPoint class is implemented to represent a scan point in a point cloud from L
 * X-Y position array of the scan point[m]
 * Trasformed x coordinate of the scan point on a specific coordinate system
 * Trasformed y coordinate of the scan point on a specific coordinate system
+
+The constructor of ScanPoint class is implemented as follow. A distance, horizontal angle, x coordinate and y coordinate are given as arguments.  
+[scan_point.py](/src/components/sensors/lidar/scan_point.py)  
+```python
+"""
+scan_point.py
+
+Author: Shisato Yano
+"""
+
+import numpy as np
+import sys
+from pathlib import Path
+
+sys.path.append(str(Path(__file__).absolute().parent) + "/../../array")
+sys.path.append(str(Path(__file__).absolute().parent) + "/../../common")
+from xy_array import XYArray
+from matrix_lib import hom_mat_33
+
+
+class ScanPoint:
+    """
+    Scan point of sensor class includes each sensing data
+    """
+    
+    def __init__(self, distance_m, angle_rad, x_m, y_m):
+        """
+        Constructor
+        distance_m: sensed distance data[m]
+        angle_rad: sensed angle data[rad]
+        x_m: sensed point's x coordinate data[m]
+        y_m: sensed point's y coordinate data[m]
+        """
+        
+        self.distance_m = distance_m
+        self.angle_rad = angle_rad
+        self.point_array = XYArray(np.array([[x_m], [y_m]]))
+        self.transformed_x = None
+        self.transformed_y = None
+```
