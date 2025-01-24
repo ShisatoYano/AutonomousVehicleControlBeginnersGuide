@@ -114,7 +114,43 @@ draw_pos is used for visualizing the position of the sensor in the simulation wo
         elems.append(pos_plot)
 ```
 
-### 3.2.2 Scan point
+### 3.2.2 Homogeneous transformation matrix
+For transforming the generated point cloud, some utility methods of transformation matrix. These methods can process homogeneous 2D transformation and rotation.  
+[matrix_lib.py](/src/components/common/matrix_lib.py)  
+```python
+"""
+matrix_lib.py
+
+Author: Shisato Yano
+"""
+
+import numpy as np
+from math import sin, cos
+
+
+def hom_mat_33(x, y, yaw):
+    """
+    Homogeneous transformation matrix 3x3
+    x: x direction translation[m]
+    y: y direction translation[m]
+    yaw: yaw direction rotation[rad]
+    """
+
+    cos_yaw, sin_yaw = cos(yaw), sin(yaw)
+
+    return np.array([[cos_yaw, -sin_yaw, x],
+                     [sin_yaw, cos_yaw, y],
+                     [0.0, 0.0, 1.0]])
+
+
+def rot_mat_22(yaw):
+    cos_yaw, sin_yaw = cos(yaw), sin(yaw)
+
+    return np.array([[cos_yaw, -sin_yaw],
+                     [sin_yaw, cos_yaw]])
+```
+
+### 3.2.3 Scan point
 ScanPoint class is implemented to represent a scan point in a point cloud from LiDAR. [XYArray class](/doc/2_vehicle_model/2_vehicle_model.md) is imported in the class for representing a x-y vector of the position of the scan point. The scan point object has the following data.  
 
 * Distance from the LiDAR to the scan point[m]
