@@ -81,3 +81,20 @@ And then, some member methods, calculate_global_pos, get_global_x_m, get_global_
         self.global_x_m = transformed_array.get_x_data()
         self.global_y_m = transformed_array.get_y_data()
 ```
+
+get_global_x_m and get_global_y_m are used for getting the global position of the sensor.  
+```python
+    def get_global_x_m(self):
+        """
+        Getter of sensor's x installation position on global coordinate system
+        """
+
+        return self.global_x_m[0]
+    
+    def get_global_y_m(self):
+        """
+        Getter of sensor's y installation position on global coordinate system
+        """
+
+        return self.global_y_m[0]
+```
