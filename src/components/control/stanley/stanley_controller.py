@@ -104,7 +104,10 @@ class StanleyController:
 
         # calculate steering angle input
         curr_spd = state.get_speed_mps()
-        error_steer_rad = atan2(self.CONTROL_GAIN * error_lat_m, curr_spd)
+        if abs(curr_spd) != 0.0:
+            error_steer_rad = atan2(self.CONTROL_GAIN * error_lat_m, curr_spd)
+        else:
+            error_steer_rad = 0.0
         self.target_steer_rad = -1 * (error_steer_rad + error_yaw_rad)
 
         # calculate yaw rate input
