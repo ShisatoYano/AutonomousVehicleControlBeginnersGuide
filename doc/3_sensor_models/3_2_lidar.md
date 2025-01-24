@@ -98,3 +98,18 @@ get_global_x_m and get_global_y_m are used for getting the global position of th
 
         return self.global_y_m[0]
 ```
+
+draw_pos is used for visualizing the position of the sensor in the simulation world. In this method, the position of the sensor is transformed into the global position and visualized.  
+```python
+    def draw_pos(self, axes, elems, state):
+        """
+        Function to draw sensor's installation position on vehicle
+        axes: axes object of figure
+        elems: list of plot object
+        state: vehicle state object
+        """
+
+        self.calculate_global_pos(state)
+        pos_plot, = axes.plot(self.global_x_m, self.global_y_m, marker='.', color='b')
+        elems.append(pos_plot)
+```
