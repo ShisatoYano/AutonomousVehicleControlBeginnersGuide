@@ -113,3 +113,12 @@ draw_pos is used for visualizing the position of the sensor in the simulation wo
         pos_plot, = axes.plot(self.global_x_m, self.global_y_m, marker='.', color='b')
         elems.append(pos_plot)
 ```
+
+### 3.2.2 Scan point
+ScanPoint class is implemented to represent a scan point in a point cloud from LiDAR. [XYArray class](/doc/2_vehicle_model/2_vehicle_model.md) is imported in the class for representing a x-y vector of the position of the scan point. The scan point object has the following data.  
+
+* Distance from the LiDAR to the scan point[m]
+* Horizontal angle from the LiDAR to the scan point[rad]
+* X-Y position array of the scan point[m]
+* Trasformed x coordinate of the scan point on a specific coordinate system
+* Trasformed y coordinate of the scan point on a specific coordinate system
