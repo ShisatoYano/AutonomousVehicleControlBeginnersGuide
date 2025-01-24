@@ -198,3 +198,28 @@ class ScanPoint:
         self.transformed_x = None
         self.transformed_y = None
 ```
+
+Then, some member methods for accessing or visualizing the data. The getter methods for a dimension of x-y array, distance and x-y array of point are implemented as follow.  
+```python
+    def get_dimension(self):
+        """
+        Return point's x-y array data's dimension value
+        """
+
+        return self.point_array.get_dimension()
+    
+    def get_distance_m(self):
+        """
+        Return point's distance data[m]
+        """
+        
+        return self.distance_m
+    
+    def get_point_array(self):
+        """
+        Return point's x-y array data
+        Type is ndarray object
+        """
+
+        return self.point_array.get_data()
+```
