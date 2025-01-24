@@ -13,7 +13,7 @@ A parameters class, SensorParameters is implemented here. This class has the fol
 * Scale of an angle standard deviation
 * Rate of a distance standard deviation
 
-SensorParameters class is implemented as follow. [XYArray class](/doc/2_vehicle_model/2_vehicle_model.md) is imported in the class for representing a x-y vector of the position of the sensor.  
+SensorParameters class is implemented as follow. [XYArray class](/doc/2_vehicle_model/2_vehicle_model.md) is imported in the class for representing a x-y vector of the position of the sensor. The above parameters can be given to the constructor as arguments.  
 
 [sensor_parameters.py](/src/components/sensors/sensor_parameters.py)  
 ```python
@@ -65,4 +65,19 @@ class SensorParameters:
         self.inst_pos_array = XYArray(np.array([[self.INST_LON_M], [self.INST_LAT_M]]))
         self.global_x_m = None
         self.global_y_m = None
+```
+
+And then, some member methods, calculate_global_pos, get_global_x_m, get_global_y_m and  draw_pos are implemented. calculate_global_pos method is used for transforming the position and pose of the sensor from the vehicle coordinate system to the global coordinate system based on the state of the vehicle.  
+```python
+    def calculate_global_pos(self, state):
+        """
+        Function to calculate sensor's installation position on global coordinate system
+        state: vehicle's state object
+        """
+
+        pose = state.x_y_yaw()
+        transformed_array = self.inst_pos_array.homogeneous_transformation(pose[0, 0], pose[1, 0], pose[2, 0])
+        
+        self.global_x_m = transformed_array.get_x_data()
+        self.global_y_m = transformed_array.get_y_data()
 ```
