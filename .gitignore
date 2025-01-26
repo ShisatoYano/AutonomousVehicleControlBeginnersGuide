@@ -37,3 +37,4 @@ test/__pycache__
 Test/__pycache__
 .pytest_cache
 .coverage
+__pycache__
