@@ -36,7 +36,7 @@ colors = [
 custom_cmap = ListedColormap(colors)
 
 class BinaryOccupancyGrid:
-    def __init__(self, x_lim , y_lim, resolution, clearance):
+    def __init__(self, x_lim , y_lim, resolution, clearance, map_path):
 
         self.x_min, self.x_max = x_lim.min_value(), x_lim.max_value()
         self.y_min, self.y_max = y_lim.min_value(), y_lim.max_value()
@@ -44,6 +44,7 @@ class BinaryOccupancyGrid:
         self.clearance = clearance
 
         self.map, self.x_range, self.y_range =  self.create_grid()
+        self.map_path = map_path
 
 
     def create_grid(self):
@@ -147,20 +148,18 @@ class BinaryOccupancyGrid:
                     self.map[y, x] = max(self.map[y, x], value)  # Mark the cell
 
     # Save the map to a file as an image/json
-    def save_map(self, filename):
+    def save_map(self):
         """
         Save the map to a file.
-        Args:
-            filename: The name of the file to save the map to.
         """
 
-        if filename.endswith('.npy'):
-            np.save(filename, self.map)
-        elif filename.endswith('.png'):
-            plt.imsave(filename, self.map, cmap=custom_cmap, origin='lower')
-        elif filename.endswith('.json'):
+        if self.map_path.endswith('.npy'):
+            np.save(self.map_path, self.map)
+        elif self.map_path.endswith('.png'):
+            plt.imsave(self.map_path, self.map, cmap=custom_cmap, origin='lower')
+        elif self.map_path.endswith('.json'):
             map_list = self.map.tolist()
-            with open(filename, 'w') as f:
+            with open(self.map_path, 'w') as f:
                 json.dump(map_list, f)
         else:
             raise ValueError("Unsupported file format. Use .npy, .png, or .json")
