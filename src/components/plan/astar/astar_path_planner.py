@@ -1,11 +1,45 @@
+"""
+astar_path_planner.py
+
+Author: Shantanu Parab
+"""
+
 import numpy as np
 import matplotlib.pyplot as plt
 import heapq
 import matplotlib.animation as anm
+import numpy as np
+import sys
+from pathlib import Path
+from matplotlib.colors import ListedColormap
+
+abs_dir_path = str(Path(__file__).absolute().parent)
+relative_path = "/../../../components/"
+relative_simulations = "/../../../simulations/"
+
+
+sys.path.append(abs_dir_path + relative_path + "visualization")
+sys.path.append(abs_dir_path + relative_path + "state")
+sys.path.append(abs_dir_path + relative_path + "obstacle")
+sys.path.append(abs_dir_path + relative_path + "plan/astar")
+sys.path.append(abs_dir_path + relative_path + "mapping/grid")
+
+
+
+
+from state import State
+from obstacle import Obstacle
+from obstacle_list import ObstacleList
+from binary_occupancy_grid import BinaryOccupancyGrid
+from min_max import MinMax
+import json
+
+
+
 
 
 class AStarPathPlanner:
-    def __init__(self, start, goal, obstacle_parameters, resolution=0.1, weight=1.0, obstacle_clearance=0.0, robot_clearance=0.0, visualize=False, x_lim=None, y_lim=None):
+    def __init__(self, start, goal, map_file, weight=1.0, x_lim=None, y_lim=None, path_filename=None, gif_name=None):
         """
         Initialize the A* planner.
         Args:
@@ -20,135 +54,44 @@ class AStarPathPlanner:
         """
         self.start = start
         self.goal = goal
-        self.obstacle_parameters = obstacle_parameters
-        self.resolution = resolution
         self.weight = weight
-        self.visualize = visualize
-        self.x_lim = x_lim
-        self.y_lim = y_lim
-        self.obstacle_clearance = obstacle_clearance
-        self.robot_clearance = robot_clearance
-        self.clearance = obstacle_clearance + robot_clearance
-        self.grid, self.x_range, self.y_range = self.create_grid()
-        self.mark_obstacles()
-
         self.explored_nodes = []
+        self.grid = self.load_grid_from_file(map_file)
+        x_min, x_max = x_lim.min_value(), x_lim.max_value()
+        y_min, y_max = y_lim.min_value(), y_lim.max_value()
+        self.resolution = (x_max - x_min) / self.grid.shape[1]  # Width of each cell
+        self.x_range = np.arange(x_min, x_max, self.resolution)
+        self.y_range = np.arange(y_min, y_max, self.resolution)
+        self.path = []
+        self.path_filename = path_filename
+        self.search()
+        self.visualize_search(gif_name)
 
-
-        if visualize:
-            plt.figure(figsize=(10, 8))
-            plt.imshow(self.grid, extent=[self.x_range[0], self.x_range[-1], self.y_range[0], self.y_range[-1]],
-                    origin='lower', cmap='Greys')
-            plt.plot(start[0], start[1], 'go', label="Start")  # Start point
-            plt.plot(goal[0], goal[1], 'ro', label="Goal")    # Goal point
-            plt.legend()
-            plt.show()
-
-
-    def create_grid(self):
-        """Create a grid based on the specified or derived limits."""
-        if self.x_lim and self.y_lim:
-            x_min, x_max = self.x_lim.min_value(), self.x_lim.max_value()
-            y_min, y_max = self.y_lim.min_value(), self.y_lim.max_value()
-        
-        x_range = np.arange(x_min, x_max, self.resolution)
-        y_range = np.arange(y_min, y_max, self.resolution)
-        # print("x_range: ", x_range)
-        # print("y_range: ", y_range)
-        grid = np.zeros((len(y_range), len(x_range)))  # Initialize grid as free space
-        # print("grid element: ", grid[-10][0])
-        return grid, x_range, y_range
-
-    def mark_obstacles(self):
-        """Mark obstacles and their clearance on the grid, considering rotation (yaw)."""
-        for obs in self.obstacle_parameters:
-            # Get obstacle parameters
-            x_c = obs["x_m"]
-            y_c = obs["y_m"]
-            yaw = obs["yaw_rad"]
-            length = obs["length_m"]
-            width = obs["width_m"]
-
-            # Calculate the clearance dimensions
-            clearance_length = length + self.clearance
-            clearance_width = width + self.clearance
-
-            # Define corners for the clearance area
-            clearance_corners = np.array([
-                [-clearance_length, -clearance_width],
-                [-clearance_length, clearance_width],
-                [clearance_length, clearance_width],
-                [clearance_length, -clearance_width]
-            ])
-
-            # Define corners for the actual obstacle
-            obstacle_corners = np.array([
-                [-length, -width],
-                [-length, width],
-                [length, width],
-                [length, -width]
-            ])
-
-            # Apply rotation to both obstacle and clearance corners
-            rotation_matrix = np.array([
-                [np.cos(yaw), -np.sin(yaw)],
-                [np.sin(yaw), np.cos(yaw)]
-            ])
-            rotated_clearance_corners = np.dot(clearance_corners, rotation_matrix.T) + np.array([x_c, y_c])
-            rotated_obstacle_corners = np.dot(obstacle_corners, rotation_matrix.T) + np.array([x_c, y_c])
-
-            # Mark the clearance area
-            self._mark_area(rotated_clearance_corners, value=0.5)  # 0.5 for clearance
-
-            # Mark the actual obstacle area
-            self._mark_area(rotated_obstacle_corners, value=1.0)  # 1.0 for obstacles
-
-    def _point_in_polygon(self, x, y, corners):
+    def load_grid_from_file(self, file_path):
         """
-        Check if a point (x, y) is inside a polygon defined by corners.
+        Load a grid from a file and convert it to a numpy array.
         Args:
-            x: X-coordinate of the point.
-            y: Y-coordinate of the point.
-            corners: Array of polygon corners in global coordinates.
+            file_path: Path to the file containing the grid data.
         Returns:
-            True if the point is inside the polygon, False otherwise.
+            grid: A numpy array representing the grid.
         """
-        n = len(corners)
-        inside = False
-        px, py = x, y
-        for i in range(n):
-            x1, y1 = corners[i]
-            x2, y2 = corners[(i + 1) % n]
-            if ((y1 > py) != (y2 > py)) and \
-            (px < (x2 - x1) * (py - y1) / (y2 - y1 + 1e-6) + x1):
-                inside = not inside
-        return inside
+        file_extension = Path(file_path).suffix
 
+        if file_extension == '.npy':
+            grid = np.load(file_path)
+        elif file_extension == '.png':
+            grid = plt.imread(file_path)
+            if grid.ndim == 3:  # If the image has color channels, convert to grayscale
+                grid = np.mean(grid, axis=2)
+            grid = (grid > 0.5).astype(int)  # Binarize the image
+        elif file_extension == '.json':
+            with open(file_path, 'r') as f:
+                grid_data = json.load(f)
+            grid = np.array(grid_data)
+        else:
+            raise ValueError(f"Unsupported file format: {file_extension}")
 
-    def _mark_area(self, corners, value):
-        """
-        Mark a rectangular area on the grid based on the given rotated corners.
-        Args:
-            corners: The rotated corners of the area in global coordinates.
-            value: The value to mark in the grid (e.g., 0.5 for clearance, 1.0 for obstacles).
-        """
-        # Get the bounding box of the corners
-        x_min = max(0, int((min(corners[:, 0]) - self.x_range[0]) / self.resolution))
-        x_max = min(self.grid.shape[1], int((max(corners[:, 0]) - self.x_range[0]) / self.resolution))
-        y_min = max(0, int((min(corners[:, 1]) - self.y_range[0]) / self.resolution))
-        y_max = min(self.grid.shape[0], int((max(corners[:, 1]) - self.y_range[0]) / self.resolution))
-
-        # Iterate through the grid cells in the bounding box
-        for x in range(x_min, x_max):
-            for y in range(y_min, y_max):
-                # Get the center of the current cell
-                cell_x = self.x_range[0] + x * self.resolution + self.resolution / 2
-                cell_y = self.y_range[0] + y * self.resolution + self.resolution / 2
-
-                # Check if the cell center is inside the rotated polygon
-                if self._point_in_polygon(cell_x, cell_y, corners):
-                    self.grid[y, x] = max(self.grid[y, x], value)  # Mark the cell
-
+        return grid
 
     def heuristic(self, a, b):
         return self.weight * (abs(a[0] - b[0]) + abs(a[1] - b[1]))
@@ -159,15 +102,15 @@ class AStarPathPlanner:
         Converts world coordinates to grid indices, accounting for negative min values.
         """
         # Check if indices are within bounds and not an obstacle
-        return (0 <= x < self.grid.shape[1] and 
-                0 <= y < self.grid.shape[0] and 
+        return (0 <= x < self.grid.shape[1] and
+                0 <= y < self.grid.shape[0] and
                 self.grid[y, x] == 0)
 
     def search(self):
-        start_idx = (int((self.start[0] - self.x_range[0]) / self.resolution),
-                     int((self.start[1] - self.y_range[0]) / self.resolution))
-        goal_idx = (int((self.goal[0] - self.x_range[0]) / self.resolution),
-                    int((self.goal[1] - self.y_range[0]) / self.resolution))
+        start_idx = (int((self.start[0] - self.x_range[0]) /self.resolution),
+                     int((self.start[1] - self.y_range[0]) /self.resolution))
+        goal_idx = (int((self.goal[0] - self.x_range[0]) /self.resolution),
+                    int((self.goal[1] - self.y_range[0]) /self.resolution))
 
         open_list = []
         heapq.heappush(open_list, (0, start_idx))
@@ -180,7 +123,10 @@ class AStarPathPlanner:
             self.explored_nodes.append(current)
             if current == goal_idx:
                 print(f"Goal found at: {current}")
-                return self.reconstruct_path(came_from, start_idx, goal_idx)
+                self.path = self.reconstruct_path(came_from, start_idx, goal_idx)
+                sparse_path = self.make_sparse_path(self.path)
+                self.save_path(sparse_path, self.path_filename)
+                return
 
             for dx, dy in [(-1, 0), (1, 0), (0, -1), (0, 1),(1, 1), (-1, -1), (1, -1), (-1, 1)]:
                 neighbor = (current[0] + dx, current[1] + dy)
@@ -192,7 +138,6 @@ class AStarPathPlanner:
                         priority = new_cost + self.heuristic(neighbor, goal_idx)
                         heapq.heappush(open_list, (priority, neighbor))
                         came_from[neighbor] = current
-                
 
         return []
 
@@ -224,8 +169,8 @@ class AStarPathPlanner:
             (world_x, world_y): Corresponding world coordinates.
         """
         grid_x, grid_y = grid_node
-        world_x = self.x_range[0] + grid_x * self.resolution
-        world_y = self.y_range[0] + grid_y * self.resolution
+        world_x = self.x_range[0] + grid_x *self.resolution
+        world_y = self.y_range[0] + grid_y *self.resolution
         return (world_x, world_y)
 
     def make_sparse_path(self, path, num_points=20):
@@ -245,8 +190,18 @@ class AStarPathPlanner:
         indices = np.linspace(0, len(path) - 1, num_points, dtype=int)
         sparse_path = [self._grid_to_world(path[i]) for i in indices]
         return sparse_path
-    
-    def visualize_search(self, path, gif_name=None):
+
+    def save_path(self, path, filename):
+
+        """Save path to a json file."""
+        if not Path(filename).exists():
+            Path(filename).touch()
+        path = [node for node in path]
+        with open(filename, "w") as f:
+            json.dump(path, f)
+
+
+    def visualize_search(self, gif_name=None):
         print(f"Exploring {len(self.explored_nodes)} nodes.")
         if not self.explored_nodes:
             print("Error: No explored nodes. Ensure search() is executed before visualize_search().")
@@ -259,21 +214,29 @@ class AStarPathPlanner:
         axes.set_xlabel("X [m]", fontsize=15)
         axes.set_ylabel("Y [m]", fontsize=15)
 
+
         self.anime = anm.FuncAnimation(
             figure,
             self.update_frame,
-            fargs=(axes, path),
-            frames=len(self.explored_nodes) + len(path),  # Include frames for the path
+            fargs=(axes, self.path),
+            frames=len(self.explored_nodes) + len(self.path),  # Include frames for the path
             interval=50,
             repeat=False,
         )
 
-        if gif_name:
+        if gif_name is not None:
             try:
+                print("Saving animation...")
                 self.anime.save(gif_name, writer="pillow")
+                print("Animation saved successfully.")
             except Exception as e:
                 print(f"Error saving animation: {e}")
-        plt.show()
+        else:
+            plt.show()
+
+        # clear existing plot and close existing figure
+        plt.clf()
+        plt.close()
 
 
     def update_frame(self, i, axes, path):
@@ -290,7 +253,7 @@ class AStarPathPlanner:
             node = self.explored_nodes[i]
             grid_x = int(node[0])
             grid_y = int(node[1])
-            self.grid[grid_y, grid_x] = 0.5  # Set a value to represent explored nodes
+            self.grid[grid_y, grid_x] = 0.25  # Set a value to represent explored nodes
 
         # Path reconstruction phase
         else:
@@ -299,14 +262,48 @@ class AStarPathPlanner:
                 node = path[path_index]
                 grid_x = int(node[0])
                 grid_y = int(node[1])
-                self.grid[grid_y, grid_x] = 0.75  # Set a value to represent the path
+                self.grid[grid_y, grid_x] = 0.5  # Set a value to represent the path
 
         # Clear the axes and redraw the updated grid
         axes.clear()
+
+        # Define RGB colors for each grid value
+        # Colors in the format [R, G, B], where values are in the range [0, 1]
+        colors = [
+            [1.0, 1.0, 1.0],  # Free space (white)
+            [0.4, 0.8, 1.0],  # Explored nodes (light blue)
+            [0.0, 1.0, 0.0],  # Path (green)
+            [0.5, 0.5, 0.5],  # Clearance space (yellow-orange)
+            [0.0, 0.0, 0.0],  # Obstacles (red)
+        ]
+
+        # Create a colormap
+        custom_cmap = ListedColormap(colors)
+
+
         axes.imshow(self.grid, extent=[self.x_range[0], self.x_range[-1], self.y_range[0], self.y_range[-1]],
-                    origin='lower', cmap='coolwarm', alpha=0.8)
+                    origin='lower', cmap=custom_cmap, alpha=0.8)
         axes.plot(self.start[0], self.start[1], 'go', label="Start")
         axes.plot(self.goal[0], self.goal[1], 'ro', label="Goal")
         axes.legend()
+
+
+if __name__ == "__main__":
+
+    # The path to the map file where the planner will search for a path
+    map_file = "map.json"
+    # Define the path file to save the path that is generated by the planner
+    path_file = "path.json"
+    # Visualize the search process and save the gif
+    gif_path = "astar_search.gif"
+
+    x_lim, y_lim = MinMax(-5, 55), MinMax(-20, 25)
+
+    # Define the start and goal positions
+    start = (0, 0)
+    goal = (50, -10)
+
+    # Create the A* planner
+    planner = AStarPathPlanner(start, goal, map_file, weight=5.0, x_lim=x_lim, y_lim=y_lim, path_filename=path_file, gif_name=gif_path)
 
 
