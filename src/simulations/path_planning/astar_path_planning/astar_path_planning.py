@@ -1,7 +1,7 @@
 """
-ndt_map_construction.py
+astar_path_planning.py
 
-Author: Shisato Yano
+Author: Shantanu Parab
 """
 
 # import path setting
@@ -18,9 +18,7 @@ sys.path.append(abs_dir_path + relative_path + "visualization")
 sys.path.append(abs_dir_path + relative_path + "state")
 sys.path.append(abs_dir_path + relative_path + "vehicle")
 sys.path.append(abs_dir_path + relative_path + "obstacle")
-sys.path.append(abs_dir_path + relative_path + "sensors")
-sys.path.append(abs_dir_path + relative_path + "sensors/lidar")
-sys.path.append(abs_dir_path + relative_path + "mapping/ndt")
+sys.path.append(abs_dir_path + relative_path + "mapping/grid")
 sys.path.append(abs_dir_path + relative_path + "course/cubic_spline_course")
 sys.path.append(abs_dir_path + relative_path + "control/pure_pursuit")
 sys.path.append(abs_dir_path + relative_path + "plan/astar")
@@ -35,13 +33,11 @@ from state import State
 from four_wheels_vehicle import FourWheelsVehicle
 from obstacle import Obstacle
 from obstacle_list import ObstacleList
-from sensors import Sensors
-from sensor_parameters import SensorParameters
-from omni_directional_lidar import OmniDirectionalLidar
-from ndt_global_mapper import NdtGlobalMapper
 from cubic_spline_course import CubicSplineCourse
 from pure_pursuit_controller import PurePursuitController
 from astar_path_planner import AStarPathPlanner
+from binary_occupancy_grid import BinaryOccupancyGrid
+import json
 
 
 # flag to show plot figure
@@ -56,46 +52,39 @@ def main():
 
     # set simulation parameters
     x_lim, y_lim = MinMax(-5, 55), MinMax(-20, 25)
-    vis = GlobalXYVisualizer(x_lim, y_lim, TimeParameters(span_sec=25), show_zoom=False)
+    navigation_gif_path = abs_dir_path + relative_simulations + "path_planning/astar_path_planning/astar_navigate.gif"
+    map_path = abs_dir_path + relative_simulations + "path_planning/astar_path_planning/map.json"
+    path_filename = abs_dir_path + relative_simulations + "path_planning/astar_path_planning/path.json"
+    search_gif_path = abs_dir_path + relative_simulations + "path_planning/astar_path_planning/astar_search.gif"
 
-    
 
-    obstacle_parameters = [
-    {"x_m": 10.0, "y_m": 15.0, "yaw_rad": 0.0, "length_m": 10.0, "width_m": 8.0},
-    {"x_m": 40.0, "y_m": 0.0, "yaw_rad": 0.0, "length_m": 2.0, "width_m": 10.0},
-    {"x_m": 10.0, "y_m": -10.0, "yaw_rad": np.rad2deg(45), "length_m": 5.0, "width_m": 5.0},
-    {"x_m": 30.0, "y_m": 15.0, "yaw_rad": np.rad2deg(10), "length_m": 5.0, "width_m": 2.0},
-    {"x_m": 50.0, "y_m": 15.0, "yaw_rad": np.rad2deg(15), "length_m": 5.0, "width_m": 2.0},
-    {"x_m": 25.0, "y_m": 0.0, "yaw_rad": 0.0, "length_m": 2.0, "width_m": 2.0},
-    {"x_m": 35.0, "y_m": -15.0, "yaw_rad": 0.0, "length_m": 7.0, "width_m": 2.0}
-    ]
+    vis = GlobalXYVisualizer(x_lim, y_lim, TimeParameters(span_sec=25), show_zoom=False, gif_name=navigation_gif_path)
+    occ_grid = BinaryOccupancyGrid(x_lim, y_lim, resolution=0.5, clearance=1.5, map_path=map_path)
 
-    # create obstacle instances
     obst_list = ObstacleList()
-  
-    for params in obstacle_parameters:
-        obstacle = Obstacle(
-            State(x_m=params["x_m"], y_m=params["y_m"], yaw_rad=params["yaw_rad"]),
-            length_m=params["length_m"],
-            width_m=params["width_m"]
-        )
-        obst_list.add_obstacle(obstacle)
+    obst_list.add_obstacle(Obstacle(State(x_m=10.0, y_m=15.0), length_m=10, width_m=8))
+    obst_list.add_obstacle(Obstacle(State(x_m=40.0, y_m=0.0), length_m=2, width_m=10))
+    # obst_list.add_obstacle(Obstacle(State(x_m=10.0, y_m=-10.0, yaw_rad=np.rad2deg(45)), length_m=5, width_m=5))
+    # obst_list.add_obstacle(Obstacle(State(x_m=30.0, y_m=15.0, yaw_rad=np.rad2deg(10)), length_m=5, width_m=2))
+    # obst_list.add_obstacle(Obstacle(State(x_m=50.0, y_m=15.0, yaw_rad=np.rad2deg(15)), length_m=5, width_m=2))
+    # obst_list.add_obstacle(Obstacle(State(x_m=25.0, y_m=0.0), length_m=2, width_m=2))
+    # obst_list.add_obstacle(Obstacle(State(x_m=35.0, y_m=-15.0), length_m=7, width_m=2))
 
     vis.add_object(obst_list)
+    occ_grid.add_object(obst_list)
+    occ_grid.save_map()
     # Easy Goal = (50,22)
     # Hard Goal = (50,-10)
-    planner = AStarPathPlanner((0, 0), (50, -10), obstacle_parameters, resolution=0.5, weight=5.0, obstacle_clearance = 1.5, visualize=True, x_lim=x_lim, y_lim=y_lim)
-    path = planner.search()
-    gif_path = abs_dir_path + relative_simulations + "path_planning/astar_path_planning/astar_search.gif"
-    planner.visualize_search(path, gif_name=gif_path)
+    planner = AStarPathPlanner((0, 0), (50, -10), map_path, weight=5.0, x_lim=x_lim, y_lim=y_lim, path_filename=path_filename, gif_name=search_gif_path)
 
-    sparse_path = planner.make_sparse_path(path, num_points=20)
+    # Load sparse path from json file
+    with open(path_filename, 'r') as f:
+        sparse_path = json.load(f)
 
     # Extract x and y coordinates
     sparse_x = [point[0] for point in sparse_path]
     sparse_y = [point[1] for point in sparse_path]
 
-    print(sparse_x)
     # Use with CubicSplineCourse
     course = CubicSplineCourse(sparse_x, sparse_y, 20)
     vis.add_object(course)
@@ -106,6 +95,7 @@ def main():
     vehicle = FourWheelsVehicle(State(color=spec.color), spec,
                                 controller=pure_pursuit,
                                 show_zoom=False)
+
     vis.add_object(vehicle)
 
     # plot figure is not shown when executed as unit test
