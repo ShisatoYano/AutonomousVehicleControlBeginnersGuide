@@ -1,3 +1,9 @@
+"""
+binary_occupancy_grid.py
+
+Author: Shantanu Parab
+"""
+
 import numpy as np
 import sys
 from pathlib import Path
