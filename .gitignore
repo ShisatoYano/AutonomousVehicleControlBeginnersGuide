@@ -37,5 +37,6 @@ src/simulations/perception/lidar_obstacle_sensing/__pycache__
 src/simulations/perception/sensor_auto_calibration/__pycache__
 test/__pycache__
 Test/__pycache__
+__pycache__
 .pytest_cache
 .coverage
