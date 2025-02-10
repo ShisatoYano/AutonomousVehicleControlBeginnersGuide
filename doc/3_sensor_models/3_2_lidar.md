@@ -270,3 +270,17 @@ To transform the scan point data, the following functions are implemented. These
             self.get_transformed_data(sensor_lon, sensor_lat, sensor_yaw,
                                       vehicle_x, vehicle_y, vehicle_yaw)
 ```
+
+Finally, a function to draw the scan point is implemented as follow.  
+```python
+    def draw(self, axes, elems):
+        """
+        Function to draw scan point's x-y coordinate data
+        axes: Axes object of figure
+        elems: List of plot objects
+        """
+
+        if self.transformed_x and self.transformed_y:
+            point_plot, = axes.plot(self.transformed_x, self.transformed_y, marker='.', color='b')
+            elems.append(point_plot)
+```
