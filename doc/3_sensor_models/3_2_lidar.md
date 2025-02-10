@@ -284,3 +284,5 @@ Finally, a function to draw the scan point is implemented as follow.
             point_plot, = axes.plot(self.transformed_x, self.transformed_y, marker='.', color='b')
             elems.append(point_plot)
 ```
+
+### 3.2.4 Omni Directional LiDAR
