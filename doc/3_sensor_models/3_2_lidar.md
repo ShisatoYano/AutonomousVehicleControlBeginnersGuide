@@ -223,3 +223,50 @@ Then, some member methods for accessing or visualizing the data. The getter meth
 
         return self.point_array.get_data()
 ```
+
+To transform the scan point data, the following functions are implemented. These functions are used to get the transformed scan point by other class.  
+```python
+    def get_transformed_data(self, sensor_lon, sensor_lat, sensor_yaw,
+                             vehicle_x, vehicle_y, vehicle_yaw):
+        """
+        Return transformed x-y array data based on specific coordinate system
+        Type is ndarray object
+        sensor_lon: longitudinal position of sensor on vehicle coordinate[m]
+        sensor_lat: lateral position of sensor on vehicle coordinate[m]
+        sensor_yaw: yaw angle of sensor on vehicle coordinate[rad]
+        vehicle_x: x position of vehicle on global coordinate[m]
+        vehicle_y: y position of vehicle on global coordinate[m]
+        vehicle_yaw: yaw angle of vehicle on global coordinate[rad]
+        """
+
+        # transformation matrix on sensor coordinate
+        point_xy = self.point_array.get_data()
+        sensor_tf = hom_mat_33(point_xy[0, 0], point_xy[1, 0], 0.0)
+
+        # transformation matrix on vehicle coordinate
+        vehicle_tf = hom_mat_33(sensor_lon, sensor_lat, sensor_yaw)
+
+        # transformation matrix on global coordinate
+        global_tf = hom_mat_33(vehicle_x, vehicle_y, vehicle_yaw)
+
+        # homegeneous transformation from sensor to global coordinate
+        transformed_points_matrix = global_tf @ vehicle_tf @ sensor_tf
+
+        return transformed_points_matrix[0, 2], transformed_points_matrix[1, 2]
+    
+    def calculate_transformed_point(self, sensor_lon, sensor_lat, sensor_yaw,
+                                    vehicle_x, vehicle_y, vehicle_yaw):
+        """
+        Function to calculate transformed x-y point based on specific coordinate system
+        sensor_lon: longitudinal position of sensor on vehicle coordinate[m]
+        sensor_lat: lateral position of sensor on vehicle coordinate[m]
+        sensor_yaw: yaw angle of sensor on vehicle coordinate[rad]
+        vehicle_x: x position of vehicle on global coordinate[m]
+        vehicle_y: y position of vehicle on global coordinate[m]
+        vehicle_yaw: yaw angle of vehicle on global coordinate[rad]
+        """
+        
+        self.transformed_x, self.transformed_y = \
+            self.get_transformed_data(sensor_lon, sensor_lat, sensor_yaw,
+                                      vehicle_x, vehicle_y, vehicle_yaw)
+```
