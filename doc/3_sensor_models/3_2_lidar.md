@@ -286,4 +286,10 @@ Finally, a function to draw the scan point is implemented as follow.
 ```
 
 ### 3.2.4 Omni Directional LiDAR
-Omni directional LiDAR class is implemented to generate the point cloud by importing [Scan point class](#323-scan-point).
+Omni directional LiDAR class is implemented to generate the point cloud by importing [Scan point class](#323-scan-point). This class has the following data.  
+
+* List of obstacle objects
+* Sensor parameters object
+* Size of distance database at each angles
+* Maximum value of distance database
+* List of delta values list for interpolating obstacle contour
