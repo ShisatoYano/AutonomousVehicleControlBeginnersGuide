@@ -293,3 +293,37 @@ Omni directional LiDAR class is implemented to generate the point cloud by impor
 * Size of distance database at each angles
 * Maximum value of distance database
 * List of delta values list for interpolating obstacle contour
+
+Firstly, the constructor of this class is implemented as follow. The list of obstacles objects and sensor parameters object are given as the arguments. And then, the above member data is initialized.  
+```python
+"""
+omni_directional_lidar.py
+
+Author: Shisato Yano
+"""
+
+import numpy as np
+from math import atan2, sin, cos
+from scipy.stats import norm
+
+from scan_point import ScanPoint
+
+class OmniDirectionalLidar:
+    """
+    Sensing simulation class with Omni directional LiDAR
+    """
+    
+    def __init__(self, obst_list, params):
+        """
+        Constructor
+        obst_list: List of Obstacle objects
+        params: Sensor parameters object
+        """
+        
+        self.obst_list = obst_list
+        self.params = params
+        self.DIST_DB_SIZE = int(np.floor((np.pi * 2.0) / self.params.RESO_RAD)) + 1
+        self.MAX_DB_VALUE = float("inf")
+        self.DELTA_LIST = np.arange(0.0, 1.0, 0.008)
+        self.latest_point_cloud = []
+```
