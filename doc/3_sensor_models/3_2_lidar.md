@@ -294,7 +294,7 @@ Omni directional LiDAR class is implemented to generate the point cloud by impor
 * Maximum value of distance database
 * List of delta values list for interpolating obstacle contour
 
-Firstly, the constructor of this class is implemented as follow. The list of obstacles objects and sensor parameters object are given as the arguments. And then, the above member data is initialized.  
+The constructor of this class is implemented as follow. The list of obstacles objects and sensor parameters object are given as the arguments. And then, the above member data is initialized.  
 ```python
 """
 omni_directional_lidar.py
@@ -326,4 +326,15 @@ class OmniDirectionalLidar:
         self.MAX_DB_VALUE = float("inf")
         self.DELTA_LIST = np.arange(0.0, 1.0, 0.008)
         self.latest_point_cloud = []
+```
+
+The installation position of this LiDAR need to be computed for transformation of the coordinate of the point cloud. The following function to compute the installation position on global coordinate system is implemented.  
+```python
+    def install(self, state):
+        """
+        Function to calculate installed position on global coordinate
+        state: Vehicle's state object 
+        """
+        
+        self.params.calculate_global_pos(state)
 ```
