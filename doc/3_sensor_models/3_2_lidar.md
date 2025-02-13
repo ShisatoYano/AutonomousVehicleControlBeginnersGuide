@@ -349,3 +349,24 @@ The obstacles within the coverage of LiDAR can be observed. The private function
         
         return (self.params.MIN_RANGE_M <= distance_m <= self.params.MAX_RANGE_M)
 ```
+
+For normalizing an angle of scan point data, the following private functions are implemented.  
+```python
+    def _normalize_angle_until_2pi(self, angle_rad):
+        """
+        Private function to normalize sensing angle between 0 and 360 deg
+        angle_rad: Sensing angle[rad]
+        """
+
+        if 0.0 > angle_rad: return (angle_rad + np.pi * 2.0)
+        else: return angle_rad
+    
+    def _normalize_angle_pi_2_pi(self, angle_rad):
+        """
+        Private function to normalize sensing angle between -180 and 180 deg
+        angle_rad: Sensing angle[rad]
+        """
+
+        if angle_rad > np.pi: return (angle_rad - np.pi * 2.0)
+        else: return angle_rad
+```
