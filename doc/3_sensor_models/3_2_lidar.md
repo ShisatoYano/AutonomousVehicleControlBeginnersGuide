@@ -338,3 +338,14 @@ The installation position of this LiDAR need to be computed for transformation o
         
         self.params.calculate_global_pos(state)
 ```
+
+The obstacles within the coverage of LiDAR can be observed. The private function, _visible(self, distance_m) is used to check the obstacle is within the coverage.  
+```python
+    def _visible(self, distance_m):
+        """
+        Private function to check object is visible according to sensing distance
+        distance_m: Sensing distance[m]
+        """
+        
+        return (self.params.MIN_RANGE_M <= distance_m <= self.params.MAX_RANGE_M)
+```
