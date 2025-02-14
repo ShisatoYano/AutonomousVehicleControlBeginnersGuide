@@ -370,3 +370,39 @@ For normalizing an angle of scan point data, the following private functions are
         if angle_rad > np.pi: return (angle_rad - np.pi * 2.0)
         else: return angle_rad
 ```
+
+The above normalization functions are used to compute a scan point data and a point cloud data. A function to compute a point cloud with ray casting algorithm is implemented considering occlusion.  
+```python
+    def _ray_casting_filter(self, distance_list, angle_list, state):
+        """
+        Private function to filter point cloud by Ray casting
+        distance_list: List of sensing distance[m]
+        angle_list: List of sensing angle[rad]
+        """
+
+        point_cloud = []
+        dist_db = [self.MAX_DB_VALUE for _ in range(self.DIST_DB_SIZE)]
+
+        for i in range(len(angle_list)):
+            normalized_angle_2pi = self._normalize_angle_until_2pi(angle_list[i])
+            angle_id = int(round(normalized_angle_2pi / self.params.RESO_RAD)) % self.DIST_DB_SIZE
+            if dist_db[angle_id] > distance_list[i]:
+                dist_db[angle_id] = distance_list[i]
+        
+        for i in range(len(dist_db)):
+            angle_rad = i * self.params.RESO_RAD
+            angle_pi_2_pi = self._normalize_angle_pi_2_pi(angle_rad)
+            distance_m = dist_db[i]
+            if (distance_m != self.MAX_DB_VALUE) and self._visible(distance_m):
+                angle_with_noise = norm.rvs(loc=angle_pi_2_pi, scale=self.params.ANGLE_STD_SCALE)
+                dist_with_noise = norm.rvs(loc=distance_m, scale=self.params.DIST_STD_RATE*distance_m)
+                x_m = dist_with_noise * cos(angle_with_noise)
+                y_m = dist_with_noise * sin(angle_with_noise)
+                point = ScanPoint(dist_with_noise, angle_with_noise, x_m, y_m)
+                vehicle_pose = state.x_y_yaw()
+                point.calculate_transformed_point(self.params.INST_LON_M, self.params.INST_LAT_M, self.params.INST_YAW_RAD,
+                                                  vehicle_pose[0, 0], vehicle_pose[1, 0], vehicle_pose[2, 0])
+                point_cloud.append(point)
+        
+        self.latest_point_cloud = point_cloud
+```
