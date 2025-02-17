@@ -463,3 +463,19 @@ A function to update the point cloud data including the above functions is imple
         
         self._ray_casting_filter(distance_list, angle_list, state)
 ```
+
+Additionally, a function to draw the generated point cloud in the simulation is implemented. Then, the global position of the LiDAR on the vehicle is also drawn simultaneously.  
+```python
+    def draw(self, axes, elems, state):
+        """
+        Function to draw sensed point cloud data
+        axes: Axes object of figure
+        elems: List of plot objects
+        state: Vehicle's state object
+        """
+
+        self.params.draw_pos(axes, elems, state)
+
+        for point in self.latest_point_cloud:
+            point.draw(axes, elems)
+```
