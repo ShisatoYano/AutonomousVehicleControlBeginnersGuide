@@ -479,3 +479,28 @@ Additionally, a function to draw the generated point cloud in the simulation is 
         for point in self.latest_point_cloud:
             point.draw(axes, elems)
 ```
+
+Finally, some getters for an external class are implemented as follow. The array of point cloud, global x-y coordinates of the LiDAR can be got.  
+```python
+    def get_point_cloud(self):
+        """
+        Function to get latest point cloud data
+        Each points are calculated on sensor coordinate system
+        """
+
+        return self.latest_point_cloud                
+
+    def get_global_x_m(self):
+        """
+        Function to get installation position x in global coordinate[m]
+        """
+        
+        return self.params.get_global_x_m()
+    
+    def get_global_y_m(self):
+        """
+        Function to get installation position y in global coordinate[m]
+        """
+
+        return self.params.get_global_y_m()
+```
