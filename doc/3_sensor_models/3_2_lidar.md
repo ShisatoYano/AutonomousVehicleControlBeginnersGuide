@@ -438,3 +438,28 @@ For generating a scan point data, the following two functions need to be impleme
 
         return contour_x, contour_y
 ```
+
+A function to update the point cloud data including the above functions is implemented. This function is called in the main process of the simulation.  
+```python
+    def update(self, state):
+        """
+        Function to update sensed point cloud data
+        state: Vehicle's state
+        """
+        
+        self.params.calculate_global_pos(state)
+
+        distance_list, angle_list = [], []
+        for obst in self.obst_list.get_list():
+            vertex_x, vertex_y = obst.vertex_xy()
+            contour_x, contour_y = self._calculate_contour_xy(vertex_x, vertex_y)
+            for x, y in zip(contour_x, contour_y):
+                diff_x = x - self.params.get_global_x_m()
+                diff_y = y - self.params.get_global_y_m()
+                distance_m = np.hypot(diff_x, diff_y)
+                angle_rad = atan2(diff_y, diff_x) - state.get_yaw_rad()
+                distance_list.append(distance_m)
+                angle_list.append(angle_rad)
+        
+        self._ray_casting_filter(distance_list, angle_list, state)
+```
