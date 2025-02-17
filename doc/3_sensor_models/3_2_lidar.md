@@ -406,3 +406,35 @@ The above normalization functions are used to compute a scan point data and a po
         
         self.latest_point_cloud = point_cloud
 ```
+
+For generating a scan point data, the following two functions need to be implemented. By using these functions, a line between two vertexes of the obstacle can be interpolated with multiple points. The coordinate of each points can be used as the scan points.  
+```python
+    def _interpolate(self, x_1, x_2, delta):
+        """
+        Private function to interpolate between two values
+        x_1: value 1
+        x_2: value 2
+        delta: resolution between value 1 and 2
+        """
+
+        return ((1.0 - delta) * x_1 + delta * x_2)
+
+    def _calculate_contour_xy(self, vertex_x, vertex_y):
+        """
+        Private function to calculate contour coordinates x-y
+        vertex_x: List of vertex's x coordinate
+        vertex_y: List of vertex's y coordinate
+        """
+
+        contour_x, contour_y = [], []
+        len_vertex = len(vertex_x)
+
+        for i in range(len_vertex - 1):
+            contour_x.extend([self._interpolate(vertex_x[i], vertex_x[i+1], delta) for delta in self.DELTA_LIST])
+            contour_y.extend([self._interpolate(vertex_y[i], vertex_y[i+1], delta) for delta in self.DELTA_LIST])
+        
+        contour_x.extend([self._interpolate(vertex_x[len_vertex-1], vertex_x[1], delta) for delta in self.DELTA_LIST])
+        contour_y.extend([self._interpolate(vertex_y[len_vertex-1], vertex_y[1], delta) for delta in self.DELTA_LIST])
+
+        return contour_x, contour_y
+```
