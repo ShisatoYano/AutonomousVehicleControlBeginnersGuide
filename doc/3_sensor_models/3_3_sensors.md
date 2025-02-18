@@ -23,3 +23,15 @@ class Sensors:
 
         self.lidar = lidar
 ```
+
+## 3.3.2 Installation
+A function to install each sensors is implemented to compute the global position coordinate on the vehicle. It is computed only when the object of LiDAR class is given to the constructor.  
+```python
+    def install(self, state):
+        """
+        Function to calculate each sensor's installation position on vehicle
+        state: vehicle's state object
+        """
+
+        if self.lidar: self.lidar.install(state)
+```
