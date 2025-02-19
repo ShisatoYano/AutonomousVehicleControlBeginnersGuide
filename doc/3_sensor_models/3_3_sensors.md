@@ -35,3 +35,25 @@ A function to install each sensors is implemented to compute the global position
 
         if self.lidar: self.lidar.install(state)
 ```
+
+## 3.3.3 Update and Draw
+Two functions to update data and to draw data are implemented. These processes are executed only when the object of LiDAR class is installed.  
+```python
+    def update_data(self, state):
+        """
+        Function to update each sensor's data
+        state: vehicle's state object
+        """
+
+        if self.lidar: self.lidar.update(state)
+    
+    def draw_data(self, axes, elems, state):
+        """
+        Function to draw each sensor's data
+        axes: axes object of figure
+        elems: list of plot object
+        state: vehicle's state object
+        """
+
+        if self.lidar: self.lidar.draw(axes, elems, state)
+```
