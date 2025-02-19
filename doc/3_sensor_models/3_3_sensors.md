@@ -88,3 +88,21 @@ The following three functions to get data of LiDAR are implemented. First one is
         if self.lidar: return self.lidar.get_global_y_m()
         else: return 0.0
 ```
+
+### 3.3.5 Vehicle class
+For installing the object of sensors class on the vehicle model, [Four wheels vehicle class](/src/components/vehicle/four_wheels_vehicle.py) need to be modified. Firstly, an argument, sensors is added to the constructor. This argument is None as default. When it is None, any processes are not executed.  
+```python
+class FourWheelsVehicle:
+    """
+    Four Wheels Vehicle model class
+    """
+
+    def __init__(self, state, spec, sensors=None, show_zoom=True):
+        """
+        Constructor
+        state: Vehicle's state object
+        spec: Vehicle's specification object
+        sensors: Sencors object
+        show_zoom: Flag for zoom around vehicle
+        """
+```
