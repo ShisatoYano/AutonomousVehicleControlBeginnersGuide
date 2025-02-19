@@ -106,3 +106,19 @@ class FourWheelsVehicle:
         show_zoom: Flag for zoom around vehicle
         """
 ```
+
+A private function to install sensors is implemented. This function is used to compute the global position coordinate of the sensors based on the current state of the vehicle. The function, install in Sensors class is called.  
+```python
+    def _install_sensors(self, state):
+        """
+        Private function to calculate each sensor's installation position on vehicle
+        state: Vehicle's state object
+        """
+
+        if self.sensors: self.sensors.install(state)
+```
+The added argument, sensors is stored in a member variable and the above function, _install_sensors() is called in the constructor.  
+```python
+        self.sensors = sensors
+        self._install_sensors(self.state)
+```
