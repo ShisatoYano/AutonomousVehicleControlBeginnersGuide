@@ -122,3 +122,64 @@ The added argument, sensors is stored in a member variable and the above functio
         self.sensors = sensors
         self._install_sensors(self.state)
 ```
+
+For updating and drawing the data, the following two private functions are implemented.  
+```python
+    def _update_sensors_data(self, state):
+        """
+        Private function to update each sensor's data
+        state: Vehicle's state object
+        """
+
+        if self.sensors: self.sensors.update_data(state)
+    
+    def _draw_sensors_data(self, axes, elems, state):
+        """
+        Private function to draw each sensor's data
+        axes: Axes object of figure
+        elems: List of plot object
+        state: Vehicle's state object
+        """
+
+        if self.sensors: self.sensors.draw_data(axes, elems, state)
+```
+These functions are called in the update function and draw function of the vehicle class.  
+```python
+    def update(self, time_s):
+        """
+        Function to update each member objects
+        time_s: Simulation interval time[sec]
+        """
+
+        self._update_sensors_data(self.state)
+
+    def draw(self, axes, elems):
+        """
+        Function to draw each member object's data
+        axes: Axes object of figure
+        elems: List of plot object
+        """
+
+        self._draw_sensors_data(axes, elems, self.state)
+
+        self.state.draw(axes, elems)
+        x_y_yaw_array = self.state.x_y_yaw()
+        x_m = self.state.get_x_m()
+        y_m = self.state.get_y_m()
+        
+        self.body.draw(axes, x_y_yaw_array, elems)
+        self.chassis.draw(axes, x_y_yaw_array, elems)
+        self.front_left_tire.draw(axes, x_y_yaw_array, steer_rad, elems)
+        self.front_right_tire.draw(axes, x_y_yaw_array, steer_rad, elems)
+        self.rear_left_tire.draw(axes, x_y_yaw_array, elems)
+        self.rear_right_tire.draw(axes, x_y_yaw_array, elems)
+        self.front_axle.draw(axes, x_y_yaw_array, elems)
+        self.rear_axle.draw(axes, x_y_yaw_array, elems)
+
+        if self.show_zoom:
+            axes.set_xlim(x_m - self.spec.area_size, x_m + self.spec.area_size)
+            axes.set_ylim(y_m - self.spec.area_size, y_m + self.spec.area_size)
+        else:
+            axes.set_xlim(self.spec.x_lim.min_value(), self.spec.x_lim.max_value())
+            axes.set_ylim(self.spec.y_lim.min_value(), self.spec.y_lim.max_value())
+```
