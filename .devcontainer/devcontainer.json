@@ -15,7 +15,8 @@
                 "shd101wyy.markdown-preview-enhanced",
                 "ms-azuretools.vscode-docker",
                 "azemoh.one-monokai",
-                "corschenzi.mermaid-graphical-editor"
+                "corschenzi.mermaid-graphical-editor",
+                "Codeium.codeium"
             ],
             "settings": {
                 "workbench.editor.enablePreview": false,
