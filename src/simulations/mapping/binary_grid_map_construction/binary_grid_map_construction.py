@@ -38,3 +38,8 @@ from omni_directional_lidar import OmniDirectionalLidar
 # import binary grid mapper module
 from cubic_spline_course import CubicSplineCourse
 from pure_pursuit_controller import PurePursuitController
+
+
+# flag to show plot figure
+# when executed as unit test, this flag is set as false
+show_plot = True
