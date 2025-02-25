@@ -70,3 +70,14 @@ def main():
     obst_list.add_obstacle(Obstacle(State(x_m=25.0, y_m=0.0), length_m=2, width_m=2))
     obst_list.add_obstacle(Obstacle(State(x_m=35.0, y_m=-15.0), length_m=7, width_m=2))
     vis.add_object(obst_list)
+
+    # create vehicle instance
+    spec = VehicleSpecification()
+    pure_pursuit = PurePursuitController(spec, course)
+    sensor_params = SensorParameters(lon_m=spec.wheel_base_m/2, max_m=15, dist_std_rate=0.05)
+    lidar = OmniDirectionalLidar(obst_list, sensor_params)
+    vehicle = FourWheelsVehicle(State(color=spec.color), spec,
+                                controller=pure_pursuit,
+                                sensors=Sensors(lidar=lidar),
+                                show_zoom=False)
+    vis.add_object(vehicle)
