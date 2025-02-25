@@ -53,3 +53,9 @@ def main():
     # set simulation parameters
     x_lim, y_lim = MinMax(-5, 55), MinMax(-20, 25)
     vis = GlobalXYVisualizer(x_lim, y_lim, TimeParameters(span_sec=25), show_zoom=False)
+
+    # create course data instance
+    course = CubicSplineCourse([0.0, 10.0, 25, 40, 50],
+                               [0.0, 4, -12, 20, -13],
+                               20)
+    vis.add_object(course)
