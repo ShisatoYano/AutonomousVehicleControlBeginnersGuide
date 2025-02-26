@@ -16,7 +16,7 @@
                 "ms-azuretools.vscode-docker",
                 "azemoh.one-monokai",
                 "corschenzi.mermaid-graphical-editor",
-                "Codeium.codeium"
+                "TabNine.tabnine-vscode"
             ],
             "settings": {
                 "workbench.editor.enablePreview": false,
