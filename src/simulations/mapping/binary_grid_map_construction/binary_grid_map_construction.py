@@ -87,3 +87,8 @@ def main():
 
     # show plot figure
     vis.draw()
+
+
+# execute main process
+if __name__ == "__main__":
+    main()
