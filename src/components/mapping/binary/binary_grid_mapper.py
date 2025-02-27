@@ -42,3 +42,14 @@ class BinaryGridMapper:
             points_y_list.append(global_y)
         
         # updata map data
+    
+    def draw(self, axes, elems):
+        """
+        Function to draw map data
+        axes: Axes object of figure
+        elems: List of plot object
+        """
+
+        # draw occupancy grid map
+
+        pass
