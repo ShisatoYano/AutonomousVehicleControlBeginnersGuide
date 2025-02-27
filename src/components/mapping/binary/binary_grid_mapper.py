@@ -22,4 +22,23 @@ class BinaryGridMapper:
         sensor_params: Parameters object of sensor
         """
 
+        # initialize map data
         self.params = sensor_params
+
+    def update(self, point_cloud, state):
+        """
+        Function to update binary occupancy grid map
+        point_cloud: List of points from LiDAR
+        state: Vehicle's state to transform into global coordinate
+        """
+
+        vehicle_pose = state.x_y_yaw()
+
+        points_x_list, points_y_list = [], []
+        for point in point_cloud:
+            global_x, global_y = point.get_transformed_data(self.params.INST_LON_M, self.params.INST_LAT_M, self.params.INST_YAW_RAD,
+                                                            vehicle_pose[0, 0], vehicle_pose[1, 0], vehicle_pose[2, 0])
+            points_x_list.append(global_x)
+            points_y_list.append(global_y)
+        
+        # updata map data
