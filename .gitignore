@@ -14,6 +14,7 @@ src/components/localization/__pycache__
 src/components/localization/kalman_filter/__pycache__
 src/components/mapping/__pycache__
 src/components/mapping/grid/__pycache__
+src/components/mapping/binary/__pycache__
 src/components/mapping/ndt/__pycache__
 src/components/obstacle/__pycache__
 src/components/search/__pycache__
