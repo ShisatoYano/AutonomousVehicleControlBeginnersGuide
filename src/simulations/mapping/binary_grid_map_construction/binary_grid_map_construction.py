@@ -76,9 +76,11 @@ def main():
     pure_pursuit = PurePursuitController(spec, course)
     sensor_params = SensorParameters(lon_m=spec.wheel_base_m/2, max_m=15, dist_std_rate=0.05)
     lidar = OmniDirectionalLidar(obst_list, sensor_params)
+    mapper = BinaryGridMapper(sensor_params=sensor_params, center_x_m=25.0, center_y_m=5.0)
     vehicle = FourWheelsVehicle(State(color=spec.color), spec,
                                 controller=pure_pursuit,
                                 sensors=Sensors(lidar=lidar),
+                                mapper=mapper,
                                 show_zoom=False)
     vis.add_object(vehicle)
 
