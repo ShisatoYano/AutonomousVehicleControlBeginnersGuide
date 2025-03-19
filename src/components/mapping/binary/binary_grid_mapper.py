@@ -4,6 +4,12 @@ binary_grid_mapper.py
 Author: Shisato Yano
 """
 
+import sys
+from pathlib import Path
+
+sys.path.append(str(Path(__file__).absolute().parent) + "/../grid")
+from grid_map import GridMap
+
 
 class BinaryGridMapper:
     """
@@ -22,7 +28,7 @@ class BinaryGridMapper:
         sensor_params: Parameters object of sensor
         """
 
-        # initialize map data
+        self.map = GridMap(width_m, height_m, resolution_m, center_x_m, center_y_m)
         self.params = sensor_params
 
     def update(self, point_cloud, state):
