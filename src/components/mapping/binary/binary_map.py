@@ -32,5 +32,10 @@ class BinaryMap:
         pass
 
     def draw_map(self, axes, elems):
+        """"
+        Function to draw map data
+        axes: Axes object of figure
+        elems: List of plot object
+        """
 
         pass
