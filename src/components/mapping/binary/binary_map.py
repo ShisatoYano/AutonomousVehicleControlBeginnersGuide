@@ -21,3 +21,6 @@ class BinaryMap:
         """
         
         pass
+
+    def update_map(self, points_x_list, points_y_list):
+        pass
