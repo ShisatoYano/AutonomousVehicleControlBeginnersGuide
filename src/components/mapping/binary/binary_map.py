@@ -28,5 +28,9 @@ class BinaryMap:
         points_x_list: List of x coordinates of point cloud
         points_y_list: List of y coordinates of point cloud
         """
-        
+
+        pass
+
+    def draw_map(self, axes, elems):
+
         pass
