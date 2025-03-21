@@ -23,4 +23,10 @@ class BinaryMap:
         pass
 
     def update_map(self, points_x_list, points_y_list):
+        """
+        Function to update map
+        points_x_list: List of x coordinates of point cloud
+        points_y_list: List of y coordinates of point cloud
+        """
+        
         pass
