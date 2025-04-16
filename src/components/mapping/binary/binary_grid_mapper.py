@@ -52,6 +52,4 @@ class BinaryGridMapper:
         elems: List of plot object
         """
 
-        # draw occupancy grid map
-
-        pass
+        self.map.draw_map(axes, elems)
