@@ -43,7 +43,7 @@ class BinaryGridMapper:
             points_x_list.append(global_x)
             points_y_list.append(global_y)
         
-        # updata map data
+        self.map.update_map(points_x_list, points_y_list)
     
     def draw(self, axes, elems):
         """
