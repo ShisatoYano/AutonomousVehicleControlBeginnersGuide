@@ -16,7 +16,7 @@
                 "ms-azuretools.vscode-docker",
                 "azemoh.one-monokai",
                 "corschenzi.mermaid-graphical-editor",
-                "TabNine.tabnine-vscode"
+                "GitHub.copilot"
             ],
             "settings": {
                 "workbench.editor.enablePreview": false,
