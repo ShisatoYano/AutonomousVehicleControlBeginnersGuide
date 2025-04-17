@@ -4,6 +4,11 @@ binary_map.py
 Author: Shisato Yano
 """
 
+import sys
+from pathlib import Path
+sys.path.append(str(Path(__file__).absolute().parent) + "/../grid")
+from grid_map import GridMap
+
 class BinaryMap:
     """
     Binary grid map class
