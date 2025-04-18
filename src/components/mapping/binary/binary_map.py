@@ -25,7 +25,8 @@ class BinaryMap:
         center_y_m: Center y position of map[m]
         """
         
-        pass
+        self.map = GridMap(width_m, height_m, resolution_m,
+                           center_x_m, center_y_m)
 
     def update_map(self, points_x_list, points_y_list):
         """
