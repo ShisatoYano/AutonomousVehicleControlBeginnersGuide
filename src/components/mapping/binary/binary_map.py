@@ -4,10 +4,12 @@ binary_map.py
 Author: Shisato Yano
 """
 
+import numpy as np
 import sys
 from pathlib import Path
 sys.path.append(str(Path(__file__).absolute().parent) + "/../grid")
 from grid_map import GridMap
+from grid_map import FloatGrid
 
 class BinaryMap:
     """
@@ -35,7 +37,13 @@ class BinaryMap:
         points_y_list: List of y coordinates of point cloud
         """
 
-        pass
+        points_x_array, points_y_array = np.array(points_x_list), np.array(points_y_list)
+        
+        for i in range(len(points_x_array)):
+            index = self.map.calculate_vector_index_from_position(points_x_array[i],
+                                                                  points_y_array[i])
+            if index is not None:
+                self.map.set_grid_data(index, FloatGrid(value=1.0))
 
     def draw_map(self, axes, elems):
         """"
