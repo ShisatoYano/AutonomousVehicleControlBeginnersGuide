@@ -40,6 +40,8 @@ class GridMap:
         self.left_bottom_y_m = self.center_y_m - self.height_m / 2.0
 
         self.data = [init_grid] * self.all_grids_num
+
+        self.data_2d = [[0.0 for y_idx in range(self.height_grids_num)] for x_idx in range(self.width_grids_num)]
     
     def calculate_xy_index_from_position(self, pos, left_bottom_pos, max_index):
         """
