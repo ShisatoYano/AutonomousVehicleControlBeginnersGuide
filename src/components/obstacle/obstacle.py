@@ -31,11 +31,14 @@ class Obstacle:
         self.state = state
         self.accel_mps2 = accel_mps2
         self.yaw_rate_rps = yaw_rate_rps
+        self.length_m = length_m
+        self.width_m = width_m
 
         contour = np.array([[length_m, -length_m, -length_m, length_m, length_m],
                             [width_m, width_m, -width_m, -width_m, width_m]])
+
         self.array = XYArray(contour)
-    
+
     def update(self, time_s):
         """
         Function to update obstacle's state
