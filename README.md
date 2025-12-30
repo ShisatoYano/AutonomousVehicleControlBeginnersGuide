@@ -83,9 +83,19 @@ For setting up the environment with Docker:
 ### Localization
 #### Extended Kalman Filter Localization
 ![](src/simulations/localization/extended_kalman_filter_localization/extended_kalman_filter_localization.gif)  
+#### Unscented Kalman Filter Localization
+![](src/simulations/localization/unscented_kalman_filter_localization/unscented_kalman_filter_localization.gif)  
+#### EKF(Blue) vs UKF(Cian)
+![](src/simulations/localization/ekf_vs_ukf_comparison/ekf_vs_ukf_comparison.gif)  
 ### Mapping
 #### NDT Map Construction
 ![](src/simulations/mapping/ndt_map_construction/ndt_map_construction.gif)  
+### Path Planning
+#### A*
+Planning  
+![](src/simulations/path_planning/astar_path_planning/astar_search.gif)  
+Navigation  
+![](src/simulations/path_planning/astar_path_planning/astar_navigate.gif)  
 ### Path Tracking
 #### Pure pursuit Path Tracking
 ![](src/simulations/path_tracking/pure_pursuit_path_tracking/pure_pursuit_path_tracking.gif)  
