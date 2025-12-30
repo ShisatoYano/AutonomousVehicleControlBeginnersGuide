@@ -17,6 +17,7 @@ src/components/mapping/grid/__pycache__
 src/components/mapping/binary/__pycache__
 src/components/mapping/ndt/__pycache__
 src/components/obstacle/__pycache__
+src/components/plan/astar/__pycache__
 src/components/search/__pycache__
 src/components/search/kd_tree/__pycache__
 src/components/sensors/__pycache__
