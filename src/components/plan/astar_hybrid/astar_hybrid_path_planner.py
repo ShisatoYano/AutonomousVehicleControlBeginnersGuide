@@ -1,3 +1,9 @@
+"""
+astar_hybrid_path_planning.py
+
+Author: Shreyansh Shethia
+"""
+
 import math
 import numpy as np
 import matplotlib.pyplot as plt
