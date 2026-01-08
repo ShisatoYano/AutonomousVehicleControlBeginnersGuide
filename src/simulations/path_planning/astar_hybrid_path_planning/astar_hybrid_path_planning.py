@@ -63,18 +63,18 @@ def main():
 
     obst_list = ObstacleList()
     obst_list.add_obstacle(Obstacle(State(x_m=10.0, y_m=15.0), length_m=10, width_m=8))
-    obst_list.add_obstacle(Obstacle(State(x_m=40.0, y_m=-10.0), length_m=2, width_m=10))
-    #obst_list.add_obstacle(Obstacle(State(x_m=10.0, y_m=-10.0, yaw_rad=np.rad2deg(45)), length_m=5, width_m=5))
-    #obst_list.add_obstacle(Obstacle(State(x_m=30.0, y_m=15.0, yaw_rad=np.rad2deg(10)), length_m=5, width_m=2))
-    #obst_list.add_obstacle(Obstacle(State(x_m=50.0, y_m=15.0, yaw_rad=np.rad2deg(15)), length_m=5, width_m=2))
-    #obst_list.add_obstacle(Obstacle(State(x_m=25.0, y_m=0.0), length_m=2, width_m=2))
-    #obst_list.add_obstacle(Obstacle(State(x_m=35.0, y_m=-15.0), length_m=7, width_m=2))
+    obst_list.add_obstacle(Obstacle(State(x_m=40.0, y_m=0.0), length_m=2, width_m=10))
+    obst_list.add_obstacle(Obstacle(State(x_m=10.0, y_m=-10.0, yaw_rad=np.rad2deg(45)), length_m=5, width_m=5))
+    obst_list.add_obstacle(Obstacle(State(x_m=30.0, y_m=15.0, yaw_rad=np.rad2deg(10)), length_m=5, width_m=2))
+    obst_list.add_obstacle(Obstacle(State(x_m=50.0, y_m=15.0, yaw_rad=np.rad2deg(15)), length_m=5, width_m=2))
+    obst_list.add_obstacle(Obstacle(State(x_m=25.0, y_m=0.0), length_m=2, width_m=2))
+    obst_list.add_obstacle(Obstacle(State(x_m=35.0, y_m=-15.0), length_m=7, width_m=2))
 
     vis.add_object(obst_list)
     occ_grid.add_object(obst_list)
     occ_grid.save_map()
 
-    planner = AStarHybridPathPlanner((0, 0, 0.0), (50, -10, np.radians(270.0)), map_path, weight=5.0, 
+    planner = AStarHybridPathPlanner((0, 0, 0.0), (50, -10, np.radians(90.0)), map_path, weight=5.0, 
                                      x_lim=x_lim, y_lim=y_lim, path_filename=path_filename, gif_name=search_gif_path, visualize=show_plot)
 
     # Load sparse path from json file
