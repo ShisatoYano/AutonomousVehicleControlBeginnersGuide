@@ -36,6 +36,37 @@ import json
 
 class AStarHybridPathPlanner:
     def __init__(self, start, goal, map_file, weight=1.0, x_lim=None, y_lim=None, path_filename=None, gif_name=None):
+        """
+        Initializes the Hybrid A* Path Planner with kinematic constraints.
+
+        This constructor sets up the coordinate system, loads the occupancy grid, 
+        configures the vehicle's motion primitives based on a minimum turning radius, 
+        and triggers the pathfinding search and visualization.
+
+        Args:
+            start (tuple): The starting state as (x, y, yaw) in world coordinates (meters, radians).
+            goal (tuple): The target state as (x, y, yaw) in world coordinates (meters, radians).
+            map_file (str): Path to the grid source file (.json, .npy, or .png).
+            weight (float): Heuristic weight to prioritize the cost-to-go (default: 1.0).
+            x_lim (MinMax): Object providing .min_value() and .max_value() for the X-axis boundary.
+            y_lim (MinMax): Object providing .min_value() and .max_value() for the Y-axis boundary.
+            path_filename (str, optional): The filename used to save the generated path as a JSON.
+            gif_name (str, optional): The filename for saving the search animation (if enabled).
+
+        Attributes:
+            resolution (float): The calculated width of a single grid cell in meters.
+            x_range (np.ndarray): Array of X-coordinates mapped to the grid columns.
+            y_range (np.ndarray): Array of Y-coordinates mapped to the grid rows.
+            R (float): The minimum turning radius of the vehicle, determining maneuverability.
+            motion_primitives (list): Set of steering curvatures [left, straight, right] applied 
+                during expansion.
+            yaw_cost_weight (float): Scalar used in the heuristic to penalize heading misalignment 
+                relative to the goal.
+            explored_nodes (list): Stores (gx, gy) grid indices visited during the search 
+                for visualization.
+            path (list): Stores the final path as (gx, gy) grid indices for rendering.
+        """
+        
         self.start = start  # (x, y, yaw)
         self.goal = goal    # (x, y, yaw)
         self.weight = weight
@@ -55,6 +86,9 @@ class AStarHybridPathPlanner:
         self.explored_nodes = []
         self.path = []
         self.path_filename = path_filename
+        self.R = 6.0  # Minimum turning radius
+        self.motion_primitives = [-1.0/self.R, 0.0, 1.0/self.R]  # Steering angles
+        self.yaw_cost_weight = 0.1  # Weight for yaw difference in heuristic
         
         # Execute search
         self.search()
@@ -100,14 +134,36 @@ class AStarHybridPathPlanner:
         return gx, gy
 
     def heuristic(self, pos, goal):
-        """Euclidean distance + weight."""
+        """
+        Calculates the estimated cost-to-go from the current state to the goal.
+
+        This heuristic combines the 2D Euclidean distance with an angular penalty 
+        to guide the Hybrid A* search. By penalizing yaw differences, the planner 
+        encourages paths that align with the target heading as the vehicle 
+        approaches the goal.
+
+        Args:
+            pos (tuple): The current state (x, y, yaw) of the vehicle.
+            goal (tuple): The target state (x, y, yaw) to reach.
+
+        Returns:
+            float: The weighted total estimated cost, incorporating both 
+                spatial and orientation errors.
+        """
         dist = self._euclidean(pos[:2], goal[:2])
-        # Add a weighted penalty for being at the wrong angle
+        # Add a weighted penalty for being at the wrong angle using the atan2(sin, cos) 
+        # method to find the shortest angular distance.
         yaw_diff = abs(math.atan2(math.sin(pos[2]-goal[2]), math.cos(pos[2]-goal[2])))
         return self.weight * (dist + self.yaw_cost_weight * yaw_diff)
 
     def _euclidean(self, a: Tuple[float, float], b: Tuple[float, float]) -> float:
-        """Standard 2D distance. Fixed Tuple casing to avoid TypeError."""
+        """ 
+        Standard 2D distance. Fixed Tuple casing to avoid TypeError.
+         Args:
+             a, b: 2D points as (x, y) tuples.
+         Returns:
+             Euclidean distance between points a and b.
+         """
         return math.hypot(a[0] - b[0], a[1] - b[1])
 
     def _wrap_angle(self, theta: float) -> float:
@@ -118,6 +174,14 @@ class AStarHybridPathPlanner:
         return (theta + math.pi) % (2 * math.pi) - math.pi
 
     def world_to_grid_safe(self, x: float, y: float) -> Tuple[int, int]:
+        """
+        Translates continuous World Coordinates (meters) to Discrete Grid Indices.
+        
+        Args:
+            x, y: Continuous position in the world map.
+        Returns:
+            gx, gy: Clamped integer indices for array access.
+        """
         # Use x_min and y_min established in __init__
         gx = int((x - self.x_min) / self.resolution)
         gy = int((y - self.y_min) / self.resolution)
@@ -128,6 +192,37 @@ class AStarHybridPathPlanner:
         return gx, gy
 
     def search(self):
+        """
+        Executes the Hybrid A* pathfinding algorithm to find a kinematically feasible path.
+
+        The search operates in continuous SE(2) space (x, y, theta) using motion 
+        primitives to ensure the path adheres to the vehicle's minimum turning radius. 
+        It utilizes a 3D discretized 'closed set' (grid_x, grid_y, heading_bin) to 
+        prune the search tree while maintaining floating-point precision for 
+        actual vehicle states.
+
+        Algorithm Workflow:
+            1. Initialization: Adds the start state (x, y, yaw) to the priority 
+               queue (open list) with a cost based on the heuristic.
+            2. Exploration: Pops the node with the lowest f-score (g_cost + h_cost) 
+               and checks if the state has already been visited in the discrete 
+               closed set.
+            3. Visualization Sync: Converts the current continuous position into 
+               grid indices to update 'explored_nodes' for the animator.
+            4. Goal Test: Checks if the current state is within a set distance 
+               and angular tolerance of the goal.
+            5. Expansion: Generates neighbors by simulating motion primitives 
+               (Left, Straight, Right) based on the vehicle's turning radius.
+            6. Path Reconstruction: Once the goal is reached, traces parent 
+               pointers back to the start and converts the resulting world path 
+               into grid indices for the final visualization.
+
+        Updates:
+            self.explored_nodes (list): Appends (gx, gy) for visualization.
+            self.path (list): Final path converted to (gx, gy) grid indices.
+            self.path_filename (str): Saves the full 3D world path (x, y, yaw) 
+                to a JSON file.
+        """
         open_list = []
         # Priority queue stores: (f_score, (x, y, yaw))
         # Use slicing [:2] to pass only (x, y) to Euclidean function
@@ -167,7 +262,9 @@ class AStarHybridPathPlanner:
                 return
 
             # 4. Expansion with Motion Primitives
-            for steer in [-1.0/6.0, 0.0, 1.0/6.0]:
+            # MOTION PRIMITIVES: Instead of jumping to adjacent cells, we simulate 
+            # three physical steering inputs: Full Left, Straight, and Full Right.
+            for steer in self.motion_primitives:
                 L = self.resolution * 3
                 next_yaw = current[2] + steer * L
                 next_x = current[0] + math.cos(next_yaw) * L
@@ -376,13 +473,14 @@ if __name__ == "__main__":
     # Define the path file to save the path that is generated by the planner
     path_file = "astar_hybrid_path.json"
     # Visualize the search process and save the gif
-    gif_path = "astar_hybrid_search2.gif"
+    gif_path = "astar_hybrid_search.gif"
+
+    # Define the limits of the environment
     x_lim, y_lim = MinMax(-5, 55), MinMax(-20, 25)
 
     # Define the start and goal positions
     start = (0, 0, math.radians(0.0))
     goal = (50, -10, math.radians(90.0))
 
-    # Create the A* planner
-
+    # Create the Hybrid A* planner
     planner = AStarHybridPathPlanner(start, goal, map_file, weight=5.0, x_lim=x_lim, y_lim=y_lim, path_filename=path_file, gif_name=gif_path)
