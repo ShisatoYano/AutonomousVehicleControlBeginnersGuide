@@ -96,6 +96,11 @@ Planning
 ![](src/simulations/path_planning/astar_path_planning/astar_search.gif)  
 Navigation  
 ![](src/simulations/path_planning/astar_path_planning/astar_navigate.gif)  
+#### Dijkstra
+Planning  
+![](src/simulations/path_planning/dijkstra_path_planning/dijkstra_search.gif)  
+Navigation  
+![](src/simulations/path_planning/dijkstra_path_planning/dijkstra_navigate.gif)  
 ### Path Tracking
 #### Pure pursuit Path Tracking
 ![](src/simulations/path_tracking/pure_pursuit_path_tracking/pure_pursuit_path_tracking.gif)  
