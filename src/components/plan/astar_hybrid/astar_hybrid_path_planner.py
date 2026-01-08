@@ -99,8 +99,8 @@ class AStarHybridPathPlanner:
         
         # Execute search
         self.search()
-        #self.visualize_search(gif_name)
         if visualize:
+            self.visualize_search(gif_name)
             self.visualize_static_path()
 
     def load_grid_from_file(self, file_path):
