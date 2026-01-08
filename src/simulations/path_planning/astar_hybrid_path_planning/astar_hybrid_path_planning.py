@@ -73,9 +73,9 @@ def main():
     vis.add_object(obst_list)
     occ_grid.add_object(obst_list)
     occ_grid.save_map()
-    # Easy Goal = (50,22)
-    # Hard Goal = (50,-10)
-    planner = AStarHybridPathPlanner((0, 0, 0.0), (50, -10, np.radians(270.0)), map_path, weight=5.0, x_lim=x_lim, y_lim=y_lim, path_filename=path_filename, gif_name=search_gif_path)
+
+    planner = AStarHybridPathPlanner((0, 0, 0.0), (50, -10, np.radians(270.0)), map_path, weight=5.0, 
+                                     x_lim=x_lim, y_lim=y_lim, path_filename=path_filename, gif_name=search_gif_path, visualize=show_plot)
 
     # Load sparse path from json file
     with open(path_filename, 'r') as f:
