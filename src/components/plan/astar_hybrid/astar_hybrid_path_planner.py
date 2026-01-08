@@ -247,7 +247,7 @@ class AStarHybridPathPlanner:
                 continue
             closed_set.add(discrete_state)
 
-            # 2. Add to explored_nodes as 2-value tuple for your animator
+            # Add to explored_nodes as 2-value tuple for your animator
             self.explored_nodes.append((pgx, pgy))
 
             # 2. Updated Goal Check: Position AND Heading
@@ -265,7 +265,7 @@ class AStarHybridPathPlanner:
             # MOTION PRIMITIVES: Instead of jumping to adjacent cells, we simulate 
             # three physical steering inputs: Full Left, Straight, and Full Right.
             for steer in self.motion_primitives:
-                L = self.resolution * 3
+                L = self.resolution * 3  # Step size for Euler integration
                 next_yaw = current[2] + steer * L
                 next_x = current[0] + math.cos(next_yaw) * L
                 next_y = current[1] + math.sin(next_yaw) * L
@@ -465,8 +465,6 @@ class AStarHybridPathPlanner:
 
 
 if __name__ == "__main__":
-
- 
 
     # The path to the map file where the planner will search for a path
     map_file = "map.json"
