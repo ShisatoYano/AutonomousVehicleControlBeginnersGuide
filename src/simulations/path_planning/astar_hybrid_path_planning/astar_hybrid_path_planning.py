@@ -21,7 +21,7 @@ sys.path.append(abs_dir_path + relative_path + "obstacle")
 sys.path.append(abs_dir_path + relative_path + "mapping/grid")
 sys.path.append(abs_dir_path + relative_path + "course/cubic_spline_course")
 sys.path.append(abs_dir_path + relative_path + "control/pure_pursuit")
-sys.path.append(abs_dir_path + relative_path + "plan/astar")
+sys.path.append(abs_dir_path + relative_path + "plan/astar_hybrid")
 
 
 # import component modules
@@ -35,7 +35,7 @@ from obstacle import Obstacle
 from obstacle_list import ObstacleList
 from cubic_spline_course import CubicSplineCourse
 from pure_pursuit_controller import PurePursuitController
-from astar_path_planner import AStarPathPlanner
+from astar_hybrid_path_planner import AStarHybridPathPlanner
 from binary_occupancy_grid import BinaryOccupancyGrid
 import json
 
@@ -52,10 +52,10 @@ def main():
 
     # set simulation parameters
     x_lim, y_lim = MinMax(-5, 55), MinMax(-20, 25)
-    navigation_gif_path = abs_dir_path + relative_simulations + "path_planning/astar_hybrid_path_planning/astar_navigate.gif"
+    navigation_gif_path = abs_dir_path + relative_simulations + "path_planning/astar_hybrid_path_planning/astar_hybrid_navigate.gif"
     map_path = abs_dir_path + relative_simulations + "path_planning/astar_hybrid_path_planning/map.json"
     path_filename = abs_dir_path + relative_simulations + "path_planning/astar_hybrid_path_planning/path.json"
-    search_gif_path = abs_dir_path + relative_simulations + "path_planning/astar_hybrid_path_planning/astar_search.gif"
+    search_gif_path = abs_dir_path + relative_simulations + "path_planning/astar_hybrid_path_planning/astar_hybrid_search.gif"
 
 
     vis = GlobalXYVisualizer(x_lim, y_lim, TimeParameters(span_sec=25), show_zoom=False, gif_name=navigation_gif_path)
@@ -63,19 +63,19 @@ def main():
 
     obst_list = ObstacleList()
     obst_list.add_obstacle(Obstacle(State(x_m=10.0, y_m=15.0), length_m=10, width_m=8))
-    obst_list.add_obstacle(Obstacle(State(x_m=40.0, y_m=0.0), length_m=2, width_m=10))
-    # obst_list.add_obstacle(Obstacle(State(x_m=10.0, y_m=-10.0, yaw_rad=np.rad2deg(45)), length_m=5, width_m=5))
-    # obst_list.add_obstacle(Obstacle(State(x_m=30.0, y_m=15.0, yaw_rad=np.rad2deg(10)), length_m=5, width_m=2))
-    # obst_list.add_obstacle(Obstacle(State(x_m=50.0, y_m=15.0, yaw_rad=np.rad2deg(15)), length_m=5, width_m=2))
-    # obst_list.add_obstacle(Obstacle(State(x_m=25.0, y_m=0.0), length_m=2, width_m=2))
-    # obst_list.add_obstacle(Obstacle(State(x_m=35.0, y_m=-15.0), length_m=7, width_m=2))
+    obst_list.add_obstacle(Obstacle(State(x_m=40.0, y_m=-10.0), length_m=2, width_m=10))
+    #obst_list.add_obstacle(Obstacle(State(x_m=10.0, y_m=-10.0, yaw_rad=np.rad2deg(45)), length_m=5, width_m=5))
+    #obst_list.add_obstacle(Obstacle(State(x_m=30.0, y_m=15.0, yaw_rad=np.rad2deg(10)), length_m=5, width_m=2))
+    #obst_list.add_obstacle(Obstacle(State(x_m=50.0, y_m=15.0, yaw_rad=np.rad2deg(15)), length_m=5, width_m=2))
+    #obst_list.add_obstacle(Obstacle(State(x_m=25.0, y_m=0.0), length_m=2, width_m=2))
+    #obst_list.add_obstacle(Obstacle(State(x_m=35.0, y_m=-15.0), length_m=7, width_m=2))
 
     vis.add_object(obst_list)
     occ_grid.add_object(obst_list)
     occ_grid.save_map()
     # Easy Goal = (50,22)
     # Hard Goal = (50,-10)
-    planner = AStarPathPlanner((0, 0), (50, -10), map_path, weight=5.0, x_lim=x_lim, y_lim=y_lim, path_filename=path_filename, gif_name=search_gif_path)
+    planner = AStarHybridPathPlanner((0, 0, 0.0), (50, -10, np.radians(270.0)), map_path, weight=5.0, x_lim=x_lim, y_lim=y_lim, path_filename=path_filename, gif_name=search_gif_path)
 
     # Load sparse path from json file
     with open(path_filename, 'r') as f:
