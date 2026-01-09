@@ -2,6 +2,7 @@
 Test of Binary grid map construction
 
 Author: Shisato Yano
+Updated by: Bhavesh Lokesh Agarwal
 """
 
 from pathlib import Path
