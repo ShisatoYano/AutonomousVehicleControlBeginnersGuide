@@ -1,69 +1,140 @@
-# Hybrid A* Path Planner for Kinematic Vehicles
+# AutonomousVehicleControlBeginnersGuide
+[![Linux_CI](https://github.com/ShisatoYano/AutonomousDrivingSamplePrograms/actions/workflows/Linux_CI.yml/badge.svg)](https://github.com/ShisatoYano/AutonomousDrivingSamplePrograms/actions/workflows/Linux_CI.yml) [![Windows_CI](https://github.com/ShisatoYano/AutonomousDrivingSamplePrograms/actions/workflows/Windows_CI.yml/badge.svg)](https://github.com/ShisatoYano/AutonomousDrivingSamplePrograms/actions/workflows/Windows_CI.yml) [![MacOS_CI](https://github.com/ShisatoYano/AutonomousDrivingSamplePrograms/actions/workflows/MacOS_CI.yml/badge.svg)](https://github.com/ShisatoYano/AutonomousDrivingSamplePrograms/actions/workflows/MacOS_CI.yml) [![CodeFactor](https://www.codefactor.io/repository/github/shisatoyano/autonomousvehiclecontrolbeginnersguide/badge)](https://www.codefactor.io/repository/github/shisatoyano/autonomousvehiclecontrolbeginnersguide)  
 
-This project implements a Hybrid A Path Planning algorithm* designed for vehicles with non-holonomic constraints (like a car). Unlike standard A* which is restricted to grid cells, this planner generates smooth, driveable paths by simulating actual vehicle steering primitives.
-The base code for A* algorithm and beautiful visualization was adopted from https://github.com/ShisatoYano/AutonomousVehicleControlBeginnersGuide/blob/main/src/components/plan/astar/astar_path_planner.py
-
-
-## Highlights
-- Kinematic Constraints: Uses a bicycle model with a minimum turning radius ($R$) to ensure the path can be followed by a real vehicle.
--  Continuous State Space: Operates in $SE(2)$ space $(x, y, \theta)$, allowing for sub-pixel precision in vehicle positioning. 
-- Discretized Search (3D Closed Set): To maintain efficiency, the search prunes nodes using a 3D grid, preventing infinite expansion in continuous space.
-- Heading Awareness: The cost function and goal check incorporate heading (yaw), ensuring the vehicle arrives at the destination facing the correct direction.
-- Grid-to-World Synchronization: Seamlessly integrates with standard 2D occupancy grids while performing high-fidelity continuous math.
+Python sample codes and documents about Autonomous vehicle control algorithm. This project can be used as a technical guide book to study the algorithms and the software architectures for beginners.  
 
 
-## Brief Code explanation 
-1. Motion Primitives: Instead of moving to the 8 immediate neighbors, the planner "drives" forward using three steering commands:
+## Table of Contents
+* [What is this?](#what-is-this)
+* [Goal of this project](#goal-of-this-project)
+* [Requirements](#requirements)
+* [How to use](#how-to-use)
+* [Examples of Simulation](#examples-of-simulation)
+    * [Localization](#localization)
+        * [Extended Kalman Filter Localization](#extended-kalman-filter-localization)
+    * [Mapping](#mapping)
+        * [NDT Map Construction](#ndt-map-construction)
+    * [Path Tracking](#path-tracking)
+        * [Pure pursuit Path Tracking](#pure-pursuit-path-tracking)
+        * [Rear wheel feedback Path Tracking](#rear-wheel-feedback-path-tracking)
+        * [LQR(Linear Quadratic Regulator) Path Tracking](#lqrlinear-quadratic-regulator-path-tracking)
+        * [Stanley steering control Path tracking](#stanley-steering-control-path-tracking)
+    * [Perception](#perception)
+        * [Rectangle fitting Detection](#rectangle-fitting-detection)
+        * [Sensor's Extrinsic Parameters Estimation](#sensors-extrinsic-parameters-estimation)
+* [Documents](#documents)
+* [License](#license)
+* [Use Case](#use-case)
+* [Contribution](#contribution)
+* [Author](#author)
 
-* Steer Full Left ($-1/R$)
-* Straight ($0$)
-* Steer Full Right ($+1/R$)
 
-2. Heuristic Function: The heuristic guides the search using a combination of:
+## What is this?
+This is a sample codes collections about Autonomous vehicle control algorithm. Each source codes are implemented with Python to help your understanding. You can fork this repository and use for studying, education or work freely.  
 
-- Euclidean Distance: Straight-line distance to the target $(x, y)$.
-- Angular Penalty: The shortest angular distance to the goal yaw, calculated using atan2(sin, cos) to handle the $180^\circ$ to $-180^\circ$ boundary.
 
-3. Coordinate Systems: 
+## Goal of this project
+I want to release my own technical book about Autonomous Vehicle algorithms in the future. The book will include all of codes and documents in this repository as contents.  
 
-- World Coordinates: Used for simulation and kinematic math (floats in meters/radians).
-- Grid Indices: Used for collision checking against the occupancy grid and for visualization (integers).
 
-## Tuning Parameters
-To adapt the planner for different vehicles or environments, you can modify the following parameters in the ```__init__``` method:
+## Requirements
+Please satisfy with the following requirements on native or VM Linux in advance.  
+For running each sample codes:  
+* [Python 3.13.x](https://www.python.org/)
+* [Matplotlib](https://matplotlib.org/)
+* [NumPy](https://numpy.org/)
+* [SciPy](https://scipy.org/)
 
-1. Kinematic Constraints
+For development:
+* [pytest](https://docs.pytest.org/en/7.4.x/) (for unit tests)
+* [pytest-cov](https://github.com/pytest-dev/pytest-cov) (for coverage measurement)
 
-- ```self. R``` (Minimum Turning Radius): Defines how sharply the vehicle can turn. A larger $R$ creates wider turns, while a smaller $R$ allows for tighter maneuvers in cluttered spaces.
-- ```self.motion_primitives```: This list determines the steering angles tested at each step. Adding more steering values can result in smoother paths, but increases computation time.
- 
-2. Search Performance
+For setting up the environment with Docker:
+* [VS Code](https://code.visualstudio.com/)
+* [Docker](https://www.docker.com/)
 
-- ```self.resolution```: Inferred from the grid map. It defines the size of the "bins" for the discrete closed set. Smaller resolution improves accuracy but significantly increases the number of nodes explored.
-- ```yaw_res```: The discretization of the heading (inside the search function). Narrower bins (e.g., $5^\circ$ vs $10^\circ$) force the planner to be more precise with orientation but make the search slower.
 
-3. Cost and Heuristic Weights
+## How to use
+1. Clone this repository  
+    ```bash
+    $ git clone https://github.com/ShisatoYano/AutonomousVehicleControlBeginnersGuide
+    ```
 
-- ```self.weight```: The primary A* weight. Increasing this makes the search more "greedy" (moving faster toward the goal), while decreasing it makes the search more "exhaustive" (finding a more optimal path).
+2. Set up the environment for running each codes
+    * Set up with Docker on WSL:
+        * Before cloning thi repo, [install Docker](https://docs.docker.com/desktop/install/linux-install/) in advance
+        * Clone this repo following the above Step 1
+        * Open this repo's folder by VSCode
+        * [Create Dev Container](https://code.visualstudio.com/docs/devcontainers/create-dev-container)
+        * And then, all required libraries are installed automatically
+3. Execute unit tests to confirm the environment were installed successfully
+    ```bash
+    $ . run_test_suites.sh
+    ```
+4. Execute a python script at src/simulations directory
+    * For example, when you want to execute localization simulation of Extended Kalman Filter:
+        ```bash
+        $ python src/simulations/localization/extended_kalman_filter_localization/extended_kalman_filter_localization.py
+        ```
+5. Add star to this repository if you like it!!
 
-- ```self.yaw_cost_weight```: Controls how much the planner prioritizes reaching the correct Goal Yaw.
-    - High weight: The vehicle will start turning much earlier to align its heading with the goal.
-    - Low weight: The vehicle will focus on reaching the $(x, y)$ coordinates first, potentially resulting in sharp "corrective" turns at the end. 
 
-4. Goal Tolerance
-- ```dist_tolerance```: How close the vehicle needs to be to the goal point in meters.
-- ```yaw_tolerance```: The allowable heading error (in radians) at the goal. Tight tolerances ensure high precision but may take longer to solve.
+## Examples of Simulation
+### Localization
+#### Extended Kalman Filter Localization
+![](src/simulations/localization/extended_kalman_filter_localization/extended_kalman_filter_localization.gif)  
+#### Unscented Kalman Filter Localization
+![](src/simulations/localization/unscented_kalman_filter_localization/unscented_kalman_filter_localization.gif)  
+#### EKF(Blue) vs UKF(Cian)
+![](src/simulations/localization/ekf_vs_ukf_comparison/ekf_vs_ukf_comparison.gif)  
+### Mapping
+#### NDT Map Construction
+![](src/simulations/mapping/ndt_map_construction/ndt_map_construction.gif)  
+### Path Planning
+#### A*
+Planning  
+![](src/simulations/path_planning/astar_path_planning/astar_search.gif)  
+Navigation  
+![](src/simulations/path_planning/astar_path_planning/astar_navigate.gif)  
+### Path Tracking
+#### Pure pursuit Path Tracking
+![](src/simulations/path_tracking/pure_pursuit_path_tracking/pure_pursuit_path_tracking.gif)  
+#### Rear wheel feedback Path Tracking
+![](src/simulations//path_tracking/rear_wheel_feedback_tracking/rear_wheel_feedback_tracking.gif)  
+#### LQR(Linear Quadratic Regulator) Path Tracking
+![](src/simulations/path_tracking/lqr_path_tracking/lqr_path_tracking.gif)  
+#### Stanley steering control Path Tracking
+![](src/simulations/path_tracking/stanley_path_tracking/stanley_path_tracking.gif)  
+### Perception
+#### Rectangle fitting Detection
+![](src/simulations/perception/point_cloud_rectangle_fitting/point_cloud_rectangle_fitting.gif)  
+#### Sensor's Extrinsic Parameters Estimation
+Estimation by Unscented Kalman Filter  
+![](src/simulations/perception/sensor_auto_calibration/sensor_auto_calibration.gif)  
 
-## References:
-1. Gentle introduction to Hybrid A star : https://medium.com/@junbs95/gentle-introduction-to-hybrid-a-star-9ce93c0d7869
-2. Practical Search Techniques in Path Planning for Autonomous Driving: https://ai.stanford.edu/~ddolgov/papers/dolgov_gpp_stair08.pdf
 
-## Simulations
+## Documents
+Design documents of each Python programs are prepared here. The documents are still not completed. They have been being updated. If you found any problems in them, please tell me by creating an issue.  
+[Documents link](/doc/DESIGN_DOCUMENT.md)  
 
-![Path Search](https://github.com/user-attachments/assets/6b3f8c90-2c5c-453e-81c8-6240fa7810a8)
 
-![Path Tracking with Pure Pursuit](https://github.com/user-attachments/assets/f1ab4ef8-9efa-4a7e-804d-edb1b0299683)
+## License
+MIT  
 
-### Thanks!
-Please let me know if you have questions.
 
+## Use Case
+I started this project to study an algorithm and software development for Autonomous Vehicle system by myself. You can also use this repo for your own studying, education, researching and development.  
+
+If this project helps your task, please let me know by creating a issue.  
+Any paper, animation, video as your output, always welcome!! It will encourage me to continue this project.  
+
+Your comment and output is added to [this list of user comments](/USERS_COMMENTS.md).  
+
+
+## Contribution
+Any contribution by creating an issue or sending a pull request is welcome!! Please check [this document about how to contribute](/HOWTOCONTRIBUTE.md).  
+
+
+## Author
+
+[Shisato Yano](https://github.com/ShisatoYano)  
