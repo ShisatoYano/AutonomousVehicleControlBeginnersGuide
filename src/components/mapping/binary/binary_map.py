@@ -2,11 +2,13 @@
 binary_map.py
 
 Author: Shisato Yano
+Updated by: Bhavesh Lokesh Agarwal
 """
 
 import numpy as np
 import sys
 from pathlib import Path
+import matplotlib.patches as patches
 sys.path.append(str(Path(__file__).absolute().parent) + "/../grid")
 from grid_map import GridMap
 from grid_map import FloatGrid
@@ -52,4 +54,20 @@ class BinaryMap:
         elems: List of plot object
         """
 
-        pass
+        for vector_idx in range(self.map.all_grids_num):
+            grid_data = self.map.get_grid_data(vector_idx)
+            
+            if grid_data.get_data() > 0.5:
+                center_x, center_y = self.map.calculate_grid_center_xy_pos_from_vector_index(vector_idx)
+                bottom_left_x = center_x - self.map.resolution_m / 2.0
+                bottom_left_y = center_y - self.map.resolution_m / 2.0
+                
+                rect = patches.Rectangle((bottom_left_x, bottom_left_y),
+                                        self.map.resolution_m,
+                                        self.map.resolution_m,
+                                        linewidth=0.5,
+                                        edgecolor='k',
+                                        facecolor='gray',
+                                        alpha=0.5)
+                axes.add_patch(rect)
+                elems.append(rect)
