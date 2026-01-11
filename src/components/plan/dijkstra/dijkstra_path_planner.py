@@ -202,6 +202,12 @@ class DijkstraPathPlanner:
             print("Error: No explored nodes. Ensure search() is executed before visualize_search().")
             return
 
+        # Reduce frames by sampling every nth node to prevent memory exhaustion
+        max_frames = 2000  # Maximum number of animation frames
+        frame_step = max(1, len(self.explored_nodes) // max_frames)
+        sampled_nodes = self.explored_nodes[::frame_step]
+        
+        print(f"Reducing animation frames from {len(self.explored_nodes)} to {len(sampled_nodes)} nodes.")
 
         figure = plt.figure(figsize=(10, 8))
         axes = figure.add_subplot(111)
@@ -209,12 +215,13 @@ class DijkstraPathPlanner:
         axes.set_xlabel("X [m]", fontsize=15)
         axes.set_ylabel("Y [m]", fontsize=15)
 
+        self.sampled_nodes = sampled_nodes  # Store for update_frame access
 
         self.anime = anm.FuncAnimation(
             figure,
             self.update_frame,
             fargs=(axes, self.path),
-            frames=len(self.explored_nodes) + len(self.path),  # Include frames for the path
+            frames=len(sampled_nodes) + len(self.path),  # Include frames for the path
             interval=50,
             repeat=False,
         )
@@ -222,10 +229,23 @@ class DijkstraPathPlanner:
         if gif_name is not None:
             try:
                 print("Saving animation...")
-                self.anime.save(gif_name, writer="pillow")
+                # Use FFmpeg writer if available for better memory efficiency
+                try:
+                    self.anime.save(gif_name, writer="pillow", fps=20, 
+                                  savefig_kwargs={'bbox_inches': 'tight', 'dpi': 100})
+                except Exception:
+                    # Fallback to pillow with reduced quality
+                    self.anime.save(gif_name, writer="pillow")
                 print("Animation saved successfully.")
             except Exception as e:
                 print(f"Error saving animation: {e}")
+                # Try saving as MP4 instead if GIF fails
+                try:
+                    mp4_name = gif_name.replace('.gif', '.mp4')
+                    self.anime.save(mp4_name, writer="ffmpeg", fps=20)
+                    print(f"Saved as MP4 instead: {mp4_name}")
+                except Exception as e2:
+                    print(f"Both GIF and MP4 saving failed: {e2}")
         else:
             plt.show()
 
@@ -242,22 +262,37 @@ class DijkstraPathPlanner:
             axes: Matplotlib axes to draw on.
             path: The reconstructed path to draw after exploration.
         """
+        # Create a copy of the original grid to avoid modifying the source
+        display_grid = self.grid.copy()
+        
         # Exploration phase
-        if i < len(self.explored_nodes):
-            # Mark the current node as explored
-            node = self.explored_nodes[i]
-            grid_x = int(node[0])
-            grid_y = int(node[1])
-            self.grid[grid_y, grid_x] = 0.25  # Set a value to represent explored nodes
+        if i < len(self.sampled_nodes):
+            # Mark explored nodes up to current frame
+            for j in range(i + 1):
+                node = self.sampled_nodes[j]
+                grid_x = int(node[0])
+                grid_y = int(node[1])
+                if 0 <= grid_x < display_grid.shape[1] and 0 <= grid_y < display_grid.shape[0]:
+                    display_grid[grid_y, grid_x] = 0.25  # Set a value to represent explored nodes
 
         # Path reconstruction phase
         else:
-            path_index = i - len(self.explored_nodes)
-            if path_index < len(path):
-                node = path[path_index]
+            # Show all explored nodes
+            for node in self.sampled_nodes:
                 grid_x = int(node[0])
                 grid_y = int(node[1])
-                self.grid[grid_y, grid_x] = 0.5  # Set a value to represent the path
+                if 0 <= grid_x < display_grid.shape[1] and 0 <= grid_y < display_grid.shape[0]:
+                    display_grid[grid_y, grid_x] = 0.25
+                    
+            # Show path up to current frame
+            path_index = i - len(self.sampled_nodes)
+            if path_index < len(path):
+                for j in range(path_index + 1):
+                    node = path[j]
+                    grid_x = int(node[0])
+                    grid_y = int(node[1])
+                    if 0 <= grid_x < display_grid.shape[1] and 0 <= grid_y < display_grid.shape[0]:
+                        display_grid[grid_y, grid_x] = 0.5  # Set a value to represent the path
 
         # Clear the axes and redraw the updated grid
         axes.clear()
@@ -275,8 +310,7 @@ class DijkstraPathPlanner:
         # Create a colormap
         custom_cmap = ListedColormap(colors)
 
-
-        axes.imshow(self.grid, extent=[self.x_range[0], self.x_range[-1], self.y_range[0], self.y_range[-1]],
+        axes.imshow(display_grid, extent=[self.x_range[0], self.x_range[-1], self.y_range[0], self.y_range[-1]],
                     origin='lower', cmap=custom_cmap, alpha=0.8)
         axes.plot(self.start[0], self.start[1], 'go', label="Start")
         axes.plot(self.goal[0], self.goal[1], 'ro', label="Goal")
