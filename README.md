@@ -3,6 +3,8 @@
 
 Python sample codes and documents about Autonomous vehicle control algorithm. This project can be used as a technical guide book to study the algorithms and the software architectures for beginners.  
 
+![](src/simulations/mapping/ndt_map_construction/ndt_map_construction.gif)  
+
 
 ## Table of Contents
 * [What is this?](#what-is-this)
@@ -12,8 +14,13 @@ Python sample codes and documents about Autonomous vehicle control algorithm. Th
 * [Examples of Simulation](#examples-of-simulation)
     * [Localization](#localization)
         * [Extended Kalman Filter Localization](#extended-kalman-filter-localization)
+        * [Unscented Kalman Filter Localization](#unscented-kalman-filter-localization)
+        * [Particle Filter Localization](#particle-filter-localization)
     * [Mapping](#mapping)
         * [NDT Map Construction](#ndt-map-construction)
+    * [Path Planning](#path-planning)
+        * [A*](#a)
+        * [Dijkstra](#dijkstra)
     * [Path Tracking](#path-tracking)
         * [Pure pursuit Path Tracking](#pure-pursuit-path-tracking)
         * [Rear wheel feedback Path Tracking](#rear-wheel-feedback-path-tracking)
@@ -85,8 +92,10 @@ For setting up the environment with Docker:
 ![](src/simulations/localization/extended_kalman_filter_localization/extended_kalman_filter_localization.gif)  
 #### Unscented Kalman Filter Localization
 ![](src/simulations/localization/unscented_kalman_filter_localization/unscented_kalman_filter_localization.gif)  
-#### EKF(Blue) vs UKF(Cian)
-![](src/simulations/localization/ekf_vs_ukf_comparison/ekf_vs_ukf_comparison.gif)  
+#### Particle Filter Localization
+![](src/simulations/localization/particle_filter_localization/particle_filter_localization.gif)  
+#### EKF(Blue) vs UKF(Cyan) vs PF(Lime)
+![](src/simulations/localization/ekf_ukf_pf_comparison/ekf_ukf_pf_comparison.gif)    
 ### Mapping
 #### NDT Map Construction
 ![](src/simulations/mapping/ndt_map_construction/ndt_map_construction.gif)  
@@ -96,6 +105,11 @@ Planning
 ![](src/simulations/path_planning/astar_path_planning/astar_search.gif)  
 Navigation  
 ![](src/simulations/path_planning/astar_path_planning/astar_navigate.gif)  
+#### Dijkstra
+Planning(Reduce frames by sampling every nth node to prevent memory exhaustion)  
+![](src/simulations/path_planning/dijkstra_path_planning/dijkstra_search.gif)  
+Navigation  
+![](src/simulations/path_planning/dijkstra_path_planning/dijkstra_navigate.gif)  
 ### Path Tracking
 #### Pure pursuit Path Tracking
 ![](src/simulations/path_tracking/pure_pursuit_path_tracking/pure_pursuit_path_tracking.gif)  
@@ -136,5 +150,4 @@ Any contribution by creating an issue or sending a pull request is welcome!! Ple
 
 
 ## Author
-
 [Shisato Yano](https://github.com/ShisatoYano)  
