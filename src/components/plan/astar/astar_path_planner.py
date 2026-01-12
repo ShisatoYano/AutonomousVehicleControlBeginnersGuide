@@ -109,6 +109,7 @@ class AStarPathPlanner:
     def search(self):
         start_idx = (int((self.start[0] - self.x_range[0]) /self.resolution),
                      int((self.start[1] - self.y_range[0]) /self.resolution))
+                     
         goal_idx = (int((self.goal[0] - self.x_range[0]) /self.resolution),
                     int((self.goal[1] - self.y_range[0]) /self.resolution))
 
