@@ -17,6 +17,7 @@ Python sample codes and documents about Autonomous vehicle control algorithm. Th
         * [Unscented Kalman Filter Localization](#unscented-kalman-filter-localization)
         * [Particle Filter Localization](#particle-filter-localization)
     * [Mapping](#mapping)
+        * [Binary Occupancy Grid Map Construction](#binary-occupancy-grid-map-construction)
         * [NDT Map Construction](#ndt-map-construction)
     * [Path Planning](#path-planning)
         * [A*](#a)
@@ -98,6 +99,8 @@ For setting up the environment with Docker:
 #### EKF(Blue) vs UKF(Cyan) vs PF(Lime)
 ![](src/simulations/localization/ekf_ukf_pf_comparison/ekf_ukf_pf_comparison.gif)    
 ### Mapping
+#### Binary Occupancy Grid Map Construction
+![](src/simulations/mapping/binary_grid_map_construction/binary_grid_map_construction.gif)  
 #### NDT Map Construction
 ![](src/simulations/mapping/ndt_map_construction/ndt_map_construction.gif)  
 ### Path Planning
