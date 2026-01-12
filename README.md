@@ -20,6 +20,7 @@ Python sample codes and documents about Autonomous vehicle control algorithm. Th
         * [NDT Map Construction](#ndt-map-construction)
     * [Path Planning](#path-planning)
         * [A*](#a)
+        * [Hybrid A*](#hybrid-a)
         * [Dijkstra](#dijkstra)
     * [Path Tracking](#path-tracking)
         * [Pure pursuit Path Tracking](#pure-pursuit-path-tracking)
@@ -105,6 +106,11 @@ Planning
 ![](src/simulations/path_planning/astar_path_planning/astar_search.gif)  
 Navigation  
 ![](src/simulations/path_planning/astar_path_planning/astar_navigate.gif)  
+#### Hybrid A*
+Planning  
+![](src/simulations/path_planning/astar_hybrid_path_planning/astar_hybrid_search.gif)  
+Navigation  
+![](src/simulations/path_planning/astar_hybrid_path_planning/astar_hybrid_navigate.gif)  
 #### Dijkstra
 Planning(Reduce frames by sampling every nth node to prevent memory exhaustion)  
 ![](src/simulations/path_planning/dijkstra_path_planning/dijkstra_search.gif)  
