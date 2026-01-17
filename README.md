@@ -18,6 +18,7 @@ Python sample codes and documents about Autonomous vehicle control algorithm. Th
         * [Particle Filter Localization](#particle-filter-localization)
     * [Mapping](#mapping)
         * [Binary Occupancy Grid Map Construction](#binary-occupancy-grid-map-construction)
+        * [Cost Map Construction](#cost-map-construction)
         * [NDT Map Construction](#ndt-map-construction)
     * [Path Planning](#path-planning)
         * [A*](#a)
@@ -101,6 +102,8 @@ For setting up the environment with Docker:
 ### Mapping
 #### Binary Occupancy Grid Map Construction
 ![](src/simulations/mapping/binary_grid_map_construction/binary_grid_map_construction.gif)  
+#### Cost Map Construction
+![](src/simulations/mapping/cost_grid_map_construction/cost_grid_map_construction.gif)  
 #### NDT Map Construction
 ![](src/simulations/mapping/ndt_map_construction/ndt_map_construction.gif)  
 ### Path Planning
