@@ -24,6 +24,7 @@ Python sample codes and documents about Autonomous vehicle control algorithm. Th
         * [A*](#a)
         * [Hybrid A*](#hybrid-a)
         * [Dijkstra](#dijkstra)
+        * [RRT](#rrt)
     * [Path Tracking](#path-tracking)
         * [Pure pursuit Path Tracking](#pure-pursuit-path-tracking)
         * [Rear wheel feedback Path Tracking](#rear-wheel-feedback-path-tracking)
