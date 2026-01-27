@@ -10,7 +10,7 @@ import itertools
 import numpy as np
 from collections import deque
 from pathlib import Path
-from math import sin, cos
+from math import pi, sin, cos
 from scipy.optimize import least_squares
 from math import sin, cos, atan2
 
@@ -20,214 +20,156 @@ sys.path.append(abs_dir_path + "/../../search/kd_tree")
 from l_shape_fitting_detector import LShapeFittingDetector
 from kd_tree import KdTree
 from rectangle import Rectangle
-    
+import numpy as np
+from scipy.optimize import least_squares
+from math import sin, cos, atan2
 
-class RobustRectangleFittingDetector(LShapeFittingDetector):
-    def __init__(self, min_rng_th_m=3.0, rng_th_rate=0.1, f_scale=1.0):
-        super().__init__(min_rng_th_m, rng_th_rate)
-        self.f_scale = f_scale  # Outlier threshold (m) for robust loss
-        # Temporal storage: {object_id: [cx, cy, theta, w, l]}
-        self.prev_rects = {}
-        self.history = []  # [time, pred_w, pred_l, true_w, true_l]
-        self.time_count = 0.0
-        self.dt = 0.1 # Simulation step
+class OptimizedLShapeDetector(LShapeFittingDetector):
+    def __init__(self, min_rng_th_m=3.0, rng_th_rate=0.1, change_angle_deg=1.0):
+        super().__init__(min_rng_th_m, rng_th_rate, change_angle_deg)
+        self.f_scale = 0.05  # Tight tolerance for the final polish
 
-    def _get_initial_guess(self, points_array):
-        cx, cy = np.mean(points_array, axis=1)
-        
-        # Search for a nearby rectangle from the previous frame
-        best_id = None
-        min_dist = 3.0 # 2-meter tracking threshold
-        
-        for rect_id, params in self.prev_rects.items():
-            dist = np.hypot(cx - params[0], cy - params[1])
-            if dist < min_dist:
-                min_dist = dist
-                best_id = rect_id
-        
-        # If found, use previous params as the warm start
-        if best_id is not None:
-            return self.prev_rects[best_id]
-        
-        # Enhanced PCA Initializer
-        # 2. PCA for Orientation
-        cov = np.cov(points_array)
-        evals, evecs = np.linalg.eig(cov)
-        sort_indices = np.argsort(evals)[::-1]
-        primary_vec = evecs[:, sort_indices[0]]
-        theta_init = atan2(primary_vec[1], primary_vec[0])
-        
-        # 3. Transform to Local Frame to find TRUE extents
-        cos_t, sin_t = cos(theta_init), sin(theta_init)
-        # Calculate local coordinates relative to a temporary origin (the mean)
-        mx, my = np.mean(points_array, axis=1)
-        dx_raw = cos_t * (points_array[0,:] - mx) + sin_t * (points_array[1,:] - my)
-        dy_raw = -sin_t * (points_array[0,:] - mx) + cos_t * (points_array[1,:] - my)
-        
-        # 4. Calculate dimensions
-        w_init = (np.max(dx_raw) - np.min(dx_raw)) + 0.1
-        l_init = (np.max(dy_raw) - np.min(dy_raw)) + 0.1
-        
-        # 5. Calculate NEW center based on the midpoint of extents
-        # This is more robust for "long big rectangles" than the mean
-        cx_local = (np.max(dx_raw) + np.min(dx_raw)) / 2.0
-        cy_local = (np.max(dy_raw) + np.min(dy_raw)) / 2.0
-        
-        # Rotate local center back to global frame
-        cx = mx + (cx_local * cos_t - cy_local * sin_t)
-        cy = my + (cx_local * sin_t + cy_local * cos_t)
-        
-        return [cx, cy, theta_init, w_init, l_init]
-
-    def _calculate_residuals(self, params, points, prev_params=None):
-        """
-        Calculates distance to closest rectangle edge.
-        """
+    def _calculate_residuals(self, params, points, weights):
+        """Standard SDF residuals used for the final polish."""
         cx, cy, theta, w, l = params
         cos_t, sin_t = np.cos(theta), np.sin(theta)
         
+        # Transform points to box-local frame
         dx = cos_t * (points[0,:] - cx) + sin_t * (points[1,:] - cy)
         dy = -sin_t * (points[0,:] - cx) + cos_t * (points[1,:] - cy)
         
-        # 1. Edge distances (Core Data)
-        res_x = np.abs(np.abs(dx) - w/2.0)
-        res_y = np.abs(np.abs(dy) - l/2.0)
-        base_res = np.minimum(res_x, res_y)
+        # Distance to box edges
+        err_x = np.abs(dx) - (w / 2.0)
+        err_y = np.abs(dy) - (l / 2.0)
         
-        # 2. Constraints (Using np.maximum to avoid the ValueError)
-        span_w = np.max(dx) - np.min(dx)
-        span_l = np.max(dy) - np.min(dy)
+        # Signed Distance Field (SDF) logic
+        res = np.sqrt(np.maximum(err_x, 0)**2 + np.maximum(err_y, 0)**2) + \
+              np.minimum(np.maximum(err_x, err_y), 0)
         
-        # Penalty if box is much BIGGER than points (Stops 18m explosion)
-        tightness_penalty = np.maximum(0, np.array([w - (span_w + 0.5), l - (span_l + 0.5)])) * 2.0
+        return res * np.sqrt(weights)
+
+    def _calculate_rectangle(self, points_array):
+        # --- STAGE 1: THE ORIGINAL ZHANG SWEEP ---
+        # This finds the correct global orientation (0 or 90 deg)
+        min_cost_angle = (-float("inf"), None)
+        initial_angle_rad = 0.0
+        end_angle_rad = np.pi / 2.0 - self.CHANGE_ANGLE_RAD
         
-        # Penalty if box is much SMALLER than 0.8m (Stops the 0.2m collapse)
-        min_size_penalty = np.maximum(0, np.array([0.8 - w, 0.8 - l])) * 5.0
+        for angle_rad in np.arange(initial_angle_rad, end_angle_rad, self.CHANGE_ANGLE_RAD):
+            rotated_points = self._rotate_points(points_array, angle_rad)
+            cost = self._calculate_variance_criterion(rotated_points)
+            if min_cost_angle[0] < cost: 
+                min_cost_angle = (cost, angle_rad)
+        
+        # Zhang's result
+        best_angle = min_cost_angle[1]
+        pts_at_best = self._rotate_points(points_array, best_angle)
+        c1, c2 = pts_at_best[0, :], pts_at_best[1, :]
+        
+        # Initial box parameters from Zhang sweep
+        w_init = max(c1) - min(c1)
+        l_init = max(c2) - min(c2)
+        cx_init = (max(c1) + min(c1)) / 2.0
+        cy_init = (max(c2) + min(c2)) / 2.0
+        
+        # Convert local center back to world coordinates
+        cos_a, sin_a = cos(best_angle), sin(best_angle)
+        cx_world = cos_a * cx_init - sin_a * cy_init
+        cy_world = sin_a * cx_init + cos_a * cy_init
+        
+        init_guess = [cx_world, cy_world, best_angle, w_init, l_init]
 
-        # 3. Momentum
-        momentum = []
-        if prev_params is not None:
-            # prev_params is likely a list or array [cx, cy, theta, w, l]
-            momentum = [(w - prev_params[3]) * 0.3, (l - prev_params[4]) * 0.3]
+        # --- STAGE 2: THE OPTIMIZATION POLISH ---
+        # We constrain the optimizer to only search +/- 5 degrees of the Zhang result.
+        # This prevents the 15-degree drift or 45-degree diagonal issues.
+        lower = np.array([-np.inf, -np.inf, best_angle - 0.2, w_init*0.8, l_init*0.8])
+        upper = np.array([np.inf, np.inf, best_angle + 0.2, w_init*1.2, l_init*1.2])
+        
+        # Simple uniform weights
+        weights = np.ones(points_array.shape[1])
+        
+        try:
+            #print(f"Original params: cx={cx_world:.2f}, cy={cy_world:.2f}, theta={np.degrees(best_angle):.2f} deg, w={w_init:.2f}, l={l_init:.2f}")
+            res = least_squares(
+                self._calculate_residuals, init_guess,
+                args=(points_array, weights),
+                bounds=(lower, upper),
+                loss='huber', f_scale=.01
+            )
+            cx, cy, theta, w, l = res.x
+            #print(f"Optimization succeeded with cost {res.cost:.4f}")
+            #print(f"Refined params: cx={cx:.2f}, cy={cy:.2f}, theta={np.degrees(theta):.2f} deg, w={w:.2f}, l={l:.2f}")
+        except:
+            # Fallback to Zhang result if optimization fails
+            cx, cy, theta, w, l = init_guess
 
-        return np.concatenate([base_res, tightness_penalty, min_size_penalty, momentum])
-
-    def _create_rectangle_obj(self, cx, cy, theta, w, l):
-        """
-        Helper to map [cx, cy, theta, w, l] back to Yano's Rectangle(a, b, c).
-        """
+        # --- STAGE 3: CREATE FINAL RECTANGLE ---
         cos_t, sin_t = cos(theta), sin(theta)
         c1_mid = cx * cos_t + cy * sin_t
         c2_mid = -cx * sin_t + cy * cos_t
         
-        c_params = [c1_mid - w/2.0, c2_mid - l/2.0, 
-                    c1_mid + w/2.0, c2_mid + l/2.0]
-        
         return Rectangle(a=[cos_t, -sin_t, cos_t, -sin_t],
                          b=[sin_t, cos_t, sin_t, cos_t],
-                         c=c_params)
-
-    def _optimize_rectangle(self, points_array, prev_params=None):
-        # 1. Get the initial guess from PCA
-        initial_params = self._get_initial_guess(points_array)
-        
-        # If we have previous params, use them as the warm start (initial guess)
-        if prev_params is not None:
-            initial_params = prev_params
-            # We still update the center to the current mean to keep up with motion
-            initial_params[0], initial_params[1] = np.mean(points_array, axis=1)
-        # 2. Define bounds (as you have them)
-        # [cx, cy, theta, w, l]
-        lower_bounds = [-np.inf, -np.inf, -np.pi, 0.2, 0.2]
-        upper_bounds = [np.inf, np.inf, np.pi, 40.0, 40.0]
-
-        # 3. SAFETY: Clip the initial guess to be strictly within bounds
-        # This prevents the "x0 is infeasible" error
-        for i in range(len(initial_params)):
-            # We use a small epsilon offset to ensure it's not exactly on the edge
-            eps = 1e-3
-            initial_params[i] = np.clip(initial_params[i], 
-                                        lower_bounds[i] + eps, 
-                                        upper_bounds[i] - eps)
-        
-        # 4. Handle Angle Wrapping specifically
-        # Ensure theta is in [-pi, pi]
-        #initial_params[2] = atan2(sin(initial_params[2]), cos(initial_params[2]))
-
-        # 5. Run the optimizer
-        res = least_squares(
-            self._calculate_residuals,
-            initial_params,
-            args=(points_array,prev_params),
-            loss='soft_l1',
-            f_scale= .5,
-            bounds=(lower_bounds, upper_bounds),
-            method='trf'
-        )
-        return res.x
-
-    def _search_rectangles(self, clusters_list):
-        new_rects_params = {}
-        rectangles_list = []
-        
-        print(f"\n--- Frame Debug: {len(clusters_list)} clusters found by LiDAR ---")
-
-        for i, cluster in enumerate(clusters_list):
-            # 1. Check Point Count
-            if len(cluster) < 5: 
-                print(f"  Cluster {i}: Dropped (Too sparse: {len(cluster)} points)")
-                continue
-                
-            array_list = [point.get_point_array() for point in list(cluster)]
-            points = np.concatenate(array_list, 1)
-
-            # 2. Check Data Association
-            prev_params = self._get_matching_prev_params(points)
-            if prev_params:
-                print(f"  Cluster {i}: Matched to previous Object (Center: {prev_params[0]:.1f}, {prev_params[1]:.1f})")
-            else:
-                print(f"  Cluster {i}: No match, starting fresh (PCA)")
-
-            try:
-                # 3. Check Optimization
-                opt_params = self._optimize_rectangle(points, prev_params)
-                
-                # Check for "Exploding" dimensions
-                if opt_params[3] > 15.0 or opt_params[4] > 15.0:
-                    print(f"  Cluster {i}: WARNING! Dimensions exploded (w={opt_params[3]:.1f}, l={opt_params[4]:.1f})")
-
-                new_rects_params[i] = opt_params
-                rectangles_list.append(self._create_rectangle_obj(*opt_params))
-                print(f"  Cluster {i}: SUCCESS (w={opt_params[3]:.2f}, l={opt_params[4]:.2f})")
-
-            except Exception as e:
-                # This catches the "x0 is infeasible" and other math errors
-                print(f"  Cluster {i}: FAILED Optimization: {str(e)}")
-
-        self.prev_rects = new_rects_params
-        self.latest_rectangles_list = rectangles_list
+                         c=[c1_mid - w/2.0, c2_mid - l/2.0, c1_mid + w/2.0, c2_mid + l/2.0])
     
-    def _get_matching_prev_params(self, current_points):
+    def _apply_temporal_filter(self, current_params, prev_params):
         """
-        Finds the parameters from the previous frame that 
-        belong to the current cluster based on center distance.
+        Smooths the box movement to stop high-frequency jitter.
         """
-        if not self.prev_rects:
-            return None
-
-        # Calculate current cluster center (rough estimate)
-        cx_curr, cy_curr = np.mean(current_points, axis=1)
+        # Alpha: 1.0 = No smoothing, 0.1 = Very heavy smoothing
+        alpha_pos = 0.4 
+        alpha_rot = 0.2 # Lower alpha for rotation makes the heading more stable
         
-        best_match_params = None
-        min_dist = 2.5 # Threshold in meters (adjustable based on vehicle speed)
-
-        for rect_id, params in self.prev_rects.items():
-            # params: [cx, cy, theta, w, l]
-            prev_cx, prev_cy = params[0], params[1]
-            dist = np.hypot(cx_curr - prev_cx, cy_curr - prev_cy)
+        smoothed = np.zeros(5)
+        # Smooth Position (cx, cy) and Size (w, l)
+        for i in [0, 1, 3, 4]:
+            smoothed[i] = prev_params[i] + alpha_pos * (current_params[i] - prev_params[i])
             
-            if dist < min_dist:
-                min_dist = dist
-                best_match_params = params
+        # Smooth Rotation (theta) with Angle Wrapping
+        diff = (current_params[2] - prev_params[2] + np.pi) % (2 * np.pi) - np.pi
+        smoothed[2] = prev_params[2] + alpha_rot * diff
         
-        return best_match_params
+        return smoothed
+    
+
+class DualLShapeDetector:
+    def __init__(self):
+        # We initialize both the original and the optimized versions
+        self.geometric_detector = LShapeFittingDetector()
+        self.optimized_detector = OptimizedLShapeDetector()
+        self.latest_rectangles_list = []
+
+    def update(self, point_cloud):
+        # 1. Update both detectors
+        self.geometric_detector.update(point_cloud)
+        self.optimized_detector.update(point_cloud)
+
+        # 2. Combine results for the vehicle state if needed
+        # We show both in the list so they can both be drawn
+        self.latest_rectangles_list = (self.geometric_detector.latest_rectangles_list + 
+                                       self.optimized_detector.latest_rectangles_list)
+
+    def draw(self, axes, elems, x_m, y_m, yaw_rad):
+        def custom_draw(rect_obj, color_code):
+            """A temporary replacement for the hard-coded draw logic"""
+            # Transform contour
+            transformed_contour = rect_obj.contour.homogeneous_transformation(x_m, y_m, yaw_rad)
+            rectangle_plot, = axes.plot(transformed_contour.get_x_data(),
+                                        transformed_contour.get_y_data(),
+                                        color=color_code, ls='-', linewidth=2)
+            elems.append(rectangle_plot)
+
+            # Transform center
+            transformed_center = rect_obj.center_xy.homogeneous_transformation(x_m, y_m, yaw_rad)
+            center_plot, = axes.plot(transformed_center.get_x_data(),
+                                     transformed_center.get_y_data(),
+                                     marker='.', color=color_code)
+            elems.append(center_plot)
+
+        # 1. Draw Geometric results in Blue
+        for rect in self.geometric_detector.latest_rectangles_list:
+            custom_draw(rect, 'b')
+
+        # 2. Draw Optimized results in Red
+        for rect in self.optimized_detector.latest_rectangles_list:
+            custom_draw(rect, 'r')

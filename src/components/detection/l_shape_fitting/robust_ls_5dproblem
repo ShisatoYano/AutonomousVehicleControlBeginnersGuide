@@ -1,0 +1,250 @@
+"""
+l_shape_fitting_detector.py
+
+Author: Shisato Yano
+"""
+
+import sys
+import copy
+import itertools
+import numpy as np
+from collections import deque
+from pathlib import Path
+from math import sin, cos
+from scipy.optimize import least_squares
+from math import sin, cos, atan2
+
+abs_dir_path = str(Path(__file__).absolute().parent)
+sys.path.append(abs_dir_path + "/../../search/kd_tree")
+
+from l_shape_fitting_detector import LShapeFittingDetector
+from kd_tree import KdTree
+from rectangle import Rectangle
+    
+"""
+robust_least_squares_detector.py
+"""
+"""
+robust_least_squares_detector.py
+"""
+class RobustRectangleFittingDetector(LShapeFittingDetector):
+    def __init__(self, min_rng_th_m=3.0, rng_th_rate=0.1, f_scale=0.1):
+        super().__init__(min_rng_th_m, rng_th_rate)
+        self.f_scale = f_scale  # Sensitivity for M-estimator
+        self.prev_rects = {}    # Temporal memory: {id: [cx, cy, theta, w, l]}
+        self.dt = 0.1 
+
+    def calculate_density_weights(self, points):
+        from scipy.spatial.distance import cdist
+        dists = cdist(points.T, points.T)
+        density = np.sum(dists < 1.0, axis=1)
+        weights = 1.0 / density
+        return weights / np.mean(weights)
+
+    def _calculate_residuals(self, params, points, weights=None, prev_params=None):
+        cx, cy, theta, w, l = params
+        
+        # 1. Transform points to the Box's Local Frame
+        cos_t, sin_t = np.cos(theta), np.sin(theta)
+        dx = cos_t * (points[0,:] - cx) + sin_t * (points[1,:] - cy)
+        dy = -sin_t * (points[0,:] - cx) + cos_t * (points[1,:] - cy)
+        
+        # 2. Face Assignment (Partitioning)
+        # Determine if a point is closer to a 'Width' edge or a 'Length' edge
+        # This is based on which distance-to-boundary is smaller
+        dist_to_w_edge = np.abs(np.abs(dx) - w/2.0)
+        dist_to_l_edge = np.abs(np.abs(dy) - l/2.0)
+        
+        is_width_face = dist_to_w_edge < dist_to_l_edge
+        is_length_face = ~is_width_face
+        
+        # 3. Calculate SDF Residuals
+        err_x = np.abs(dx) - (w / 2.0)
+        err_y = np.abs(dy) - (l / 2.0)
+        ext_dist = np.sqrt(np.maximum(err_x, 0)**2 + np.maximum(err_y, 0)**2)
+        int_dist = np.minimum(np.maximum(err_x, err_y), 0)
+        base_res = (ext_dist + int_dist)
+        
+        # 4. BALANCED WEIGHTING (The Solution)
+        # We ensure both faces provide equal total 'pull' on the optimizer
+        num_w = np.sum(is_width_face)
+        num_l = np.sum(is_length_face)
+        
+        # Avoid division by zero
+        weight_w = 1.0 / max(1, num_w)
+        weight_l = 1.0 / max(1, num_l)
+        
+        face_weights = np.where(is_width_face, weight_w, weight_l)
+        
+        # Combine with your existing density weights
+        final_base_res = base_res * np.sqrt(weights) * np.sqrt(face_weights) * 10.0
+
+        # 5. Constraints (Stretch, Tightness, Momentum)
+        actual_spread_w = np.max(dx) - np.min(dx)
+        actual_spread_l = np.max(dy) - np.min(dy)
+        stretch_penalty = np.array([
+            max(0, actual_spread_w - w),
+            max(0, actual_spread_l - l)
+        ]) * 15.0 # Increased force to expand
+
+        tightness = np.array([w, l]) * 0.01 
+        
+        if prev_params is not None:
+            state_stiffness = np.array([15.0, 15.0, 10.0, 5.0, 5.0]) 
+            angle_diff = (theta - prev_params[2] + np.pi) % (2 * np.pi) - np.pi
+            diff = params - prev_params
+            diff[2] = angle_diff 
+            state_momentum = diff * state_stiffness
+            return np.concatenate([final_base_res, stretch_penalty, tightness, state_momentum])
+
+        return np.concatenate([final_base_res, stretch_penalty, tightness])
+    
+    def _get_initial_guess(self, points_array):
+        cx, cy = np.mean(points_array, axis=1)
+        
+        # 1. Temporal Warm-Start
+        best_params = self._get_matching_prev_params(points_array)
+        if best_params is not None:
+            return [cx, cy, best_params[2], best_params[3], best_params[4]]
+        
+        # 2. PCA Fallback
+        cov = np.cov(points_array) + np.eye(2) * 1e-6
+        evals, evecs = np.linalg.eig(cov)
+        sort_indices = np.argsort(evals)[::-1]
+        primary_vec = evecs[:, sort_indices[0]]
+        theta_init = atan2(primary_vec[1], primary_vec[0])
+        
+        cos_t, sin_t = cos(theta_init), sin(theta_init)
+        dx_raw = cos_t * (points_array[0,:] - cx) + sin_t * (points_array[1,:] - cy)
+        dy_raw = -sin_t * (points_array[0,:] - cx) + cos_t * (points_array[1,:] - cy)
+        
+        w_init = (np.max(dx_raw) - np.min(dx_raw)) + 0.2
+        l_init = (np.max(dy_raw) - np.min(dy_raw)) + 0.2
+        
+        return [cx, cy, theta_init, max(0.5, w_init), max(0.5, l_init)]
+
+    def _optimize_rectangle(self, points, weights, prev_params=None):
+        # 1. Warm Start vs. Cold Start
+        if prev_params is not None:
+            init = np.array(prev_params)
+            # Optional: Center 'init' on the current points to help convergence
+            init[0:2] = np.mean(points, axis=1)
+        else:
+            init = self._get_initial_guess(points)
+
+        # 2. Define Global Physical Limits
+        # [cx, cy, theta, w, l]
+        lower = np.array([-np.inf, -np.inf, -np.pi, 0.5, 0.5])
+        upper = np.array([np.inf, np.inf, np.pi, 40.0, 40.0])
+
+        # 3. Apply Local Tracking Constraints (The Jitter Killer)
+        if prev_params is not None:
+            # We allow the box to move/change only by a fixed amount per frame
+            # This is much safer than percentages
+            slack = np.array([2.0, 2.0, np.radians(5), 0.5, 0.5]) 
+            
+            # Update bounds based on previous state
+            local_lower = prev_params - slack
+            local_upper = prev_params + slack
+            
+            # Ensure we don't exceed global physical limits
+            lower = np.maximum(lower, local_lower)
+            upper = np.minimum(upper, local_upper)
+
+        # 4. Final Safety Check: Ensure init is strictly inside the bounds
+        # Scipy's 'trf' method crashes if init is exactly on the boundary
+        init = np.clip(init, lower + 1e-4, upper - 1e-4)
+        
+        # FINAL GUARD: If somehow lower >= upper, reset to global bounds
+        invalid_mask = lower >= upper
+        if np.any(invalid_mask):
+            lower[invalid_mask] = -np.inf # or a safe default
+            upper[invalid_mask] = np.inf
+
+        res = least_squares(
+            self._calculate_residuals,
+            init,
+            args=(points, weights, prev_params),
+            loss='cauchy',
+            f_scale=0.03,
+            bounds=(lower, upper),
+            method='trf'
+        )
+        return res.x
+
+    def _search_rectangles(self, clusters_list):
+        new_rects_params = {}
+        rectangles_list = []
+        self.alpha = 0.3 # Smoother alpha for stable tracking
+
+        for i, cluster in enumerate(clusters_list):
+            if len(cluster) < 5: continue
+            points = np.concatenate([p.get_point_array() for p in cluster], 1)
+            weights = self.calculate_density_weights(points)
+            prev_params = self._get_matching_prev_params(points)
+            
+            try:
+                opt_params = self._optimize_rectangle(points, weights, prev_params)
+                
+                if prev_params is not None:
+                    final_params = self._apply_temporal_filter(opt_params, prev_params)
+                else:
+                    final_params = opt_params
+
+                # Store smoothed for memory, but use final for display
+                new_rects_params[i] = final_params
+                rectangles_list.append(self._create_rectangle_obj(*final_params))
+            except Exception as e:
+                print(f"Optimization Error: {e}")
+
+        self.prev_rects = new_rects_params
+        self.latest_rectangles_list = rectangles_list
+    
+    def _apply_temporal_filter(self, current, previous):
+        smoothed = np.zeros_like(current)
+        indices_to_smooth = [0, 1, 3, 4] 
+        for idx in indices_to_smooth:
+            smoothed[idx] = previous[idx] + self.alpha * (current[idx] - previous[idx])
+        
+        angle_diff = (current[2] - previous[2] + np.pi) % (2 * np.pi) - np.pi
+        smoothed[2] = previous[2] + self.alpha * angle_diff
+        return smoothed
+
+    def _get_matching_prev_params(self, current_points):
+        if not self.prev_rects: return None
+        cx_curr, cy_curr = np.mean(current_points, axis=1)
+        best_match, min_dist = None, 3.0 
+        for params in self.prev_rects.values():
+            dist = np.hypot(cx_curr - params[0], cy_curr - params[1])
+            if dist < min_dist:
+                min_dist = dist
+                best_match = params
+        return best_match
+
+    def _create_rectangle_obj(self, cx, cy, theta, w, l):
+        cos_t, sin_t = cos(theta), sin(theta)
+        c1_mid = cx * cos_t + cy * sin_t
+        c2_mid = -cx * sin_t + cy * cos_t
+        c_params = [c1_mid - w/2.0, c2_mid - l/2.0, c1_mid + w/2.0, c2_mid + l/2.0]
+        return Rectangle(a=[cos_t, -sin_t, cos_t, -sin_t],
+                         b=[sin_t, cos_t, sin_t, cos_t],
+                         c=c_params)
+    
+    def _apply_temporal_filter(self, current, previous):
+        """
+        Alpha-Beta style smoothing for center, size, and orientation.
+        """
+        smoothed = np.zeros_like(current)
+        
+        # Smooth Position (cx, cy) and Size (w, l)
+        # formula: x_filt = x_prev + alpha * (x_meas - x_prev)
+        indices_to_smooth = [0, 1, 3, 4] 
+        for idx in indices_to_smooth:
+            smoothed[idx] = previous[idx] + self.alpha * (current[idx] - previous[idx])
+            
+        # Smooth Orientation (theta) with Angle Wrapping
+        # We find the shortest path between the two angles
+        angle_diff = (current[2] - previous[2] + np.pi) % (2 * np.pi) - np.pi
+        smoothed[2] = previous[2] + self.alpha * angle_diff
+        
+        return smoothed

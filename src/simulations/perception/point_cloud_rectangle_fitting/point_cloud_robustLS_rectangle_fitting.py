@@ -36,7 +36,7 @@ from sensors import Sensors
 from sensor_parameters import SensorParameters
 from omni_directional_lidar import OmniDirectionalLidar
 from l_shape_fitting_detector import LShapeFittingDetector
-from robust_least_squares_detector import RobustRectangleFittingDetector
+from robust_least_squares_detector import OptimizedLShapeDetector, DualLShapeDetector #RansacOptimizationDetector #RobustRectangleFittingDetector
 
 # flag to show plot figure
 # when executed as unit test, this flag is set as false
@@ -50,24 +50,28 @@ def main():
     
     # set simulation parameters
     x_lim, y_lim = MinMax(-30, 30), MinMax(-30, 30)
-    vis = GlobalXYVisualizer(x_lim, y_lim, TimeParameters(span_sec=15))
+    vis = GlobalXYVisualizer(x_lim, y_lim, TimeParameters(span_sec=10))
 
     # create obstacle instances
     obst_list = ObstacleList()
-    obst1 = Obstacle(State(x_m=-5.0, y_m=15.0, speed_mps=1.0), yaw_rate_rps=np.deg2rad(10), width_m=1.0)
-    obst_list.add_obstacle(obst1)
-    obst2 = Obstacle(State(x_m=-15.0, y_m=-15.0), length_m=10.0, width_m=5.0)
-    obst_list.add_obstacle(obst2)
-    obst3 = Obstacle(State(x_m=20.0), yaw_rate_rps=np.deg2rad(15))
-    obst_list.add_obstacle(obst3)
-    obst4 = Obstacle(State(x_m=-20.0, y_m=0.0), width_m=1.0)
-    obst_list.add_obstacle(obst4)
+    #obst1 = Obstacle(State(x_m=-5.0, y_m=15.0, speed_mps=1.0), yaw_rate_rps=np.deg2rad(10), width_m=1.0)
+    #obst_list.add_obstacle(obst1)
+    #obst2 = Obstacle(State(x_m=0.0, y_m=-15.0), length_m=10.0, width_m=5.0)
+    #obst_list.add_obstacle(obst2)
+    #obst3 = Obstacle(State(x_m=20.0), yaw_rate_rps=np.deg2rad(15))
+    #obst_list.add_obstacle(obst3)
+    #obst4 = Obstacle(State(x_m=-20.0, y_m=0.0), width_m=1.0)
+    #obst_list.add_obstacle(obst4)
+    obst6 = Obstacle(State(x_m=15.0, y_m=15.0), length_m=10.0, width_m=5.0)
+    obst_list.add_obstacle(obst6)
+    #obst7 = Obstacle(State(x_m=-15.0, y_m=15.0, yaw_rad = np.pi/4), length_m=10.0, width_m=5.0)
+    #obst_list.add_obstacle(obst7)
     vis.add_object(obst_list)
 
     # create vehicle instance
     spec = VehicleSpecification(area_size=30.0) # spec instance
     lidar = OmniDirectionalLidar(obst_list, SensorParameters(lon_m=spec.wheel_base_m/2)) # lidar instance
-    detector = RobustRectangleFittingDetector() # detector instance # LShapeFittingDetector()#
+    detector = DualLShapeDetector()#OptimizedLShapeDetector() # detector instance # LShapeFittingDetector()#
     vehicle = FourWheelsVehicle(State(color=spec.color), spec, sensors=Sensors(lidar=lidar), detector=detector) # set state, spec, lidar, detector as arguments
     vis.add_object(vehicle)
 
