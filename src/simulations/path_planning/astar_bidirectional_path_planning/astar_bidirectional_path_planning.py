@@ -52,33 +52,69 @@ def main():
 
     # set simulation parameters
     x_lim, y_lim = MinMax(-5, 55), MinMax(-20, 25)
-    navigation_gif_path = abs_dir_path + relative_simulations + "path_planning/astar_bidirectional_path_planning/astar_bidirectional_navigate.gif"
-    map_path = abs_dir_path + relative_simulations + "path_planning/astar_bidirectional_path_planning/map.json"
-    path_filename = abs_dir_path + relative_simulations + "path_planning/astar_bidirectional_path_planning/path.json"
-    search_gif_path = abs_dir_path + relative_simulations + "path_planning/astar_bidirectional_path_planning/astar_bidirectional_search.gif"
+    navigation_gif_path = (
+        abs_dir_path
+        + relative_simulations
+        + "path_planning/astar_bidirectional_path_planning/astar_bidirectional_navigate.gif"
+    )
+    map_path = (
+        abs_dir_path
+        + relative_simulations
+        + "path_planning/astar_bidirectional_path_planning/map.json"
+    )
+    path_filename = (
+        abs_dir_path
+        + relative_simulations
+        + "path_planning/astar_bidirectional_path_planning/path.json"
+    )
+    search_gif_path = (
+        abs_dir_path
+        + relative_simulations
+        + "path_planning/astar_bidirectional_path_planning/astar_bidirectional_search.gif"
+    )
 
-
-    vis = GlobalXYVisualizer(x_lim, y_lim, TimeParameters(span_sec=25), show_zoom=False, gif_name=navigation_gif_path)
-    occ_grid = BinaryOccupancyGrid(x_lim, y_lim, resolution=0.5, clearance=1.5, map_path=map_path)
+    vis = GlobalXYVisualizer(
+        x_lim,
+        y_lim,
+        TimeParameters(span_sec=25),
+        show_zoom=False,
+        gif_name=navigation_gif_path,
+    )
+    occ_grid = BinaryOccupancyGrid(
+        x_lim, y_lim, resolution=0.5, clearance=1.5, map_path=map_path
+    )
 
     obst_list = ObstacleList()
-    obst_list.add_obstacle(Obstacle(State(x_m=10.0, y_m=15.0), length_m=10, width_m=8))
-    obst_list.add_obstacle(Obstacle(State(x_m=40.0, y_m=0.0), length_m=2, width_m=10))
-    # obst_list.add_obstacle(Obstacle(State(x_m=10.0, y_m=-10.0, yaw_rad=np.rad2deg(45)), length_m=5, width_m=5))
-    # obst_list.add_obstacle(Obstacle(State(x_m=30.0, y_m=15.0, yaw_rad=np.rad2deg(10)), length_m=5, width_m=2))
-    # obst_list.add_obstacle(Obstacle(State(x_m=50.0, y_m=15.0, yaw_rad=np.rad2deg(15)), length_m=5, width_m=2))
-    # obst_list.add_obstacle(Obstacle(State(x_m=25.0, y_m=0.0), length_m=2, width_m=2))
-    # obst_list.add_obstacle(Obstacle(State(x_m=35.0, y_m=-15.0), length_m=7, width_m=2))
+    # Map for bidirectional A*: obstacles funnel both searches toward the middle.
+    # Start (0,0) and Goal (50,-10); meeting point ~(25, -5). Bidir expands fewer nodes.
+    # Left half: block direct path from start, force flow toward center
+    obst_list.add_obstacle(Obstacle(State(x_m=12.0, y_m=-12.0), length_m=8, width_m=2))
+    obst_list.add_obstacle(Obstacle(State(x_m=10.0, y_m=6.0), length_m=6, width_m=9))
+    # Right half: block direct path from goal, force flow toward center
+    obst_list.add_obstacle(Obstacle(State(x_m=42.0, y_m=4.0), length_m=8, width_m=9))
+    obst_list.add_obstacle(Obstacle(State(x_m=42.0, y_m=-14.0), length_m=6, width_m=5))
+    # Central corridor stays clear so forward and backward meet in the middle
+    obst_list.add_obstacle(Obstacle(State(x_m=25.0, y_m=10.0), length_m=10, width_m=8))
+    obst_list.add_obstacle(Obstacle(State(x_m=25.0, y_m=-16.0), length_m=10, width_m=3))
 
     vis.add_object(obst_list)
     occ_grid.add_object(obst_list)
     occ_grid.save_map()
     # Easy Goal = (50,22)
     # Hard Goal = (50,-10)
-    planner = AStarBidirectionalPathPlanner((0, 0), (50, -10), map_path, weight=5.0, x_lim=x_lim, y_lim=y_lim, path_filename=path_filename, gif_name=search_gif_path)
+    planner = AStarBidirectionalPathPlanner(
+        (53, -15),
+        (0, 0),
+        map_path,
+        weight=5.0,
+        x_lim=x_lim,
+        y_lim=y_lim,
+        path_filename=path_filename,
+        gif_name=search_gif_path,
+    )
 
     # Load sparse path from json file
-    with open(path_filename, 'r') as f:
+    with open(path_filename, "r") as f:
         sparse_path = json.load(f)
 
     # Extract x and y coordinates
@@ -92,14 +128,15 @@ def main():
     # create vehicle instance
     spec = VehicleSpecification()
     pure_pursuit = PurePursuitController(spec, course)
-    vehicle = FourWheelsVehicle(State(color=spec.color), spec,
-                                controller=pure_pursuit,
-                                show_zoom=False)
+    vehicle = FourWheelsVehicle(
+        State(color=spec.color), spec, controller=pure_pursuit, show_zoom=False
+    )
 
     vis.add_object(vehicle)
 
     # plot figure is not shown when executed as unit test
-    if not show_plot: vis.not_show_plot()
+    if not show_plot:
+        vis.not_show_plot()
 
     # show plot figure
     vis.draw()
