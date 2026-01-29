@@ -32,9 +32,9 @@ class PotentialFieldMapper:
         """
 
         self.map = PotentialFieldMap(width_m, height_m, resolution_m,
-                                      center_x_m, center_y_m,
-                                      zeta, eta, rho,
-                                      goal_x_m, goal_y_m)
+                                     center_x_m, center_y_m,
+                                     zeta, eta, rho,
+                                     goal_x_m, goal_y_m)
         self.params = sensor_params
 
     def update(self, point_cloud, state):
@@ -61,6 +61,13 @@ class PotentialFieldMapper:
 
         self.map.update_map(points_x_list, points_y_list)
 
+    def clear_memory(self):
+        """
+        Clear the persistent obstacle memory.
+        Useful for resetting the field when starting a new navigation goal.
+        """
+        self.map.clear_memory()
+
     def draw(self, axes, elems, colormap='jet'):
         """
         Function to draw potential field data
@@ -73,5 +80,5 @@ class PotentialFieldMapper:
 
         # Draw goal position as a star marker
         goal_marker, = axes.plot(self.map.goal_x_m, self.map.goal_y_m,
-                                  'r*', markersize=15, label='Goal')
+                                 'r*', markersize=15, label='Goal')
         elems.append(goal_marker)
