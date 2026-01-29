@@ -22,6 +22,7 @@ Python sample codes and documents about Autonomous vehicle control algorithm. Th
         * [NDT Map Construction](#ndt-map-construction)
     * [Path Planning](#path-planning)
         * [A*](#a)
+        * [Bidirectional A*](#bidirectional-a)
         * [Hybrid A*](#hybrid-a)
         * [Dijkstra](#dijkstra)
         * [RRT](#rrt)
@@ -113,6 +114,11 @@ Planning
 ![](src/simulations/path_planning/astar_path_planning/astar_search.gif)  
 Navigation  
 ![](src/simulations/path_planning/astar_path_planning/astar_navigate.gif)  
+#### Bidirectional A*
+Planning  
+![](src/simulations/path_planning/astar_bidirectional_path_planning/astar_bidirectional_search.gif)  
+Navigation  
+![](src/simulations/path_planning/astar_bidirectional_path_planning/astar_bidirectional_navigate.gif)  
 #### Hybrid A*
 Planning  
 ![](src/simulations/path_planning/astar_hybrid_path_planning/astar_hybrid_search.gif)  
