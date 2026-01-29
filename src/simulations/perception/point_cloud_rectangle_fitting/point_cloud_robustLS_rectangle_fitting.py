@@ -50,19 +50,19 @@ def main():
     
     # set simulation parameters
     x_lim, y_lim = MinMax(-30, 30), MinMax(-30, 30)
-    vis = GlobalXYVisualizer(x_lim, y_lim, TimeParameters(span_sec=10))
+    vis = GlobalXYVisualizer(x_lim, y_lim, TimeParameters(span_sec=20))
 
     # create obstacle instances
     obst_list = ObstacleList()
-    #obst1 = Obstacle(State(x_m=-5.0, y_m=15.0, speed_mps=1.0), yaw_rate_rps=np.deg2rad(10), width_m=1.0)
-    #obst_list.add_obstacle(obst1)
+    obst1 = Obstacle(State(x_m=-5.0, y_m=15.0, speed_mps=1.0), yaw_rate_rps=np.deg2rad(10), width_m=1.0)
+    obst_list.add_obstacle(obst1)
     #obst2 = Obstacle(State(x_m=0.0, y_m=-15.0), length_m=10.0, width_m=5.0)
     #obst_list.add_obstacle(obst2)
-    #obst3 = Obstacle(State(x_m=20.0), yaw_rate_rps=np.deg2rad(15))
-    #obst_list.add_obstacle(obst3)
+    obst3 = Obstacle(State(x_m=20.0), yaw_rate_rps=np.deg2rad(15))
+    obst_list.add_obstacle(obst3)
     #obst4 = Obstacle(State(x_m=-20.0, y_m=0.0), width_m=1.0)
     #obst_list.add_obstacle(obst4)
-    obst6 = Obstacle(State(x_m=15.0, y_m=15.0), length_m=10.0, width_m=5.0)
+    obst6 = Obstacle(State(x_m=-15.0, y_m=-15.0), length_m=10.0, width_m=5.0)
     obst_list.add_obstacle(obst6)
     #obst7 = Obstacle(State(x_m=-15.0, y_m=15.0, yaw_rad = np.pi/4), length_m=10.0, width_m=5.0)
     #obst_list.add_obstacle(obst7)

@@ -28,6 +28,7 @@ class OptimizedLShapeDetector(LShapeFittingDetector):
     def __init__(self, min_rng_th_m=3.0, rng_th_rate=0.1, change_angle_deg=1.0):
         super().__init__(min_rng_th_m, rng_th_rate, change_angle_deg)
         self.f_scale = 0.05  # Tight tolerance for the final polish
+        self.prev_rects = {}
 
     def _calculate_residuals(self, params, points, weights):
         """Standard SDF residuals used for the final polish."""
@@ -46,9 +47,79 @@ class OptimizedLShapeDetector(LShapeFittingDetector):
         res = np.sqrt(np.maximum(err_x, 0)**2 + np.maximum(err_y, 0)**2) + \
               np.minimum(np.maximum(err_x, err_y), 0)
         
-        return res * np.sqrt(weights)
+        # 3. THE HEADING UNLOCK: Variance Penalty
+        # If the box is tilted 15 degrees, the 'dy' values of points on 
+        # the 'w' face will have high variance.
+        # We penalize the 'thickness' of the walls to force rotation.
+        is_w_face = np.abs(dx/w) > np.abs(dy/l)
+        is_l_face = ~is_w_face
+        
+        alignment_penalty = []
+        if np.any(is_w_face):
+            # Points on the width face should have dy = 0 in a perfect fit
+            alignment_penalty.append(np.std(dy[is_w_face]) * 10.0)
+        if np.any(is_l_face):
+            # Points on the length face should have dx = 0 in a perfect fit
+            alignment_penalty.append(np.std(dx[is_l_face]) * 10.0)
 
+        return np.concatenate([res * np.sqrt(weights)])
+
+    def _get_initial_guess(self, points_array):
+        # points_array shape is (2, N)
+        points_t = points_array.T # (N, 2)
+        
+        # 1. Find the two farthest points (the diameter of the point cloud)
+        # For performance with many points, you could use a convex hull, 
+        # but a simple pairwise distance or a search for min/max works for clusters.
+        from scipy.spatial.distance import pdist, squareform
+        
+        if points_t.shape[0] > 2:
+            # Finding the absolute farthest pair
+            dists = pdist(points_t)
+            dist_matrix = squareform(dists)
+            i, j = np.unravel_index(np.argmax(dist_matrix), dist_matrix.shape)
+            p1, p2 = points_t[i], points_t[j]
+            
+            # Use the midpoint of these two as the center guess
+            cx, cy = (p1 + p2) / 2.0
+        else:
+            cx, cy = np.mean(points_array, axis=1)
+        
+        # 1. Temporal Warm-Start
+        best_params = self._get_matching_prev_params(points_array)
+        #if best_params is not None:
+            #return [cx, cy, best_params[2], best_params[3], best_params[4]]
+        
+        # 2. PCA Fallback
+        cov = np.cov(points_array) + np.eye(2) * 1e-6
+        evals, evecs = np.linalg.eig(cov)
+        sort_indices = np.argsort(evals)[::-1]
+        primary_vec = evecs[:, sort_indices[0]]
+        theta_init = atan2(primary_vec[1], primary_vec[0])
+        
+        cos_t, sin_t = cos(theta_init), sin(theta_init)
+        dx_raw = cos_t * (points_array[0,:] - cx) + sin_t * (points_array[1,:] - cy)
+        dy_raw = -sin_t * (points_array[0,:] - cx) + cos_t * (points_array[1,:] - cy)
+        
+        w_init = (np.max(dx_raw) - np.min(dx_raw)) + 0.2
+        l_init = (np.max(dy_raw) - np.min(dy_raw)) + 0.2
+        
+        
+        return [cx, cy, theta_init, max(0.5, w_init), max(0.5, l_init)]
+    
+    def _get_matching_prev_params(self, current_points):
+        if not self.prev_rects: return None
+        cx_curr, cy_curr = np.mean(current_points, axis=1)
+        best_match, min_dist = None, 3.0 
+        for params in self.prev_rects.values():
+            dist = np.hypot(cx_curr - params[0], cy_curr - params[1])
+            if dist < min_dist:
+                min_dist = dist
+                best_match = params
+        return best_match
+    
     def _calculate_rectangle(self, points_array):
+        self.prev_rects = {}
         # --- STAGE 1: THE ORIGINAL ZHANG SWEEP ---
         # This finds the correct global orientation (0 or 90 deg)
         min_cost_angle = (-float("inf"), None)
@@ -78,15 +149,20 @@ class OptimizedLShapeDetector(LShapeFittingDetector):
         cy_world = sin_a * cx_init + cos_a * cy_init
         
         init_guess = [cx_world, cy_world, best_angle, w_init, l_init]
-
+        init_guess = self._get_initial_guess(points_array)  # Use improved initial guess
         # --- STAGE 2: THE OPTIMIZATION POLISH ---
         # We constrain the optimizer to only search +/- 5 degrees of the Zhang result.
         # This prevents the 15-degree drift or 45-degree diagonal issues.
-        lower = np.array([-np.inf, -np.inf, best_angle - 0.2, w_init*0.8, l_init*0.8])
-        upper = np.array([np.inf, np.inf, best_angle + 0.2, w_init*1.2, l_init*1.2])
+        theta_search_window = np.radians(40.0) # Allow 5 degrees of movement
+        lower = np.array([-np.inf, -np.inf, best_angle - theta_search_window, w_init*0.9, l_init*0.9])
+        upper = np.array([np.inf, np.inf, best_angle + theta_search_window, w_init*1.1, l_init*1.1])
         
         # Simple uniform weights
         weights = np.ones(points_array.shape[1])
+
+        # Calculate initial cost
+        res_before = self._calculate_residuals(init_guess, points_array, weights)
+        cost_before = 0.5 * np.sum(res_before**2) # Least squares cost is 0.5 * sum(r^2)
         
         try:
             #print(f"Original params: cx={cx_world:.2f}, cy={cy_world:.2f}, theta={np.degrees(best_angle):.2f} deg, w={w_init:.2f}, l={l_init:.2f}")
@@ -94,24 +170,46 @@ class OptimizedLShapeDetector(LShapeFittingDetector):
                 self._calculate_residuals, init_guess,
                 args=(points_array, weights),
                 bounds=(lower, upper),
-                loss='huber', f_scale=.01
+                loss='cauchy', f_scale=.05,
+                diff_step=[0.01, 0.01, 0.01, 0.01, 0.01] # Explicitly define step sizes
             )
             cx, cy, theta, w, l = res.x
+            self.prev_rects = res.x
             #print(f"Optimization succeeded with cost {res.cost:.4f}")
             #print(f"Refined params: cx={cx:.2f}, cy={cy:.2f}, theta={np.degrees(theta):.2f} deg, w={w:.2f}, l={l:.2f}")
         except:
             # Fallback to Zhang result if optimization fails
             cx, cy, theta, w, l = init_guess
+            self.prev_rects = init_guess
 
         # --- STAGE 3: CREATE FINAL RECTANGLE ---
         cos_t, sin_t = cos(theta), sin(theta)
         c1_mid = cx * cos_t + cy * sin_t
         c2_mid = -cx * sin_t + cy * cos_t
         
+        # --- AFTER OPTIMIZATION ---
+        if 'res' in locals():
+            final_params = res.x if 'res' in locals() else init_guess
+            res_after = self._calculate_residuals(final_params, points_array, weights)
+            cost_after = 0.5 * np.sum(res_after**2)
+            improvement = (cost_before - cost_after) / (cost_before + 1e-6) * 100
+            theta_diff = np.rad2deg(final_params[2] - init_guess[2])
+
+            print("-" * 30)
+            print(f"Optimization Report (Status: {res.message})")
+            print(f"  Cost:  {cost_before:.4f} -> {cost_after:.4f} ({improvement:.1f}% improvement)")
+            print(f"  Theta: {np.rad2deg(init_guess[2]):.2f}° -> {np.rad2deg(final_params[2]):.2f}° (Δ: {theta_diff:.2f}°)")
+            print("-" * 30)
+
+        else:
+            print("Optimization failed; using Zhang's result.")
+
+        # --- DEBUG REPORT ---
+    
         return Rectangle(a=[cos_t, -sin_t, cos_t, -sin_t],
                          b=[sin_t, cos_t, sin_t, cos_t],
                          c=[c1_mid - w/2.0, c2_mid - l/2.0, c1_mid + w/2.0, c2_mid + l/2.0])
-    
+
     def _apply_temporal_filter(self, current_params, prev_params):
         """
         Smooths the box movement to stop high-frequency jitter.
