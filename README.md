@@ -30,6 +30,7 @@ Python sample codes and documents about Autonomous vehicle control algorithm. Th
         * [Rear wheel feedback Path Tracking](#rear-wheel-feedback-path-tracking)
         * [LQR(Linear Quadratic Regulator) Path Tracking](#lqrlinear-quadratic-regulator-path-tracking)
         * [Stanley steering control Path tracking](#stanley-steering-control-path-tracking)
+        * [MPPI Path Tracking](#mppi-path-tracking)
     * [Perception](#perception)
         * [Rectangle fitting Detection](#rectangle-fitting-detection)
         * [Sensor's Extrinsic Parameters Estimation](#sensors-extrinsic-parameters-estimation)
@@ -137,6 +138,8 @@ Navigation
 ![](src/simulations/path_tracking/lqr_path_tracking/lqr_path_tracking.gif)  
 #### Stanley steering control Path Tracking
 ![](src/simulations/path_tracking/stanley_path_tracking/stanley_path_tracking.gif)  
+#### MPPI Path Tracking
+![](src/simulations/path_tracking/mppi_path_tracking/mppi_path_tracking.gif)  
 ### Perception
 #### Rectangle fitting Detection
 ![](src/simulations/perception/point_cloud_rectangle_fitting/point_cloud_rectangle_fitting.gif)  
