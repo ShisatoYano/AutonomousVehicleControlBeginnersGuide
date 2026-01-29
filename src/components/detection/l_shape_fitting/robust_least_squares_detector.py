@@ -28,6 +28,8 @@ from math import sin, cos, atan2
 class FittingDataTracker:
     def __init__(self):
         # Explicitly initialize the dictionary
+        self.gt_cx = 20.0      # Example ground truth center x
+        self.gt_cy = 0.0   # Example ground truth center y
         self.data = {
             "time": [], 
             "rmse_geo": [], 
@@ -59,20 +61,29 @@ class FittingDataTracker:
             return
 
         plt.figure(figsize=(10, 5))
-        plt.subplot(3, 1, 1)
         plt.plot(self.data["time"], self.data["rmse_geo"], 'b--', label='Previous RMSE')
         plt.plot(self.data["time"], self.data["rmse_opt"], 'r-', label='Optimized RMSE')
         plt.ylabel("RMSE [m]"); plt.legend(); plt.grid(True)
 
-        plt.subplot(3, 1, 2)
-        plt.plot(self.data["time"], self.data["cx_geo"], 'b--', label='Previous Center X')
-        plt.plot(self.data["time"], self.data["cx_opt"], 'r-', label='Optimized Center X')
-        plt.ylabel("Center X [m]"); plt.xlabel("Frames"); plt.legend(); plt.grid(True)
+        # Create a 2x1 plot specifically for Center Accuracy
+        fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(10, 10))
+        
+        # Plot 1: CX Accuracy
+        ax1.plot(self.data["time"], self.data["cx_geo"], 'b--', label='Zhang CX', alpha=0.5)
+        ax1.plot(self.data["time"], self.data["cx_opt"], 'r-', label='Optimized CX')
+        ax1.axhline(y=self.gt_cx, color='g', linestyle='-', linewidth=2, label='Ground Truth CX')
+        ax1.set_ylabel("X Position [m]")
+        ax1.set_title("Center X: Ground Truth vs. Predictions")
+        ax1.legend(); ax1.grid(True)
 
-        plt.subplot(3, 1, 3)
-        plt.plot(self.data["time"], self.data["cy_geo"], 'b--', label='Previous Center Y')
-        plt.plot(self.data["time"], self.data["cy_opt"], 'r-', label='Optimized Center Y')
-        plt.ylabel("Center Y [m]"); plt.xlabel("Frames"); plt.legend(); plt.grid(True)
+        # Plot 2: CY Accuracy
+        ax2.plot(self.data["time"], self.data["cy_geo"], 'b--', label='Zhang CY', alpha=0.5)
+        ax2.plot(self.data["time"], self.data["cy_opt"], 'r-', label='Optimized CY')
+        ax2.axhline(y=self.gt_cy, color='g', linestyle='-', linewidth=2, label='Ground Truth CY')
+        ax2.set_ylabel("Y Position [m]")
+        ax2.set_xlabel("Frames")
+        ax2.set_title("Center Y: Ground Truth vs. Predictions")
+        ax2.legend(); ax2.grid(True)
 
         plt.tight_layout()
         plt.show()
@@ -81,10 +92,11 @@ class FittingDataTracker:
 tracker = FittingDataTracker()
 
 class OptimizedLShapeDetector(LShapeFittingDetector):
-    def __init__(self, min_rng_th_m=3.0, rng_th_rate=0.1, change_angle_deg=1.0):
+    def __init__(self, min_rng_th_m=3.0, rng_th_rate=0.1, change_angle_deg=1.0, lossfunc='huber'):
         super().__init__(min_rng_th_m, rng_th_rate, change_angle_deg)
         self.f_scale = 0.05  # Tight tolerance for the final polish
         self.prev_rects = {}
+        self.lossfunc = lossfunc
 
     def _calculate_residuals(self, params, points, weights):
         """Standard SDF residuals used for the final polish."""
@@ -265,7 +277,7 @@ class OptimizedLShapeDetector(LShapeFittingDetector):
                 self._calculate_residuals, init_guess,
                 args=(points_array, weights),
                 bounds=(lower, upper),
-                loss='cauchy', f_scale=.02
+                loss=self.lossfunc, f_scale=.02
                 # Explicitly define step sizes
             )
             cx, cy, theta, w, l = res.x
