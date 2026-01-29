@@ -1,3 +1,8 @@
+"""
+Test of A* path planning and navigation simulation
+
+Author: Yuvraj Gupta
+"""
 from pathlib import Path
 import sys
 import pytest
