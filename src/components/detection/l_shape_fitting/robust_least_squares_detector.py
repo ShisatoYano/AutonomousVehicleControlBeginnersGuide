@@ -4,6 +4,7 @@ l_shape_fitting_detector.py
 Author: Shisato Yano
 """
 
+from asyncio.log import logger
 import sys
 import copy
 import itertools
@@ -13,7 +14,7 @@ from pathlib import Path
 from math import pi, sin, cos
 from scipy.optimize import least_squares
 from math import sin, cos, atan2
-
+import matplotlib.pyplot as plt
 abs_dir_path = str(Path(__file__).absolute().parent)
 sys.path.append(abs_dir_path + "/../../search/kd_tree")
 
@@ -23,6 +24,61 @@ from rectangle import Rectangle
 import numpy as np
 from scipy.optimize import least_squares
 from math import sin, cos, atan2
+
+class FittingDataTracker:
+    def __init__(self):
+        # Explicitly initialize the dictionary
+        self.data = {
+            "time": [], 
+            "rmse_geo": [], 
+            "rmse_opt": [], 
+            "theta_geo": [], 
+            "theta_opt": [],
+            "cx_geo": [], 
+            "cy_geo": [], 
+            "cx_opt": [], 
+            "cy_opt": []
+        }
+
+    def log(self, t, r_geo, r_opt, p_geo, p_opt):
+        # Append data points to the lists
+        self.data["time"].append(t)
+        self.data["rmse_geo"].append(np.sqrt(np.mean(r_geo**2)))
+        self.data["rmse_opt"].append(np.sqrt(np.mean(r_opt**2)))
+        self.data["theta_geo"].append(np.degrees(p_geo[2]))
+        self.data["theta_opt"].append(np.degrees(p_opt[2]))
+        self.data["cx_geo"].append(p_geo[0])
+        self.data["cy_geo"].append(p_geo[1])
+        self.data["cx_opt"].append(p_opt[0])
+        self.data["cy_opt"].append(p_opt[1])
+
+    def plot(self):
+        # Check if we actually collected anything to avoid empty plot errors
+        if not self.data["time"]:
+            print("No data collected to plot.")
+            return
+
+        plt.figure(figsize=(10, 5))
+        plt.subplot(3, 1, 1)
+        plt.plot(self.data["time"], self.data["rmse_geo"], 'b--', label='Previous RMSE')
+        plt.plot(self.data["time"], self.data["rmse_opt"], 'r-', label='Optimized RMSE')
+        plt.ylabel("RMSE [m]"); plt.legend(); plt.grid(True)
+
+        plt.subplot(3, 1, 2)
+        plt.plot(self.data["time"], self.data["cx_geo"], 'b--', label='Previous Center X')
+        plt.plot(self.data["time"], self.data["cx_opt"], 'r-', label='Optimized Center X')
+        plt.ylabel("Center X [m]"); plt.xlabel("Frames"); plt.legend(); plt.grid(True)
+
+        plt.subplot(3, 1, 3)
+        plt.plot(self.data["time"], self.data["cy_geo"], 'b--', label='Previous Center Y')
+        plt.plot(self.data["time"], self.data["cy_opt"], 'r-', label='Optimized Center Y')
+        plt.ylabel("Center Y [m]"); plt.xlabel("Frames"); plt.legend(); plt.grid(True)
+
+        plt.tight_layout()
+        plt.show()
+
+# Create the specific instance
+tracker = FittingDataTracker()
 
 class OptimizedLShapeDetector(LShapeFittingDetector):
     def __init__(self, min_rng_th_m=3.0, rng_th_rate=0.1, change_angle_deg=1.0):
@@ -122,43 +178,82 @@ class OptimizedLShapeDetector(LShapeFittingDetector):
         self.prev_rects = {}
         # --- STAGE 1: THE ORIGINAL ZHANG SWEEP ---
         # This finds the correct global orientation (0 or 90 deg)
-        min_cost_angle = (-float("inf"), None)
-        initial_angle_rad = 0.0
-        end_angle_rad = np.pi / 2.0 - self.CHANGE_ANGLE_RAD
+        # min_cost_angle = (-float("inf"), None)
+        # initial_angle_rad = 0.0
+        # end_angle_rad = np.pi / 2.0 - self.CHANGE_ANGLE_RAD
         
-        for angle_rad in np.arange(initial_angle_rad, end_angle_rad, self.CHANGE_ANGLE_RAD):
+        # for angle_rad in np.arange(initial_angle_rad, end_angle_rad, self.CHANGE_ANGLE_RAD):
+        #     rotated_points = self._rotate_points(points_array, angle_rad)
+        #     cost = self._calculate_variance_criterion(rotated_points)
+        #     if min_cost_angle[0] < cost: 
+        #         min_cost_angle = (cost, angle_rad)
+        
+        # # Zhang's result
+        # best_angle = min_cost_angle[1]
+        # pts_at_best = self._rotate_points(points_array, best_angle)
+        # c1, c2 = pts_at_best[0, :], pts_at_best[1, :]
+        
+        # # Initial box parameters from Zhang sweep
+        # w_init = max(c1) - min(c1)
+        # l_init = max(c2) - min(c2)
+        # cx_init = (max(c1) + min(c1)) / 2.0
+        # cy_init = (max(c2) + min(c2)) / 2.0
+        
+        # # Convert local center back to world coordinates
+        # cos_a, sin_a = cos(best_angle), sin(best_angle)
+        # cx_world = cos_a * cx_init - sin_a * cy_init
+        # cy_world = sin_a * cx_init + cos_a * cy_init
+        
+        # init_guess = [cx_world, cy_world, best_angle, w_init, l_init]
+        # init_guess = self._get_initial_guess(points_array)  # Use improved initial guess
+        # # --- STAGE 2: THE OPTIMIZATION POLISH ---
+        # # We constrain the optimizer to only search +/- 5 degrees of the Zhang result.
+        # # This prevents the 15-degree drift or 45-degree diagonal issues.
+        # theta_search_window = np.radians(40.0) # Allow 5 degrees of movement
+        
+        # --- STAGE 1: ZHANG SWEEP (Global Heading Search) ---
+        min_cost_angle = (-float("inf"), None)
+        # ... (Your existing 90-degree sweep) ...
+        for angle_rad in np.arange(0, np.pi/2 - self.CHANGE_ANGLE_RAD, self.CHANGE_ANGLE_RAD):
             rotated_points = self._rotate_points(points_array, angle_rad)
             cost = self._calculate_variance_criterion(rotated_points)
             if min_cost_angle[0] < cost: 
                 min_cost_angle = (cost, angle_rad)
         
-        # Zhang's result
         best_angle = min_cost_angle[1]
-        pts_at_best = self._rotate_points(points_array, best_angle)
-        c1, c2 = pts_at_best[0, :], pts_at_best[1, :]
+
+        # --- STAGE 2: GEOMETRIC CENTERING (Your Farthest-Point Logic) ---
+        # Get the good cx, cy from your improved PCA/Farthest-point method
+        pca_guess = self._get_initial_guess(points_array)
         
-        # Initial box parameters from Zhang sweep
-        w_init = max(c1) - min(c1)
-        l_init = max(c2) - min(c2)
-        cx_init = (max(c1) + min(c1)) / 2.0
-        cy_init = (max(c2) + min(c2)) / 2.0
+        # 3. FIX: Re-project points to find W and L for THIS specific theta
+        # This prevents the 90-degree swap
+        cos_t, sin_t = np.cos(best_angle), np.sin(best_angle)
         
-        # Convert local center back to world coordinates
-        cos_a, sin_a = cos(best_angle), sin(best_angle)
-        cx_world = cos_a * cx_init - sin_a * cy_init
-        cy_world = sin_a * cx_init + cos_a * cy_init
+        # Local coordinates relative to the chosen center and angle
+        dx =  cos_t * (points_array[0,:] - pca_guess[0]) + sin_t * (points_array[1,:] - pca_guess[1])
+        dy = -sin_t * (points_array[0,:] - pca_guess[0]) + cos_t * (points_array[1,:] - pca_guess[1])
         
-        init_guess = [cx_world, cy_world, best_angle, w_init, l_init]
-        init_guess = self._get_initial_guess(points_array)  # Use improved initial guess
-        # --- STAGE 2: THE OPTIMIZATION POLISH ---
-        # We constrain the optimizer to only search +/- 5 degrees of the Zhang result.
-        # This prevents the 15-degree drift or 45-degree diagonal issues.
-        theta_search_window = np.radians(40.0) # Allow 5 degrees of movement
-        lower = np.array([-np.inf, -np.inf, best_angle - theta_search_window, w_init*0.9, l_init*0.9])
-        upper = np.array([np.inf, np.inf, best_angle + theta_search_window, w_init*1.1, l_init*1.1])
+        # Now w and l are guaranteed to be aligned with the Zhang angle
+        w_aligned = np.max(dx) - np.min(dx)
+        l_aligned = np.max(dy) - np.min(dy)
+        # --- STAGE 3: FINAL OPTIMIZATION POLISH ---
+        # BLEND THEM: 
+        # Take CX, CY from PCA, but THETA from Zhang
+        init_guess = [
+            pca_guess[0],  # Good cx
+            pca_guess[1],  # Good cy
+            best_angle,    # Correct global theta
+            w_aligned,  # w
+            l_aligned   # l
+        ]
+        theta_window = np.radians(2.0) # Small window is fine now because theta is good
+        lower = np.array([-np.inf, -np.inf, best_angle - theta_window, w_aligned*0.9, l_aligned*0.9])
+        upper = np.array([np.inf, np.inf, best_angle + theta_window, w_aligned*1.1, l_aligned*1.1])
         
         # Simple uniform weights
-        weights = np.ones(points_array.shape[1])
+        #weights = np.ones(points_array.shape[1])
+        weights = self._calculate_smart_weights(points_array)
 
         # Calculate initial cost
         res_before = self._calculate_residuals(init_guess, points_array, weights)
@@ -170,8 +265,8 @@ class OptimizedLShapeDetector(LShapeFittingDetector):
                 self._calculate_residuals, init_guess,
                 args=(points_array, weights),
                 bounds=(lower, upper),
-                loss='cauchy', f_scale=.05,
-                diff_step=[0.01, 0.01, 0.01, 0.01, 0.01] # Explicitly define step sizes
+                loss='cauchy', f_scale=.02
+                # Explicitly define step sizes
             )
             cx, cy, theta, w, l = res.x
             self.prev_rects = res.x
@@ -189,11 +284,14 @@ class OptimizedLShapeDetector(LShapeFittingDetector):
         
         # --- AFTER OPTIMIZATION ---
         if 'res' in locals():
-            final_params = res.x if 'res' in locals() else init_guess
+            # Send to the global logger
+            
+            final_params = res.x
             res_after = self._calculate_residuals(final_params, points_array, weights)
             cost_after = 0.5 * np.sum(res_after**2)
             improvement = (cost_before - cost_after) / (cost_before + 1e-6) * 100
             theta_diff = np.rad2deg(final_params[2] - init_guess[2])
+            tracker.log(len(tracker.data["time"]), res_before, res_after, init_guess, res.x)
 
             print("-" * 30)
             print(f"Optimization Report (Status: {res.message})")
@@ -210,6 +308,30 @@ class OptimizedLShapeDetector(LShapeFittingDetector):
                          b=[sin_t, cos_t, sin_t, cos_t],
                          c=[c1_mid - w/2.0, c2_mid - l/2.0, c1_mid + w/2.0, c2_mid + l/2.0])
 
+    def _calculate_smart_weights(self, points_array):
+        # points_array is (2, N)
+        # 1. Distance-based weighting (Radial distance from sensor)
+        # Assumes sensor is at (0,0) in the local frame or use world coords
+        dists = np.linalg.norm(points_array, axis=0)
+        # Inverse square law: points twice as far are 4x less certain
+        dist_weights = 1.0 / (1.0 + dists**2)
+
+        # 2. Local Density Weighting (Robustness to "Tail Points")
+        # We look at how many neighbors each point has within 20cm
+        from scipy.spatial import cKDTree
+        tree = cKDTree(points_array.T)
+        # Find number of neighbors within a 0.3m radius
+        neighbor_counts = tree.query_ball_point(points_array.T, r=0.3, return_length=True)
+        
+        # Normalize density: a point with 1 neighbor is "noisy", 10 is "dense"
+        density_weights = np.clip(neighbor_counts / 10.0, 0.1, 1.0)
+
+        # Combined Weights
+        final_weights = dist_weights * density_weights
+        
+        # Normalize so the mean weight is 1.0 (keeps optimizer scaling stable)
+        return final_weights / np.mean(final_weights)
+    
     def _apply_temporal_filter(self, current_params, prev_params):
         """
         Smooths the box movement to stop high-frequency jitter.
@@ -248,26 +370,23 @@ class DualLShapeDetector:
                                        self.optimized_detector.latest_rectangles_list)
 
     def draw(self, axes, elems, x_m, y_m, yaw_rad):
-        def custom_draw(rect_obj, color_code):
-            """A temporary replacement for the hard-coded draw logic"""
-            # Transform contour
+        def custom_draw(rect_obj, color_code, label_prefix, lw=2):
             transformed_contour = rect_obj.contour.homogeneous_transformation(x_m, y_m, yaw_rad)
-            rectangle_plot, = axes.plot(transformed_contour.get_x_data(),
-                                        transformed_contour.get_y_data(),
-                                        color=color_code, ls='-', linewidth=2)
-            elems.append(rectangle_plot)
-
-            # Transform center
+            rect_plot, = axes.plot(transformed_contour.get_x_data(),
+                                   transformed_contour.get_y_data(),
+                                   color=color_code, ls='-', linewidth=lw, label=label_prefix)
+            elems.append(rect_plot)
+            
             transformed_center = rect_obj.center_xy.homogeneous_transformation(x_m, y_m, yaw_rad)
             center_plot, = axes.plot(transformed_center.get_x_data(),
                                      transformed_center.get_y_data(),
                                      marker='.', color=color_code)
             elems.append(center_plot)
 
-        # 1. Draw Geometric results in Blue
+        # Draw Geometric (Blue) - Thin line
         for rect in self.geometric_detector.latest_rectangles_list:
-            custom_draw(rect, 'b')
+            custom_draw(rect, 'b', 'Zhang (Geometric)', lw=1.5)
 
-        # 2. Draw Optimized results in Red
+        # Draw Optimized (Red) - Thick line
         for rect in self.optimized_detector.latest_rectangles_list:
-            custom_draw(rect, 'r')
+            custom_draw(rect, 'r', 'Optimized (Polish)', lw=3.0)

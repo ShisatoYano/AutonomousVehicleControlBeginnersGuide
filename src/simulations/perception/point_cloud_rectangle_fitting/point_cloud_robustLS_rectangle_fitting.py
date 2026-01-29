@@ -36,11 +36,13 @@ from sensors import Sensors
 from sensor_parameters import SensorParameters
 from omni_directional_lidar import OmniDirectionalLidar
 from l_shape_fitting_detector import LShapeFittingDetector
-from robust_least_squares_detector import OptimizedLShapeDetector, DualLShapeDetector #RansacOptimizationDetector #RobustRectangleFittingDetector
+from robust_least_squares_detector import OptimizedLShapeDetector, DualLShapeDetector, tracker #RansacOptimizationDetector #RobustRectangleFittingDetector
 
 # flag to show plot figure
 # when executed as unit test, this flag is set as false
 show_plot = True
+# --- STEP 1: Define at the top ---
+
 
 
 def main():
@@ -54,12 +56,12 @@ def main():
 
     # create obstacle instances
     obst_list = ObstacleList()
-    obst1 = Obstacle(State(x_m=-5.0, y_m=15.0, speed_mps=1.0), yaw_rate_rps=np.deg2rad(10), width_m=1.0)
-    obst_list.add_obstacle(obst1)
+    #obst1 = Obstacle(State(x_m=-5.0, y_m=15.0, speed_mps=1.0), yaw_rate_rps=np.deg2rad(10), width_m=1.0)
+    #obst_list.add_obstacle(obst1)
     #obst2 = Obstacle(State(x_m=0.0, y_m=-15.0), length_m=10.0, width_m=5.0)
     #obst_list.add_obstacle(obst2)
-    obst3 = Obstacle(State(x_m=20.0), yaw_rate_rps=np.deg2rad(15))
-    obst_list.add_obstacle(obst3)
+    #obst3 = Obstacle(State(x_m=20.0), yaw_rate_rps=np.deg2rad(15))
+    #obst_list.add_obstacle(obst3)
     #obst4 = Obstacle(State(x_m=-20.0, y_m=0.0), width_m=1.0)
     #obst_list.add_obstacle(obst4)
     obst6 = Obstacle(State(x_m=-15.0, y_m=-15.0), length_m=10.0, width_m=5.0)
@@ -82,6 +84,10 @@ def main():
 
     # ... Execute simulation ...
     vis.draw()
+
+    # This only runs AFTER you close the simulation window
+    print("Generating post-simulation report...")
+    tracker.plot()
 
 
 # execute main process
