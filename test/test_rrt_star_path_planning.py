@@ -1,5 +1,5 @@
 """
-Test of A* path planning and navigation simulation
+Test of RRT* path planning and navigation simulation
 
 Author: Yuvraj Gupta
 """
