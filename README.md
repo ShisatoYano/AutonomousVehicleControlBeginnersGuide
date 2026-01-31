@@ -100,8 +100,6 @@ For setting up the environment with Docker:
 ![](src/simulations/localization/unscented_kalman_filter_localization/unscented_kalman_filter_localization.gif)  
 #### Particle Filter Localization
 ![](src/simulations/localization/particle_filter_localization/particle_filter_localization.gif)  
-#### EKF(Blue) vs UKF(Cyan) vs PF(Lime)
-![](src/simulations/localization/ekf_ukf_pf_comparison/ekf_ukf_pf_comparison.gif)    
 ### Mapping
 #### Binary Occupancy Grid Map Construction
 ![](src/simulations/mapping/binary_grid_map_construction/binary_grid_map_construction.gif)  
@@ -113,23 +111,15 @@ For setting up the environment with Docker:
 #### A*
 Planning  
 ![](src/simulations/path_planning/astar_path_planning/astar_search.gif)  
-Navigation  
-![](src/simulations/path_planning/astar_path_planning/astar_navigate.gif)  
 #### Bidirectional A*
 Planning  
 ![](src/simulations/path_planning/astar_bidirectional_path_planning/astar_bidirectional_search.gif)  
-Navigation  
-![](src/simulations/path_planning/astar_bidirectional_path_planning/astar_bidirectional_navigate.gif)  
 #### Hybrid A*
 Planning  
 ![](src/simulations/path_planning/astar_hybrid_path_planning/astar_hybrid_search.gif)  
-Navigation  
-![](src/simulations/path_planning/astar_hybrid_path_planning/astar_hybrid_navigate.gif)  
 #### Dijkstra
 Planning(Reduce frames by sampling every nth node to prevent memory exhaustion)  
 ![](src/simulations/path_planning/dijkstra_path_planning/dijkstra_search.gif)  
-Navigation  
-![](src/simulations/path_planning/dijkstra_path_planning/dijkstra_navigate.gif)  
 #### RRT
 Planning  
 ![](src/simulations/path_planning/rrt_path_planning/rrt_search.gif)  
