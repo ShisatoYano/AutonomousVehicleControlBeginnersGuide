@@ -1,6 +1,5 @@
 """
 potential_field_map_construction.py
-
 Author: Panav Arpit Raaj
 """
 
@@ -52,7 +51,8 @@ def main():
 
     # set simulation parameters
     x_lim, y_lim = MinMax(-5, 55), MinMax(-20, 25)
-    vis = GlobalXYVisualizer(x_lim, y_lim, TimeParameters(span_sec=25), show_zoom=False)
+    gif_path = abs_dir_path + "/potential_field_demo.gif"
+    vis = GlobalXYVisualizer(x_lim, y_lim, TimeParameters(span_sec=30), show_zoom=False, gif_name=gif_path)
 
     # create course data instance
     course = CubicSplineCourse([0.0, 10.0, 25, 40, 50],
