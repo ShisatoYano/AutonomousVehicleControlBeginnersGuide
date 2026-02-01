@@ -1,7 +1,7 @@
 """
 point_cloud_rectangle_fitting.py
 
-Author: Shisato Yano
+Author: Shreyansh Shethia
 """
 
 # import path setting
