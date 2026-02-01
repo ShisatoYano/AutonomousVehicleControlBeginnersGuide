@@ -1,5 +1,5 @@
 """
-Test of Object Detection simulation by L-Shape Fitting algorithm
+Test of Object Detection simulation by Robust Rectangle Fitting algorithm
 
 Author: Shreyansh Shethia
 """
