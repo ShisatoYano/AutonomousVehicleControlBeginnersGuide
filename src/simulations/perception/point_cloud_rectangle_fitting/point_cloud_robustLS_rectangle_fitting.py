@@ -52,16 +52,16 @@ def main():
     # set simulation parameters
     x_lim, y_lim = MinMax(-30, 30), MinMax(-30, 30)
     navigation_gif_path = abs_dir_path + relative_simulations + "perception/point_cloud_rectangle_fitting/point_cloud_robustLS_rectangle_fitting.gif"
-    vis = GlobalXYVisualizer(x_lim, y_lim, TimeParameters(span_sec=1), gif_name=navigation_gif_path)
+    vis = GlobalXYVisualizer(x_lim, y_lim, TimeParameters(span_sec=20), gif_name=navigation_gif_path)
 
     # create obstacle instances
     obst_list = ObstacleList()
-    #obst1 = Obstacle(State(x_m=-5.0, y_m=15.0, speed_mps=1.0), yaw_rate_rps=np.deg2rad(10), width_m=1.0)
-    #obst_list.add_obstacle(obst1)
+    obst1 = Obstacle(State(x_m=-5.0, y_m=15.0, speed_mps=1.0), yaw_rate_rps=np.deg2rad(10), width_m=1.0)
+    obst_list.add_obstacle(obst1)
     #obst2 = Obstacle(State(x_m=0.0, y_m=-15.0), length_m=10.0, width_m=5.0)
     #obst_list.add_obstacle(obst2)
-    #obst3 = Obstacle(State(x_m=20.0), yaw_rate_rps=np.deg2rad(15))
-    #obst_list.add_obstacle(obst3)
+    obst3 = Obstacle(State(x_m=20.0), yaw_rate_rps=np.deg2rad(15))
+    obst_list.add_obstacle(obst3)
     #obst4 = Obstacle(State(x_m=-20.0, y_m=0.0), width_m=1.0)
     #obst_list.add_obstacle(obst4)
     obst6 = Obstacle(State(x_m=-15.0, y_m=-15.0), length_m=10.0, width_m=5.0)
@@ -82,8 +82,7 @@ def main():
         vis.not_show_plot()
     else:
         print("Simulation started. Close the simulation window to generate report after simulation.")
-            
-        
+
     # ... Execute simulation ...
     vis.draw()
     if (show_plot and len(obst_list.get_list())==1):
