@@ -1,5 +1,5 @@
 """
-point_cloud_rectangle_fitting.py
+point_cloud_robustLS_rectangle_fitting.py
 
 Author: Shreyansh Shethia
 """
