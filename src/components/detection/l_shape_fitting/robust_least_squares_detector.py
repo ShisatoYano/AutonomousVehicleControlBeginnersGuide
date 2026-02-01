@@ -25,9 +25,20 @@ import numpy as np
 from scipy.optimize import least_squares
 from math import sin, cos, atan2
 from scipy.spatial.distance import pdist, squareform
+
 class FittingDataTracker:
+    """
+    Telemetry and performance tracking class for OBB fitting analysis.
+    
+    This class captures frame-by-frame metrics from both the geometric 
+    baseline and the optimized refinement stage. It facilitates the 
+    calculation of Root Mean Square Error (RMSE) and tracks the 
+    evolution of spatial parameters (cx, cy, theta) over time.
+    """
     def __init__(self):
-        # Explicitly initialize the dictionary
+        """
+        Initialize the tracker with Ground Truth placeholders and data storage.
+        """
         self.gt_cx = 20.0      # replace with 
         self.gt_cy = 0.0   # Example ground truth center y
         self.data = {
@@ -43,7 +54,19 @@ class FittingDataTracker:
         }
 
     def log(self, t, r_geo, r_opt, p_geo, p_opt):
-        # Append data points to the lists
+        """
+        Record performance metrics for the current simulation frame.
+
+        Calculates the instantaneous RMSE for both methods and logs the 
+        predicted pose and dimensions.
+
+        Args:
+            t (float/int): Current frame index or simulation time.
+            r_geo (numpy.ndarray): Residual vector from the geometric fit.
+            r_opt (numpy.ndarray): Residual vector from the optimized fit.
+            p_geo (list/tuple): Pose parameters from geometric fitting [cx, cy, theta, ...].
+            p_opt (list/tuple): Pose parameters from optimized fitting [cx, cy, theta, ...].
+        """
         self.data["time"].append(t)
         self.data["rmse_geo"].append(np.sqrt(np.mean(r_geo**2)))
         self.data["rmse_opt"].append(np.sqrt(np.mean(r_opt**2)))
@@ -55,13 +78,20 @@ class FittingDataTracker:
         self.data["cy_opt"].append(p_opt[1])
 
     def plot(self):
-        # Check if we actually collected anything to avoid empty plot errors
+        """
+        Generate a multi-panel performance report using Matplotlib.
+
+        Produces:
+        1. An RMSE comparison plot to visualize fitting precision.
+        2. A two-panel plot comparing predicted Center-X and Center-Y 
+           against baseline geometric results.
+        """
         if not self.data["time"]:
             print("No data collected to plot.")
             return
 
         plt.figure(figsize=(10, 5))
-        plt.plot(self.data["time"], self.data["rmse_geo"], 'b--', label='Previous RMSE')
+        plt.plot(self.data["time"], self.data["rmse_geo"], 'b--', label='Geometric RMSE')
         plt.plot(self.data["time"], self.data["rmse_opt"], 'r-', label='Optimized RMSE')
         plt.ylabel("RMSE [m]"); plt.legend(); plt.grid(True)
 
@@ -69,7 +99,7 @@ class FittingDataTracker:
         fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(10, 10))
         
         # Plot 1: CX Accuracy
-        ax1.plot(self.data["time"], self.data["cx_geo"], 'b--', label='Zhang CX', alpha=0.5)
+        ax1.plot(self.data["time"], self.data["cx_geo"], 'b--', label='Geometric CX', alpha=0.5)
         ax1.plot(self.data["time"], self.data["cx_opt"], 'r-', label='Optimized CX')
         #ax1.axhline(y=self.gt_cx, color='g', linestyle='-', linewidth=2, label='Ground Truth CX')
         ax1.set_ylabel("X Position [m]")
@@ -77,7 +107,7 @@ class FittingDataTracker:
         ax1.legend(); ax1.grid(True)
 
         # Plot 2: CY Accuracy
-        ax2.plot(self.data["time"], self.data["cy_geo"], 'b--', label='Zhang CY', alpha=0.5)
+        ax2.plot(self.data["time"], self.data["cy_geo"], 'b--', label='Geometric CY', alpha=0.5)
         ax2.plot(self.data["time"], self.data["cy_opt"], 'r-', label='Optimized CY')
         #ax2.axhline(y=self.gt_cy, color='g', linestyle='-', linewidth=2, label='Ground Truth CY')
         ax2.set_ylabel("Y Position [m]")
@@ -93,6 +123,16 @@ tracker = FittingDataTracker()
 
 class OptimizedLShapeDetector(LShapeFittingDetector):
     def __init__(self, min_rng_th_m=3.0, rng_th_rate=0.1, change_angle_deg=1.0, lossfunc='huber', show_logger_debug=True):
+        """
+        Initialize the Robust L-Shape detector with Least-Squares optimization.
+        
+        Args:
+            min_rng_th_m (float): Minimum range threshold for clustering.
+            rng_th_rate (float): Range threshold rate.
+            change_angle_deg (float): Step size for the geometric orientation sweep.
+            lossfunc (str): Robust M-estimator to use ('huber', 'cauchy', etc.).
+            show_logger_debug (bool): Flag to print optimization results to console.
+        """
         super().__init__(min_rng_th_m, rng_th_rate, change_angle_deg)
         self.f_scale = 0.05  # Tight tolerance for the final polish
         self.prev_rects = {}
@@ -100,7 +140,20 @@ class OptimizedLShapeDetector(LShapeFittingDetector):
         self.show_logger_debug = show_logger_debug
 
     def _calculate_residuals(self, params, points, weights):
-        """Standard SDF residuals used for the final polish."""
+        """
+        Calculate the Signed Distance Field (SDF) residuals for the optimizer.
+        
+        This function transforms points into the local frame of the candidate box 
+        and calculates the distance of each point to the nearest rectangle edge.
+        
+        Args:
+            params (list): [cx, cy, theta, w, l]
+            points (numpy.ndarray): (2, N) array of LiDAR points in world frame.
+            weights (numpy.ndarray): (N,) array of weights for each point.
+            
+        Returns:
+            numpy.ndarray: Flattened residual vector scaled by weights.
+        """
         cx, cy, theta, w, l = params
         cos_t, sin_t = np.cos(theta), np.sin(theta)
         
@@ -119,6 +172,19 @@ class OptimizedLShapeDetector(LShapeFittingDetector):
         return np.concatenate([res * np.sqrt(weights)])
 
     def _get_initial_guess(self, points_array):
+        """
+        Generate a high-quality initial guess using a hybrid geometric approach.
+        
+        1. Uses Yano's variance criterion to find the global orientation.
+        2. Uses the midpoint of the farthest-point pair for the spatial center.
+        3. Projects points onto the chosen axes to estimate initial dimensions.
+        
+        Args:
+            points_array (numpy.ndarray): (2, N) array of LiDAR points.
+            
+        Returns:
+            list: [cx, cy, theta_init, w_init, l_init] as an initial guess for the solver.
+        """
         # points_array shape is (2, N)
         points_t = points_array.T # (N, 2)
         
@@ -162,6 +228,18 @@ class OptimizedLShapeDetector(LShapeFittingDetector):
     
     
     def _calculate_rectangle(self, points_array):
+        """
+        Execute the full fitting pipeline: Initialization -> Optimization -> Logging.
+        
+        This is the main entry point for the detector, providing a polished OBB 
+        by refining the geometric guess with a non-linear Huber-weighted solver.
+        
+        Args:
+            points_array (numpy.ndarray): (2, N) array of clustered LiDAR points.
+            
+        Returns:
+            Rectangle: A specialized rectangle object containing the refined OBB parameters.
+        """
         self.prev_rects = {}
         
         # --- STAGE 1: Get Initial Guess from L-Shape Fitting (Your Farthest-Point Logic) ---
@@ -229,13 +307,37 @@ class OptimizedLShapeDetector(LShapeFittingDetector):
     
 
 class DualLShapeDetector:
+    """
+    A comparative detector class that runs both geometric and optimized L-shape fitting.
+    
+    This class facilitates side-by-side visualization and performance analysis by 
+    encapsulating a standard LShapeFittingDetector and an OptimizedLShapeDetector. 
+    It is primarily used for validating the accuracy gains of non-linear optimization 
+    over traditional geometric search methods.
+    """    
     def __init__(self, show_logger_debug=True):
-        # We initialize both the original and the optimized versions
+        """
+        Initialize the dual detector with both fitting pipelines.
+
+        Args:
+            show_logger_debug (bool): If True, enables console output for the 
+                                      optimized fitting stage.
+        """
         self.geometric_detector = LShapeFittingDetector()
         self.optimized_detector = OptimizedLShapeDetector(show_logger_debug=show_logger_debug)
         self.latest_rectangles_list = []
 
     def update(self, point_cloud):
+        """
+        Update both detection pipelines with the latest LiDAR point cloud data.
+
+        Processes the raw cluster through the geometric sweep first, followed 
+        by the optimized Huber-weighted polish. Results are aggregated into 
+        a single list for state management and visualization.
+
+        Args:
+            point_cloud (numpy.ndarray): The raw (2, N) LiDAR point cloud cluster.
+        """
         # 1. Update both detectors
         self.geometric_detector.update(point_cloud)
         self.optimized_detector.update(point_cloud)
@@ -246,7 +348,21 @@ class DualLShapeDetector:
                                        self.optimized_detector.latest_rectangles_list)
 
     def draw(self, axes, elems, x_m, y_m, yaw_rad):
+        """
+        Visualize the OBB results from both detectors on a 2D plot.
+
+        Renders the geometric fit as a thin blue line and the optimized fit 
+        as a thick red line to clearly distinguish the refinement polish.
+
+        Args:
+            axes (matplotlib.axes.Axes): The axes object for the current plot.
+            elems (list): A list of plot elements to be updated/cleared.
+            x_m (float): Current vehicle X position in world frame.
+            y_m (float): Current vehicle Y position in world frame.
+            yaw_rad (float): Current vehicle heading in radians.
+        """
         def custom_draw(rect_obj, color_code, label_prefix, lw=2):
+            """Internal helper to handle homogeneous transformation and plotting."""
             transformed_contour = rect_obj.contour.homogeneous_transformation(x_m, y_m, yaw_rad)
             rect_plot, = axes.plot(transformed_contour.get_x_data(),
                                    transformed_contour.get_y_data(),
@@ -261,8 +377,8 @@ class DualLShapeDetector:
 
         # Draw Geometric (Blue) - Thin line
         for rect in self.geometric_detector.latest_rectangles_list:
-            custom_draw(rect, 'b', 'Zhang (Geometric)', lw=1.5)
+            custom_draw(rect, 'b', 'Geometric', lw=1.5)
 
         # Draw Optimized (Red) - Thick line
         for rect in self.optimized_detector.latest_rectangles_list:
-            custom_draw(rect, 'r', 'Optimized (Polish)', lw=3.0)
+            custom_draw(rect, 'r', 'Optimized', lw=3.0)

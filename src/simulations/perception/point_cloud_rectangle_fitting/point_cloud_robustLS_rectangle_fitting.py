@@ -52,7 +52,7 @@ def main():
     # set simulation parameters
     x_lim, y_lim = MinMax(-30, 30), MinMax(-30, 30)
     navigation_gif_path = abs_dir_path + relative_simulations + "perception/point_cloud_rectangle_fitting/point_cloud_robustLS_rectangle_fitting.gif"
-    vis = GlobalXYVisualizer(x_lim, y_lim, TimeParameters(span_sec=1), gif_name=None)
+    vis = GlobalXYVisualizer(x_lim, y_lim, TimeParameters(span_sec=1), gif_name=navigation_gif_path)
 
     # create obstacle instances
     obst_list = ObstacleList()
