@@ -17,9 +17,10 @@ Python sample codes and documents about Autonomous vehicle control algorithm. Th
         * [Unscented Kalman Filter Localization](#unscented-kalman-filter-localization)
         * [Particle Filter Localization](#particle-filter-localization)
     * [Mapping](#mapping)
-        * [Binary Occupancy Grid Map Construction](#binary-occupancy-grid-map-construction)
-        * [Cost Map Construction](#cost-map-construction)
-        * [NDT Map Construction](#ndt-map-construction)
+        * [Binary Occupancy Grid Map](#binary-occupancy-grid-map)
+        * [Cost Map](#cost-map)
+        * [Potential Field Map](#potential-field-map)
+        * [NDT Map](#ndt-map)
     * [Path Planning](#path-planning)
         * [A*](#a)
         * [Bidirectional A*](#bidirectional-a)
@@ -100,11 +101,13 @@ For setting up the environment with Docker:
 #### Particle Filter Localization
 ![](src/simulations/localization/particle_filter_localization/particle_filter_localization.gif)  
 ### Mapping
-#### Binary Occupancy Grid Map Construction
+#### Binary Occupancy Grid Map
 ![](src/simulations/mapping/binary_grid_map_construction/binary_grid_map_construction.gif)  
-#### Cost Map Construction
+#### Cost Map
 ![](src/simulations/mapping/cost_grid_map_construction/cost_grid_map_construction.gif)  
-#### NDT Map Construction
+#### Potential Field Map
+![](src/simulations/mapping/potential_field_map_construction/potential_field_demo.gif)   
+#### NDT Map
 ![](src/simulations/mapping/ndt_map_construction/ndt_map_construction.gif)  
 ### Path Planning
 #### A*
