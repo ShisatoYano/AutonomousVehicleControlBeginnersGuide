@@ -82,23 +82,18 @@ def main():
 
     course = CubicSplineCourse(sparse_x, sparse_y, 20)
 
-    # -- Obstacles for visualisation --
-    obst_list = ObstacleList()
-    obst_list.add_obstacle(Obstacle(State(x_m=10.0, y_m=15.0), length_m=10, width_m=8))
-    obst_list.add_obstacle(Obstacle(State(x_m=40.0, y_m=0.0), length_m=2, width_m=10))
-    obst_list.add_obstacle(Obstacle(State(x_m=10.0, y_m=-10.0, yaw_rad=np.rad2deg(45)), length_m=5, width_m=5))
-    obst_list.add_obstacle(Obstacle(State(x_m=30.0, y_m=15.0, yaw_rad=np.rad2deg(10)), length_m=5, width_m=2))
-    obst_list.add_obstacle(Obstacle(State(x_m=50.0, y_m=15.0, yaw_rad=np.rad2deg(15)), length_m=5, width_m=2))
-    obst_list.add_obstacle(Obstacle(State(x_m=25.0, y_m=0.0), length_m=2, width_m=2))
-    obst_list.add_obstacle(Obstacle(State(x_m=35.0, y_m=-15.0), length_m=7, width_m=2))
-
     # -- Vehicle navigation simulation --
     x_lim, y_lim = MinMax(-5, 55), MinMax(-20, 25)
     gif_path = abs_dir_path + "/gradient_descent_demo.gif"
     vis = GlobalXYVisualizer(x_lim, y_lim, TimeParameters(span_sec=25),
                              show_zoom=False, gif_name=gif_path)
 
-    vis.add_object(obst_list)
+    # Add heatmap as background (wrap draw_map to match visualizer interface)
+    class _HeatmapWrapper:
+        def __init__(self, pf): self.pf = pf
+        def draw(self, axes, elems): self.pf.draw_map(axes, elems)
+
+    vis.add_object(_HeatmapWrapper(pf_map))
     vis.add_object(course)
 
     spec = VehicleSpecification()
