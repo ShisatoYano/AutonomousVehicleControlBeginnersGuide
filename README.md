@@ -17,15 +17,22 @@ Python sample codes and documents about Autonomous vehicle control algorithm. Th
         * [Unscented Kalman Filter Localization](#unscented-kalman-filter-localization)
         * [Particle Filter Localization](#particle-filter-localization)
     * [Mapping](#mapping)
-        * [NDT Map Construction](#ndt-map-construction)
+        * [Binary Occupancy Grid Map](#binary-occupancy-grid-map)
+        * [Cost Map](#cost-map)
+        * [Potential Field Map](#potential-field-map)
+        * [NDT Map](#ndt-map)
     * [Path Planning](#path-planning)
         * [A*](#a)
+        * [Bidirectional A*](#bidirectional-a)
+        * [Hybrid A*](#hybrid-a)
         * [Dijkstra](#dijkstra)
+        * [RRT](#rrt)
     * [Path Tracking](#path-tracking)
         * [Pure pursuit Path Tracking](#pure-pursuit-path-tracking)
         * [Rear wheel feedback Path Tracking](#rear-wheel-feedback-path-tracking)
         * [LQR(Linear Quadratic Regulator) Path Tracking](#lqrlinear-quadratic-regulator-path-tracking)
         * [Stanley steering control Path tracking](#stanley-steering-control-path-tracking)
+        * [MPPI Path Tracking](#mppi-path-tracking)
     * [Perception](#perception)
         * [Rectangle fitting Detection](#rectangle-fitting-detection)
         * [Sensor's Extrinsic Parameters Estimation](#sensors-extrinsic-parameters-estimation)
@@ -94,22 +101,31 @@ For setting up the environment with Docker:
 ![](src/simulations/localization/unscented_kalman_filter_localization/unscented_kalman_filter_localization.gif)  
 #### Particle Filter Localization
 ![](src/simulations/localization/particle_filter_localization/particle_filter_localization.gif)  
-#### EKF(Blue) vs UKF(Cyan) vs PF(Lime)
-![](src/simulations/localization/ekf_ukf_pf_comparison/ekf_ukf_pf_comparison.gif)    
 ### Mapping
-#### NDT Map Construction
+#### Binary Occupancy Grid Map
+![](src/simulations/mapping/binary_grid_map_construction/binary_grid_map_construction.gif)  
+#### Cost Map
+![](src/simulations/mapping/cost_grid_map_construction/cost_grid_map_construction.gif)  
+#### Potential Field Map
+![](src/simulations/mapping/potential_field_map_construction/potential_field_demo.gif)   
+#### NDT Map
 ![](src/simulations/mapping/ndt_map_construction/ndt_map_construction.gif)  
 ### Path Planning
 #### A*
 Planning  
 ![](src/simulations/path_planning/astar_path_planning/astar_search.gif)  
-Navigation  
-![](src/simulations/path_planning/astar_path_planning/astar_navigate.gif)  
+#### Bidirectional A*
+Planning  
+![](src/simulations/path_planning/astar_bidirectional_path_planning/astar_bidirectional_search.gif)  
+#### Hybrid A*
+Planning  
+![](src/simulations/path_planning/astar_hybrid_path_planning/astar_hybrid_search.gif)  
 #### Dijkstra
 Planning(Reduce frames by sampling every nth node to prevent memory exhaustion)  
 ![](src/simulations/path_planning/dijkstra_path_planning/dijkstra_search.gif)  
-Navigation  
-![](src/simulations/path_planning/dijkstra_path_planning/dijkstra_navigate.gif)  
+#### RRT
+Planning  
+![](src/simulations/path_planning/rrt_path_planning/rrt_search.gif)  
 ### Path Tracking
 #### Pure pursuit Path Tracking
 ![](src/simulations/path_tracking/pure_pursuit_path_tracking/pure_pursuit_path_tracking.gif)  
@@ -119,6 +135,8 @@ Navigation
 ![](src/simulations/path_tracking/lqr_path_tracking/lqr_path_tracking.gif)  
 #### Stanley steering control Path Tracking
 ![](src/simulations/path_tracking/stanley_path_tracking/stanley_path_tracking.gif)  
+#### MPPI Path Tracking
+![](src/simulations/path_tracking/mppi_path_tracking/mppi_path_tracking.gif)  
 ### Perception
 #### Rectangle fitting Detection
 ![](src/simulations/perception/point_cloud_rectangle_fitting/point_cloud_rectangle_fitting.gif)  
