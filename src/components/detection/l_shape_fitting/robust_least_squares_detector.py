@@ -1,7 +1,7 @@
 """
-l_shape_fitting_detector.py
+robust_least_squares_detector.py
 
-Author: Shisato Yano
+Author: Shreyansh Shethia
 """
 
 from asyncio.log import logger
