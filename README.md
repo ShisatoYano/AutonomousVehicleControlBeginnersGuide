@@ -1,9 +1,9 @@
 # AutonomousVehicleControlBeginnersGuide
-[![Linux_CI](https://github.com/ShisatoYano/AutonomousDrivingSamplePrograms/actions/workflows/Linux_CI.yml/badge.svg)](https://github.com/ShisatoYano/AutonomousDrivingSamplePrograms/actions/workflows/Linux_CI.yml) [![Windows_CI](https://github.com/ShisatoYano/AutonomousDrivingSamplePrograms/actions/workflows/Windows_CI.yml/badge.svg)](https://github.com/ShisatoYano/AutonomousDrivingSamplePrograms/actions/workflows/Windows_CI.yml) [![MacOS_CI](https://github.com/ShisatoYano/AutonomousDrivingSamplePrograms/actions/workflows/MacOS_CI.yml/badge.svg)](https://github.com/ShisatoYano/AutonomousDrivingSamplePrograms/actions/workflows/MacOS_CI.yml) [![CodeFactor](https://www.codefactor.io/repository/github/shisatoyano/autonomousvehiclecontrolbeginnersguide/badge)](https://www.codefactor.io/repository/github/shisatoyano/autonomousvehiclecontrolbeginnersguide)  
+[![Linux_CI](https://github.com/ShisatoYano/AutonomousDrivingSamplePrograms/actions/workflows/Linux_CI.yml/badge.svg)](https://github.com/ShisatoYano/AutonomousDrivingSamplePrograms/actions/workflows/Linux_CI.yml) [![Windows_CI](https://github.com/ShisatoYano/AutonomousDrivingSamplePrograms/actions/workflows/Windows_CI.yml/badge.svg)](https://github.com/ShisatoYano/AutonomousDrivingSamplePrograms/actions/workflows/Windows_CI.yml) [![MacOS_CI](https://github.com/ShisatoYano/AutonomousDrivingSamplePrograms/actions/workflows/MacOS_CI.yml/badge.svg)](https://github.com/ShisatoYano/AutonomousDrivingSamplePrograms/actions/workflows/MacOS_CI.yml) [![CodeFactor](https://www.codefactor.io/repository/github/shisatoyano/autonomousvehiclecontrolbeginnersguide/badge)](https://www.codefactor.io/repository/github/shisatoyano/autonomousvehiclecontrolbeginnersguide)
 
-Python sample codes and documents about Autonomous vehicle control algorithm. This project can be used as a technical guide book to study the algorithms and the software architectures for beginners.  
+Python sample codes and documents about Autonomous vehicle control algorithm. This project can be used as a technical guide book to study the algorithms and the software architectures for beginners.
 
-![](src/simulations/mapping/ndt_map_construction/ndt_map_construction.gif)  
+![](src/simulations/mapping/ndt_map_construction/ndt_map_construction.gif)
 
 
 ## Table of Contents
@@ -26,6 +26,7 @@ Python sample codes and documents about Autonomous vehicle control algorithm. Th
         * [Bidirectional A*](#bidirectional-a)
         * [Hybrid A*](#hybrid-a)
         * [Dijkstra](#dijkstra)
+        * [Elastic Bands](#elastic-bands)
         * [RRT](#rrt)
     * [Path Tracking](#path-tracking)
         * [Pure pursuit Path Tracking](#pure-pursuit-path-tracking)
@@ -44,16 +45,16 @@ Python sample codes and documents about Autonomous vehicle control algorithm. Th
 
 
 ## What is this?
-This is a sample codes collections about Autonomous vehicle control algorithm. Each source codes are implemented with Python to help your understanding. You can fork this repository and use for studying, education or work freely.  
+This is a sample codes collections about Autonomous vehicle control algorithm. Each source codes are implemented with Python to help your understanding. You can fork this repository and use for studying, education or work freely.
 
 
 ## Goal of this project
-I want to release my own technical book about Autonomous Vehicle algorithms in the future. The book will include all of codes and documents in this repository as contents.  
+I want to release my own technical book about Autonomous Vehicle algorithms in the future. The book will include all of codes and documents in this repository as contents.
 
 
 ## Requirements
-Please satisfy with the following requirements on native or VM Linux in advance.  
-For running each sample codes:  
+Please satisfy with the following requirements on native or VM Linux in advance.
+For running each sample codes:
 * [Python 3.13.x](https://www.python.org/)
 * [Matplotlib](https://matplotlib.org/)
 * [NumPy](https://numpy.org/)
@@ -69,7 +70,7 @@ For setting up the environment with Docker:
 
 
 ## How to use
-1. Clone this repository  
+1. Clone this repository
     ```bash
     $ git clone https://github.com/ShisatoYano/AutonomousVehicleControlBeginnersGuide
     ```
@@ -96,76 +97,83 @@ For setting up the environment with Docker:
 ## Examples of Simulation
 ### Localization
 #### Extended Kalman Filter Localization
-![](src/simulations/localization/extended_kalman_filter_localization/extended_kalman_filter_localization.gif)  
+![](src/simulations/localization/extended_kalman_filter_localization/extended_kalman_filter_localization.gif)
 #### Unscented Kalman Filter Localization
-![](src/simulations/localization/unscented_kalman_filter_localization/unscented_kalman_filter_localization.gif)  
+![](src/simulations/localization/unscented_kalman_filter_localization/unscented_kalman_filter_localization.gif)
 #### Particle Filter Localization
-![](src/simulations/localization/particle_filter_localization/particle_filter_localization.gif)  
+![](src/simulations/localization/particle_filter_localization/particle_filter_localization.gif)
 ### Mapping
 #### Binary Occupancy Grid Map
-![](src/simulations/mapping/binary_grid_map_construction/binary_grid_map_construction.gif)  
+![](src/simulations/mapping/binary_grid_map_construction/binary_grid_map_construction.gif)
 #### Cost Map
-![](src/simulations/mapping/cost_grid_map_construction/cost_grid_map_construction.gif)  
+![](src/simulations/mapping/cost_grid_map_construction/cost_grid_map_construction.gif)
 #### Potential Field Map
-![](src/simulations/mapping/potential_field_map_construction/potential_field_demo.gif)   
+![](src/simulations/mapping/potential_field_map_construction/potential_field_demo.gif)
 #### NDT Map
-![](src/simulations/mapping/ndt_map_construction/ndt_map_construction.gif)  
+![](src/simulations/mapping/ndt_map_construction/ndt_map_construction.gif)
 ### Path Planning
 #### A*
-Planning  
-![](src/simulations/path_planning/astar_path_planning/astar_search.gif)  
+Planning
+![](src/simulations/path_planning/astar_path_planning/astar_search.gif)
 #### Bidirectional A*
-Planning  
-![](src/simulations/path_planning/astar_bidirectional_path_planning/astar_bidirectional_search.gif)  
+Planning
+![](src/simulations/path_planning/astar_bidirectional_path_planning/astar_bidirectional_search.gif)
 #### Hybrid A*
-Planning  
-![](src/simulations/path_planning/astar_hybrid_path_planning/astar_hybrid_search.gif)  
+Planning
+![](src/simulations/path_planning/astar_hybrid_path_planning/astar_hybrid_search.gif)
 #### Dijkstra
-Planning(Reduce frames by sampling every nth node to prevent memory exhaustion)  
-![](src/simulations/path_planning/dijkstra_path_planning/dijkstra_search.gif)  
+Planning(Reduce frames by sampling every nth node to prevent memory exhaustion)
+![](src/simulations/path_planning/dijkstra_path_planning/dijkstra_search.gif)
+Navigation
+![](src/simulations/path_planning/dijkstra_path_planning/dijkstra_navigate.gif)
+#### Elastic Bands
+A* seed path smoothed with Elastic Bands optimisation
+![](src/simulations/path_planning/elastic_bands_path_planning/elastic_bands_search.gif)
+Navigation
+![](src/simulations/path_planning/elastic_bands_path_planning/elastic_bands_navigate.gif)
 #### RRT
-Planning  
-![](src/simulations/path_planning/rrt_path_planning/rrt_search.gif)  
+Planning
+![](src/simulations/path_planning/rrt_path_planning/rrt_search.gif)
 ### Path Tracking
 #### Pure pursuit Path Tracking
-![](src/simulations/path_tracking/pure_pursuit_path_tracking/pure_pursuit_path_tracking.gif)  
+![](src/simulations/path_tracking/pure_pursuit_path_tracking/pure_pursuit_path_tracking.gif)
 #### Rear wheel feedback Path Tracking
-![](src/simulations//path_tracking/rear_wheel_feedback_tracking/rear_wheel_feedback_tracking.gif)  
+![](src/simulations//path_tracking/rear_wheel_feedback_tracking/rear_wheel_feedback_tracking.gif)
 #### LQR(Linear Quadratic Regulator) Path Tracking
-![](src/simulations/path_tracking/lqr_path_tracking/lqr_path_tracking.gif)  
+![](src/simulations/path_tracking/lqr_path_tracking/lqr_path_tracking.gif)
 #### Stanley steering control Path Tracking
-![](src/simulations/path_tracking/stanley_path_tracking/stanley_path_tracking.gif)  
+![](src/simulations/path_tracking/stanley_path_tracking/stanley_path_tracking.gif)
 #### MPPI Path Tracking
-![](src/simulations/path_tracking/mppi_path_tracking/mppi_path_tracking.gif)  
+![](src/simulations/path_tracking/mppi_path_tracking/mppi_path_tracking.gif)
 ### Perception
 #### Rectangle fitting Detection
-![](src/simulations/perception/point_cloud_rectangle_fitting/point_cloud_rectangle_fitting.gif)  
+![](src/simulations/perception/point_cloud_rectangle_fitting/point_cloud_rectangle_fitting.gif)
 #### Sensor's Extrinsic Parameters Estimation
-Estimation by Unscented Kalman Filter  
-![](src/simulations/perception/sensor_auto_calibration/sensor_auto_calibration.gif)  
+Estimation by Unscented Kalman Filter
+![](src/simulations/perception/sensor_auto_calibration/sensor_auto_calibration.gif)
 
 
 ## Documents
-Design documents of each Python programs are prepared here. The documents are still not completed. They have been being updated. If you found any problems in them, please tell me by creating an issue.  
-[Documents link](/doc/DESIGN_DOCUMENT.md)  
+Design documents of each Python programs are prepared here. The documents are still not completed. They have been being updated. If you found any problems in them, please tell me by creating an issue.
+[Documents link](/doc/DESIGN_DOCUMENT.md)
 
 
 ## License
-MIT  
+MIT
 
 
 ## Use Case
-I started this project to study an algorithm and software development for Autonomous Vehicle system by myself. You can also use this repo for your own studying, education, researching and development.  
+I started this project to study an algorithm and software development for Autonomous Vehicle system by myself. You can also use this repo for your own studying, education, researching and development.
 
-If this project helps your task, please let me know by creating a issue.  
-Any paper, animation, video as your output, always welcome!! It will encourage me to continue this project.  
+If this project helps your task, please let me know by creating a issue.
+Any paper, animation, video as your output, always welcome!! It will encourage me to continue this project.
 
-Your comment and output is added to [this list of user comments](/USERS_COMMENTS.md).  
+Your comment and output is added to [this list of user comments](/USERS_COMMENTS.md).
 
 
 ## Contribution
-Any contribution by creating an issue or sending a pull request is welcome!! Please check [this document about how to contribute](/HOWTOCONTRIBUTE.md).  
+Any contribution by creating an issue or sending a pull request is welcome!! Please check [this document about how to contribute](/HOWTOCONTRIBUTE.md).
 
 
 ## Author
-[Shisato Yano](https://github.com/ShisatoYano)  
+[Shisato Yano](https://github.com/ShisatoYano)
