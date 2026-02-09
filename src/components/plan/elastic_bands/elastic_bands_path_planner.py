@@ -233,9 +233,10 @@ class ElasticBandsPathPlanner:
         self.y_range = np.arange(y_min, y_max, self.resolution)
         self.rows, self.cols = self.grid.shape
 
-        # SDF: distance (in cells) to nearest obstacle for every free cell
-        obstacle_mask = (self.grid >= 0.99)
-        self.sdf = distance_transform_edt(~obstacle_mask)
+        # SDF: distance (in cells) to nearest impassable cell
+        # (obstacles at >= 0.99 AND clearance zones at ~0.75)
+        impassable_mask = (self.grid > 0)
+        self.sdf = distance_transform_edt(~impassable_mask)
 
         # A* initial path
         self.path = []
@@ -308,7 +309,7 @@ class ElasticBandsPathPlanner:
                 nb = (current[0] + dx, current[1] + dy)
                 if not (0 <= nb[0] < self.cols and 0 <= nb[1] < self.rows):
                     continue
-                if self.grid[nb[1], nb[0]] >= 0.99:
+                if self.grid[nb[1], nb[0]] > 0:
                     continue
                 step = 1.414 if (dx != 0 and dy != 0) else 1.0
                 nc = cost[current] + step
@@ -456,10 +457,11 @@ class ElasticBandsPathPlanner:
             ax.plot(self.start[0], self.start[1], 'go', markersize=8, label="Start")
             ax.plot(self.goal[0], self.goal[1], 'ro', markersize=8, label="Goal")
 
-            # Draw bubbles during optimisation phase
+            # Draw bubbles + path trace during optimisation phases
             if phase >= 3:
                 snap = (history[opt_indices[min(local, len(opt_indices) - 1)]]
                         if phase == 3 else self._optimiser.bubbles)
+                # Bubble circles
                 for bub in snap:
                     wx = self.x_range[0] + bub.pos[0] * self.resolution
                     wy = self.y_range[0] + bub.pos[1] * self.resolution
@@ -467,6 +469,15 @@ class ElasticBandsPathPlanner:
                     circ = Circle((wx, wy), r_world, fill=False,
                                   color='green', alpha=0.25, linewidth=0.5)
                     ax.add_patch(circ)
+                # Path line connecting bubble centers
+                bx = [self.x_range[0] + b.pos[0] * self.resolution
+                      for b in snap]
+                by = [self.y_range[0] + b.pos[1] * self.resolution
+                      for b in snap]
+                ax.plot(bx, by, '-', color='#1565C0', linewidth=2.0,
+                        label="EB Path", zorder=5)
+                ax.plot(bx, by, 'o', color='#1565C0', markersize=4,
+                        zorder=6)
 
             ax.set_title(titles[phase](local), fontsize=14)
             ax.legend(loc='upper left')
