@@ -49,7 +49,7 @@ from min_max import MinMax  # noqa: E402
 class _Bubble:
     """A single bubble in the elastic band."""
 
-    MAX_RADIUS = 100.0
+    MAX_RADIUS = 20.0
     MIN_RADIUS = 0.5
 
     def __init__(self, position, radius):
@@ -85,8 +85,8 @@ class _ElasticBandsOptimiser:
     """
 
     def __init__(self, initial_path, sdf, *,
-                 rho0=20.0, kc=0.05, kr=-0.1, lambda_=0.7,
-                 step_size=3.0, max_iter=60):
+                 rho0=5.0, kc=0.3, kr=-0.05, lambda_=0.6,
+                 step_size=1.0, max_iter=60):
         self.sdf = sdf
         self.rows, self.cols = sdf.shape
         self.rho0 = rho0
@@ -154,7 +154,7 @@ class _ElasticBandsOptimiser:
             v_norm2 = np.dot(v, v) + 1e-9
             # Remove tangential component (project onto normal)
             f_star = f_total - (np.dot(f_total, v) / v_norm2) * v
-            alpha = bub.radius  # adaptive step
+            alpha = min(bub.radius, 3.0)  # adaptive step, clamped
             new_pos = bub.pos + alpha * f_star
             new_pos[0] = np.clip(new_pos[0], 0, self.cols - 1)
             new_pos[1] = np.clip(new_pos[1], 0, self.rows - 1)
