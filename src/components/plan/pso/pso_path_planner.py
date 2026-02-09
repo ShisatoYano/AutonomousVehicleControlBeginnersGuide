@@ -56,20 +56,33 @@ class PsoPathPlanner:
     # Collision penalty per colliding segment
     COLLISION_PENALTY = 1e4
 
-    def __init__(self, start, goal, map_file, *,
-                 x_lim=None, y_lim=None,
-                 path_filename=None, gif_name=None,
-                 n_particles=40, n_waypoints=5,
-                 max_iter=120, w=0.6, c1=1.8, c2=1.8,
-                 line_check_samples=20, seed=42):
+    def __init__(
+        self,
+        start,
+        goal,
+        map_file,
+        *,
+        x_lim=None,
+        y_lim=None,
+        path_filename=None,
+        gif_name=None,
+        n_particles=40,
+        n_waypoints=5,
+        max_iter=120,
+        w=0.6,
+        c1=1.8,
+        c2=1.8,
+        line_check_samples=20,
+        seed=42,
+    ):
         self.start = np.array(start, dtype=float)
         self.goal = np.array(goal, dtype=float)
         self.n_particles = n_particles
         self.n_waypoints = n_waypoints
         self.max_iter = max_iter
-        self.w = w        # inertia weight
-        self.c1 = c1      # cognitive coefficient
-        self.c2 = c2      # social coefficient
+        self.w = w  # inertia weight
+        self.c1 = c1  # cognitive coefficient
+        self.c2 = c2  # social coefficient
         self.line_check_samples = line_check_samples
 
         # Load grid
@@ -103,15 +116,15 @@ class PsoPathPlanner:
     @staticmethod
     def _load_grid(file_path):
         ext = Path(file_path).suffix
-        if ext == '.npy':
+        if ext == ".npy":
             return np.load(file_path)
-        if ext == '.png':
+        if ext == ".png":
             g = plt.imread(file_path)
             if g.ndim == 3:
                 g = np.mean(g, axis=2)
             return (g > 0.5).astype(float)
-        if ext == '.json':
-            with open(file_path, 'r') as f:
+        if ext == ".json":
+            with open(file_path, "r") as f:
                 return np.array(json.load(f))
         raise ValueError(f"Unsupported grid format: {ext}")
 
@@ -124,8 +137,7 @@ class PsoPathPlanner:
 
     def _is_free(self, point):
         gx, gy = self._world_to_grid(point)
-        return (0 <= gx < self.cols and 0 <= gy < self.rows
-                and self.grid[gy, gx] == 0)
+        return 0 <= gx < self.cols and 0 <= gy < self.rows and self.grid[gy, gx] == 0
 
     def _line_collision_free(self, p1, p2):
         for i in range(self.line_check_samples + 1):
@@ -161,6 +173,14 @@ class PsoPathPlanner:
                 penalty += self.COLLISION_PENALTY
         return total_length + penalty
 
+    def _path_collides(self, position):
+        """Return True if any segment of this particle's path collides."""
+        path = self._decode_path(position)
+        for i in range(len(path) - 1):
+            if not self._line_collision_free(path[i], path[i + 1]):
+                return True
+        return False
+
     # -- PSO core ----------------------------------------------------------
 
     def _run_pso(self):
@@ -175,9 +195,11 @@ class PsoPathPlanner:
                 noise_x = self._rng.uniform(-8.0, 8.0)
                 noise_y = self._rng.uniform(-8.0, 8.0)
                 positions[i, 2 * w] = np.clip(
-                    interp[0] + noise_x, self.x_min, self.x_max)
+                    interp[0] + noise_x, self.x_min, self.x_max
+                )
                 positions[i, 2 * w + 1] = np.clip(
-                    interp[1] + noise_y, self.y_min, self.y_max)
+                    interp[1] + noise_y, self.y_min, self.y_max
+                )
 
         velocities = self._rng.uniform(-1.0, 1.0, (self.n_particles, dim))
 
@@ -190,10 +212,10 @@ class PsoPathPlanner:
         gbest_fit = pbest_fit[gbest_idx]
 
         # Record initial state
+        colliding = np.array([self._path_collides(p) for p in positions])
         self._history.append((
-            positions.copy(),
-            self._decode_path(gbest_pos),
-            float(gbest_fit),
+            positions.copy(), self._decode_path(gbest_pos),
+            float(gbest_fit), colliding.copy(),
         ))
 
         for it in range(self.max_iter):
@@ -201,9 +223,11 @@ class PsoPathPlanner:
             r2 = self._rng.random((self.n_particles, dim))
 
             # Update velocities
-            velocities = (self.w * velocities
-                          + self.c1 * r1 * (pbest_pos - positions)
-                          + self.c2 * r2 * (gbest_pos - positions))
+            velocities = (
+                self.w * velocities
+                + self.c1 * r1 * (pbest_pos - positions)
+                + self.c2 * r2 * (gbest_pos - positions)
+            )
 
             # Update positions
             positions += velocities
@@ -231,10 +255,11 @@ class PsoPathPlanner:
 
             # Record history (subsample for animation)
             if it % 2 == 0 or it == self.max_iter - 1:
+                colliding = np.array(
+                    [self._path_collides(p) for p in positions])
                 self._history.append((
-                    positions.copy(),
-                    self._decode_path(gbest_pos),
-                    float(gbest_fit),
+                    positions.copy(), self._decode_path(gbest_pos),
+                    float(gbest_fit), colliding.copy(),
                 ))
 
         # Final path
@@ -243,13 +268,16 @@ class PsoPathPlanner:
 
         collision_free = all(
             self._line_collision_free(
-                np.array(self.path[i]), np.array(self.path[i + 1]))
+                np.array(self.path[i]), np.array(self.path[i + 1])
+            )
             for i in range(len(self.path) - 1)
         )
-        print(f"PSO: converged after {self.max_iter} iterations, "
-              f"fitness={gbest_fit:.2f}, "
-              f"collision_free={collision_free}, "
-              f"waypoints={len(self.path)}")
+        print(
+            f"PSO: converged after {self.max_iter} iterations, "
+            f"fitness={gbest_fit:.2f}, "
+            f"collision_free={collision_free}, "
+            f"waypoints={len(self.path)}"
+        )
 
     # -- Path utilities ----------------------------------------------------
 
@@ -261,17 +289,22 @@ class PsoPathPlanner:
 
     def _save_path(self, path, filename):
         Path(filename).parent.mkdir(parents=True, exist_ok=True)
-        with open(filename, 'w') as f:
+        with open(filename, "w") as f:
             json.dump(path, f)
 
     # -- Visualisation -----------------------------------------------------
 
     def visualize_search(self, gif_name=None):
         """
-        Render a GIF showing PSO convergence:
-          Phase 0: Swarm iterations (particles + current global best path)
-          Phase 1: Final path drawing
-          Phase 2: Hold final
+        Render a GIF showing PSO convergence with colour-coded particles:
+
+          Phase 0: Swarm iterations
+            - Collision-free particles in blue, colliding ones in red/orange
+            - Dashed connectors from start→first waypoint, last→goal
+            - Global best path drawn prominently in green
+            - Fitness counter in title shows convergence
+          Phase 1: Final path progressively drawn
+          Phase 2: Hold final result
         """
         if gif_name is None:
             return
@@ -281,8 +314,8 @@ class PsoPathPlanner:
         # Colour map for grid
         cmap = ListedColormap([
             [1.0, 1.0, 1.0],    # free
-            [0.5, 0.5, 0.5],    # clearance
-            [0.0, 0.0, 0.0],    # obstacle
+            [0.75, 0.75, 0.75],  # clearance
+            [0.15, 0.15, 0.15],  # obstacle
         ])
 
         def _disc(g):
@@ -292,6 +325,12 @@ class PsoPathPlanner:
             return out
 
         grid_disc = _disc(self.grid)
+
+        # Colour palette
+        _COL_FREE = '#42A5F5'       # blue — collision-free particle
+        _COL_COLLIDE = '#EF5350'    # red  — colliding particle
+        _COL_BEST = '#2E7D32'       # green — global best
+        _COL_CONNECTOR = '#78909C'  # grey-blue — start/goal connectors
 
         # Frame plan
         n_hist = len(self._history)
@@ -307,47 +346,97 @@ class PsoPathPlanner:
                     return p, i - int(offsets[p])
             return 2, hold_frames - 1
 
-        def update(i, ax):
-            phase, local = _phase(i)
-            ax.clear()
-
-            # Draw grid
+        def _draw_grid(ax):
             ax.imshow(grid_disc,
                       extent=[self.x_range[0], self.x_range[-1],
                               self.y_range[0], self.y_range[-1]],
                       origin='lower', cmap=cmap, vmin=0, vmax=2,
-                      alpha=0.8)
+                      alpha=0.85)
+
+        def _draw_endpoints(ax):
+            ax.plot(self.start[0], self.start[1], 'o',
+                    color=_COL_BEST, markersize=11, markeredgecolor='white',
+                    markeredgewidth=1.2, label="Start", zorder=8)
+            ax.plot(self.goal[0], self.goal[1], 'o',
+                    color=_COL_COLLIDE, markersize=11,
+                    markeredgecolor='white', markeredgewidth=1.2,
+                    label="Goal", zorder=8)
+
+        def update(i, ax):
+            phase, local = _phase(i)
+            ax.clear()
+            _draw_grid(ax)
 
             if phase == 0:
                 snap_idx = min(local, n_hist - 1)
-                positions, gbest_path, gfit = self._history[snap_idx]
+                positions, gbest_path, gfit, colliding = \
+                    self._history[snap_idx]
+                n_free = int(np.sum(~colliding))
+                n_coll = int(np.sum(colliding))
 
-                # Draw all particles' waypoints
+                # Draw each particle's path colour-coded
                 for p_idx in range(positions.shape[0]):
                     pts = self._decode_path(positions[p_idx])
                     px = [pt[0] for pt in pts]
                     py = [pt[1] for pt in pts]
-                    ax.plot(px, py, '-', color='#90CAF9', linewidth=0.5,
-                            alpha=0.3, zorder=2)
-                    ax.scatter(px[1:-1], py[1:-1], c='#42A5F5', s=6,
-                               alpha=0.4, zorder=3)
+                    is_bad = colliding[p_idx]
+                    col = _COL_COLLIDE if is_bad else _COL_FREE
+                    alpha_line = 0.20 if is_bad else 0.35
+                    alpha_dot = 0.30 if is_bad else 0.50
 
-                # Draw global best path
+                    # Start→wp1 and wp_last→goal as dashed connectors
+                    ax.plot([px[0], px[1]], [py[0], py[1]],
+                            '--', color=_COL_CONNECTOR,
+                            linewidth=0.4, alpha=0.25, zorder=2)
+                    ax.plot([px[-2], px[-1]], [py[-2], py[-1]],
+                            '--', color=_COL_CONNECTOR,
+                            linewidth=0.4, alpha=0.25, zorder=2)
+
+                    # Internal segments as solid
+                    if len(px) > 2:
+                        ax.plot(px[1:-1], py[1:-1], '-', color=col,
+                                linewidth=0.6, alpha=alpha_line, zorder=3)
+
+                    # Waypoint dots (exclude start/goal)
+                    ax.scatter(px[1:-1], py[1:-1], c=col, s=8,
+                               alpha=alpha_dot, zorder=4,
+                               edgecolors='none')
+
+                # Global best path — prominent
                 if gbest_path:
                     gx = [pt[0] for pt in gbest_path]
                     gy = [pt[1] for pt in gbest_path]
-                    ax.plot(gx, gy, '-', color='#2E7D32', linewidth=2.0,
-                            zorder=5, label=f"Best (L={gfit:.1f})")
-                    ax.scatter(gx[1:-1], gy[1:-1], c='#2E7D32', s=20,
-                               zorder=6)
+                    # Start/goal connectors for best
+                    ax.plot([gx[0], gx[1]], [gy[0], gy[1]],
+                            '--', color=_COL_BEST, linewidth=1.5,
+                            alpha=0.6, zorder=5)
+                    ax.plot([gx[-2], gx[-1]], [gy[-2], gy[-1]],
+                            '--', color=_COL_BEST, linewidth=1.5,
+                            alpha=0.6, zorder=5)
+                    # Internal path
+                    ax.plot(gx, gy, '-', color=_COL_BEST, linewidth=2.5,
+                            zorder=6)
+                    ax.scatter(gx[1:-1], gy[1:-1], c=_COL_BEST, s=30,
+                               zorder=7, edgecolors='white', linewidths=0.5)
 
-                iter_num = snap_idx * 2 if snap_idx < n_hist - 1 else self.max_iter
+                iter_num = (snap_idx * 2 if snap_idx < n_hist - 1
+                            else self.max_iter)
                 ax.set_title(
-                    f"PSO — Iteration {iter_num}/{self.max_iter}",
-                    fontsize=14)
+                    f"PSO — Iter {iter_num}/{self.max_iter}  |  "
+                    f"fitness={gfit:.1f}  |  "
+                    f"\u2713 {n_free}  \u2717 {n_coll}",
+                    fontsize=13)
+
+                # Legend proxies
+                ax.plot([], [], '-', color=_COL_FREE, linewidth=2,
+                        label=f"Free ({n_free})")
+                ax.plot([], [], '-', color=_COL_COLLIDE, linewidth=2,
+                        label=f"Colliding ({n_coll})")
+                ax.plot([], [], '-', color=_COL_BEST, linewidth=2.5,
+                        label=f"Global Best")
 
             elif phase >= 1:
-                # Draw final path
+                # Draw final optimised path
                 if self.path:
                     if phase == 1:
                         frac = min(local + 1, path_frames)
@@ -359,20 +448,24 @@ class PsoPathPlanner:
                     if len(seg) > 1:
                         px = [p[0] for p in seg]
                         py = [p[1] for p in seg]
-                        ax.plot(px, py, '-', color='#2E7D32',
-                                linewidth=2.5, zorder=5, label="Path")
-                        ax.scatter(px[1:-1], py[1:-1], c='#2E7D32',
-                                   s=25, zorder=6)
+                        # Dashed connectors to start/goal
+                        ax.plot([px[0], px[1]], [py[0], py[1]],
+                                '--', color=_COL_BEST, linewidth=2.0,
+                                alpha=0.6, zorder=5)
+                        if n >= len(self.path):
+                            ax.plot([px[-2], px[-1]], [py[-2], py[-1]],
+                                    '--', color=_COL_BEST, linewidth=2.0,
+                                    alpha=0.6, zorder=5)
+                        ax.plot(px, py, '-', color=_COL_BEST,
+                                linewidth=3.0, zorder=6, label="Path")
+                        ax.scatter(px[1:-1], py[1:-1], c=_COL_BEST,
+                                   s=40, zorder=7, edgecolors='white',
+                                   linewidths=0.8)
 
                 ax.set_title("PSO — Optimised Path", fontsize=14)
 
-            # Start and goal
-            ax.plot(self.start[0], self.start[1], 'go', markersize=10,
-                    label="Start", zorder=7)
-            ax.plot(self.goal[0], self.goal[1], 'ro', markersize=10,
-                    label="Goal", zorder=7)
-
-            ax.legend(loc='upper left')
+            _draw_endpoints(ax)
+            ax.legend(loc='upper left', fontsize=9, framealpha=0.85)
             ax.set_xlabel("X [m]", fontsize=12)
             ax.set_ylabel("Y [m]", fontsize=12)
             ax.set_aspect("equal")
@@ -403,8 +496,11 @@ if __name__ == "__main__":
     goal = (50, -10)
 
     planner = PsoPathPlanner(
-        start, goal, map_file,
-        x_lim=x_lim, y_lim=y_lim,
+        start,
+        goal,
+        map_file,
+        x_lim=x_lim,
+        y_lim=y_lim,
         path_filename=path_file,
         gif_name=gif_path,
     )
