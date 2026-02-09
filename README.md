@@ -25,6 +25,7 @@ Python sample codes and documents about Autonomous vehicle control algorithm. Th
         * [A*](#a)
         * [Bidirectional A*](#bidirectional-a)
         * [Hybrid A*](#hybrid-a)
+        * [D*](#d)
         * [Dijkstra](#dijkstra)
         * [RRT](#rrt)
     * [Path Tracking](#path-tracking)
@@ -120,6 +121,11 @@ Planning
 #### Hybrid A*
 Planning  
 ![](src/simulations/path_planning/astar_hybrid_path_planning/astar_hybrid_search.gif)  
+#### D*
+Planning with dynamic obstacle replanning  
+![](src/simulations/path_planning/dstar_path_planning/dstar_search.gif)  
+Navigation (car switches to replanned path mid-drive)  
+![](src/simulations/path_planning/dstar_path_planning/dstar_navigate.gif)  
 #### Dijkstra
 Planning(Reduce frames by sampling every nth node to prevent memory exhaustion)  
 ![](src/simulations/path_planning/dijkstra_path_planning/dijkstra_search.gif)  
