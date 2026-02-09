@@ -79,9 +79,9 @@ def main():
         x_lim=x_lim, y_lim=y_lim,
         path_filename=path_filename,
         gif_name=search_gif_path if show_plot else None,
-        n_particles=40,
-        n_waypoints=5,
-        max_iter=120,
+        n_particles=120,
+        max_iter=300,
+
     )
 
     if not planner.path:
