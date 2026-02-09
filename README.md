@@ -26,6 +26,7 @@ Python sample codes and documents about Autonomous vehicle control algorithm. Th
         * [Bidirectional A*](#bidirectional-a)
         * [Hybrid A*](#hybrid-a)
         * [Dijkstra](#dijkstra)
+        * [PRM](#prm)
         * [RRT](#rrt)
     * [Path Tracking](#path-tracking)
         * [Pure pursuit Path Tracking](#pure-pursuit-path-tracking)
@@ -123,6 +124,11 @@ Planning
 #### Dijkstra
 Planning(Reduce frames by sampling every nth node to prevent memory exhaustion)  
 ![](src/simulations/path_planning/dijkstra_path_planning/dijkstra_search.gif)  
+#### PRM
+Planning  
+![](src/simulations/path_planning/prm_path_planning/prm_search.gif)  
+Navigation  
+![](src/simulations/path_planning/prm_path_planning/prm_navigate.gif)  
 #### RRT
 Planning  
 ![](src/simulations/path_planning/rrt_path_planning/rrt_search.gif)  
