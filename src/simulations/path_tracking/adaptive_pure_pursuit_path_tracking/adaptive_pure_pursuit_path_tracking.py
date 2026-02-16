@@ -2,6 +2,8 @@
 adaptive_pure_pursuit_path_tracking.py
 
 Path tracking simulation using Adaptive Pure Pursuit controller.
+The look-ahead distance adapts to path curvature: shorter on sharp
+turns for tight tracking, longer on straights for stability.
 """
 
 # import path setting
@@ -38,7 +40,12 @@ def main():
     """
     # set simulation parameters
     x_lim, y_lim = MinMax(-5, 55), MinMax(-20, 25)
-    vis = GlobalXYVisualizer(x_lim, y_lim, TimeParameters(span_sec=25))
+    gif_path = str(
+        Path(__file__).absolute().parent
+        / "adaptive_pure_pursuit_path_tracking.gif"
+    )
+    vis = GlobalXYVisualizer(x_lim, y_lim, TimeParameters(span_sec=25),
+                             gif_name=gif_path)
 
     # create course data instance
     course = CubicSplineCourse([0.0, 10.0, 25, 40, 50],
@@ -58,9 +65,9 @@ def main():
         course,
         color='g',
         min_look_ahead_m=2.0,
-        look_forward_gain=0.3,
-        curvature_adapt_gain=1.0,
-        max_look_ahead_m=15.0,
+        look_forward_gain=0.4,
+        curvature_adapt_gain=2.0,
+        max_look_ahead_m=25.0,
     )
 
     # create vehicle instance
