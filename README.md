@@ -27,6 +27,7 @@ Python sample codes and documents about Autonomous vehicle control algorithm. Th
         * [Hybrid A*](#hybrid-a)
         * [Dijkstra](#dijkstra)
         * [RRT](#rrt)
+        * [RRT*](#rrt-star)
         * [Informed RRT*](#informed-rrt)
     * [Path Tracking](#path-tracking)
         * [Pure pursuit Path Tracking](#pure-pursuit-path-tracking)
@@ -129,6 +130,11 @@ Planning
 ![](src/simulations/path_planning/rrt_path_planning/rrt_search.gif)  
 Navigation  
 ![](src/simulations/path_planning/rrt_path_planning/rrt_navigate.gif)  
+#### RRT*
+Planning  
+![](src/simulations/path_planning/rrt_star_path_planning/rrt_star_search.gif)  
+Navigation  
+![](src/simulations/path_planning/rrt_star_path_planning/rrt_star_navigate.gif)  
 #### Informed RRT*
 Planning  
 ![](src/simulations/path_planning/informed_rrt_star_path_planning/informed_rrt_star_search.gif)  
