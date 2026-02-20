@@ -28,9 +28,11 @@ Python sample codes and documents about Autonomous vehicle control algorithm. Th
         * [Dijkstra](#dijkstra)
         * [RRT](#rrt)
         * [Bidirectional RRT*](#bidirectional-rrt)
+        * [RRT*](#rrt-star)
         * [Informed RRT*](#informed-rrt)
     * [Path Tracking](#path-tracking)
         * [Pure pursuit Path Tracking](#pure-pursuit-path-tracking)
+        * [Adaptive Pure pursuit Path Tracking](#adaptive-pure-pursuit-path-tracking)
         * [Rear wheel feedback Path Tracking](#rear-wheel-feedback-path-tracking)
         * [LQR(Linear Quadratic Regulator) Path Tracking](#lqrlinear-quadratic-regulator-path-tracking)
         * [Stanley steering control Path tracking](#stanley-steering-control-path-tracking)
@@ -135,6 +137,11 @@ Planning
 ![](src/simulations/path_planning/rrt_star_bidirectional_path_planning/rrt_star_bidirectional_search.gif)  
 Navigation  
 ![](src/simulations/path_planning/rrt_star_bidirectional_path_planning/rrt_star_bidirectional_navigate.gif)  
+#### RRT*
+Planning  
+![](src/simulations/path_planning/rrt_star_path_planning/rrt_star_search.gif)  
+Navigation  
+![](src/simulations/path_planning/rrt_star_path_planning/rrt_star_navigate.gif)  
 #### Informed RRT*
 Planning  
 ![](src/simulations/path_planning/informed_rrt_star_path_planning/informed_rrt_star_search.gif)  
@@ -143,6 +150,8 @@ Navigation
 ### Path Tracking
 #### Pure pursuit Path Tracking
 ![](src/simulations/path_tracking/pure_pursuit_path_tracking/pure_pursuit_path_tracking.gif)  
+#### Adaptive Pure pursuit Path Tracking
+![](src/simulations/path_tracking/adaptive_pure_pursuit_path_tracking/adaptive_pure_pursuit_path_tracking.gif)  
 #### Rear wheel feedback Path Tracking
 ![](src/simulations//path_tracking/rear_wheel_feedback_tracking/rear_wheel_feedback_tracking.gif)  
 #### LQR(Linear Quadratic Regulator) Path Tracking
