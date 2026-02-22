@@ -6,13 +6,8 @@ Jointly estimates robot pose [x, y, yaw] and landmark positions [lx, ly, ...]
 using range-bearing observations.
 """
 
-import sys
 import numpy as np
-from pathlib import Path
-from math import sqrt, atan2, pi
-
-sys.path.append(str(Path(__file__).absolute().parent) + "/../../array")
-from xy_array import XYArray
+from math import sqrt, pi
 
 from motion_model import predict_robot_state, jacobian_F, jacobian_G
 from observation_model import observe_landmark, build_H_matrix
@@ -29,7 +24,7 @@ class EKFSLAMLocalizer:
     def __init__(self, init_x=0.0, init_y=0.0, init_yaw=0.0,
                  sigma_r=0.2, sigma_phi=0.1, sigma_v=0.15, sigma_omega=0.08,
                  gate_threshold=2.0, max_range=12.0,
-                 duplicate_position_threshold=6.5, color='r'):
+                 duplicate_position_threshold=4.5, color='r'):
         self.R_obs = np.diag([sigma_r ** 2, sigma_phi ** 2])
         self.Q_input = np.diag([sigma_v ** 2, sigma_omega ** 2])
         self.sigma_r = sigma_r
@@ -41,7 +36,6 @@ class EKFSLAMLocalizer:
 
         self.mu = np.array([[init_x], [init_y], [init_yaw]])
         self.Sigma = np.eye(3) * 0.1
-        self.landmark_ids = []
 
     def predict(self, control, dt):
         """
@@ -65,19 +59,19 @@ class EKFSLAMLocalizer:
             self.Sigma[0:3, 3:] = F @ Sigma_rl
             self.Sigma[3:, 0:3] = Sigma_rl.T @ F.T
 
-    def update(self, observations, observed_landmark_indices):
+    def update(self, observations):
         """
         EKF update step with data association and landmark augmentation.
         observations: list of (2,1) [range, bearing] measurements
-        observed_landmark_indices: list of true landmark indices (for bookkeeping)
         """
         if not observations:
             return
 
         n = self.mu.shape[0]
+        num_landmarks = (n - 3) // 2
         pred_obs_list = []
         S_list = []
-        for j in range(len(self.landmark_ids)):
+        for j in range(num_landmarks):
             lx = self.mu[3 + 2 * j, 0]
             ly = self.mu[3 + 2 * j + 1, 0]
             z_pred = observe_landmark(self.mu[0:3], lx, ly)
@@ -90,7 +84,7 @@ class EKFSLAMLocalizer:
         else:
             matches = nearest_neighbor_association(
                 observations, pred_obs_list, S_list,
-                list(range(len(self.landmark_ids))), self.gate_threshold
+                list(range(num_landmarks)), self.gate_threshold
             )
 
         for (obs_idx, land_id) in matches:
@@ -105,16 +99,17 @@ class EKFSLAMLocalizer:
                     continue
                 H = build_H_matrix(self.mu[0:3], lx, ly, j, n)
                 S = H @ self.Sigma @ H.T + self.R_obs
-                S = S + 1e-6 * np.eye(2)
                 try:
-                    K = np.linalg.solve(S.T, (self.Sigma @ H.T).T).T
+                    # K = Sigma @ H.T @ inv(S); inv() is clear for beginners; np.linalg.solve is preferred in production
+                    K = self.Sigma @ H.T @ np.linalg.inv(S)
                 except np.linalg.LinAlgError:
                     continue
                 innov = z - z_pred
                 innov[1, 0] = (innov[1, 0] + pi) % (2 * pi) - pi
                 self.mu = self.mu + K @ innov
+                # Standard EKF covariance update (Joseph form can be used for better numerical stability)
                 IKH = np.eye(n) - K @ H
-                self.Sigma = IKH @ self.Sigma @ IKH.T + K @ self.R_obs @ K.T
+                self.Sigma = IKH @ self.Sigma
             elif land_id == POTENTIAL_DUPLICATE:
                 continue
             else:
@@ -124,7 +119,7 @@ class EKFSLAMLocalizer:
                 )
                 lx_new, ly_new = float(lm_new[0, 0]), float(lm_new[1, 0])
                 is_duplicate = False
-                for j in range(len(self.landmark_ids)):
+                for j in range((self.mu.shape[0] - 3) // 2):
                     lx_j = self.mu[3 + 2 * j, 0]
                     ly_j = self.mu[3 + 2 * j + 1, 0]
                     d = sqrt((lx_new - lx_j) ** 2 + (ly_new - ly_j) ** 2)
@@ -136,7 +131,6 @@ class EKFSLAMLocalizer:
                 self.mu, self.Sigma = augment_state(
                     self.mu, self.Sigma, z, self.mu[0:3], self.R_obs
                 )
-                self.landmark_ids.append(observed_landmark_indices[obs_idx])
 
     def get_robot_state(self):
         """Returns (3,1) array [x, y, yaw]."""
@@ -154,10 +148,10 @@ class EKFSLAMLocalizer:
 
     def draw(self, axes, elems, pose):
         """
-        Draw covariance ellipse and estimated landmarks.
+        Draw uncertainty circle and estimated landmarks.
         axes: Axes object
         elems: list of plot elements
-        pose: (3,1) [x, y, yaw] for ellipse center
+        pose: (3,1) [x, y, yaw] for circle center
         """
         est_lm = self.get_estimated_landmarks()
         if est_lm:
@@ -166,27 +160,15 @@ class EKFSLAMLocalizer:
             p, = axes.plot(lx_est, ly_est, "rx", markersize=6, label="Est. landmarks")
             elems.append(p)
 
+        # Simple uncertainty circle (radius ~ 3-sigma from trace of pose covariance)
         Sigma_xy = self.Sigma[0:2, 0:2]
         try:
-            eig_val, eig_vec = np.linalg.eig(Sigma_xy)
-            if eig_val[0] >= eig_val[1]:
-                big_idx, small_idx = 0, 1
-            else:
-                big_idx, small_idx = 1, 0
-            a = sqrt(3.0 * max(0, eig_val[big_idx]))
-            b = sqrt(3.0 * max(0, eig_val[small_idx]))
-            angle = atan2(eig_vec[1, big_idx], eig_vec[0, big_idx])
+            trace_xy = np.trace(Sigma_xy) / 2.0
+            r = 3.0 * sqrt(max(0.0, trace_xy))
             t = np.arange(0, 2 * pi + 0.1, 0.1)
-            xs = a * np.cos(t)
-            ys = b * np.sin(t)
-            xys_array = XYArray(np.array([xs, ys]))
-            trans = xys_array.homogeneous_transformation(
-                pose[0, 0], pose[1, 0], angle
-            )
-            p, = axes.plot(
-                trans.get_x_data(), trans.get_y_data(),
-                color=self.DRAW_COLOR, linewidth=0.8
-            )
+            cx = pose[0, 0] + r * np.cos(t)
+            cy = pose[1, 0] + r * np.sin(t)
+            p, = axes.plot(cx, cy, color=self.DRAW_COLOR, linewidth=0.8)
             elems.append(p)
         except (np.linalg.LinAlgError, ValueError):
             pass

@@ -41,6 +41,8 @@ GATE_THRESHOLD = 2.0
 MAX_RANGE = 15.0
 NUM_LANDMARKS = 18
 INTERVAL_SEC = 0.2
+# Min distance between landmarks (so they stay distinct)
+MIN_LANDMARK_SPACING = 4.5
 # Stop after one lap (circumference / speed); slight overshoot for loop closure
 LAP_OVERSHOOT = 1.2
 
@@ -102,18 +104,16 @@ class EKFSLAMSimulation:
 
         # Simulate range-bearing observations from true robot
         observations = []
-        observed_indices = []
-        for idx, (lx, ly) in enumerate(self.true_landmarks):
+        for lx, ly in self.true_landmarks:
             z_pred = observe_landmark(self.true_robot, lx, ly)
             if z_pred[0, 0] <= self.max_range:
                 z = simulate_observation(
                     self.true_robot, lx, ly, self.sigma_r, self.sigma_phi
                 )
                 observations.append(z)
-                observed_indices.append(idx)
 
         # EKF update
-        self.localizer.update(observations, observed_indices)
+        self.localizer.update(observations)
 
         # Push estimated pose into vehicle's State for drawing
         rs = self.localizer.get_robot_state()
@@ -131,9 +131,14 @@ class EKFSLAMSimulation:
         # True trajectory
         p2, = axes.plot(
             self.true_trajectory_x, self.true_trajectory_y,
-            "b-", linewidth=1, alpha=0.7, label="True path"
+            "b-", linewidth=1, alpha=0.7
         )
         elems.append(p2)
+
+        # Legend entries so users see: blue = true pose, green = est. pose
+        p_legend_b, = axes.plot([], [], "b-", linewidth=2, label="True pose")
+        p_legend_g, = axes.plot([], [], "g-", linewidth=2, label="Est. pose")
+        elems.extend([p_legend_b, p_legend_g])
 
         # True pose: vehicle body + trajectory (blue)
         if self.true_vehicle is not None:
@@ -142,8 +147,10 @@ class EKFSLAMSimulation:
         # Estimated pose: vehicle body + trajectory (green)
         self.vehicle.draw(axes, elems)
 
-        # Covariance ellipse + estimated landmarks via localizer
+        # Uncertainty circle + estimated landmarks via localizer
         self.localizer.draw(axes, elems, self.est_state.x_y_yaw())
+
+        axes.legend(loc="upper left")
 
 
 def draw_final_comparison(sim):
@@ -222,18 +229,23 @@ def main():
     time_params = TimeParameters(span_sec=lap_time_sec, interval_sec=INTERVAL_SEC)
     vis = GlobalXYVisualizer(x_lim, y_lim, time_params, show_zoom=True)
 
-    num_outer = 12
-    radius_inner = 7.0
-    num_inner = 6
-    true_landmarks = [
-        (center_x + radius_lm * np.cos(2 * pi * i / num_outer),
-         center_y + radius_lm * np.sin(2 * pi * i / num_outer))
-        for i in range(num_outer)
-    ] + [
-        (center_x + radius_inner * np.cos(2 * pi * i / num_inner),
-         center_y + radius_inner * np.sin(2 * pi * i / num_inner))
-        for i in range(num_inner)
-    ]
+    # Landmarks: random within canvas, with margin; ensure not closer than MIN_LANDMARK_SPACING
+    margin = 5.0
+    x_min, x_max = x_lim.min_value() + margin, x_lim.max_value() - margin
+    y_min, y_max = y_lim.min_value() + margin, y_lim.max_value() - margin
+    true_landmarks = []
+    max_attempts = 500
+    for _ in range(NUM_LANDMARKS):
+        for _ in range(max_attempts):
+            x, y = float(np.random.uniform(x_min, x_max)), float(np.random.uniform(y_min, y_max))
+            if all(
+                (x - lx) ** 2 + (y - ly) ** 2 >= MIN_LANDMARK_SPACING ** 2
+                for (lx, ly) in true_landmarks
+            ):
+                true_landmarks.append((x, y))
+                break
+        else:
+            true_landmarks.append((float(np.random.uniform(x_min, x_max)), float(np.random.uniform(y_min, y_max))))
 
     localizer = EKFSLAMLocalizer(
         init_x=center_x + radius_lm,
@@ -245,6 +257,7 @@ def main():
         sigma_omega=SIGMA_OMEGA,
         gate_threshold=GATE_THRESHOLD,
         max_range=MAX_RANGE,
+        duplicate_position_threshold=MIN_LANDMARK_SPACING,
     )
 
     est_state = State(

@@ -70,7 +70,6 @@ def nearest_neighbor_association(observations, predicted_observations, innovatio
             used_landmarks.add(best_landmark)
             matches.append((o, best_landmark))
         elif min_dist_any <= gate_threshold:
-            # Some landmark was within gate but already used → likely duplicate view
             matches.append((o, POTENTIAL_DUPLICATE))
         else:
             matches.append((o, -1))  # truly new landmark
