@@ -130,23 +130,15 @@ Planning(Reduce frames by sampling every nth node to prevent memory exhaustion)
 #### RRT
 Planning  
 ![](src/simulations/path_planning/rrt_path_planning/rrt_search.gif)  
-Navigation  
-![](src/simulations/path_planning/rrt_path_planning/rrt_navigate.gif)  
 #### Bidirectional RRT*
 Planning  
 ![](src/simulations/path_planning/rrt_star_bidirectional_path_planning/rrt_star_bidirectional_search.gif)  
-Navigation  
-![](src/simulations/path_planning/rrt_star_bidirectional_path_planning/rrt_star_bidirectional_navigate.gif)  
 #### RRT*
 Planning  
 ![](src/simulations/path_planning/rrt_star_path_planning/rrt_star_search.gif)  
-Navigation  
-![](src/simulations/path_planning/rrt_star_path_planning/rrt_star_navigate.gif)  
 #### Informed RRT*
 Planning  
 ![](src/simulations/path_planning/informed_rrt_star_path_planning/informed_rrt_star_search.gif)  
-Navigation  
-![](src/simulations/path_planning/informed_rrt_star_path_planning/informed_rrt_star_navigate.gif)  
 ### Path Tracking
 #### Pure pursuit Path Tracking
 ![](src/simulations/path_tracking/pure_pursuit_path_tracking/pure_pursuit_path_tracking.gif)  
