@@ -62,7 +62,7 @@ class _StateView:
     def get_speed_mps(self): return self.speed_mps
 
 
-class MpcController:
+class MPCController:
     """
     do-mpc based MPC path-tracking controller.
     Public interface is identical to MppiController.

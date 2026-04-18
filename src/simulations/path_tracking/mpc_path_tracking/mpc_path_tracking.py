@@ -35,7 +35,7 @@ from vehicle_specification import VehicleSpecification
 from state import State
 from four_wheels_vehicle import FourWheelsVehicle
 from cubic_spline_course import CubicSplineCourse
-from mpc_controller import MpcController              # ← do-mpc controller
+from mpc_controller import MPCController              # ← do-mpc controller
 
 show_plot = True
 
@@ -71,11 +71,11 @@ def main():
     #   both controllers optimise the same objective shape.
     #
     # MPC-specific knobs not present in MPPI:
-    #   control_cost_weight    – penalises large raw inputs (δ², a²)
-    #   smoothness_cost_weight – penalises Δu changes (do-mpc rterm)
+    #   control_cost_weight    – penalises large raw inputs (do-mpc mterm)
+    #   smoothness_cost_weight – penalises delta_u changes (do-mpc rterm)
     #   v_min / v_max          – hard speed bounds enforced by IPOPT
     #   ipopt_max_iter         – solver iteration budget
-    mpc = MpcController(
+    mpc = MPCController(
         spec,
         course,
         color                  = "g",      # green dashed predicted trajectory
@@ -83,11 +83,11 @@ def main():
         horizon_step_T         = 20,       # ≈ 2 s look-ahead  (MPPI uses 22)
         stage_cost_weight      = [50.0, 50.0, 1.0, 20.0],   # [x, y, yaw, v]
         terminal_cost_weight   = [50.0, 50.0, 1.0, 20.0],   # same as MPPI
-        control_cost_weight    = [1.0, 0.5],                 # [steer, accel]
-        smoothness_cost_weight = [5.0, 2.0],                 # [Δsteer, Δaccel]
+        control_cost_weight    = [1.0, 0.5],                # [steer, accel]
+        smoothness_cost_weight = [5.0, 2.0],                # [delta_steer, delta_accel]
         max_steer_abs          = 0.523,    # rad  (~30°) – same as MPPI
         max_accel_abs          = 2.0,      # m/s²        – same as MPPI
-        v_min                  = 0.0,     # m/s  (hard bound, MPC only)
+        v_min                  = 0.0,      # m/s  (hard bound, MPC only)
         v_max                  = 15.0,     # m/s  (hard bound, MPC only)
         ipopt_max_iter         = 100,      # IPOPT iteration limit
         ipopt_print_level      = 0,        # silent solver output
