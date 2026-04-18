@@ -30,5 +30,10 @@ WORKDIR $WORKDIR
 RUN python -m pip install --upgrade --user pip
 RUN python -m pip install --upgrade --user setuptools
 
+# Install do-mpc + CasADi
+RUN pip install --no-cache-dir \
+    casadi>=3.6.5 \
+    do-mpc>=4.6.4
+
 COPY requirements.txt $WORKDIR
 RUN python -m pip install --user -r requirements.txt
