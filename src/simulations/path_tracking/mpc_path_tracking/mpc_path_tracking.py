@@ -1,19 +1,13 @@
 """
 mpc_path_tracking.py
 
-Path tracking simulation using the do-mpc–based MPC controller.
-Mirrors the interface and structure of mppi_path_tracking.py exactly —
-only the controller class and its parameters differ.
+Path tracking simulation using the do-mpc based MPC controller.
 
 Visualises:
   - The cubic-spline reference course
   - The four-wheels vehicle animated along the track
-  - The MPC predicted (optimal) trajectory at each step  (dashed red line)
+  - The MPC predicted (optimal) trajectory at each step.
 
-Usage
------
-    python mpc_path_tracking.py          # show animated window + save GIF
-    python mpc_path_tracking.py --no-gif # window only, skip GIF encoding
 """
 
 import sys
