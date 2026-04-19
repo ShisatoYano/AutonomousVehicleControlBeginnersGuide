@@ -167,6 +167,8 @@ Planning
 ![](src/simulations/path_tracking/stanley_path_tracking/stanley_path_tracking.gif)  
 #### MPPI Path Tracking
 ![](src/simulations/path_tracking/mppi_path_tracking/mppi_path_tracking.gif)  
+#### MPC Path Tracking
+![](src/simulations/path_tracking/mpc_path_tracking/mpc_path_tracking.gif)  
 ### Perception
 #### Rectangle fitting Detection
 ![](src/simulations/perception/point_cloud_rectangle_fitting/point_cloud_rectangle_fitting.gif)  

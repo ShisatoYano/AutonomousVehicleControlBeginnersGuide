@@ -6,12 +6,11 @@ from pathlib import Path
 import sys
 import pytest
 
-from simulations.path_tracking.mpc_path_tracking import mpc_path_tracking
-
 sys.path.append(
     str(Path(__file__).absolute().parent)
     + "/../src/simulations/path_tracking/mpc_path_tracking"
 )
+
 import mpc_path_tracking
 
 
