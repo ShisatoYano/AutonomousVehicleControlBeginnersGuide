@@ -5,3 +5,5 @@ scipy
 seaborn
 pytest
 pytest-cov
+casadi
+do-mpc
