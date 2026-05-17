@@ -1,14 +1,17 @@
 # 2. Vehicle Model
-In this chapter, I'm gonna explain about a vehicle model definition. The vehicle model is defined as a four wheels vehicle based on Kinematics and Geometry. And then, the vehicle is controlled by acceleration input and yaw rate input.  
+This chapter covers the vehicle model definition. The model is structured as follows:
+
+- Type: Four-wheeled vehicle based on kinematics and geometry
+- Control inputs: Acceleration [m/s²] and yaw rate [rad/s]
 
 ## 2.1 Vehicle's state
-A vehicle's state is defined as follow.  
+A vehicle's state is defined as follows.  
 
 * Position (x, y)[m]
 * Yaw angle[rad]
 * Speed[m/s]
 
-State class which manages these data is implemented.  
+The `State` class which manages these data is implemented.  
 [state.py](/src/components/state/state.py)  
 
 ```python
@@ -50,10 +53,12 @@ class State:
         self.y_history = [self.y_m]
 ```
 
-In this code, an initial state including position (x, y), yaw angle and speed is given to a constructor. Additionally, one more argument, "color" is defined for setting the color of position (x, y) plot. And then, the position is stored into 2 member variables, x_history and y_history to record it at each time steps. Finally, 3 constant values, STOP_SPEED_MPS, MAX_SPEED_MPS and MIN_SPEED_MPS are defined to limit a range of the speed computation.  
+In this code snippet, an initial state including position $(x, y)$, yaw angle and speed is given as input to the constructor. Additionally, one more argument, "color" is defined for setting the color of position (x, y) plot. And then, the position is stored into $2$ member variables, `x_history` and `y_history` to record it at each time steps. Finally, $3$ constant values, STOP_SPEED_MPS, MAX_SPEED_MPS and MIN_SPEED_MPS are defined to limit a range of the speed computation.  
 
 ## 2.2 Vehicle's motion and State equation
-I define the vehicle's motion and a state equation in this section. The vehicle's motion is defined as constant acceleration linear motion model. Then, an input given to the vehicle is acceleration[m/s2] and yaw rate[rad/s]. The vehicle's state can be updated with the input based on the motion model. The positive direction of the vehicle's yaw angle is left direction. This model can be implemented as State class's member methos as follow.  
+This section defines the vehicle's motion and state equation. The vehicle's motion is defined as constant acceleration linear motion model. Then, an input given to the vehicle is acceleration[m/s2] and yaw rate[rad/s]. The vehicle's state can be updated with the input based on the motion model. The positive direction of the vehicle's yaw angle is the left direction. This model can be implemented as State class's member method as follows.
+
+NOTE: The motion model treats yaw angle as updated only by yaw rate with no coupling to speed.
 
 ```python
     @staticmethod
@@ -87,14 +92,14 @@ I define the vehicle's motion and a state equation in this section. The vehicle'
 This method is defined as a static method. When you want to use this method, you don't need to generate the State class's object. 2 matrix A and B in this code is to represent multiple state variables as a state equation.  
 
 ## 2.3 Updating vehicle's state
-I implement a member method of State class, "update" to compute the vehicle's state at the next time step. The input of acceleration, yaw rate and an interval time per cycle[sec] are given as arguments.  
+This section explains the implementation of the member method of the State class, "update" to compute the vehicle's state at the next time step. The input of acceleration, yaw rate and an interval time per cycle[sec] are given as arguments.  
 
 ```python
     def update(self, accel_mps2, yaw_rate_rps, time_s):
         """
         Function to update state
         accel_mps2: Acceleration[m/s^2]
-        steer_rad: Steering angle[rad]
+        yaw_rate_rps: Yaw rate [rad/s]
         time_s: Time interval per cycle[sec]
         """
 
@@ -121,20 +126,20 @@ I implement a member method of State class, "update" to compute the vehicle's st
         self.y_history.append(self.y_m)
 ```
 
-In this code, a new state at the next time step can be computed with the method, "motion_model". If the updated speed was lower than STOP_SPEED_MPS, the speed would be set to 0 to make the vehicle stopped. And then, the speed is limited between MAX_SPEED_MPS and MIN_SPEED_MPS. Finally, the updated position (x, y) is stored to those list of history.  
+In this code, a new state at the next time step can be computed with the method, "motion_model". If the updated speed is lower than STOP_SPEED_MPS, the speed would be set to 0 to bring the vehicle to a stop. And then, the speed is clamped between MAX_SPEED_MPS and MIN_SPEED_MPS. Finally, the updated position $(x, y)$ is appended to the position history lists.  
 
 ## 2.4 Vehicle's parts class
-This section provides the explanation of the vehicle's parts class. The vehicle is separated into the following multiple parts and those drawing classes are implemented.  
+This section describes the vehicle's parts class. The vehicle is separated into the following multiple parts with a dedicated drawing class implemented for each.  
 
 * Body
-* Chasis
+* Chassis
 * Front axle
 * Rear axle
 * Front Right/Left tire
 * Rear Right/Left tire
 
 ### 2.4.1 Drawing method
-Implementing a member method of State class, "draw" for visualization. In this code, Those lists of x, y history are plot and the current speed is also visualized.  
+The `draw` method of the State class is implemented for visualization. In this code, the lists of $x, y$ history are plotted and the current speed is also visualized.  
 
 ```python
     def draw(self, axes, elems):
@@ -149,7 +154,7 @@ Implementing a member method of State class, "draw" for visualization. In this c
 ```
 
 ### 2.4.2 X-Y Array class
-The vehicle's drawing is represented as x-y 2D array. So, I implement X-Y Array class as follow.  
+The vehicle's drawing is represented as x-y 2D array. So, the X-Y Array class is implemented as follows.  
 [xy_array.py](/src/components/array/xy_array.py)  
 
 ```python
@@ -198,10 +203,10 @@ class XYArray:
         return XYArray(translated_data)
 ```
 
-In this code, a given data to Constructor is x-y 2D array. Then, the data can be transformed based on the vehicle's position (x, y) and yaw angle. After the data was transformed, a new XYArray object with the transformed data is returned.  
+In this code, the data passed to the constructor is a 2D x-y array. Then, the data can be transformed based on the vehicle's position (x, y) and yaw angle. After transformation, a new XYArray object with the transformed data is returned.  
 
 ### 2.4.3 Specification class
-Implementing Vehicle's specification class as follow. This class is used to manage each parameters for the vehicle's control.  
+The `VehicleSpecification` class is implemented as follows. This class is used to manage the parameters for the vehicle's control.  
 [vehicle_specification.py](/src/components/vehicle/vehicle_specification.py)  
 
 ```python
@@ -287,7 +292,7 @@ The vehicle has the following parameters as specification. The vehicle is drawn 
 * Maximum acceleration[m/s2]
 
 ### 2.4.4 Body class
-Vehicle body class is implemented as follow. This class is used for drawing the vehicle's body according to the specification.  
+Vehicle body class is implemented as follows. This class is used for drawing the vehicle's body as per the specification.  
 [body.py](/src/components/vehicle/body.py)  
 
 ```python
@@ -337,7 +342,7 @@ class Body:
 ```
 
 ### 2.4.5 Chassis class
-Vehicle chassis class is implemented as follow. This class is used for drawing the vehicle's chassis according to the specification.  
+Vehicle chassis class is implemented as follows. This class is used for drawing the vehicle's chassis according to the specification.  
 [chassis.py](/src/components/vehicle/chassis.py)  
 
 ```python
@@ -387,7 +392,7 @@ class Chassis:
 ```
 
 ### 2.4.6 Front axle class
-Vehicle front axle class is implemented as follow. This class is used for drawing the vehicle's front axle according to the specification.  
+Vehicle front axle class is implemented as follows. This class is used for drawing the vehicle's front axle according to the specification.  
 [front_axle.py](/src/components/vehicle/front_axle.py)  
 
 ```python
@@ -440,7 +445,7 @@ class FrontAxle:
 ```
 
 ### 2.4.7 Rear axle class
-Vehicle rear axle class is implemented as follow. This class is used for drawing the vehicle's rear axle according to the specification.  
+Vehicle rear axle class is implemented as follows. This class is used for drawing the vehicle's rear axle according to the specification.  
 [rear_axle.py](/src/components/vehicle/rear_axle.py)  
 
 ```python
@@ -493,7 +498,7 @@ class RearAxle:
 ```
 
 ### 2.4.8 Front left tire class
-Vehicle front left tire class is implemented as follow. This class is used for drawing the vehicle's front left tire according to the specification.  
+Vehicle front left tire class is implemented as follows. This class is used for drawing the vehicle's front left tire according to the specification.  
 [front_left_tire.py](/src/components/vehicle/front_left_tire.py)  
 
 ```python
@@ -547,7 +552,7 @@ class FrontLeftTire:
 ```
 
 ### 2.4.9 Front right tire class
-Vehicle front right tire class is implemented as follow. This class is used for drawing the vehicle's front right tire according to the specification.  
+Vehicle front right tire class is implemented as follows. This class is used for drawing the vehicle's front right tire according to the specification.  
 [front_right_tire.py](/src/components/vehicle/front_right_tire.py)  
 
 ```python
@@ -601,7 +606,7 @@ class FrontRightTire:
 ```
 
 ### 2.4.10 Rear left tire class
-Vehicle rear left tire class is implemented as follow. This class is used for drawing the vehicle's rear left tire according to the specification.  
+Vehicle rear left tire class is implemented as follows. This class is used for drawing the vehicle's rear left tire as per the specification.  
 [rear_left_tire.py](/src/components/vehicle/rear_left_tire.py)  
 
 ```python
@@ -654,7 +659,7 @@ class RearLeftTire:
 ```
 
 ### 2.4.11 Rear right tire class
-Vehicle rear left tire class is implemented as follow. This class is used for drawing the vehicle's rear left tire according to the specification.  
+Vehicle rear right tire class is implemented as follows. This class is used for drawing the vehicle's rear right tire as per the specification.  
 [rear_right_tire.py](/src/components/vehicle/rear_right_tire.py)  
 
 ```python
@@ -707,7 +712,7 @@ class RearRightTire:
 ```
 
 ### 2.4.12 Four wheels vehicle class
-FourWheelsVehicle class is implemented by importing the above each parts class.  
+`FourWheelsVehicle` class is implemented by composing the part classes above.  
 [four_wheels_vehicle.py](/src/components/vehicle/four_wheels_vehicle.py)  
 
 ```python
@@ -864,7 +869,7 @@ You can see the following animation by executing this program.
 ![](/doc/2_vehicle_model/visualize_vehicle.gif)  
 
 ### 2.5.2 With zoom
-This program can visualize the vehicle within an limited area in global coordinate system. The size of limited area can be set as parameters.  
+This program can visualize the vehicle within a limited area in global coordinate system. The size of the limited area can be set as parameters.  
 [visualize_vehicle_zoom.py](/doc/2_vehicle_model/visualize_vehicle_zoom.py)  
 
 ```python
@@ -929,5 +934,5 @@ if __name__ == "__main__":
     main()
 ```
 
-You can see the following animation by executing this program. In this animation, the size of limited area is 10m x 10m. This size is defined as default values of VehicleSpecification class's parameters.  
+You can see the following animation by executing this program. In this animation, the size of the limited area is 10m x 10m. This size is defined as default values of VehicleSpecification class's parameters.  
 ![](/doc/2_vehicle_model/visualize_vehicle_zoom.gif)  
