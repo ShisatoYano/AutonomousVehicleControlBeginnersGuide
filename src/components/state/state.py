@@ -66,7 +66,7 @@ class State:
         """
         Function to update state
         accel_mps2: Acceleration[m/s^2]
-        steer_rad: Steering angle[rad]
+        yaw_rate_rps: Yaw rate[rad/s]
         time_s: Time interval per cycle[sec]
         """
 
