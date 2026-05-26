@@ -27,6 +27,7 @@ Python sample codes and documents about Autonomous vehicle control algorithm. Th
         * [Hybrid A*](#hybrid-a)
         * [D*](#d)
         * [Dijkstra](#dijkstra)
+        * [ACO](#aco)
         * [PSO](#pso)
         * [PRM](#prm)
         * [RRT](#rrt)
@@ -133,6 +134,10 @@ Planning with dynamic obstacle replanning
 #### Dijkstra
 Planning(Reduce frames by sampling every nth node to prevent memory exhaustion)  
 ![](src/simulations/path_planning/dijkstra_path_planning/dijkstra_search.gif)  
+#### ACO
+Ant Colony Optimization  
+Author: [Banaan Kiamanesh](https://github.com/BanaanKiamanesh)  
+![](src/simulations/path_planning/aco_path_planning/aco_search.gif)  
 #### PSO
 Particle Swarm Optimization  
 ![](src/simulations/path_planning/pso_path_planning/pso_search.gif)  
