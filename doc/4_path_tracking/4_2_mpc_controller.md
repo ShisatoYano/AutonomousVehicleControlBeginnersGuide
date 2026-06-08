@@ -185,39 +185,29 @@ CasADi writes these equations as symbolic expressions, meaning it can automatica
 At every time step, MPC solves the optimization problem:
 
 $$
-\begin{aligned}
-\min_{U}\quad
-J
-&=
+\min_{U}\quad J =
 \sum_{t=0}^{N-1}
 \ell(x_t,u_t,u_{t-1})
 +
 \phi(x_N)
-\\[6pt]
-\text{subject to}\quad
-&
-x_{t+1}
-=
-f(x_t,u_t),
-\qquad t=0,\ldots,N-1
-\\[4pt]
-&
-|\delta_t|
-\le
-\delta_{\max}
-\\[4pt]
-&
-|a_t|
-\le
-a_{\max}
-\\[4pt]
-&
-v_{\min}
-\le
-v_t
-\le
-v_{\max}
-\end{aligned}
+$$
+
+subject to
+
+$$
+x_{t+1}=f(x_t,u_t)
+$$
+
+$$
+|\delta_t| \le \delta_{\max}
+$$
+
+$$
+|a_t| \le a_{\max}
+$$
+
+$$
+v_{\min} \le v_t \le v_{\max}
 $$
 
 where:
