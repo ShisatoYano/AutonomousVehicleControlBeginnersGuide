@@ -167,10 +167,10 @@ MPC uses an internal motion model to predict how the vehicle will move in respon
 
 $$
 \begin{aligned}
-p_{x,t+1} &= p_{x,t} + v_t \cos(\psi_t)\,\Delta t, \\
-p_{y,t+1} &= p_{y,t} + v_t \sin(\psi_t)\,\Delta t, \\
-\psi_{t+1} &= \psi_t + \frac{v_t}{L}\tan(\delta_t)\,\Delta t, \\
-v_{t+1} &= v_t + a_t\,\Delta t.
+p_{x,t+1} &= p_{x,t} + v_t \cos(\psi_t)\ \Delta t \\
+p_{y,t+1} &= p_{y,t} + v_t \sin(\psi_t)\ \Delta t \\
+\psi_{t+1} &= \psi_t + \frac{v_t}{L}\tan(\delta_t)\ \Delta t \\
+v_{t+1} &= v_t + a_t\,\Delta t
 \end{aligned}
 $$
 
@@ -230,20 +230,20 @@ The stage cost is evaluated at every step $t = 0,\ldots,N-1$ of the horizon. It 
 Penalises deviation from the reference trajectory:
 
 $$
-\ell_{\text{track}}
+\ell_{\mathrm{track}}
 =
-w_x (p_{x,t} - p_{x,r})^2
+w_x (p_{x,t}-p_{x,r})^2
 +
-w_y (p_{y,t} - p_{y,r})^2
+w_y (p_{y,t}-p_{y,r})^2
 +
 w_\psi
-\left[
-\text{atan2}
-\left(
+\Bigl[
+\operatorname{atan2}
+\bigl(
 \sin(\psi_t-\psi_r),
 \cos(\psi_t-\psi_r)
-\right)
-\right]^2
+\bigr)
+\Bigr]^2
 +
 w_v (v_t-v_r)^2
 $$
