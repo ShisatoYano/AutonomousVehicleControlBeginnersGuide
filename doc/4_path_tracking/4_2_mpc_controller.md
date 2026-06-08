@@ -238,7 +238,7 @@ w_y (p_{y,t} - p_{y,r})^2
 +
 w_\psi
 \left[
-\mathrm{atan2}
+\text{atan2}
 \left(
 \sin(\psi_t-\psi_r),
 \cos(\psi_t-\psi_r)
@@ -251,7 +251,7 @@ $$
 The heading error uses
 
 $$
-\mathrm{atan2}
+\text{atan2}
 \left(
 \sin(\psi_t-\psi_r),
 \cos(\psi_t-\psi_r)
@@ -532,10 +532,12 @@ This method builds the $(4, T+1)$ reference array that is injected into the NLP 
 
 The formula for each reference step is:
 
-```
-target_s  =  s₀  +  k × v × Δt
+$$
+{target_s}  =  s₀  +  k × v × Δt
+$$
+$$
 ref[k]    =  course point nearest to arc-length target_s
-```
+$$
 
 where $s₀$ is the cumulative arc-length at the vehicle's current nearest point, and $v × Δt$ is the distance travelled per prediction step.
 
