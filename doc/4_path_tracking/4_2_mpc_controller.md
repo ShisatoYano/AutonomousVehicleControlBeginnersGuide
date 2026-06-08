@@ -236,16 +236,20 @@ w_x (p_{x,t}-p_{x,r})^2
 +
 w_y (p_{y,t}-p_{y,r})^2
 +
-w_\psi
-\Bigl[
-\operatorname{atan2}
-\bigl(
-\sin(\psi_t-\psi_r),
-\cos(\psi_t-\psi_r)
-\bigr)
-\Bigr]^2
+w_\psi e_\psi^2
 +
 w_v (v_t-v_r)^2
+$$
+
+where
+
+$$
+e_\psi =
+\operatorname{atan2}
+\!\left(
+\sin(\psi_t-\psi_r),
+\cos(\psi_t-\psi_r)
+\right).
 $$
 
 The heading error uses
