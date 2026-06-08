@@ -238,7 +238,7 @@ w_y (p_{y,t} - p_{y,r})^2
 +
 w_\psi
 \left[
-\operatorname{atan2}
+\mathrm{atan2}
 \left(
 \sin(\psi_t-\psi_r),
 \cos(\psi_t-\psi_r)
@@ -251,7 +251,7 @@ $$
 The heading error uses
 
 $$
-\operatorname{atan2}
+\mathrm{atan2}
 \left(
 \sin(\psi_t-\psi_r),
 \cos(\psi_t-\psi_r)
@@ -322,7 +322,7 @@ W_y (p_{y,N} - p_{y,rN})^2
 +
 W_\psi
 \left[
-\operatorname{atan2}
+\mathrm{atan2}
 \left(
 \sin(\psi_N-\psi_{rN}),
 \cos(\psi_N-\psi_{rN})
