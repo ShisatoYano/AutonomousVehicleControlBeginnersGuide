@@ -157,7 +157,7 @@ $$
 
 
 
-At each time step, MPC finds the sequence $U = {u₀, u₁, …, u_{N-1}}$ that minimises the total cost $J$ over the horizon.
+At each time step, MPC finds the sequence $U = {u_0, u_1, …, u_{N-1}}$ that minimises the total cost $J$ over the horizon.
 
 ---
 
@@ -473,19 +473,11 @@ This method builds the $(4, T+1)$ reference array that is injected into the NLP 
 The formula for each reference step is:
 
 $$
-s_{\text{target}}
-=
-s_0
-+
-k\,v\,\Delta t
+s_{\text{target}} = s_0 + k\,v\,\Delta t
 $$
+
 $$
-\mathrm{ref}[k]
-=
-\arg\min_{p_i}
-\left|
-s_i - s_{\text{target}}
-\right|
+\mathrm{ref}[k] = \arg\min_{p_i}\left|s_i - s_{\text{target}}\right|
 $$
 
 where $s_0$ is the cumulative arc-length at the vehicle's current nearest point, and $v × Δt$ is the distance travelled per prediction step.
