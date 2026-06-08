@@ -237,7 +237,7 @@ where
 
 $$
 e_\psi =
-\mathrm{atan2}\!\left(\sin(\psi_t-\psi_r),\cos(\psi_t-\psi_r)\right).
+\mathrm{atan2}\left(\sin(\psi_t-\psi_r),\cos(\psi_t-\psi_r)\right).
 $$
 
 The heading error uses **$\text{atan2}$** rather than a direct subtraction. This maps the error into $(-\pi,\pi]$, and remains smooth when the angle wraps around $\pm\pi$.
