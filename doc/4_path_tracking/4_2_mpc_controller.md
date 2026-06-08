@@ -294,7 +294,7 @@ The terminal weights $W$ are set heavier than the stage weights (default: $W = 2
 
 ### 5.2.6 The Receding Horizon Principle
 
-MPC solves for the full sequence $\{u_0, u_1, \ldots, u_{N-1}\}$ but **only applies $u_₀$** - the first control action. At the next time step, the horizon shifts forward by one step, the current state is re-measured, and the problem is solved again from scratch. This is why it is called a **receding horizon controller**.
+MPC solves for the full sequence $\{u_0, u_1, \ldots, u_{N-1}\}$ but **only applies $u_0$** - the first control action. At the next time step, the horizon shifts forward by one step, the current state is re-measured, and the problem is solved again from scratch. This is why it is called a **receding horizon controller**.
 
 At each control cycle, MPC solves an optimization problem over the prediction horizon, but only the first control action is applied:
 
