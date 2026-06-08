@@ -299,7 +299,7 @@ MPC solves for the full sequence $\{u_0, u_1, \ldots, u_{N-1}\}$ but **only appl
 At each control cycle, MPC solves an optimization problem over the prediction horizon, but only the first control action is applied:
 
 $$
-U^* = \{u_0^*, u_1^*, \ldots, u_{N-1}^*\}
+U^{*} = \{u_0^*, u_1^*, \ldots, u_{N-1}^*\}
 $$
 
 **but** only $u(k)=u_0^*$ is applied to the vehicle.
@@ -473,13 +473,22 @@ This method builds the $(4, T+1)$ reference array that is injected into the NLP 
 The formula for each reference step is:
 
 $$
-{target_s}  =  s₀  +  k × v × Δt
+s_{\text{target}}
+=
+s_0
++
+k\,v\,\Delta t
 $$
 $$
-ref[k]    =  course point nearest to arc-length target_s
+\mathrm{ref}[k]
+=
+\arg\min_{p_i}
+\left|
+s_i - s_{\text{target}}
+\right|
 $$
 
-where $s₀$ is the cumulative arc-length at the vehicle's current nearest point, and $v × Δt$ is the distance travelled per prediction step.
+where $s_0$ is the cumulative arc-length at the vehicle's current nearest point, and $v × Δt$ is the distance travelled per prediction step.
 
 ---
 
