@@ -245,7 +245,7 @@ where
 
 $$
 e_\psi =
-\operatorname{atan2}
+\text{atan2}
 \!\left(
 \sin(\psi_t-\psi_r),
 \cos(\psi_t-\psi_r)
