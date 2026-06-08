@@ -299,28 +299,12 @@ MPC solves for the full sequence $\{u_0, u_1, \ldots, u_{N-1}\}$ but **only appl
 At each control cycle, MPC solves an optimization problem over the prediction horizon, but only the first control action is applied:
 
 $$
-U^*
-=
-\left\{
-u_0^*,\,u_1^*,\,\ldots,\,u_{N-1}^*
-\right\}
+U^* = \left\{u_0^*,\,u_1^*,\,\ldots,\,u_{N-1}^*\right\}
 $$
 
-but only
+**but** only $u(k)=u_0^*$ is applied to the vehicle.
 
-$$
-u(k)=u_0^*
-$$
-
-is applied to the vehicle.
-
-At the next sampling instant, the optimization is solved again using the updated state estimate:
-
-$$
-x(k+1)
-$$
-
-resulting in a new optimal control sequence.
+At the next sampling instant, the optimization is solved again using the updated state estimate $x(k+1)$ resulting in a new optimal control sequence.
 
 This strategy is known as the **receding horizon** (or **moving horizon**) principle.
 
