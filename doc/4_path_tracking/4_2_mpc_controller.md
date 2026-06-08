@@ -299,7 +299,7 @@ MPC solves for the full sequence $\{u_0, u_1, \ldots, u_{N-1}\}$ but **only appl
 At each control cycle, MPC solves an optimization problem over the prediction horizon, but only the first control action is applied:
 
 $$
-U^{*} = u_0^{*}, u_1^{*}, \ldots, u_{N-1}^{*}
+U^{*} = u_0^{*}, u_1^{*}, {\ldots}, u_{N-1}^{*}
 $$
 
 **but** only $u(k)=u_0^*$ is applied to the vehicle.
