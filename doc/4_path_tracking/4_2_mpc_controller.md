@@ -249,11 +249,7 @@ The heading error uses **$\text{atan2}$** rather than a direct subtraction. This
 Penalises large control inputs:
 
 $$
-\ell_{\text{effort}}
-=
-w_\delta \,\delta_t^2
-+
-w_a\,a_t^2
+\ell_{\text{effort}} = w_\delta \,\delta_t^2 + w_a\,a_t^2
 $$
 
 ---
@@ -263,13 +259,7 @@ $$
 Penalises rapid changes between consecutive control inputs:
 
 $$
-\ell_{\text{smooth}}
-=
-w_{\Delta\delta}
-(\delta_t-\delta_{t-1})^2
-+
-w_{\Delta a}
-(a_t-a_{t-1})^2
+\ell_{\text{smooth}} = w_{\Delta\delta}(\delta_t-\delta_{t-1})^2 + w_{\Delta a} (a_t-a_{t-1})^2
 $$
 
 This is implemented via do-mpc's `set_rterm()` which automatically adds this term at every horizon step. It prevents the controller from producing jerky steering commands.
@@ -290,17 +280,7 @@ mpc.set_rterm(
 The terminal cost is evaluated only at the **last step** $t = N$ of the horizon:
 
 $$
-\phi(x_N)
-=
-W_x (p_{x,N} - p_{x,rN})^2
-+
-W_y (p_{y,N} - p_{y,rN})^2
-+
-W_\psi
-\left[
-\mathrm{atan2}
-\left(
-\sin(\psi_N-\psi_{rN}),
+\phi(x_N) = W_x (p_{x,N} - p_{x,rN})^2 + W_y (p_{y,N} - p_{y,rN})^2 + W_\psi\left[\mathrm{atan2}\left(\sin(\psi_N-\psi_{rN}),
 \cos(\psi_N-\psi_{rN})
 \right)
 \right]^2
