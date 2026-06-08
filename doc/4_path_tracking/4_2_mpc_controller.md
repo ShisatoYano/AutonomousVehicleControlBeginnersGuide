@@ -230,15 +230,7 @@ The stage cost is evaluated at every step $t = 0,\ldots,N-1$ of the horizon. It 
 Penalises deviation from the reference trajectory:
 
 $$
-\ell_{\mathrm{track}}
-=
-w_x (p_{x,t}-p_{x,r})^2
-+
-w_y (p_{y,t}-p_{y,r})^2
-+
-w_\psi e_\psi^2
-+
-w_v (v_t-v_r)^2
+\ell_{\mathrm{track}} = w_x (p_{x,t}-p_{x,r})^2 + w_y (p_{y,t}-p_{y,r})^2 + w_\psi e_\psi^2 + w_v (v_t-v_r)^2
 $$
 
 where
@@ -252,23 +244,7 @@ e_\psi =
 \right).
 $$
 
-The heading error uses
-
-$$
-\text{atan2}
-\left(
-\sin(\psi_t-\psi_r),
-\cos(\psi_t-\psi_r)
-\right)
-$$
-
-rather than a direct subtraction. This maps the error into:
-
-$$
-(-\pi,\pi]
-$$
-
-and remains smooth when the angle wraps around $\pm\pi$.
+The heading error uses **$\text{atan2}$** rather than a direct subtraction. This maps the error into $(-\pi,\pi]$, and remains smooth when the angle wraps around $\pm\pi$.
 
 ---
 
