@@ -12,6 +12,9 @@ Visualises:
 
 import sys
 from pathlib import Path
+import warnings
+# to supress do-mpc warnings about the full version
+warnings.filterwarnings("ignore", category=UserWarning) 
 
 # ── Path setup (identical pattern to mppi_path_tracking.py) ───────────────
 abs_dir_path = str(Path(__file__).absolute().parent)
@@ -29,7 +32,7 @@ from vehicle_specification import VehicleSpecification
 from state import State
 from four_wheels_vehicle import FourWheelsVehicle
 from cubic_spline_course import CubicSplineCourse
-from mpc_controller import MPCController              # ← do-mpc controller
+from mpc_controller import MPCController              # do-mpc controller
 
 show_plot = True
 
@@ -46,7 +49,7 @@ def main():
     )
 
     # ── Reference course  ─────────────────────────────────────────────────
-    # Identical waypoints to mppi_path_tracking.py so the comparison is fair.
+    # Identical waypoints to mppi_path_tracking.py for comparison.
     course = CubicSplineCourse(
         [0.0, 10.0, 25, 40, 50],
         [0.0,  4.0, -12, 20, -13],
@@ -59,7 +62,7 @@ def main():
     state = State(color=spec.color)
 
     # ── MPC controller  ───────────────────────────────────────────────────
-    # Parameters are chosen to be comparable to the MPPI configuration:
+    #   Parameters are chosen to be comparable to the MPPI configuration:
     #   delta_t and horizon give a similar prediction window (≈ 2 s).
     #   Stage / terminal cost weights mirror the MPPI weights exactly so
     #   both controllers optimise the same objective shape.

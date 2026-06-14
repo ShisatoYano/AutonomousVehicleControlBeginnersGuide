@@ -112,6 +112,7 @@ class MppiController:
         self.visualize_sampled_trajs = visualize_sampled_trajs
 
         self.Sigma = np.array([[sigma_steer**2, 0.0], [0.0, sigma_accel**2]])
+        self.Sigma_inv = np.linalg.inv(self.Sigma) # precompute inverse for efficiency
         self.stage_cost_weight = np.asarray(
             stage_cost_weight
             if stage_cost_weight is not None
@@ -272,13 +273,12 @@ class MppiController:
                 v[k, t] = self._g(v[k, t])
 
         S = np.zeros(self.K)
-        Sigma_inv = np.linalg.inv(self.Sigma)
         for k in range(self.K):
             x = x0.copy()
             for t in range(self.T):
                 u_t = u[t]
                 v_t = v[k, t]
-                S[k] += self._c(x) + self.param_gamma * (u_t.T @ Sigma_inv @ v_t)
+                S[k] += self._c(x) + self.param_gamma * (u_t.T @ self.Sigma_inv @ v_t)
                 x = self._F(x, v_t)
             S[k] += self._phi(x)
 
