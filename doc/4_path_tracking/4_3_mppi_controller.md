@@ -500,7 +500,7 @@ If no course is set, the method returns early and resets all outputs to safe def
     w_epsilon = np.zeros((self.T, 2))
     for t in range(self.T):
         for k in range(self.K):
-            w_epsilon[t] += w[k] * epsilon[k, t]   # ← epsilon, not v
+            w_epsilon[t] += w[k] * epsilon[k, t]   # epsilon, not v
 
     if self.moving_average_window >= 2:
         w_epsilon = self._moving_average_filter(w_epsilon, self.moving_average_window)
