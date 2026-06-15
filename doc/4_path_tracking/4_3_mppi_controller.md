@@ -165,7 +165,7 @@ $$
 The **nominal control sequence** (warm-started from the previous control cycle) is stored as:
 
 $$
-U = \left\{ u_{\text{prev}}[0],\; u_{\text{prev}}[1],\; \ldots,\; u_{\text{prev}}[T-1] \right\} \quad \text{shape: } (T,\,2)
+U = \{u_{\text{prev}}[0],\; u_{\text{prev}}[1],\; \ldots,\; u_{\text{prev}}[T-1] \} \quad \text{shape: } (T,\,2)
 $$
 
 ---
@@ -187,10 +187,10 @@ The K samples are split into two groups:
 
 ```
 Exploitation samples  (first (1 − param_exploration) × K):
-    v_{k,t}  =  clip( u_prev[t]  +  ε_{k,t} )    ← perturb warm start
+    v_{k,t}  =  clip( u_prev[t]  +  ε_{k,t} )    <- perturb warm start
 
 Exploration samples   (last  param_exploration × K):
-    v_{k,t}  =  clip( ε_{k,t} )                   ← pure random, ignores warm start
+    v_{k,t}  =  clip( ε_{k,t} )                  <- pure random, ignores warm start
 ```
 
 The exploitation samples refine the previous solution. The exploration samples venture further afield and can discover better solutions when the warm start has drifted off-course. The `param_exploration` parameter controls the ratio.
@@ -218,8 +218,8 @@ The heading error uses `atan2(sin(·), cos(·))` - it wraps the angle difference
 **Control cost term** $\gamma \cdot u_{\text{prev}}[t]^\top \Sigma^{-1} v_{k,t}$ - penalises samples that deviate far from the warm-start control. The parameter $\gamma = \lambda(1 - \alpha)$ controls its strength:
 
 ```
-param_alpha = 1.0  →  γ = 0   (control cost off - pure tracking, default)
-param_alpha = 0.0  →  γ = λ   (full control cost - conservative)
+param_alpha = 1.0  ->  γ = 0   (control cost off - pure tracking, default)
+param_alpha = 0.0  ->  γ = λ   (full control cost - conservative)
 ```
 
 **Terminal cost** $\phi(x_T^k)$ - same structure as $c(x)$ but evaluated only at the last rollout step, using `terminal_cost_weight` instead of `stage_cost_weight`.
@@ -236,7 +236,9 @@ $$\rho = \min_k S(k)$$
 
 **Step 2** - Compute unnormalised softmin weights:
 
-$$\tilde{\eta}_k = \exp\!\left( -\frac{S(k) - \rho}{\lambda} \right)$$
+$$
+\tilde{\eta}_k = \exp(-\frac{S(k)-\rho}{\lambda})
+$$
 
 **Step 3** - Normalise so weights sum to 1:
 
@@ -445,7 +447,7 @@ def _moving_average_filter(self, xx, window_size):
 
 Applies a moving-average filter to each column of the $(T, 2)$ weighted perturbation array $w_\varepsilon$. The filter smooths the control sequence along the time dimension, reducing high-frequency chatter.
 
-**Edge correction**: `numpy`'s `mode="same"` pads the signal with zeros at the boundaries. For a window of size $W$, the first element is computed from only $\lceil W/2 \rceil$ real values instead of $W$, so `numpy` effectively divides by $W$ when only $\lceil W/2 \rceil$ values exist  under-weighting the edges. The correction loop rescales each boundary element back up by $W / \text{actual\_count}$. The `window_size % 2` term handles the asymmetry between even and odd window sizes, where the left and right boundary element counts differ by one.
+**Edge correction**: `numpy`'s `mode="same"` pads the signal with zeros at the boundaries. For a window of size $W$, the first element is computed from only $\lceil W/2 \rceil$ real values instead of $W$, so `numpy` effectively divides by $W$ when only $\lceil W/2 \rceil$ values exist  under-weighting the edges. The correction loop rescales each boundary element back up by $W / actual\_count$. The `window_size % 2` term handles the asymmetry between even and odd window sizes, where the left and right boundary element counts differ by one.
 
 ---
 
