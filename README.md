@@ -28,6 +28,7 @@ Python sample codes and documents about Autonomous vehicle control algorithm. Th
         * [D*](#d)
         * [Dijkstra](#dijkstra)
         * [ACO](#aco)
+	* [GA](#ga)
         * [Q-Learning](#q-learning)	
         * [PSO](#pso)
         * [PRM](#prm)
@@ -139,6 +140,9 @@ Planning(Reduce frames by sampling every nth node to prevent memory exhaustion)
 Ant Colony Optimization  
 Author: [Banaan Kiamanesh](https://github.com/BanaanKiamanesh)  
 ![](src/simulations/path_planning/aco_path_planning/aco_search.gif)  
+#### GA
+Genetic Algorithm with spline smoothing  
+![](src/simulations/path_planning/ga_path_planning/ga_search.gif) 
 #### Q-Learning
 Reinforcement learning with a Q-table policy   
 ![](src/simulations/path_planning/q_learning_path_planning/q_learning_search.gif)  
