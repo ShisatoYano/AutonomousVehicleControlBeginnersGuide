@@ -1,0 +1,144 @@
+"""
+aco_path_planning.py
+
+Simulation that demonstrates Ant Colony Optimization (ACO) path planning.
+
+Two GIFs are produced:
+    1. **aco_search.gif** - grid animation showing the best ant-colony path
+       improving over the iterations.
+    2. **aco_navigate.gif** - car-following navigation on the planned path
+       using PurePursuit.
+
+Author: Banaan Kiamanesh
+GitHub: https://github.com/BanaanKiamanesh
+"""
+
+import json
+import sys
+from pathlib import Path
+
+abs_dir_path = str(Path(__file__).absolute().parent)
+relative_path = "/../../../components/"
+relative_simulations = "/../../../simulations/"
+
+sys.path.append(abs_dir_path + relative_path + "visualization")
+sys.path.append(abs_dir_path + relative_path + "state")
+sys.path.append(abs_dir_path + relative_path + "vehicle")
+sys.path.append(abs_dir_path + relative_path + "obstacle")
+sys.path.append(abs_dir_path + relative_path + "mapping/grid")
+sys.path.append(abs_dir_path + relative_path + "course/cubic_spline_course")
+sys.path.append(abs_dir_path + relative_path + "control/pure_pursuit")
+sys.path.append(abs_dir_path + relative_path + "plan/aco")
+
+from global_xy_visualizer import GlobalXYVisualizer  # noqa: E402
+from min_max import MinMax  # noqa: E402
+from time_parameters import TimeParameters  # noqa: E402
+from vehicle_specification import VehicleSpecification  # noqa: E402
+from state import State  # noqa: E402
+from four_wheels_vehicle import FourWheelsVehicle  # noqa: E402
+from obstacle import Obstacle  # noqa: E402
+from obstacle_list import ObstacleList  # noqa: E402
+from cubic_spline_course import CubicSplineCourse  # noqa: E402
+from pure_pursuit_controller import PurePursuitController  # noqa: E402
+from binary_occupancy_grid import BinaryOccupancyGrid  # noqa: E402
+from ant_colony_path_planner import AntColonyPathPlanner  # noqa: E402
+
+
+# flag to show plot figure
+# when executed as unit test, this flag is set as false
+show_plot = True
+
+
+def main():
+    """Main process function."""
+
+    # set simulation parameters
+    x_lim, y_lim = MinMax(-5, 55), MinMax(-20, 25)
+    sim_dir = (
+        abs_dir_path
+        + relative_simulations
+        + "path_planning/aco_path_planning/"
+    )
+    map_path = sim_dir + "map.json"
+    path_filename = sim_dir + "path.json"
+    search_gif_path = sim_dir + "aco_search.gif"
+    navigate_gif_path = sim_dir + "aco_navigate.gif"
+
+    # ---- grid + static obstacles ----
+    occ_grid = BinaryOccupancyGrid(
+        x_lim,
+        y_lim,
+        resolution=0.5,
+        clearance=1.5,
+        map_path=map_path,
+    )
+
+    obst_list = ObstacleList()
+    obst_list.add_obstacle(
+        Obstacle(State(x_m=10.0, y_m=15.0), length_m=10, width_m=8)
+    )
+    obst_list.add_obstacle(
+        Obstacle(State(x_m=40.0, y_m=0.0), length_m=2, width_m=10)
+    )
+    occ_grid.add_object(obst_list)
+    occ_grid.save_map()
+
+    # ---- ACO plan ----
+    planner = AntColonyPathPlanner(
+        (0, 0),
+        (50, -10),
+        map_path,
+        x_lim=x_lim,
+        y_lim=y_lim,
+        path_filename=path_filename,
+        gif_name=search_gif_path if show_plot else None,
+        n_ants=12,
+        n_iterations=25,
+        alpha=1.0,
+        beta=5.0,
+        evaporation=0.30,
+        q=150.0,
+        stagnation_limit=8,
+        seed=10,
+    )
+
+    if not planner.path:
+        print("ACO: no path found - aborting.")
+        return
+
+    # ---- navigation GIF (car following) ----
+    with open(path_filename, "r") as f:
+        sparse_path = json.load(f)
+
+    sparse_x = [p[0] for p in sparse_path]
+    sparse_y = [p[1] for p in sparse_path]
+
+    course = CubicSplineCourse(sparse_x, sparse_y, 20)
+
+    vis = GlobalXYVisualizer(
+        x_lim,
+        y_lim,
+        TimeParameters(span_sec=25),
+        show_zoom=False,
+        gif_name=navigate_gif_path,
+    )
+    vis.add_object(obst_list)
+    vis.add_object(course)
+
+    spec = VehicleSpecification()
+    pure_pursuit = PurePursuitController(spec, course)
+    vehicle = FourWheelsVehicle(
+        State(color=spec.color),
+        spec,
+        controller=pure_pursuit,
+        show_zoom=False,
+    )
+    vis.add_object(vehicle)
+
+    if not show_plot:
+        vis.not_show_plot()
+    vis.draw()
+
+
+if __name__ == "__main__":
+    main()
