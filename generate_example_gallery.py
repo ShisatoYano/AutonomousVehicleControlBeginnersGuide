@@ -87,3 +87,20 @@ DESCRIPTIONS = {
     "sensor_auto_calibration": "Estimation by Unscented Kalman Filter",
 }
 
+
+def _default_title(dir_name):
+    return dir_name.replace("_", " ").title()
+
+
+def _relative_to_repo_root(path):
+    return path.relative_to(PROJECT_ROOT).as_posix()
+
+
+def collect_gallery_entries():
+    """
+    戻り値: {category_title: [(display_name, description, [image相対パス, ...]), ...]}
+    .pyファイルと画像ファイル(gif/png/jpg)を両方持つディレクトリのみ対象
+    """
+    gallery = {}
+
+    return gallery
