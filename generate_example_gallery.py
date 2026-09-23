@@ -57,6 +57,7 @@ DISPLAY_NAMES = {
     "pso_path_planning": "PSO",
     "prm_path_planning": "PRM",
     "elastic_bands_path_planning": "Elastic Bands",
+    "ga_path_planning": "GA",
     "gradient_path_planning": "Gradient Descent",
     "rrt_path_planning": "RRT",
     "rrt_star_bidirectional_path_planning": "Bidirectional RRT*",
@@ -84,6 +85,7 @@ DESCRIPTIONS = {
     "dstar_path_planning": "Planning with dynamic obstacle replanning",
     "dijkstra_path_planning": "Planning (reduce frames by sampling every nth node to prevent memory exhaustion)",
     "elastic_bands_path_planning": "A* seed path smoothed with Elastic Bands optimisation",
+    "ga_path_planning": "Genetic Algorithm with spline smoothing",
     "sensor_auto_calibration": "Estimation by Unscented Kalman Filter",
 }
 

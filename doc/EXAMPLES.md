@@ -67,6 +67,10 @@ A* seed path smoothed with Elastic Bands optimisation
 ![](src/simulations/path_planning/elastic_bands_path_planning/elastic_bands_navigate.gif)  
 ![](src/simulations/path_planning/elastic_bands_path_planning/elastic_bands_search.gif)  
 
+### GA
+Genetic Algorithm with spline smoothing  
+![](src/simulations/path_planning/ga_path_planning/ga_search.gif)  
+
 ### Gradient Descent
 ![](src/simulations/path_planning/gradient_path_planning/gradient_descent_demo.gif)  
 
