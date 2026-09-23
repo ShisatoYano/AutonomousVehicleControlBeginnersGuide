@@ -24,6 +24,8 @@ When you implement a sample program of an algorithm, please keep the following i
 ### Step 3: Implement unit test
 If you added a new sample program, please add a unit test code for it under test directory. When you implement the test code, please refer to the existing code. Additionally, each unit tests should be able to run without animation because test process stops and an exception occurs. After you completed to implement the test code, confirm the test passes by executing the script, run_test_suites.sh/bat.  
 
+If your sample program has a demo GIF/image under its `src/simulations/...` directory, also run `python generate_example_gallery.py` from the repository root and commit the updated `doc/EXAMPLES.md`.  
+
 ### Step 4: Submit a pull request and modify code based on review
 If your sample program and test were ready, let's create a pull request and submit it. When you create the PR, please write a description about the following items.  
 
