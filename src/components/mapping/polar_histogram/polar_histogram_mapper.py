@@ -9,14 +9,15 @@ import matplotlib.patches as patches
 
 from polar_histogram import PolarHistogram
 from candidate_valley_detector import CandidateValleyDetector
+from direction_selector import DirectionSelector
 
 
 class PolarHistogramMapper:
     """
     Mapper class to build and visualize a polar obstacle density histogram
-    around the vehicle from LiDAR point cloud data, following the mapping
-    and candidate valley detection stages of the Vector Field Histogram(VFH)
-    algorithm.
+    around the vehicle from LiDAR point cloud data, following the mapping,
+    candidate valley detection, and direction selection stages of the
+    Vector Field Histogram(VFH) algorithm.
 
     Each frame, the histogram is drawn as a ring of colored wedges centered
     on the vehicle: denser(more blocked) sectors are drawn longer and closer
@@ -24,11 +25,16 @@ class PolarHistogramMapper:
     length and color are both normalized by the current frame's maximum
     density, so the ring stays readable regardless of how many obstacles
     are in range. Detected candidate valleys(navigable direction ranges,
-    Step 2) are drawn as green arcs just outside that ring.
+    Step 2) are drawn as green arcs just outside that ring. The direction
+    selected(Step 3) from those valleys is drawn as a bold blue arrow, with
+    a thin dashed line showing the target(goal) direction it was weighed
+    against.
     """
 
     def __init__(self, sensor_params=None, num_sectors=72, smoothing_window=5,
-                ring_radius_m=8.0, valley_density_threshold=0.2):
+                ring_radius_m=8.0, valley_density_threshold=0.2,
+                target_x_m=None, target_y_m=None,
+                target_weight=1.0, heading_weight=1.0, previous_weight=1.0):
         """
         Constructor
         sensor_params: LiDAR's SensorParameters object, used for max sensing range
@@ -36,6 +42,10 @@ class PolarHistogramMapper:
         smoothing_window: Half-width of the triangular smoothing filter(sectors)
         ring_radius_m: Drawing radius of the densest sector's wedge on the global plot[m]
         valley_density_threshold: Smoothed density at/below which a sector counts as navigable
+        target_x_m, target_y_m: Fixed goal point[m] the target direction points toward.
+                                 When not given, the vehicle's current heading is used as
+                                 the target direction(i.e. "keep going straight")
+        target_weight, heading_weight, previous_weight: Direction selection cost weights
         """
 
         max_range_m = sensor_params.MAX_RANGE_M if sensor_params else 40.0
@@ -44,16 +54,22 @@ class PolarHistogramMapper:
                                         max_range_m=max_range_m,
                                         smoothing_window=smoothing_window)
         self.valley_detector = CandidateValleyDetector(density_threshold=valley_density_threshold)
+        self.direction_selector = DirectionSelector(target_weight=target_weight,
+                                                     heading_weight=heading_weight,
+                                                     previous_weight=previous_weight)
         self.ring_radius_m = ring_radius_m
+        self.target_x_m = target_x_m
+        self.target_y_m = target_y_m
 
         self.vehicle_x_m = 0.0
         self.vehicle_y_m = 0.0
         self.vehicle_yaw_rad = 0.0
+        self.target_angle_rad = 0.0
 
     def update(self, point_cloud, state):
         """
-        Function to update the polar histogram and candidate valleys from
-        the latest LiDAR point cloud
+        Function to update the polar histogram, candidate valleys, and
+        selected direction from the latest LiDAR point cloud
         point_cloud: List of ScanPoint objects from LiDAR. Each point's angle
                      is expected to be relative to the vehicle's heading
         state: Vehicle's state object
@@ -68,17 +84,34 @@ class PolarHistogramMapper:
         self.vehicle_y_m = state.get_y_m()
         self.vehicle_yaw_rad = state.get_yaw_rad()
 
+        self.target_angle_rad = self._target_angle_rad()
+        self.direction_selector.select(self.valley_detector.get_valleys(),
+                                       self.vehicle_yaw_rad, self.target_angle_rad)
+
+    def _target_angle_rad(self):
+        """
+        Private function to get the current target direction in the global
+        frame[rad]: toward(target_x_m, target_y_m) if given, otherwise
+        straight ahead(the vehicle's current heading)
+        """
+
+        if self.target_x_m is None or self.target_y_m is None:
+            return self.vehicle_yaw_rad
+
+        return np.arctan2(self.target_y_m - self.vehicle_y_m,
+                          self.target_x_m - self.vehicle_x_m)
+
     def draw(self, axes, elems):
         """
-        Function to draw the polar histogram as a ring of colored wedges
-        around the vehicle, plus the detected candidate valleys as green
-        arcs just outside that ring
+        Function to draw the polar histogram ring, candidate valley arcs,
+        and the selected/target direction around the vehicle
         axes: Axes object of figure
         elems: List of plot objects
         """
 
         self._draw_density_ring(axes, elems)
         self._draw_valleys(axes, elems)
+        self._draw_selected_direction(axes, elems)
 
     def _draw_density_ring(self, axes, elems):
         """
@@ -137,6 +170,33 @@ class PolarHistogramMapper:
             axes.add_patch(valley_wedge)
             elems.append(valley_wedge)
 
+    def _draw_selected_direction(self, axes, elems):
+        """
+        Private function to draw the target direction as a thin dashed
+        line, and(when one was selected) the chosen steering direction as
+        a bold arrow, both from the vehicle's position
+        axes: Axes object of figure
+        elems: List of plot objects
+        """
+
+        arrow_length_m = self.ring_radius_m * 1.3
+
+        target_x = self.vehicle_x_m + arrow_length_m * np.cos(self.target_angle_rad)
+        target_y = self.vehicle_y_m + arrow_length_m * np.sin(self.target_angle_rad)
+        target_line, = axes.plot([self.vehicle_x_m, target_x], [self.vehicle_y_m, target_y],
+                                 linestyle="--", color="purple", linewidth=1.0, alpha=0.7)
+        elems.append(target_line)
+
+        selected_angle_rad = self.direction_selector.get_selected_angle_rad()
+        if selected_angle_rad is None:
+            return
+
+        end_x = self.vehicle_x_m + arrow_length_m * np.cos(selected_angle_rad)
+        end_y = self.vehicle_y_m + arrow_length_m * np.sin(selected_angle_rad)
+        arrow = axes.annotate("", xy=(end_x, end_y), xytext=(self.vehicle_x_m, self.vehicle_y_m),
+                              arrowprops=dict(arrowstyle="->", color="blue", linewidth=2.5))
+        elems.append(arrow)
+
     def get_histogram(self):
         """
         Function to get the underlying PolarHistogram instance
@@ -150,3 +210,18 @@ class PolarHistogramMapper:
         """
 
         return self.valley_detector
+
+    def get_direction_selector(self):
+        """
+        Function to get the underlying DirectionSelector instance
+        """
+
+        return self.direction_selector
+
+    def get_target_angle_rad(self):
+        """
+        Function to get the most recently computed target direction,
+        global frame[rad]
+        """
+
+        return self.target_angle_rad

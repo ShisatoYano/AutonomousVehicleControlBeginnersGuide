@@ -7,6 +7,7 @@ Author: Khushi
 import matplotlib as mpl
 mpl.use("Agg")
 import matplotlib.pyplot as plt
+import numpy as np
 import sys
 from pathlib import Path
 
@@ -62,10 +63,12 @@ def test_update_and_draw_without_error():
     assert len(elems) > 0
 
 
-def test_draw_with_no_detections_adds_only_the_full_valley():
+def test_draw_with_no_detections_adds_full_valley_and_target_line():
     # with no LiDAR detections the density ring(Step 1) contributes
     # nothing, but candidate valley detection(Step 2) still finds the
-    # entire circle navigable and draws a single valley arc for it
+    # entire circle navigable(1 element) and direction selection(Step 3)
+    # always draws the target reference line(1 element) plus, since a
+    # valley exists, a selected-direction arrow(1 element)
     mapper = PolarHistogramMapper(num_sectors=36)
     state = State()
 
@@ -75,8 +78,7 @@ def test_draw_with_no_detections_adds_only_the_full_valley():
     elems = []
     mapper.draw(axes, elems)
 
-    assert len(elems) == 1
-    assert len(mapper.get_valley_detector().get_valleys()) == 1
+    assert len(elems) == 3
 
 
 def test_update_detects_valley_between_two_obstacle_clusters():
@@ -97,3 +99,30 @@ def test_get_valley_detector_returns_configured_threshold():
     mapper = PolarHistogramMapper(num_sectors=36, valley_density_threshold=0.4)
 
     assert mapper.get_valley_detector().get_density_threshold() == 0.4
+
+
+def test_target_defaults_to_vehicle_heading_when_not_given():
+    mapper = PolarHistogramMapper(num_sectors=36)
+    state = State(x_m=0.0, y_m=0.0, yaw_rad=0.7)
+
+    mapper.update([], state)
+
+    assert np.isclose(mapper.get_target_angle_rad(), 0.7)
+
+
+def test_target_points_toward_configured_goal():
+    mapper = PolarHistogramMapper(num_sectors=36, target_x_m=10.0, target_y_m=10.0)
+    state = State(x_m=0.0, y_m=0.0, yaw_rad=0.0)
+
+    mapper.update([], state)
+
+    assert np.isclose(mapper.get_target_angle_rad(), np.deg2rad(45))
+
+
+def test_direction_selector_picks_a_direction_when_valleys_exist():
+    mapper = PolarHistogramMapper(num_sectors=36)
+    state = State()
+
+    mapper.update([], state)
+
+    assert mapper.get_direction_selector().get_selected_angle_rad() is not None
