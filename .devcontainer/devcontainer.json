@@ -87,6 +87,7 @@
                     "/home/dev-user/workspace/src/simulations/mapping/cost_grid_map_construction",
                     "/home/dev-user/workspace/src/simulations/mapping/ndt_map_construction",
                     "/home/dev-user/workspace/src/simulations/mapping/potential_field_map_construction",
+                    "/home/dev-user/workspace/src/simulations/mapping/vfh_candidate_valley_detection",
                     "/home/dev-user/workspace/src/simulations/mapping/vfh_polar_histogram_construction",
                     "/home/dev-user/workspace/src/simulations/path_planning/aco_path_planning",
                     "/home/dev-user/workspace/src/simulations/path_planning/astar_bidirectional_path_planning",
