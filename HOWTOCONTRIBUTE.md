@@ -1,6 +1,7 @@
 # How to contribute
 This document describes how to contribute this project.  
 Before starting your contribution, please check [README](/README.md) to understand what this project is and setup your development environment.  
+If you use an AI coding tool such as Claude Code, the project's conventions are summarized in [CLAUDE.md](/CLAUDE.md), which Claude Code loads automatically.  
 
 ## Add new sample program of algorithm
 Steps to add a new sample program.  
@@ -10,7 +11,7 @@ If you found an algorithm which you want to implement, let's create an issue to 
 
 If we agreed with your proposal, let's go to Step 2.  
 
-It if OK to just create an issue to propose. Someone might see your proposal and implement in the future. In this case, please a paper or documentation about the algorithm to understand it.  
+It is OK to just create an issue to propose. Someone might see your proposal and implement in the future. In this case, please share a paper or documentation about the algorithm to understand it.  
 
 ### Step 2: Implement sample program of algorithm
 When you implement a sample program of an algorithm, please keep the following items in mind.  
@@ -39,7 +40,7 @@ Reporting and fixing a defect are also welcome.
 When you report an issue, please provide the following information.  
 
 * A clear and concise description about the defect.  
-* A clear and concice description about your expectation.  
+* A clear and concise description about your expectation.  
 * Screenshots to help explaining the defect.  
 * OS version.  
 * Python version.  

@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-Project-specific guidelines. For the general workflow, see `~/.claude/CLAUDE.md`.
+Guidelines for AI coding tools such as Claude Code when working on this project. Claude Code loads this file automatically.
 
 ## Project purpose
 
@@ -11,7 +11,7 @@ When considering an implementation, always put "is it easy to understand as lear
 ## Language
 
 This project is also for users outside Japan, so write everything that goes into the repository in English: code comments, docstrings, log/print messages, documentation (`*.md`), commit messages, and PR descriptions.
-This rule does not apply to conversations with the user.
+Conversations with the AI tool itself can be in any language.
 
 ## Documents to refer to
 
