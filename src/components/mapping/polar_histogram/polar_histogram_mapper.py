@@ -6,6 +6,7 @@ Author: Khushi
 
 import numpy as np
 import matplotlib.patches as patches
+from matplotlib.collections import PatchCollection
 
 from polar_histogram import PolarHistogram
 
@@ -22,6 +23,17 @@ class PolarHistogramMapper:
     length and color are both normalized by the current frame's maximum
     density, so the ring stays readable regardless of how many obstacles
     are in range.
+
+    Note on drawing accuracy: each measurement's angle/distance is computed
+    from the LiDAR's actual mounted position(see OmniDirectionalLidar), so
+    the histogram's underlying density data is geometrically accurate. The
+    ring of wedges below is drawn centered on the vehicle's origin rather
+    than the LiDAR's position, purely to keep the drawing code simple. Since
+    the LiDAR is mounted ahead of the vehicle's origin, this is a visible
+    approximation for very close obstacles(a few meters), shifting where
+    they appear to sit within the ring by up to roughly 20[deg]. It does not
+    affect the histogram data itself, or the valleys/direction that later
+    steps derive from it - only where this ring is drawn on the plot.
     """
 
     def __init__(self, sensor_params=None, num_sectors=72, smoothing_window=5, ring_radius_m=8.0):
@@ -76,6 +88,7 @@ class PolarHistogramMapper:
         sector_deg = np.rad2deg(self.histogram.get_sector_angle_rad())
         yaw_deg = np.rad2deg(self.vehicle_yaw_rad)
 
+        wedges = []
         for index in range(num_sectors):
             normalized = density[index] / max_value
             if normalized <= 0.0:
@@ -86,11 +99,19 @@ class PolarHistogramMapper:
             theta_2 = center_deg + sector_deg / 2.0
             radius_m = self.ring_radius_m * normalized
 
-            wedge = patches.Wedge((self.vehicle_x_m, self.vehicle_y_m), radius_m,
-                                  theta_1, theta_2,
-                                  color=(normalized, 1.0 - normalized, 0.0), alpha=0.6)
-            axes.add_patch(wedge)
-            elems.append(wedge)
+            wedges.append(patches.Wedge((self.vehicle_x_m, self.vehicle_y_m), radius_m,
+                                        theta_1, theta_2,
+                                        color=(normalized, 1.0 - normalized, 0.0), alpha=0.6))
+
+        # Collecting every sector's wedge into a single PatchCollection and
+        # adding it with one axes.add_collection() call is noticeably faster
+        # than one axes.add_patch() call per wedge, which adds up at typical
+        # sector counts(dozens of add_patch() calls every frame otherwise).
+        # match_original=True keeps each wedge's own color/alpha instead of
+        # applying one shared style to the whole collection
+        collection = PatchCollection(wedges, match_original=True)
+        axes.add_collection(collection)
+        elems.append(collection)
 
     def get_histogram(self):
         """
