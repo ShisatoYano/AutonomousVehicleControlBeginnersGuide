@@ -25,7 +25,11 @@ class PolarHistogram:
 
     Each measurement's magnitude is calculated by the following equation,
     which decreases linearly from a_gain at distance 0[m] to 0 at
-    max_range_m, same as the original VFH paper:
+    max_range_m. This follows the original VFH paper(Borenstein & Koren,
+    1991), whose magnitude equation is certainty^2 * (a_gain - b_gain *
+    distance_m); this implementation fixes the certainty value at 1(no
+    separate certainty/confidence measurements are modeled here), which
+    simplifies that equation to:
         magnitude = max(a_gain - b_gain * distance_m, 0.0)
         b_gain = a_gain / max_range_m
 
