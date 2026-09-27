@@ -1,0 +1,51 @@
+name: Update_Examples_Gallery
+
+# Regenerate doc/EXAMPLES.md after merge instead of on PRs,
+# because PRs from forks get a read-only token and cannot push back.
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'src/simulations/**'
+      - 'generate_example_gallery.py'
+      # Restore hand edits right after merge so they don't vanish unnoticed later
+      - 'doc/EXAMPLES.md'
+
+permissions:
+  contents: write
+
+# Serialize runs so back-to-back merges don't race when pushing
+concurrency:
+  group: update-examples-gallery
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    name: Update doc/EXAMPLES.md
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.13'
+
+    # The script uses only the standard library, so no dependency install is needed
+    - name: Generate examples gallery
+      run: python generate_example_gallery.py
+
+    # Pushes with GITHUB_TOKEN don't trigger other workflows, so this doesn't loop
+    - name: Commit and push if changed
+      run: |
+        if git diff --quiet doc/EXAMPLES.md; then
+          echo "doc/EXAMPLES.md is up to date"
+          exit 0
+        fi
+        git config user.name "github-actions[bot]"
+        git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+        git add doc/EXAMPLES.md
+        git commit -m "docs: 📝 regenerate doc/EXAMPLES.md"
+        git push
