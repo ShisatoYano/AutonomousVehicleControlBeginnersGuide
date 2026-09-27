@@ -17,6 +17,7 @@ instead of editing doc/EXAMPLES.md directly.
 
 Author: Shisato Yano
 """
+import os
 from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parent
@@ -94,8 +95,9 @@ def _default_title(dir_name):
     return dir_name.replace("_", " ").title()
 
 
-def _relative_to_repo_root(path):
-    return path.relative_to(PROJECT_ROOT).as_posix()
+def _relative_to_output_dir(path):
+    # Markdown resolves image paths from its own directory (doc/), not the repository root
+    return Path(os.path.relpath(path, OUTPUT_PATH.parent)).as_posix()
 
 
 def collect_gallery_entries():
@@ -126,7 +128,7 @@ def collect_gallery_entries():
                 continue
             display_name = DISPLAY_NAMES.get(sim_dir.name, _default_title(sim_dir.name))
             description = DESCRIPTIONS.get(sim_dir.name, "")
-            entries.append((display_name, description, [_relative_to_repo_root(p) for p in images]))
+            entries.append((display_name, description, [_relative_to_output_dir(p) for p in images]))
 
         if entries:
             gallery[category_title] = entries
