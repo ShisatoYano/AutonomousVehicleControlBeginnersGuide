@@ -1,15 +1,15 @@
 """
 generate_pyrightconfig.py
 
-src/components, src/simulations配下で、直接.pyファイルを持つディレクトリを
-自動で探し出し、pyrightconfig.jsonのextraPathsとして書き出す。
-あわせて、.devcontainer/devcontainer.json内のpython.analysis.extraPaths
-(VSCode + Dev Containers利用者向け)も同じ内容で更新する。
+Automatically find the directories under src/components and src/simulations
+that directly contain .py files, and write them to pyrightconfig.json as extraPaths.
+It also updates python.analysis.extraPaths in .devcontainer/devcontainer.json
+(for VSCode + Dev Containers users) with the same content.
 
-各スクリプトはsys.path.append()で実行時にモジュール検索パスを追加しているが、
-pyright/Pylance(静的解析)はそれを読み取れないため、同等の情報を別途与える。
-新しいモジュール(ディレクトリ)を追加したときは、このスクリプトを再実行するだけで
-両方の設定が最新の状態に更新される。
+Each script adds module search paths at runtime with sys.path.append(),
+but pyright/Pylance (static analysis) cannot read them, so the same information is given separately.
+When you add a new module (directory), just run this script again
+to bring both configs up to date.
 
 Author: Shisato Yano
 """
@@ -20,7 +20,7 @@ PROJECT_ROOT = Path(__file__).resolve().parent
 TARGET_DIRS = ["src/components", "src/simulations"]
 PYRIGHTCONFIG_PATH = PROJECT_ROOT / "pyrightconfig.json"
 DEVCONTAINER_PATH = PROJECT_ROOT / ".devcontainer" / "devcontainer.json"
-# devcontainer.json側はコンテナ内のパス(workspaceFolder)を基準にする
+# devcontainer.json uses paths inside the container (workspaceFolder) as the base
 CONTAINER_WORKSPACE = "/home/dev-user/workspace"
 
 
@@ -40,7 +40,7 @@ def update_pyrightconfig(extra_paths):
     with open(PYRIGHTCONFIG_PATH, "w") as f:
         json.dump({"extraPaths": extra_paths}, f, indent=2)
         f.write("\n")
-    print(f"{len(extra_paths)}件のパスを{PYRIGHTCONFIG_PATH}に書き出しました")
+    print(f"Wrote {len(extra_paths)} paths to {PYRIGHTCONFIG_PATH}")
 
 
 def update_devcontainer(extra_paths):
@@ -53,7 +53,7 @@ def update_devcontainer(extra_paths):
     with open(DEVCONTAINER_PATH, "w") as f:
         json.dump(config, f, indent=4)
         f.write("\n")
-    print(f"{len(container_paths)}件のパスを{DEVCONTAINER_PATH}に書き出しました")
+    print(f"Wrote {len(container_paths)} paths to {DEVCONTAINER_PATH}")
 
 
 def main():

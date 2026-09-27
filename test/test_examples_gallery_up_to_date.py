@@ -12,7 +12,7 @@ import generate_example_gallery as gallery
 
 
 def test_examples_gallery_up_to_date():
-    committed = gallery.OUTPUT_PATH.read_text()
+    committed = gallery.OUTPUT_PATH.read_text(encoding="utf-8")
     regenerated = gallery.generate()
 
     assert committed == regenerated, (
