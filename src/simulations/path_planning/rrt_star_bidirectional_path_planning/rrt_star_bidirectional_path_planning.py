@@ -1,7 +1,8 @@
 """
 rrt_star_bidirectional_path_planning.py
 
-Author: Auto-generated
+Title: Bidirectional RRT*
+Author: Erwin Lejeune
 """
 
 # import path setting

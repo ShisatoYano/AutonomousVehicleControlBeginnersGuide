@@ -1,6 +1,8 @@
 """
 dijkstra_path_planning.py
 
+Title: Dijkstra
+Description: Planning (reduce frames by sampling every nth node to prevent memory exhaustion)
 Author: Ashish Varma
 """
 

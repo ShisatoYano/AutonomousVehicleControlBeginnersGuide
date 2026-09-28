@@ -1,6 +1,10 @@
 """
 dstar_path_planning.py
 
+Title: D*
+Description: Planning with dynamic obstacle replanning
+Author: Erwin Lejeune
+
 Simulation that demonstrates D*'s incremental replanning.
 
 Two GIFs are produced:

@@ -1,6 +1,7 @@
 """
 cubic_spline_plot.py
 
+Title: Cubic Spline Course
 Author: Shisato Yano
 """
 

@@ -1,6 +1,7 @@
 """
 gradient_path_planning.py
 
+Title: Gradient Descent
 Author: Panav Arpit Raaj
 
 Demo: build a static potential field, export to JSON, plan a path

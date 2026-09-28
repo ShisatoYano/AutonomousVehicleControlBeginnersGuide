@@ -1,6 +1,7 @@
 """
 stanley_path_tracking.py
 
+Title: Stanley Steering Control Path Tracking
 Author: Shisato Yano
 """
 

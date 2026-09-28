@@ -21,11 +21,22 @@ When you implement a sample program of an algorithm, please keep the following i
 3. Implement an animation by using matplotlib to show how the algorithm works.  
 4. Use only libraries and tools written in Requirements section of README.  
 5. Implement as simple as possible. The main purpose to help a user to understand the algorithm. It is not for practical usage.  
+6. Put the following docstring at the top of your simulation script under `src/simulations/`. `Title` is used as the heading of [doc/EXAMPLES.md](/doc/EXAMPLES.md) and `Description` (optional, one line) is shown under it. If your simulation directory has multiple scripts, put `Title` in only one of them.  
+
+```python
+"""
+pure_pursuit_path_tracking.py
+
+Title: Pure Pursuit Path Tracking
+Description: One-line summary shown under the heading
+Author: Your Name
+"""
+```
 
 ### Step 3: Implement unit test
 If you added a new sample program, please add a unit test code for it under test directory. When you implement the test code, please refer to the existing code. Additionally, each unit tests should be able to run without animation because test process stops and an exception occurs. After you completed to implement the test code, confirm the test passes by executing the script, run_test_suites.sh/bat.  
 
-If your sample program has a demo GIF/image under its `src/simulations/...` directory, it is added to [doc/EXAMPLES.md](/doc/EXAMPLES.md) automatically after your PR is merged, so you don't need to update that file. Please don't edit `doc/EXAMPLES.md` by hand, because it is overwritten. To change the display name or description, edit `DISPLAY_NAMES`/`DESCRIPTIONS` in `generate_example_gallery.py`.  
+If your sample program has a demo GIF/image under its `src/simulations/...` directory, it is added to [doc/EXAMPLES.md](/doc/EXAMPLES.md) automatically after your PR is merged, so you don't need to update that file. Please don't edit `doc/EXAMPLES.md` by hand, because it is overwritten. To change the heading or description, edit the docstring of your simulation script (see Step 2).  
 
 ### Step 4: Submit a pull request and modify code based on review
 If your sample program and test were ready, let's create a pull request and submit it. When you create the PR, please write a description about the following items.  

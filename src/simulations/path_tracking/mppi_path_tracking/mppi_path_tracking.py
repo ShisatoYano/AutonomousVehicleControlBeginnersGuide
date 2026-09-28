@@ -1,6 +1,9 @@
 """
 mppi_path_tracking.py
 
+Title: MPPI Path Tracking
+Author: Erwin Lejeune
+
 Path tracking simulation using MPPI (Model Predictive Path Integral) controller.
 Visualizes all evaluated trajectories and the chosen trajectory.
 """

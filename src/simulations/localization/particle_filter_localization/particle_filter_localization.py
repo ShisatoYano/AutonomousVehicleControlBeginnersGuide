@@ -1,6 +1,7 @@
 """
 particle_filter_localization.py
 
+Title: Particle Filter Localization
 Author: Sahruday Patti
 
 This simulation demonstrates vehicle localization using a Particle Filter.

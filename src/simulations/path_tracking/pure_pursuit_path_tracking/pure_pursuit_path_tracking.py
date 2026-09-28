@@ -1,6 +1,7 @@
 """
 pure_pursuit_path_tracking.py
 
+Title: Pure Pursuit Path Tracking
 Author: Shisato Yano
 """
 

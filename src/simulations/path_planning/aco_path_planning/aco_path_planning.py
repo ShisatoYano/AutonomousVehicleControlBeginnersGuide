@@ -1,6 +1,11 @@
 """
 aco_path_planning.py
 
+Title: ACO
+Description: Ant Colony Optimization
+Author: Banaan Kiamanesh
+GitHub: https://github.com/BanaanKiamanesh
+
 Simulation that demonstrates Ant Colony Optimization (ACO) path planning.
 
 Two GIFs are produced:
@@ -8,9 +13,6 @@ Two GIFs are produced:
        improving over the iterations.
     2. **aco_navigate.gif** - car-following navigation on the planned path
        using PurePursuit.
-
-Author: Banaan Kiamanesh
-GitHub: https://github.com/BanaanKiamanesh
 """
 
 import json

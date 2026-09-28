@@ -1,6 +1,7 @@
 """
 binary_grid_map_construction.py
 
+Title: Binary Occupancy Grid Map
 Author: Shisato Yano
 Updated by: Bhavesh Lokesh Agarwal
 """

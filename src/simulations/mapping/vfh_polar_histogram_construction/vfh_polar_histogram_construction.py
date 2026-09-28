@@ -1,6 +1,7 @@
 """
 vfh_polar_histogram_construction.py
 
+Title: VFH Polar Histogram
 Author: Khushi
 """
 

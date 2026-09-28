@@ -1,6 +1,7 @@
 """
 lqr_path_tracking.py
 
+Title: LQR (Linear Quadratic Regulator) Path Tracking
 Author: Shisato Yano
 """
 

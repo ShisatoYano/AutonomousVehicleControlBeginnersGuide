@@ -1,6 +1,7 @@
 """
 ekf_ukf_pf_comparison.py
 
+Title: EKF vs UKF vs Particle Filter Comparison
 Author: Sahruday Patti
 
 This simulation compares three localization methods:

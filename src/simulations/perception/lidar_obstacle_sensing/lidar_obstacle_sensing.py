@@ -1,6 +1,7 @@
 """
 lidar_obstacle_sensing.py
 
+Title: LiDAR Obstacle Sensing
 Author: Shisato Yano
 """
 

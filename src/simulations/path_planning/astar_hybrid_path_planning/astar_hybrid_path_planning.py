@@ -1,6 +1,7 @@
 """
 astar_hybrid_path_planning.py
 
+Title: Hybrid A*
 Author: Shreyansh Shethia
 """
 

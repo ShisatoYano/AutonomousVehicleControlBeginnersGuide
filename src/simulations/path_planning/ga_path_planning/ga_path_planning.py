@@ -1,6 +1,11 @@
 """
 ga_path_planning.py
 
+Title: GA
+Description: Genetic Algorithm with spline smoothing
+Author: Banaan Kiamanesh
+GitHub: https://github.com/BanaanKiamanesh
+
 Simulation that demonstrates Genetic Algorithm (GA) path planning.
 
 Two GIFs are produced:
@@ -8,9 +13,6 @@ Two GIFs are produced:
        final spline path.
     2. **ga_navigate.gif** - car-following navigation on the planned path
        using PurePursuit.
-
-Author: Banaan Kiamanesh
-GitHub: https://github.com/BanaanKiamanesh
 """
 
 import json

@@ -1,7 +1,8 @@
 """
 astar_bidirectional_path_planning.py
 
-Author: Auto-generated
+Title: Bidirectional A*
+Author: Erwin Lejeune
 """
 
 # import path setting

@@ -1,6 +1,10 @@
 """
 pso_path_planning.py
 
+Title: PSO
+Description: Particle Swarm Optimization
+Author: Erwin Lejeune
+
 Simulation that demonstrates Particle Swarm Optimization (PSO) path planning.
 
 Two GIFs are produced:
@@ -8,8 +12,6 @@ Two GIFs are produced:
        showing all particles and the evolving global best path.
     2. **pso_navigate.gif** – car-following navigation on the optimised
        path using PurePursuit.
-
-Author: Erwin Lejeune
 """
 
 import numpy as np

@@ -1,6 +1,7 @@
 """
 informed_rrt_star_path_planning.py
 
+Title: Informed RRT*
 Author: Rajat Arora
 """
 

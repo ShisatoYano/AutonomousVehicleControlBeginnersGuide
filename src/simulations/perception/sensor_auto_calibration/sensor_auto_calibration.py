@@ -1,6 +1,8 @@
 """
 sensor_auto_calibration.py
 
+Title: Sensor's Extrinsic Parameters Estimation
+Description: Estimation by Unscented Kalman Filter
 Author: Shisato Yano
 """
 

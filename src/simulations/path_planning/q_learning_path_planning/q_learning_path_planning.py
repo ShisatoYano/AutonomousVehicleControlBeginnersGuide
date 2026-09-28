@@ -1,6 +1,11 @@
 """
 q_learning_path_planning.py
 
+Title: Q-Learning
+Description: Reinforcement learning with a Q-table policy
+Author: Banaan Kiamanesh
+GitHub: https://github.com/BanaanKiamanesh
+
 Simulation that demonstrates Q-learning path planning.
 
 Two GIFs are produced:
@@ -8,9 +13,6 @@ Two GIFs are produced:
        and the learned greedy policy.
     2. **q_learning_navigate.gif** - car-following navigation on the planned
        path using PurePursuit.
-
-Author: Banaan Kiamanesh
-GitHub: https://github.com/BanaanKiamanesh
 """
 
 import json

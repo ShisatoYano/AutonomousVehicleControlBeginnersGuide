@@ -1,7 +1,8 @@
 """
 rrt_star_path_planning.py
 
-Author: Auto-generated
+Title: RRT*
+Author: Erwin Lejeune
 """
 
 # import path setting

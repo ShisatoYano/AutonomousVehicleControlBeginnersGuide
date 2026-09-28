@@ -1,6 +1,7 @@
 """
 point_cloud_rectangle_fitting.py
 
+Title: Rectangle Fitting Detection
 Author: Shisato Yano
 """
 

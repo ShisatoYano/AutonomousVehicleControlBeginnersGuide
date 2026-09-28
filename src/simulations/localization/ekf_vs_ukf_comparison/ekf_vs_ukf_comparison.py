@@ -1,6 +1,7 @@
 """
 ekf_vs_ukf_comparison.py
 
+Title: EKF vs UKF Comparison
 Author: Bruno DOKPOMIWA
 
 This script tries to compare Extended Kalman Filter (EKF) and Unscented Kalman Filter (UKF)

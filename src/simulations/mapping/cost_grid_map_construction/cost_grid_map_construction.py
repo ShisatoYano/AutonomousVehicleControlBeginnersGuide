@@ -1,6 +1,7 @@
 """
 cost_grid_map_construction.py
 
+Title: Cost Map
 Author: Bhavesh Lokesh Agarwal
 """
 

@@ -1,6 +1,9 @@
 """
 prm_path_planning.py
 
+Title: PRM
+Author: Erwin Lejeune
+
 Simulation that demonstrates Probabilistic Road Map (PRM) path planning.
 
 Two GIFs are produced:
@@ -8,8 +11,6 @@ Two GIFs are produced:
        edges, Dijkstra search, and final path.
     2. **prm_navigate.gif** – car-following navigation on the planned path
        using PurePursuit.
-
-Author: Erwin Lejeune
 """
 
 import numpy as np
