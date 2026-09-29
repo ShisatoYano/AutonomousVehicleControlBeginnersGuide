@@ -9,6 +9,8 @@ on:
     paths:
       - 'src/simulations/**'
       - 'generate_example_gallery.py'
+      # Run on changes to this workflow itself so they are verified right away
+      - '.github/workflows/Update_Examples_Gallery.yml'
       # Restore hand edits right after merge so they don't vanish unnoticed later
       - 'doc/EXAMPLES.md'
 
@@ -26,10 +28,10 @@ jobs:
     name: Update doc/EXAMPLES.md
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v7
 
     - name: Setup python
-      uses: actions/setup-python@v5
+      uses: actions/setup-python@v7
       with:
         python-version: '3.13'
 

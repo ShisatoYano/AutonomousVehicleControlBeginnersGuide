@@ -15,14 +15,14 @@ jobs:
         python-version: [ '3.13' ]
     name: Python ${{ matrix.python-version }} CI
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v7
       - run: git fetch --prune --unshallow
 
       - name: Update bash
         run: brew install bash
 
       - name: Setup python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v7
         with:
           python-version: ${{ matrix.python-version }}
 
