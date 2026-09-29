@@ -2,11 +2,8 @@
 adaptive_pure_pursuit_path_tracking.py
 
 Title: Adaptive Pure Pursuit Path Tracking
+Description: Pure Pursuit whose look-ahead distance shortens on sharp turns and lengthens on straights
 Author: Erwin Lejeune
-
-Path tracking simulation using Adaptive Pure Pursuit controller.
-The look-ahead distance adapts to path curvature: shorter on sharp
-turns for tight tracking, longer on straights for stability.
 """
 
 # import path setting

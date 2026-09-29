@@ -2,6 +2,7 @@
 cost_grid_map_construction.py
 
 Title: Cost Map
+Description: Builds a grid map that assigns a cost to each cell from LiDAR point clouds
 Author: Bhavesh Lokesh Agarwal
 """
 

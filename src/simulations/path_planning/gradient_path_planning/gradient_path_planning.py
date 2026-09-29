@@ -2,10 +2,8 @@
 gradient_path_planning.py
 
 Title: Gradient Descent
+Description: Plans a path by descending the gradient of a potential field toward the goal
 Author: Panav Arpit Raaj
-
-Demo: build a static potential field, export to JSON, plan a path
-using gradient descent, then simulate a vehicle following it.
 """
 
 import sys

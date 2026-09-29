@@ -2,6 +2,7 @@
 unscented_kalman_filter_localization.py
 
 Title: Unscented Kalman Filter Localization
+Description: Estimates the vehicle pose with an Unscented Kalman Filter using sigma points and GNSS observations
 Author: Bruno DOKPOMIWA
 """
 

@@ -2,10 +2,8 @@
 ekf_vs_ukf_comparison.py
 
 Title: EKF vs UKF Comparison
+Description: Compares EKF and UKF localization with GNSS observations
 Author: Bruno DOKPOMIWA
-
-This script tries to compare Extended Kalman Filter (EKF) and Unscented Kalman Filter (UKF)
-for vehicle localization.
 """
 
 # import path setting

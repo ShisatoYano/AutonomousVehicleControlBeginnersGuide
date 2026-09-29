@@ -2,6 +2,7 @@
 stanley_path_tracking.py
 
 Title: Stanley Steering Control Path Tracking
+Description: Steering control based on the heading error and the lateral error at the front wheel
 Author: Shisato Yano
 """
 

@@ -1,6 +1,8 @@
 """
 cubic_spline_2d_plot.py
 
+Title: Cubic Spline Course
+Description: Builds a 2D cubic spline course and computes its yaw angle and curvature
 Author: Shisato Yano
 """
 

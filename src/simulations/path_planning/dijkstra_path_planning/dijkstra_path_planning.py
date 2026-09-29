@@ -2,7 +2,7 @@
 dijkstra_path_planning.py
 
 Title: Dijkstra
-Description: Planning (reduce frames by sampling every nth node to prevent memory exhaustion)
+Description: Grid-based shortest path search that expands the lowest-cost node first
 Author: Ashish Varma
 """
 

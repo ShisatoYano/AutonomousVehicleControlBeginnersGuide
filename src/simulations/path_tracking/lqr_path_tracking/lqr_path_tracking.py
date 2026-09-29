@@ -2,6 +2,7 @@
 lqr_path_tracking.py
 
 Title: LQR (Linear Quadratic Regulator) Path Tracking
+Description: Steering control that minimizes a quadratic cost of tracking error and control input
 Author: Shisato Yano
 """
 

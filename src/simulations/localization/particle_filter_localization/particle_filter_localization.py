@@ -2,14 +2,8 @@
 particle_filter_localization.py
 
 Title: Particle Filter Localization
+Description: Estimates the vehicle pose with weighted samples (particles) and GNSS observations
 Author: Sahruday Patti
-
-This simulation demonstrates vehicle localization using a Particle Filter.
-The Particle Filter is a Monte Carlo method that represents the belief
-about the robot's state using a set of weighted samples (particles).
-
-- Configurable number of particles (default: 500)
-- Multiple resampling strategies: systematic, multinomial, low variance
 """
 
 # import path setting

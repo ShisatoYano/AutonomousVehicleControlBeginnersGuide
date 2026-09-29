@@ -31,7 +31,7 @@ Conversations with the AI tool itself can be in any language.
 
 - Python only. The project doesn't use a standard package structure; each script loads modules under `src/components/` at runtime with `sys.path.append(...)` (follow the pattern of existing files)
 - Put a docstring in the form `"""file name \n\n Author: <name>"""` at the top of each file
-- In a simulation script under `src/simulations/`, also put `Title:` (gallery heading, required) and `Description:` (one line, optional) before `Author:`, following the template in `generate_example_gallery.py`. If a simulation directory has multiple scripts, put `Title:` in only one of them. The test fails if this is missing
+- In a simulation script under `src/simulations/`, the docstring must be exactly the file name, an empty line, and one line each of `Title:` (gallery heading), `Description:` and `Author:` in this order, following the template in `generate_example_gallery.py`. Don't write anything else in it. Scripts in the same directory must share the same `Title:`. The test fails otherwise
 - In class and constructor docstrings, state the meaning and unit of each argument (naming convention puts the unit in the variable name, e.g. `f_len_m`, `max_accel_mps2`)
 - Simulation scripts have a `show_plot` flag and keep their logic in a `main()` function (so tests can set `show_plot = False` to stop the animation)
 - After adding a new module directory (under `src/components/*` or `src/simulations/*`), run `python generate_pyrightconfig.py` on the host to regenerate `pyrightconfig.json` and `.devcontainer/devcontainer.json`

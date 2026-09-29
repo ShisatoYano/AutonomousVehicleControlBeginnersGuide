@@ -2,6 +2,7 @@
 rear_wheel_feedback_tracking.py
 
 Title: Rear Wheel Feedback Path Tracking
+Description: Steering control based on the lateral and heading errors at the rear wheel
 Author: Shisato Yano
 """
 

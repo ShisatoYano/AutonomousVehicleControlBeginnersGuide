@@ -2,6 +2,7 @@
 extended_kalman_filter_localization.py
 
 Title: Extended Kalman Filter Localization
+Description: Estimates the vehicle pose by fusing a motion model and GNSS observations with an Extended Kalman Filter
 Author: Shisato Yano
 """
 

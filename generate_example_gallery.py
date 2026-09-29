@@ -11,9 +11,10 @@ This script builds the list only from the existing directories and image files,
 so no simulation gets left out.
 
 The heading, description and author of each entry are read from the module
-docstring of the simulation script, so nobody needs to edit this script or
-doc/EXAMPLES.md by hand. Exactly one .py file in each simulation directory must
-declare "Title:", following this template (Description is optional):
+docstring of the simulation scripts, so nobody needs to edit this script or
+doc/EXAMPLES.md by hand. The docstring of every script under src/simulations
+must consist of exactly these lines, with nothing else (the test fails otherwise).
+If a directory has multiple scripts, their Title must be the same:
 
     \"\"\"
     pure_pursuit_path_tracking.py
@@ -50,8 +51,9 @@ CATEGORY_ORDER = [
     "course",
 ]
 
-# "Key: value" lines at the start of a docstring line
-DOCSTRING_FIELD = re.compile(r"^(Title|Description|Author):[ \t]*(.*?)[ \t]*$", re.MULTILINE)
+# Lines 3-5 of the simulation docstring template; line 1 is the file name and line 2 is empty
+DOCSTRING_FIELDS = ("Title", "Description", "Author")
+DOCSTRING_FIELD_LINE = re.compile(r"^(\w+): (\S.*)$")
 
 
 def _default_title(dir_name):
@@ -67,47 +69,42 @@ def _relative_to_output_dir(path):
     return Path(os.path.relpath(path, OUTPUT_PATH.parent)).as_posix()
 
 
-def _read_docstring_fields(py_path):
+def _read_docstring(py_path):
     """
-    Returns: {field name: [value, ...]} from the module docstring
+    Returns: {"Title": ..., "Description": ..., "Author": ...} from the module docstring
     ast is used instead of importing the file, so the simulation is not executed
+    Raises ValueError with the file to fix when the docstring doesn't follow the template
     """
     docstring = ast.get_docstring(ast.parse(py_path.read_text(encoding="utf-8"))) or ""
-    fields = {}
-    for key, value in DOCSTRING_FIELD.findall(docstring):
-        fields.setdefault(key, []).append(value)
-    return fields
+    lines = docstring.splitlines()
+    matches = [DOCSTRING_FIELD_LINE.match(line) for line in lines[2:]]
+    if (len(lines) != 5 or lines[0] != py_path.name or lines[1] != ""
+            or not all(matches) or tuple(m.group(1) for m in matches) != DOCSTRING_FIELDS):
+        raise ValueError(
+            f"{_relative_to_repo_root(py_path)}: the docstring must be exactly the file name, an empty line, "
+            f"and one line each of {', '.join(k + ':' for k in DOCSTRING_FIELDS)} in this order. "
+            "See the template in generate_example_gallery.py"
+        )
+    return {m.group(1): m.group(2).strip() for m in matches}
 
 
 def _read_entry(sim_dir, py_paths):
     """
-    Returns: (title, description, [author, ...]) of a simulation directory
-    Raises ValueError with the file to fix when the docstring doesn't follow the template
+    Returns: (title, [description, ...], [author, ...]) of a simulation directory
     """
-    fields_by_path = {p: _read_docstring_fields(p) for p in py_paths}
-    titled = [p for p, fields in fields_by_path.items() if "Title" in fields]
-    if len(titled) != 1:
-        raise ValueError(
-            f"{_relative_to_repo_root(sim_dir)}: exactly one .py file must declare 'Title:' "
-            f"in its docstring, found {len(titled)}. See the template in generate_example_gallery.py"
-        )
+    docstrings = [_read_docstring(p) for p in py_paths]
+    titles = {d["Title"] for d in docstrings}
+    if len(titles) != 1:
+        raise ValueError(f"{_relative_to_repo_root(sim_dir)}: all scripts must have the same 'Title:', found {sorted(titles)}")
 
-    main_path = titled[0]
-    fields = fields_by_path[main_path]
-    for key in ("Title", "Description"):
-        if len(fields.get(key, [])) > 1 or "" in fields.get(key, []):
-            raise ValueError(f"{_relative_to_repo_root(main_path)}: '{key}:' must be a single non-empty line")
-    if not fields.get("Author"):
-        raise ValueError(f"{_relative_to_repo_root(main_path)}: 'Author:' is missing in its docstring")
-
-    # Other scripts in the same directory may have different authors, so credit all of them
+    # Scripts in the same directory may have different authors, so credit all of them
     authors = []
-    for path in [main_path] + [p for p in py_paths if p != main_path]:
-        for author in fields_by_path[path].get("Author", []):
-            if author and author not in authors:
-                authors.append(author)
+    for d in docstrings:
+        for author in d["Author"].split(","):
+            if author.strip() not in authors:
+                authors.append(author.strip())
 
-    return fields["Title"][0], fields.get("Description", [""])[0], authors
+    return titles.pop(), [d["Description"] for d in docstrings], authors
 
 
 def _category_dirs():
@@ -118,8 +115,9 @@ def _category_dirs():
 
 def collect_gallery_entries():
     """
-    Returns: {category_title: [(title, description, [author, ...], [relative image path, ...]), ...]}
-    in display order. Only directories that contain both a .py file and an image file (gif/png/jpg) are included
+    Returns: {category_title: [(title, [description, ...], [author, ...], [relative image path, ...]), ...]}
+    in display order. Only directories that contain both a .py file and an image file (gif/png/jpg) are included,
+    but every script's docstring is validated so a missing field is caught before a demo image is added
     """
     gallery = {}
 
@@ -131,14 +129,14 @@ def collect_gallery_entries():
             py_paths = sorted(sim_dir.glob("*.py"))
             if not py_paths:
                 continue
+            title, descriptions, authors = _read_entry(sim_dir, py_paths)
             images = sorted(
                 p for p in sim_dir.iterdir()
                 if p.is_file() and p.suffix.lower() in IMAGE_EXTENSIONS
             )
             if not images:
                 continue
-            title, description, authors = _read_entry(sim_dir, py_paths)
-            entries.append((title, description, authors, [_relative_to_output_dir(p) for p in images]))
+            entries.append((title, descriptions, authors, [_relative_to_output_dir(p) for p in images]))
 
         if entries:
             gallery[_default_title(category_dir.name)] = entries
@@ -163,9 +161,9 @@ def render_markdown(gallery):
     for category_title, entries in gallery.items():
         lines.append(f"## {category_title}")
         lines.append("")
-        for title, description, authors, image_paths in entries:
+        for title, descriptions, authors, image_paths in entries:
             lines.append(f"### {title}")
-            if description:
+            for description in descriptions:
                 lines.append(description + "  ")
             lines.append(f"Author: {', '.join(authors)}  ")
             for image_path in image_paths:

@@ -2,6 +2,7 @@
 lidar_obstacle_sensing.py
 
 Title: LiDAR Obstacle Sensing
+Description: Simulates an omni-directional LiDAR that detects moving and static obstacles as point clouds
 Author: Shisato Yano
 """
 

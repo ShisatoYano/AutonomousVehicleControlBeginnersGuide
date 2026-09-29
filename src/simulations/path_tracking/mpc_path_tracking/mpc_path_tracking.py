@@ -2,14 +2,8 @@
 mpc_path_tracking.py
 
 Title: MPC Path Tracking
+Description: Optimizes future inputs over a prediction horizon with do-mpc and shows the predicted trajectory
 Author: Mohit Kumar
-
-Path tracking simulation using the do-mpc based MPC controller.
-
-Visualises:
-  - The cubic-spline reference course
-  - The four-wheels vehicle animated along the track
-  - The MPC predicted (optimal) trajectory at each step.
 """
 
 import sys

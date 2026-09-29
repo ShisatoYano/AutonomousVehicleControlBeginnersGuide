@@ -2,17 +2,8 @@
 aco_path_planning.py
 
 Title: ACO
-Description: Ant Colony Optimization
+Description: Ant Colony Optimization: ants search the grid and reinforce shorter paths with pheromones
 Author: Banaan Kiamanesh
-GitHub: https://github.com/BanaanKiamanesh
-
-Simulation that demonstrates Ant Colony Optimization (ACO) path planning.
-
-Two GIFs are produced:
-    1. **aco_search.gif** - grid animation showing the best ant-colony path
-       improving over the iterations.
-    2. **aco_navigate.gif** - car-following navigation on the planned path
-       using PurePursuit.
 """
 
 import json

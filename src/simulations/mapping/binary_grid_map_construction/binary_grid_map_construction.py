@@ -2,8 +2,8 @@
 binary_grid_map_construction.py
 
 Title: Binary Occupancy Grid Map
-Author: Shisato Yano
-Updated by: Bhavesh Lokesh Agarwal
+Description: Builds a grid map that marks each cell as occupied or free from LiDAR point clouds
+Author: Shisato Yano, Bhavesh Lokesh Agarwal
 """
 
 # import path setting

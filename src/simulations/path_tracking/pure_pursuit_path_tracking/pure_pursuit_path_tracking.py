@@ -2,6 +2,7 @@
 pure_pursuit_path_tracking.py
 
 Title: Pure Pursuit Path Tracking
+Description: Steers toward a look-ahead point on the course
 Author: Shisato Yano
 """
 

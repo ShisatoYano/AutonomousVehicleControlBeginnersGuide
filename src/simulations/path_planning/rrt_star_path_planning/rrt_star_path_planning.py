@@ -2,6 +2,7 @@
 rrt_star_path_planning.py
 
 Title: RRT*
+Description: RRT that rewires the tree to shorten paths as more samples are added
 Author: Erwin Lejeune
 """
 

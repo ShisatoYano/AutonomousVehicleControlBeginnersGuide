@@ -2,6 +2,7 @@
 potential_field_map_construction.py
 
 Title: Potential Field Map
+Description: Builds a potential field map from LiDAR point clouds, with high potential around obstacles
 Author: Panav Arpit Raaj
 """
 

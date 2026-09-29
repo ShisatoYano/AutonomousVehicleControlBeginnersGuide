@@ -1,6 +1,8 @@
 """
 search_neighbor_points_kd_tree.py
 
+Title: Point Cloud Nearest Neighbor Search (kd-tree)
+Description: Finds all source points within a radius of each target point with a kd-tree
 Author: Shisato Yano
 """
 

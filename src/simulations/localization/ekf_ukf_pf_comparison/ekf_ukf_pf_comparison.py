@@ -2,19 +2,8 @@
 ekf_ukf_pf_comparison.py
 
 Title: EKF vs UKF vs Particle Filter Comparison
+Description: Compares EKF, UKF and Particle Filter localization with the same motion model, GNSS observations and noise
 Author: Sahruday Patti
-
-This simulation compares three localization methods:
-1. Extended Kalman Filter (EKF) - Blue trajectory, Red ellipse
-2. Unscented Kalman Filter (UKF) - Cyan trajectory, Orange ellipse  
-3. Particle Filter (PF) - Green trajectory, Purple particles/ellipse
-
-All three filters use the same:
-- Motion model (kinematic bicycle model)
-- Observation model (GNSS position)
-- Noise parameters
-
-This allows for a fair comparison of their localization performance.
 """
 
 # import path setting

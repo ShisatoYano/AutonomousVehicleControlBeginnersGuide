@@ -1,7 +1,8 @@
 """
-astar_path_planning.py
+rrt_path_planning.py
 
 Title: RRT
+Description: Grows a random tree from the start until it reaches the goal
 Author: Shantanu Parab
 """
 

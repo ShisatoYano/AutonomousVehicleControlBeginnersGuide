@@ -2,6 +2,7 @@
 informed_rrt_star_path_planning.py
 
 Title: Informed RRT*
+Description: RRT* that samples only inside an ellipse once a first path is found, to converge faster
 Author: Rajat Arora
 """
 

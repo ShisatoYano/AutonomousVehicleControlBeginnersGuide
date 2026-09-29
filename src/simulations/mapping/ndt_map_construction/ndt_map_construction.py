@@ -2,6 +2,7 @@
 ndt_map_construction.py
 
 Title: NDT Map
+Description: Builds a map of normal distributions (mean and covariance) per grid cell from LiDAR point clouds
 Author: Shisato Yano
 """
 

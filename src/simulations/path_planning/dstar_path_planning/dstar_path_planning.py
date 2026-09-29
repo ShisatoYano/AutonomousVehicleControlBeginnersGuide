@@ -2,19 +2,8 @@
 dstar_path_planning.py
 
 Title: D*
-Description: Planning with dynamic obstacle replanning
+Description: Incremental replanning when a new obstacle appears on the planned path
 Author: Erwin Lejeune
-
-Simulation that demonstrates D*'s incremental replanning.
-
-Two GIFs are produced:
-    1. **dstar_search.gif** – grid-based animation showing D* expansion,
-       initial path, dynamic obstacle injection, replan expansion, and
-       the replanned path.
-    2. **dstar_navigate.gif** – car-following navigation using the same
-       vehicle / pure-pursuit stack as the other planners.  Midway through,
-       a new obstacle appears on the initial path, D* replans, and the car
-       seamlessly switches to following the new route.
 """
 
 import numpy as np

@@ -2,16 +2,8 @@
 elastic_bands_path_planning.py
 
 Title: Elastic Bands
-Description: A* seed path smoothed with Elastic Bands optimisation
+Description: Smooths an A* path by treating it as an elastic band pushed away from obstacles
 Author: Erwin Lejeune
-
-Simulation that demonstrates Elastic Bands path smoothing.
-
-Two GIFs are produced:
-    1. **elastic_bands_search.gif** – grid animation: A* initial search,
-       initial path, then iterative elastic-bands optimisation with bubbles.
-    2. **elastic_bands_navigate.gif** – car-following navigation on the
-       smoothed path using PurePursuit.
 """
 
 import numpy as np

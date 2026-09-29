@@ -21,7 +21,7 @@ When you implement a sample program of an algorithm, please keep the following i
 3. Implement an animation by using matplotlib to show how the algorithm works.  
 4. Use only libraries and tools written in Requirements section of README.  
 5. Implement as simple as possible. The main purpose to help a user to understand the algorithm. It is not for practical usage.  
-6. Put the following docstring at the top of your simulation script under `src/simulations/`. `Title` is used as the heading of [doc/EXAMPLES.md](/doc/EXAMPLES.md) and `Description` (optional, one line) is shown under it. If your simulation directory has multiple scripts, put `Title` in only one of them.  
+6. Put the following docstring at the top of your simulation script under `src/simulations/`. `Title` is used as the heading of [doc/EXAMPLES.md](/doc/EXAMPLES.md), and `Description` and `Author` are shown under it. All three are required, each on one line, and nothing else can be written in the docstring (the unit test fails otherwise). If your simulation directory has multiple scripts, use the same `Title` in all of them.  
 
 ```python
 """
