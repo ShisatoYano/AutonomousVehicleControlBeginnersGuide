@@ -1,6 +1,8 @@
 """
 vfh_vehicle_motion_integration.py
 
+Title: VFH Vehicle Motion Integration
+Description: Drives the vehicle toward a goal using a VFH controller that steers along the mapper's selected direction
 Author: Khushi
 """
 
