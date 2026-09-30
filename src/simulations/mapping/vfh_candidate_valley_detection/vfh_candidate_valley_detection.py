@@ -1,6 +1,8 @@
 """
 vfh_candidate_valley_detection.py
 
+Title: VFH Candidate Valley Detection
+Description: Detects runs of low-density sectors in the polar histogram as candidate steering directions
 Author: Khushi
 """
 

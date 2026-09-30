@@ -1,6 +1,8 @@
 """
 vfh_direction_selection.py
 
+Title: VFH Direction Selection
+Description: Selects a steering direction from candidate valleys using a target, heading and previous-direction cost function
 Author: Khushi
 """
 
