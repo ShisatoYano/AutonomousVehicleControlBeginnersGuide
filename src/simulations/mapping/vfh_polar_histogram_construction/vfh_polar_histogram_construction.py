@@ -1,8 +1,8 @@
 """
 vfh_polar_histogram_construction.py
 
-Title: VFH Polar Histogram Construction
-Description: Builds a polar obstacle-density histogram around the vehicle from LiDAR range readings
+Title: VFH Polar Histogram
+Description: Builds a polar obstacle density histogram around the vehicle from LiDAR point clouds
 Author: Khushi
 """
 
