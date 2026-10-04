@@ -7,13 +7,14 @@ Author: Shisato Yano
 import sys
 import numpy as np
 from pathlib import Path
-from math import cos, sin, sqrt, atan2, pi
+from math import cos, sin
 
 sys.path.append(str(Path(__file__).absolute().parent) + "/../../state")
 sys.path.append(str(Path(__file__).absolute().parent) + "/../../array")
 sys.path.append(str(Path(__file__).absolute().parent) + "/../../sensors/gnss")
+sys.path.append(str(Path(__file__).absolute().parent) + "/../../common")
 from state import State
-from xy_array import XYArray
+from plot_lib import draw_covariance_ellipse
 
 
 class ExtendedKalmanFilterLocalizer:
@@ -92,21 +93,9 @@ class ExtendedKalmanFilterLocalizer:
         pose: Vehicle's pose[x, y, yaw]
         """
         
-        eig_val, eig_vec = np.linalg.eig(self.cov_mat)
-        if eig_val[0] >= eig_val[1]: big_idx, small_idx = 0, 1
-        else: big_idx, small_idx = 1, 0
-        a, b = sqrt(3.0 * eig_val[big_idx]), sqrt(3.0 * eig_val[small_idx])
-        angle = atan2(eig_vec[1, big_idx], eig_vec[0, big_idx])
-
-        t = np.arange(0, 2 * pi + 0.1, 0.1)
-        xs = [a * cos(it) for it in t]
-        ys = [b * sin(it) for it in t]
-        xys = np.array([xs, ys])
-        xys_array = XYArray(xys)
-
-        transformed_xys = xys_array.homogeneous_transformation(pose[0, 0], pose[1, 0], angle)
-        elip_plot, = axes.plot(transformed_xys.get_x_data(), transformed_xys.get_y_data(), color=self.DRAW_COLOR)
-        elems.append(elip_plot)        
+        # ellipse of the x-y block of the 4x4 state covariance
+        draw_covariance_ellipse(axes, elems, pose[0, 0], pose[1, 0], self.cov_mat[:2, :2],
+                                color=self.DRAW_COLOR)
 
     def _jacobian_F(self, state, input, time_s):
         """
