@@ -26,6 +26,8 @@ This is a sample codes collections about Autonomous vehicle control algorithm. E
 ## Goal of this project
 I want to release my own technical book about Autonomous Vehicle algorithms in the future. The book will include all of codes and documents in this repository as contents.  
 
+The next goal is a simulator where you can learn the whole navigation of an autonomous vehicle, swapping algorithms at each stage and comparing the results. See the [architecture and roadmap](/doc/ARCHITECTURE.md) and the [roadmap issue](https://github.com/ShisatoYano/AutonomousVehicleControlBeginnersGuide/issues/131).  
+
 
 ## Requirements
 Please satisfy with the following requirements on native or VM Linux in advance.  
@@ -131,6 +133,7 @@ Your comment and output is added to [this list of user comments](/USERS_COMMENTS
 
 ## Contribution
 Any contribution by creating an issue or sending a pull request is welcome!! Please check [this document about how to contribute](/HOWTOCONTRIBUTE.md).  
+If you are looking for a place to start, see the [good first issues](https://github.com/ShisatoYano/AutonomousVehicleControlBeginnersGuide/issues?q=is%3Aissue%20state%3Aopen%20label%3A%22good%20first%20issue%22) and the [roadmap issue](https://github.com/ShisatoYano/AutonomousVehicleControlBeginnersGuide/issues/131).  
 
 
 ## Author
