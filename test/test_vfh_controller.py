@@ -4,7 +4,7 @@ Unit test of VfhController
 Author: Khushi
 """
 
-from math import atan2
+from math import atan2, pi
 import pytest
 import sys
 from pathlib import Path
@@ -31,19 +31,47 @@ class _FakeDirectionSelector:
         return self.angle_rad
 
 
+class _FakeHistogram:
+    """
+    Minimal stand-in for PolarHistogram exposing only the query
+    VfhController actually reads(Step 5: Dynamic Speed Control), so
+    density-based speed control can be unit tested without building a
+    real sector/density array. Remembers its last call's arguments so
+    tests can confirm the controller queries the right direction
+    """
+
+    def __init__(self, density_ahead=0.0):
+        self.density_ahead = density_ahead
+        self.last_center_angle_rad = None
+        self.last_half_width_rad = None
+
+    def max_density_in_angle_range(self, center_angle_rad, half_width_rad=0.0):
+        self.last_center_angle_rad = center_angle_rad
+        self.last_half_width_rad = half_width_rad
+        return self.density_ahead
+
+
 class _FakeMapper:
     """
     Minimal stand-in for a mapper exposing only get_direction_selector()
+    and get_histogram()
     """
 
-    def __init__(self, angle_rad):
+    def __init__(self, angle_rad, density_ahead=0.0):
         self.selector = _FakeDirectionSelector(angle_rad)
+        self.histogram = _FakeHistogram(density_ahead)
 
     def get_direction_selector(self):
         return self.selector
 
+    def get_histogram(self):
+        return self.histogram
+
     def set_selected_angle_rad(self, angle_rad):
         self.selector.angle_rad = angle_rad
+
+    def set_density_ahead(self, density_ahead):
+        self.histogram.density_ahead = density_ahead
 
 
 def _spec():
@@ -167,3 +195,90 @@ def test_draw_does_not_raise():
     controller.draw(None, elems)
 
     assert elems == []
+
+
+def test_invalid_min_speed_raises():
+    with pytest.raises(ValueError):
+        VfhController(_spec(), _FakeMapper(0.0), cruise_speed_mps=3.0, min_speed_mps=-1.0)
+    with pytest.raises(ValueError):
+        VfhController(_spec(), _FakeMapper(0.0), cruise_speed_mps=3.0, min_speed_mps=4.0)
+
+
+def test_invalid_danger_density_raises():
+    with pytest.raises(ValueError):
+        VfhController(_spec(), _FakeMapper(0.0), danger_density=0.0)
+    with pytest.raises(ValueError):
+        VfhController(_spec(), _FakeMapper(0.0), danger_density=-1.0)
+
+
+def test_invalid_caution_half_angle_raises():
+    with pytest.raises(ValueError):
+        VfhController(_spec(), _FakeMapper(0.0), caution_half_angle_rad=-0.1)
+
+
+def test_target_speed_is_cruise_speed_with_no_obstacle_ahead():
+    mapper = _FakeMapper(0.0, density_ahead=0.0)
+    state = State(yaw_rad=0.0, speed_mps=3.0)
+    controller = VfhController(_spec(), mapper, cruise_speed_mps=3.0)
+
+    controller.update(state, 0.1)
+
+    assert controller.get_target_speed_mps() == pytest.approx(3.0)
+
+
+def test_target_speed_drops_to_minimum_at_danger_density():
+    mapper = _FakeMapper(0.0, density_ahead=1.0)
+    state = State(yaw_rad=0.0, speed_mps=3.0)
+    controller = VfhController(_spec(), mapper, cruise_speed_mps=3.0,
+                               min_speed_mps=0.5, danger_density=1.0)
+
+    controller.update(state, 0.1)
+
+    assert controller.get_target_speed_mps() == pytest.approx(0.5)
+
+
+def test_target_speed_scales_linearly_between_cruise_and_minimum():
+    mapper = _FakeMapper(0.0, density_ahead=0.5)
+    state = State(yaw_rad=0.0, speed_mps=3.0)
+    controller = VfhController(_spec(), mapper, cruise_speed_mps=3.0,
+                               min_speed_mps=1.0, danger_density=1.0)
+
+    controller.update(state, 0.1)
+
+    # halfway to danger_density -> halfway from cruise(3.0) down to minimum(1.0)
+    assert controller.get_target_speed_mps() == pytest.approx(2.0)
+
+
+def test_target_speed_does_not_go_below_minimum_past_danger_density():
+    mapper = _FakeMapper(0.0, density_ahead=5.0)  # far past danger_density
+    state = State(yaw_rad=0.0, speed_mps=3.0)
+    controller = VfhController(_spec(), mapper, cruise_speed_mps=3.0,
+                               min_speed_mps=0.5, danger_density=1.0)
+
+    controller.update(state, 0.1)
+
+    assert controller.get_target_speed_mps() == pytest.approx(0.5)
+
+
+def test_acceleration_targets_the_scaled_down_speed():
+    mapper = _FakeMapper(0.0, density_ahead=1.0)
+    state = State(yaw_rad=0.0, speed_mps=0.0)
+    controller = VfhController(_spec(), mapper, cruise_speed_mps=3.0, speed_gain=1.0,
+                               min_speed_mps=0.5, danger_density=1.0)
+
+    controller.update(state, 0.1)
+
+    # target speed is scaled down to min_speed_mps(0.5), not cruise_speed_mps(3.0)
+    assert controller.get_target_accel_mps2() == pytest.approx(0.5)
+
+
+def test_queries_density_relative_to_vehicle_heading_in_target_direction():
+    mapper = _FakeMapper(pi / 2, density_ahead=0.0)  # target direction, global frame
+    state = State(yaw_rad=pi / 4, speed_mps=1.0)  # vehicle heading, global frame
+    controller = VfhController(_spec(), mapper, caution_half_angle_rad=0.2)
+
+    controller.update(state, 0.1)
+
+    # target direction relative to heading = pi/2 - pi/4 = pi/4
+    assert mapper.histogram.last_center_angle_rad == pytest.approx(pi / 4)
+    assert mapper.histogram.last_half_width_rad == pytest.approx(0.2)
