@@ -51,7 +51,8 @@ class NdtMap:
         for i in range(len(points_x_array)):
             index = self.map.calculate_vector_index_from_position(points_x_array[i],
                                                                   points_y_array[i])
-            grid_points_index_map[index].append(i)
+            if index is not None:
+                grid_points_index_map[index].append(i)
         
         return grid_points_index_map
 
