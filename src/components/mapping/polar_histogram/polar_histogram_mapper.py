@@ -4,6 +4,8 @@ polar_histogram_mapper.py
 Author: Khushi
 """
 
+from time import perf_counter
+
 import numpy as np
 import matplotlib.patches as patches
 from matplotlib.collections import PatchCollection
@@ -77,6 +79,7 @@ class PolarHistogramMapper:
         self.vehicle_y_m = 0.0
         self.vehicle_yaw_rad = 0.0
         self.target_angle_rad = 0.0
+        self.last_update_duration_s = 0.0
 
     def update(self, point_cloud, state):
         """
@@ -86,6 +89,8 @@ class PolarHistogramMapper:
                      is expected to be relative to the vehicle's heading
         state: Vehicle's state object
         """
+
+        start_s = perf_counter()
 
         angle_list = [point.angle_rad for point in point_cloud]
         distance_list = [point.get_distance_m() for point in point_cloud]
@@ -99,6 +104,8 @@ class PolarHistogramMapper:
         self.target_angle_rad = self._target_angle_rad()
         self.direction_selector.select(self.valley_detector.get_valleys(),
                                        self.vehicle_yaw_rad, self.target_angle_rad)
+
+        self.last_update_duration_s = perf_counter() - start_s
 
     def _target_angle_rad(self):
         """
@@ -246,3 +253,12 @@ class PolarHistogramMapper:
         """
 
         return self.target_angle_rad
+
+    def get_last_update_duration_s(self):
+        """
+        Function to get how long(sec) the last update() call took to build
+        the histogram, detect valleys and select a direction(Step 7:
+        Performance Benchmarking)
+        """
+
+        return self.last_update_duration_s

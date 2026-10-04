@@ -91,6 +91,7 @@
                     "/home/dev-user/workspace/src/simulations/mapping/vfh_candidate_valley_detection",
                     "/home/dev-user/workspace/src/simulations/mapping/vfh_direction_selection",
                     "/home/dev-user/workspace/src/simulations/mapping/vfh_dynamic_speed_control",
+                    "/home/dev-user/workspace/src/simulations/mapping/vfh_performance_benchmarking",
                     "/home/dev-user/workspace/src/simulations/mapping/vfh_polar_histogram_construction",
                     "/home/dev-user/workspace/src/simulations/mapping/vfh_trajectory_verification",
                     "/home/dev-user/workspace/src/simulations/mapping/vfh_vehicle_motion_integration",

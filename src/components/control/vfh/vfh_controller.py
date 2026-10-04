@@ -7,6 +7,7 @@ Author: Khushi
 import sys
 from pathlib import Path
 from math import atan2, pi
+from time import perf_counter
 
 sys.path.append(str(Path(__file__).absolute().parent) + "/../../common")
 from angle_lib import pi_to_pi
@@ -87,6 +88,7 @@ class VfhController:
         self.target_accel_mps2 = 0.0
         self.target_yaw_rate_rps = 0.0
         self.target_steer_rad = 0.0
+        self.last_update_duration_s = 0.0
 
     def _decide_target_direction_rad(self, state):
         """
@@ -175,6 +177,8 @@ class VfhController:
         time_s: Simulation interval time[sec]
         """
 
+        start_s = perf_counter()
+
         self._decide_target_direction_rad(state)
 
         self._decide_target_speed_mps(state)
@@ -184,6 +188,8 @@ class VfhController:
         self._calculate_target_yaw_rate_rps(state)
 
         self._calculate_target_steer_rad(state)
+
+        self.last_update_duration_s = perf_counter() - start_s
 
     def get_target_accel_mps2(self):
         """
@@ -220,6 +226,14 @@ class VfhController:
         """
 
         return self.target_speed_mps
+
+    def get_last_update_duration_s(self):
+        """
+        Function to get how long(sec) the last update() call took(Step 7:
+        Performance Benchmarking)
+        """
+
+        return self.last_update_duration_s
 
     def draw(self, axes, elems):
         """
