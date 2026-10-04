@@ -1,6 +1,8 @@
 """
 dstar_path_planner.py
 
+Author: Erwin Lejeune
+
 Implementation of the original D* (Dynamic A*) algorithm (Stentz, 1994)
 with an optional focused heuristic (Focused D*).
 
