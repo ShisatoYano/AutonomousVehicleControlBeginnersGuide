@@ -7,6 +7,8 @@ noise sampling, stage and terminal costs, information-theoretic weighting,
 and optional moving-average smoothing. Uses (steer, accel) as control input;
 converts to (accel, yaw_rate) for the existing State.motion_model. Visualizes
 optimal and optionally all sampled trajectories.
+
+Author: Erwin Lejeune
 """
 
 import math

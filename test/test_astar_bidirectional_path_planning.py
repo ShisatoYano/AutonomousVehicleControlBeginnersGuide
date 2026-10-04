@@ -1,7 +1,7 @@
 """
 Test of Bidirectional A* path planning and navigation simulation
 
-Author: Auto-generated
+Author: Erwin Lejeune
 """
 
 from pathlib import Path

@@ -4,6 +4,8 @@ adaptive_pure_pursuit_controller.py
 Adaptive Pure Pursuit path tracking controller. Extends pure pursuit by adapting
 the look-ahead distance using speed and path curvature: shorter look-ahead on
 sharp curves for better tracking, longer look-ahead on straights for stability.
+
+Author: Erwin Lejeune
 """
 
 from math import sin, tan, atan2

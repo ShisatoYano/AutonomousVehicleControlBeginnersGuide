@@ -1,7 +1,7 @@
 """
 rrt_star_bidirectional_path_planner.py
 
-Author: Auto-generated
+Author: Erwin Lejeune
 
 This module implements the Bidirectional RRT* algorithm for path planning.
 Bidirectional RRT* runs two RRT* searches simultaneously - one from start to goal
