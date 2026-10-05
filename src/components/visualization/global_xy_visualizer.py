@@ -105,4 +105,4 @@ class GlobalXYVisualizer:
             print("Simulation finished!!")
         else:
             # only when executed as unit test
-            for i in range(1000): self.update(i, elems, axes)
+            for i in range(self.time_params.get_frame_num()): self.update(i, elems, axes)
