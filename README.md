@@ -39,7 +39,6 @@ For running each sample codes:
 
 For development:
 * [pytest](https://docs.pytest.org/en/7.4.x/) (for unit tests)
-* [pytest-cov](https://github.com/pytest-dev/pytest-cov) (for coverage measurement)
 
 For setting up the environment with Docker:
 * [VS Code](https://code.visualstudio.com/)

@@ -30,10 +30,7 @@ WORKDIR $WORKDIR
 RUN python -m pip install --upgrade --user pip
 RUN python -m pip install --upgrade --user setuptools
 
-# Install do-mpc + CasADi
-RUN pip install --no-cache-dir \
-    casadi>=3.6.5 \
-    do-mpc>=4.6.4
-
+# casadi and do-mpc are installed from requirements.txt so the version
+# pins are quoted by pip and are not parsed as shell redirects.
 COPY requirements.txt $WORKDIR
 RUN python -m pip install --user -r requirements.txt
