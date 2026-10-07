@@ -33,6 +33,8 @@ Once latched, the controller commands a proportional brake
 (accel proportional to -speed) until the vehicle is stationary, then
 holds zero.  The latch never resets, preventing re-entry into the solver
 after arrival.
+
+Author: Mohit Kumar
 """
 
 import math

@@ -1,7 +1,7 @@
 """
 Test of RRT* path planning and navigation simulation
 
-Author: Auto-generated
+Author: Erwin Lejeune
 """
 
 from pathlib import Path

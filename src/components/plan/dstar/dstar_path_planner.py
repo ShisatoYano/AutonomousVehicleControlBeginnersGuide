@@ -20,6 +20,8 @@ Key concepts:
       focuses expansion toward the robot's position.
     - LOWER states propagate optimal costs outward.
     - RAISE states detect cost increases and attempt to find cheaper back-pointers.
+
+Author: Erwin Lejeune
 """
 
 import numpy as np
