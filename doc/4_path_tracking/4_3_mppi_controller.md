@@ -1,4 +1,4 @@
-# 6. MPPI Controller
+## 4.3 MPPI Controller
 
 In this chapter, the MPPI (Model Predictive Path Integral) path tracking controller class is implemented. This class implements the MPPI path tracking algorithm, which computes a steering angle and acceleration command by **sampling thousands of random control sequences**, rolling each one forward through the vehicle dynamics, scoring them by cost, and computing a weighted average update.
 
@@ -39,7 +39,7 @@ Ref: https://dilithjay.com/blog/mppi
 
 ---
 
-## 6.1 MppiController Class
+### 4.3.1 MppiController Class
 
 The controller class is located at:
 [mppi_controller.py](/src/components/control/mppi/mppi_controller.py)
@@ -71,7 +71,7 @@ This class imports trigonometric functions from Python's `math` module and `nump
 
 ---
 
-### 6.1.1 `_StateView` Helper Class
+#### 4.3.1.1 `_StateView` Helper Class
 
 ```python
 class _StateView:
@@ -94,7 +94,7 @@ During rollouts, the simulated position of each sample is a plain numpy array, n
 
 ---
 
-### 6.1.2 Constructor
+#### 4.3.1.2 Constructor
 
 ```python
 def __init__(self, spec, course=None, color="g",
@@ -140,15 +140,15 @@ The constructor takes a `VehicleSpecification` object and an optional `CubicSpli
 | `target_accel_mps2` | 0.0 | Computed acceleration command [m/s²] |
 | `target_steer_rad` | 0.0 | Computed steering angle command [rad] |
 | `target_yaw_rate_rps` | 0.0 | Computed yaw rate command [rad/s] |
-| `target_speed_mps` | 0.0 | Current speed echoed back (not a planned target - see §6.4.1) |
+| `target_speed_mps` | 0.0 | Current speed echoed back (not a planned target - see §4.3.4.1) |
 
 > **Note on `param_gamma`**: With the default `param_alpha = 1.0`, `param_gamma = 0` and the control cost term in the trajectory cost vanishes entirely. This means the default configuration is pure tracking with no penalty for deviating from the warm-start control. Set `param_alpha < 1.0` only when you want to discourage large perturbations from the previous solution.
 
 ---
 
-## 6.2 Algorithm Background
+### 4.3.2 Algorithm Background
 
-### 6.2.1 State and Control Vectors
+#### 4.3.2.1 State and Control Vectors
 
 MPPI operates on a state vector $x_t$ and control vector $u_t$:
 
@@ -170,7 +170,7 @@ $$
 
 ---
 
-### 6.2.2 Sampling - Exploitation and Exploration
+#### 4.3.2.2 Sampling - Exploitation and Exploration
 
 At each step, K noise sequences are drawn from a zero-mean Gaussian:
 
@@ -195,11 +195,11 @@ Exploration samples   (last  param_exploration × K):
 
 The exploitation samples refine the previous solution. The exploration samples venture further afield and can discover better solutions when the warm start has drifted off-course. The `param_exploration` parameter controls the ratio.
 
-> **Important**: `v[k,t]` stores the **clipped** perturbed control used for rollout. The raw unclipped noise `epsilon[k,t]` is stored separately. The weighted update later uses `epsilon`, not `v` - this asymmetry is intentional and explained in section 6.2.5.
+> **Important**: `v[k,t]` stores the **clipped** perturbed control used for rollout. The raw unclipped noise `epsilon[k,t]` is stored separately. The weighted update later uses `epsilon`, not `v` - this asymmetry is intentional and explained in section 4.3.2.5.
 
 ---
 
-### 6.2.3 Trajectory Cost S(k)
+#### 4.3.2.3 Trajectory Cost S(k)
 
 Each sample trajectory $k$ accumulates cost across all T steps plus a terminal cost:
 
@@ -226,7 +226,7 @@ param_alpha = 0.0  ->  γ = λ   (full control cost - conservative)
 
 ---
 
-### 6.2.4 Information-Theoretic Weighting
+#### 4.3.2.4 Information-Theoretic Weighting
 
 Once all K trajectory costs are computed, the weights are calculated in three steps:
 
@@ -248,7 +248,7 @@ The subtraction of $\rho$ before the exponential is a **numerical stability tric
 
 ---
 
-### 6.2.5 Control Update - Why `epsilon` Not `v`
+#### 4.3.2.5 Control Update - Why `epsilon` Not `v`
 
 The weighted perturbation sum is computed using the **raw unclipped noise** `epsilon`, not the clipped `v`:
 
@@ -281,9 +281,9 @@ The last element is **repeated rather than zeroed** because zeroing would force 
 
 ---
 
-## 6.3 Private Methods
+### 4.3.3 Private Methods
 
-### 6.3.1 `_get_nearest_waypoint(x, y, update_prev_idx)`
+#### 4.3.3.1 `_get_nearest_waypoint(x, y, update_prev_idx)`
 
 ```python
 def _get_nearest_waypoint(self, x, y, update_prev_idx=False):
@@ -309,7 +309,7 @@ It is called in two distinct contexts:
 
 ---
 
-### 6.3.2 `_g(v)` - Control Clipping
+#### 4.3.3.2 `_g(v)` - Control Clipping
 
 ```python
 def _g(self, v):
@@ -320,11 +320,11 @@ def _g(self, v):
 
 After adding noise to the warm-start control, `_g()` clips the result to the physical limits of the vehicle. This is MPPI's only mechanism for enforcing control bounds - there are no hard constraints as in MPC. Samples that would require $|\delta| > \delta_{\max}$ are simply clipped to the limit before being rolled out.
 
-The clipped result is stored in `v[k,t]`. Critically, the raw unclipped noise `epsilon[k,t]` is preserved separately and is used in the weighted update - see section 6.2.6 for why this separation matters.
+The clipped result is stored in `v[k,t]`. Critically, the raw unclipped noise `epsilon[k,t]` is preserved separately and is used in the weighted update - see section 4.3.2.5 for why this separation matters.
 
 ---
 
-### 6.3.3 `_F(x_t, v_t)` - One-Step Dynamics Rollout
+#### 4.3.3.3 `_F(x_t, v_t)` - One-Step Dynamics Rollout
 
 ```python
 def _F(self, x_t, v_t):
@@ -349,7 +349,7 @@ This function is called $K \times T$ times per `update()` step - once for each s
 
 ---
 
-### 6.3.4 `_c(x_t)` - Stage Cost
+#### 4.3.3.4 `_c(x_t)` - Stage Cost
 
 ```python
 def _c(self, x_t):
@@ -376,7 +376,7 @@ Without the first step, vehicles near $\pm\pi$ can receive arbitrarily large hea
 
 ---
 
-### 6.3.5 `_phi(x_T)` - Terminal Cost
+#### 4.3.3.5 `_phi(x_T)` - Terminal Cost
 
 ```python
 def _phi(self, x_T):
@@ -392,7 +392,7 @@ The terminal cost is evaluated only at the **last state** $x_T^k$ of each sample
 
 ---
 
-### 6.3.6 `_calc_epsilon()`
+#### 4.3.3.6 `_calc_epsilon()`
 
 ```python
 def _calc_epsilon(self):
@@ -413,7 +413,7 @@ The off-diagonal zeros mean steering and acceleration noise are drawn independen
 
 ---
 
-### 6.3.7 `_compute_weights(S)`
+#### 4.3.3.7 `_compute_weights(S)`
 
 ```python
 def _compute_weights(self, S):
@@ -429,7 +429,7 @@ The output $w$ is a $(K,)$ array that sums to 1.0, acting as a proper probabilit
 
 ---
 
-### 6.3.8 `_moving_average_filter(xx, window_size)`
+#### 4.3.3.8 `_moving_average_filter(xx, window_size)`
 
 ```python
 def _moving_average_filter(self, xx, window_size):
@@ -451,9 +451,9 @@ Applies a moving-average filter to each column of the $(T, 2)$ weighted perturba
 
 ---
 
-## 6.4 Public Methods
+### 4.3.4 Public Methods
 
-### 6.4.1 `update`
+#### 4.3.4.1 `update`
 
 ```python
 def update(self, state, time_s):
@@ -556,7 +556,7 @@ update()
 
 ---
 
-### 6.4.2 Getter Methods
+#### 4.3.4.2 Getter Methods
 
 ```python
 def get_target_accel_mps2(self):
@@ -573,7 +573,7 @@ These three getter methods expose the computed control outputs. They are called 
 
 ---
 
-### 6.4.3 `draw`
+#### 4.3.4.3 `draw`
 
 ```python
 def draw(self, axes, elems):
@@ -606,7 +606,7 @@ The `self.weights` consumed here are set inside `update()` as `self.weights = w.
 
 ---
 
-## 6.5 Comparison with MPC
+### 4.3.5 Comparison with MPC
 
 | Aspect | MPC | MPPI |
 |---|---|---|
