@@ -34,13 +34,19 @@ class State:
 
         self.x_history = [self.x_m]
         self.y_history = [self.y_m]
+        self.hist_plot = None
     
+    def _limit_speed(self):
+        if abs(self.speed_mps) < self.STOP_SPEED_MPS: self.speed_mps = 0.0
+        if self.speed_mps > self.MAX_SPEED_MPS: self.speed_mps = self.MAX_SPEED_MPS
+        if self.speed_mps < self.MIN_SPEED_MPS: self.speed_mps = self.MIN_SPEED_MPS
+
     @staticmethod
-    def motion_model(state, input, time_s):
+    def motion_model(state, motion_input, time_s):
         """
         Static function of motion model of vehicle state
         state: Vehicle's state (x, y, yaw, speed) object
-        input: Motion input (acceleration, yaw rate) object
+        motion_input: Motion input (acceleration, yaw rate) object
         time_s: Time interval per cycle[sec]
         """
 
@@ -60,7 +66,7 @@ class State:
                       [0, time_s],
                       [time_s, 0]])
         
-        return A @ state + B @ input
+        return A @ state + B @ motion_input
 
     def update(self, accel_mps2, yaw_rate_rps, time_s):
         """
@@ -85,22 +91,23 @@ class State:
         self.yaw_rad = next_state[2, 0]
         self.speed_mps = next_state[3, 0]
         
-        if abs(self.speed_mps) < self.STOP_SPEED_MPS: self.speed_mps = 0.0
-        if self.speed_mps > self.MAX_SPEED_MPS: self.speed_mps = self.MAX_SPEED_MPS
-        if self.speed_mps < self.MIN_SPEED_MPS: self.speed_mps = self.MIN_SPEED_MPS
+        self._limit_speed()
 
         self.x_history.append(self.x_m)
         self.y_history.append(self.y_m)
     
     def update_by_localizer(self, state_from_localizer):
+        """
+        Function to update state by localizer
+        state_from_localizer: State estimated by localizer
+        """
+
         self.x_m = state_from_localizer[0, 0]
         self.y_m = state_from_localizer[1, 0]
         self.yaw_rad = state_from_localizer[2, 0]
         self.speed_mps = state_from_localizer[3, 0]
 
-        if abs(self.speed_mps) < self.STOP_SPEED_MPS: self.speed_mps = 0.0
-        if self.speed_mps > self.MAX_SPEED_MPS: self.speed_mps = self.MAX_SPEED_MPS
-        if self.speed_mps < self.MIN_SPEED_MPS: self.speed_mps = self.MIN_SPEED_MPS
+        self._limit_speed()
 
         self.x_history.append(self.x_m)
         self.y_history.append(self.y_m)
@@ -152,7 +159,9 @@ class State:
         Function to draw x-y history and speed
         """
         
-        hist_plot, = axes.plot(self.x_history, self.y_history, linewidth=0, marker='.', color=self.DRAW_COLOR)
-        elems.append(hist_plot)
-
+        if self.hist_plot is None:
+            self.hist_plot, = axes.plot(self.x_history, self.y_history, linewidth=0, marker='.', color=self.DRAW_COLOR)
+        else:
+            self.hist_plot.set_data(self.x_history, self.y_history)
+            
         elems.append(axes.text(self.x_m, self.y_m + 2, "Speed: " + str(round(self.speed_mps * 3.6, 1)) + "[km/h]", fontsize=10))
