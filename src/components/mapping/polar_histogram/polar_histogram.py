@@ -167,3 +167,25 @@ class PolarHistogram:
         """
 
         return self.smoothed_density
+
+    def max_density_in_angle_range(self, center_angle_rad, half_width_rad=0.0):
+        """
+        Function to get the highest smoothed density among the sectors
+        spanning a center angle and half_width_rad to each side of it.
+        Used(Step 5: Dynamic Speed Control) to gauge how close the
+        nearest obstacle is in roughly one direction without depending
+        on exact sector alignment
+        center_angle_rad: Center angle[rad], relative to vehicle heading
+        half_width_rad: Half width[rad] checked on each side of
+                        center_angle_rad. 0 checks only the single sector
+                        center_angle_rad falls into
+        """
+
+        if half_width_rad < 0.0:
+            raise ValueError("half_width_rad must be 0 or greater")
+
+        half_width_sectors = int(np.ceil(half_width_rad / self.sector_angle_rad))
+        center_index = self.angle_to_sector_index(center_angle_rad)
+        indices = [(center_index + offset) % self.num_sectors
+                  for offset in range(-half_width_sectors, half_width_sectors + 1)]
+        return float(np.max(self.smoothed_density[indices]))
