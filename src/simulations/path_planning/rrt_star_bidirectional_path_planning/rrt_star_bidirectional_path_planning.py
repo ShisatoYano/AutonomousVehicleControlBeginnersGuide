@@ -77,7 +77,7 @@ def main():
     occ_grid.save_map()
     # Easy Goal = (50,22)
     # Hard Goal = (50,-10)
-    planner = RrtStarBidirectionalPathPlanner((0, 0), (50, -10), map_path, x_lim=x_lim, y_lim=y_lim, path_filename=path_filename, gif_name=search_gif_path,
+    planner = RrtStarBidirectionalPathPlanner((0, 0), (50, -10), map_path, x_lim=x_lim, y_lim=y_lim, path_filename=path_filename, gif_name=search_gif_path if show_plot else None,
                                                max_iterations=5000, step_size=0.5, goal_sample_rate=0.05)
 
     # Load sparse path from json file

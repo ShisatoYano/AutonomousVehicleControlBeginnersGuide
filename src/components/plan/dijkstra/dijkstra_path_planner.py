@@ -197,6 +197,9 @@ class DijkstraPathPlanner:
 
 
     def visualize_search(self, gif_name=None):
+        if gif_name is None:
+            return
+
         print(f"Exploring {len(self.explored_nodes)} nodes.")
         if not self.explored_nodes:
             print("Error: No explored nodes. Ensure search() is executed before visualize_search().")
@@ -226,28 +229,25 @@ class DijkstraPathPlanner:
             repeat=False,
         )
 
-        if gif_name is not None:
+        try:
+            print("Saving animation...")
+            # Use FFmpeg writer if available for better memory efficiency
             try:
-                print("Saving animation...")
-                # Use FFmpeg writer if available for better memory efficiency
-                try:
-                    self.anime.save(gif_name, writer="pillow", fps=20, 
-                                  savefig_kwargs={'bbox_inches': 'tight', 'dpi': 100})
-                except Exception:
-                    # Fallback to pillow with reduced quality
-                    self.anime.save(gif_name, writer="pillow")
-                print("Animation saved successfully.")
-            except Exception as e:
-                print(f"Error saving animation: {e}")
-                # Try saving as MP4 instead if GIF fails
-                try:
-                    mp4_name = gif_name.replace('.gif', '.mp4')
-                    self.anime.save(mp4_name, writer="ffmpeg", fps=20)
-                    print(f"Saved as MP4 instead: {mp4_name}")
-                except Exception as e2:
-                    print(f"Both GIF and MP4 saving failed: {e2}")
-        else:
-            plt.show()
+                self.anime.save(gif_name, writer="pillow", fps=20, 
+                              savefig_kwargs={'bbox_inches': 'tight', 'dpi': 100})
+            except Exception:
+                # Fallback to pillow with reduced quality
+                self.anime.save(gif_name, writer="pillow")
+            print("Animation saved successfully.")
+        except Exception as e:
+            print(f"Error saving animation: {e}")
+            # Try saving as MP4 instead if GIF fails
+            try:
+                mp4_name = gif_name.replace('.gif', '.mp4')
+                self.anime.save(mp4_name, writer="ffmpeg", fps=20)
+                print(f"Saved as MP4 instead: {mp4_name}")
+            except Exception as e2:
+                print(f"Both GIF and MP4 saving failed: {e2}")
 
         # clear existing plot and close existing figure
         plt.clf()

@@ -112,7 +112,7 @@ def main():
         x_lim=x_lim,
         y_lim=y_lim,
         path_filename=path_filename,
-        gif_name=search_gif_path,
+        gif_name=search_gif_path if show_plot else None,
     )
 
     # Load sparse path from json file

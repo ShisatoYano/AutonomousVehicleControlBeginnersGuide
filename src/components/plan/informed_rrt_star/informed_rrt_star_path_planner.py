@@ -320,7 +320,7 @@ class InformedRrtStarPathPlanner:
             json.dump(path, f)
 
     def visualize_search(self, gif_name, frame_skip=3):
-        if not self.tree_edges:
+        if gif_name is None or not self.tree_edges:
             return
 
         Path(gif_name).parent.mkdir(parents=True, exist_ok=True)

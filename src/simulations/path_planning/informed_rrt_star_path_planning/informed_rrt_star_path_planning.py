@@ -71,7 +71,7 @@ def main():
     occ_grid.add_object(obst_list)
     occ_grid.save_map()
 
-    planner = InformedRrtStarPathPlanner((10, 0), (30, 0), map_path, x_lim=x_lim, y_lim=y_lim, path_filename=path_filename, gif_name=search_gif_path,
+    planner = InformedRrtStarPathPlanner((10, 0), (30, 0), map_path, x_lim=x_lim, y_lim=y_lim, path_filename=path_filename, gif_name=search_gif_path if show_plot else None,
                              max_iterations=1200,step_size=1.5,goal_sample_rate=0.05, visualize_live=False)
 
     # Load sparse path from json file
