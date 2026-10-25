@@ -77,7 +77,7 @@ def main():
     occ_grid.save_map()
     # Easy Goal = (50,22)
     # Hard Goal = (50,-10)
-    planner = AStarPathPlanner((0, 0), (50, -10), map_path, weight=5.0, x_lim=x_lim, y_lim=y_lim, path_filename=path_filename, gif_name=search_gif_path)
+    planner = AStarPathPlanner((0, 0), (50, -10), map_path, weight=5.0, x_lim=x_lim, y_lim=y_lim, path_filename=path_filename, gif_name=search_gif_path if show_plot else None)
 
     # Load sparse path from json file
     with open(path_filename, 'r') as f:

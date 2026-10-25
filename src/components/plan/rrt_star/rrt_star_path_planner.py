@@ -397,6 +397,9 @@ class RrtStarPathPlanner:
             json.dump(path, f)
 
     def visualize_search(self, gif_name=None):
+        if gif_name is None:
+            return
+
         print(f"Exploring {len(self.explored_nodes)} nodes.")
         if not self.explored_nodes:
             print("Error: No explored nodes. Ensure search() is executed before visualize_search().")
@@ -417,15 +420,12 @@ class RrtStarPathPlanner:
             repeat=False,
         )
 
-        if gif_name is not None:
-            try:
-                print("Saving animation...")
-                self.anime.save(gif_name, writer="pillow")
-                print("Animation saved successfully.")
-            except Exception as e:
-                print(f"Error saving animation: {e}")
-        else:
-            plt.show()
+        try:
+            print("Saving animation...")
+            self.anime.save(gif_name, writer="pillow")
+            print("Animation saved successfully.")
+        except Exception as e:
+            print(f"Error saving animation: {e}")
 
         plt.clf()
         plt.close()
