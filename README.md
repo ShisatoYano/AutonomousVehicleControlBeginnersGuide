@@ -36,6 +36,8 @@ For running each sample codes:
 * [Matplotlib](https://matplotlib.org/)
 * [NumPy](https://numpy.org/)
 * [SciPy](https://scipy.org/)
+* [CasADi](https://web.casadi.org/) (for MPC path tracking)
+* [do-mpc](https://www.do-mpc.com/) (for MPC path tracking)
 
 For development:
 * [pytest](https://docs.pytest.org/en/7.4.x/) (for unit tests)
