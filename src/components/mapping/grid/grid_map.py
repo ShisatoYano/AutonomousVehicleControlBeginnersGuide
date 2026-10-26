@@ -49,7 +49,7 @@ class GridMap:
         pos: x or y position
         left_bottom_pos: left bottom position of map(origin of map)
         max_index: maximum number of x/y index
-        Return: index of 2d array
+        Return: index of 2d array, or None if the position is outside the map
         """
         
         index = int(np.floor((pos - left_bottom_pos) / self.resolution_m))
@@ -72,11 +72,12 @@ class GridMap:
         Function to calculate index of x-y point in 1d vector
         x_m: x coordinate of position
         y_m: y coordinate of position
-        Return: index of 1d vector
+        Return: index of 1d vector, or None if the position is outside the map
         """
 
-        x_idx = self.calculate_xy_index_from_position(x_m, self.left_bottom_x_m, self.width_grids_num)
-        y_idx = self.calculate_xy_index_from_position(y_m, self.left_bottom_y_m, self.height_grids_num)
+        x_idx = self.calculate_xy_index_from_position(x_m, self.left_bottom_x_m, self.width_grids_num - 1)
+        y_idx = self.calculate_xy_index_from_position(y_m, self.left_bottom_y_m, self.height_grids_num - 1)
+        if x_idx is None or y_idx is None: return None
         return self.calculate_vector_index_from_xy_index(x_idx, y_idx)
     
     def calculate_xy_index_from_vector_index(self, vector_index):
