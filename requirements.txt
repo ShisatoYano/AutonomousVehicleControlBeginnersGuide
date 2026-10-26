@@ -1,9 +1,6 @@
 matplotlib
 numpy
-pandas
 scipy
-seaborn
 pytest
-pytest-cov
-casadi
-do-mpc
+casadi>=3.6.5
+do-mpc>=4.6.4
