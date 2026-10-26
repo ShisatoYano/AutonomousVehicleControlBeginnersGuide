@@ -11,13 +11,13 @@ using a set of weighted particles (samples).
 import sys
 import numpy as np
 from pathlib import Path
-from math import cos, sin, sqrt, atan2, pi
 
 sys.path.append(str(Path(__file__).absolute().parent) + "/../../state")
 sys.path.append(str(Path(__file__).absolute().parent) + "/../../array")
 sys.path.append(str(Path(__file__).absolute().parent) + "/../../sensors/gnss")
+sys.path.append(str(Path(__file__).absolute().parent) + "/../../common")
 from state import State
-from xy_array import XYArray
+from plot_lib import draw_covariance_ellipse
 
 
 class ParticleFilterLocalizer:
@@ -414,51 +414,11 @@ class ParticleFilterLocalizer:
         )
         elems.append(est_marker)
         
-        # Draw uncertainty ellipse (same as EKF/UKF)
-        # Extract 2x2 covariance for x and y
-        xy_cov = self.cov_mat[:2, :2]
-        
-        # Handle edge case where covariance is too small or negative
+        # Draw uncertainty ellipse (same as EKF/UKF) at the estimated position,
+        # from the x-y block of the weighted particle covariance
         try:
-            eig_val, eig_vec = np.linalg.eig(xy_cov)
-            eig_val = np.real(eig_val)
-            eig_vec = np.real(eig_vec)
-            
-            # Ensure positive eigenvalues
-            eig_val = np.maximum(eig_val, 1e-6)
-            
-            if eig_val[0] >= eig_val[1]:
-                big_idx, small_idx = 0, 1
-            else:
-                big_idx, small_idx = 1, 0
-            
-            # 3-sigma ellipse (99.7% confidence)
-            a = sqrt(3.0 * eig_val[big_idx])
-            b = sqrt(3.0 * eig_val[small_idx])
-            angle = atan2(eig_vec[1, big_idx], eig_vec[0, big_idx])
-            
-            # Generate ellipse points
-            t = np.arange(0, 2 * pi + 0.1, 0.1)
-            xs = [a * cos(it) for it in t]
-            ys = [b * sin(it) for it in t]
-            xys = np.array([xs, ys])
-            xys_array = XYArray(xys)
-            
-            # Transform ellipse to estimated position
-            transformed_xys = xys_array.homogeneous_transformation(
-                self.state[0, 0],
-                self.state[1, 0],
-                angle
-            )
-            
-            elip_plot, = axes.plot(
-                transformed_xys.get_x_data(),
-                transformed_xys.get_y_data(),
-                color=self.DRAW_COLOR,
-                linewidth=1.5
-            )
-            elems.append(elip_plot)
-            
+            draw_covariance_ellipse(axes, elems, self.state[0, 0], self.state[1, 0],
+                                    self.cov_mat[:2, :2], color=self.DRAW_COLOR, linewidth=1.5)
         except np.linalg.LinAlgError:
             # Skip ellipse drawing if eigenvalue computation fails
             pass
