@@ -1,7 +1,7 @@
 """
 rrt_star_path_planner.py
 
-Author: Auto-generated
+Author: Erwin Lejeune
 
 This module implements the RRT* (Rapidly-exploring Random Tree Star) algorithm for path planning.
 RRT* is an improved version of RRT that includes path optimization through rewiring.

@@ -1,5 +1,7 @@
 """
-mpc_controller.py 
+mpc_controller.py
+
+Author: Mohit Kumar
 
 Model Predictive Control (MPC) controller for path tracking.
 Follows the standard MPC formulation: receding-horizon optimization over a
