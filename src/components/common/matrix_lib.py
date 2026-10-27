@@ -24,6 +24,11 @@ def hom_mat_33(x, y, yaw):
 
 
 def rot_mat_22(yaw):
+    """
+    Rotation matrix 2x2
+    yaw: yaw direction rotation[rad]
+    """
+
     cos_yaw, sin_yaw = cos(yaw), sin(yaw)
 
     return np.array([[cos_yaw, -sin_yaw],

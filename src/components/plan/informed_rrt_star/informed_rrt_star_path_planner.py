@@ -20,6 +20,8 @@ import sys
 abs_dir_path = str(Path(__file__).absolute().parent)
 relative_path = "/../../../components/"
 sys.path.append(abs_dir_path + relative_path + "mapping/grid")
+sys.path.append(abs_dir_path + relative_path + "common")
+from matrix_lib import rot_mat_22
 
 class InformedRrtStarPathPlanner:
     def __init__(
@@ -128,9 +130,7 @@ class InformedRrtStarPathPlanner:
             theta = np.arctan2(self.goal[1] - self.start[1], self.goal[0] - self.start[0])
             centre = (np.array(self.start) + np.array(self.goal)) / 2.0
 
-            cos_theta, sin_theta = np.cos(theta), np.sin(theta)
-            C = np.array([[cos_theta, -sin_theta], 
-                          [sin_theta, cos_theta]])
+            C = rot_mat_22(theta)
 
             r = np.sqrt(np.random.uniform(0, 1))
             phi = np.random.uniform(0, 2 * np.pi)
