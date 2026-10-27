@@ -102,3 +102,39 @@ def test_smoothing_disabled_when_window_is_one():
     hist.update([0.0], [2.0])
 
     assert np.array_equal(hist.get_smoothed_density(), hist.get_raw_density())
+
+
+def test_max_density_in_angle_range_defaults_to_single_sector():
+    hist = PolarHistogram(num_sectors=4, max_range_m=10.0, smoothing_window=1)
+
+    hist.update([0.0], [2.0])  # obstacle in sector 0 only
+
+    assert hist.max_density_in_angle_range(0.0) > 0.0        # looks at sector 0 itself
+    assert hist.max_density_in_angle_range(np.pi) == 0.0      # sector 2, opposite side, empty
+
+
+def test_max_density_in_angle_range_checks_neighbouring_sectors():
+    hist = PolarHistogram(num_sectors=8, max_range_m=10.0, smoothing_window=1)
+
+    hist.update([np.deg2rad(45)], [2.0])  # obstacle in sector 1 only(sector width is 45deg)
+
+    # centered on sector 0, a half width reaching one neighbour includes sector 1
+    assert hist.max_density_in_angle_range(0.0, half_width_rad=np.deg2rad(45)) > 0.0
+    # too narrow a range centered on sector 0 never reaches sector 1
+    assert hist.max_density_in_angle_range(0.0, half_width_rad=0.0) == 0.0
+
+
+def test_max_density_in_angle_range_wraps_around_boundary():
+    hist = PolarHistogram(num_sectors=4, max_range_m=10.0, smoothing_window=1)
+
+    hist.update([np.deg2rad(-1)], [2.0])  # -1deg == 359deg, sector 3
+
+    # sector 0 is adjacent to sector 3 across the 0deg boundary
+    assert hist.max_density_in_angle_range(0.0, half_width_rad=np.deg2rad(90)) > 0.0
+
+
+def test_max_density_in_angle_range_invalid_half_width_raises():
+    hist = PolarHistogram(num_sectors=4, max_range_m=10.0)
+
+    with pytest.raises(ValueError):
+        hist.max_density_in_angle_range(0.0, half_width_rad=-0.1)
