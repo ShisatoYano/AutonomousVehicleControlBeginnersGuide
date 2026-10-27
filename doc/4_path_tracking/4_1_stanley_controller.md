@@ -1,4 +1,4 @@
-# 4. Stanley Controller
+## 4.1 Stanley Controller
 
 In this chapter, the Stanley steering controller class is implemented for path tracking. This class implements the Stanley path tracking algorithm, which computes a steering angle to guide a vehicle's front axle back onto a reference course by correcting both heading error and lateral (cross-track) error.
 
@@ -36,7 +36,7 @@ Ref: https://www.ri.cmu.edu/pub_files/2009/2/Automatic_Steering_Methods_for_Auto
 - can be unstable at low speed(divison be 0) and steady state error.
 
 
-## 4.1 StanleyController Class
+### 4.1.1 StanleyController Class
 
 The controller class is located at:  
 [stanley_controller.py](/src/components/control/stanley/stanley_controller.py)
@@ -70,7 +70,7 @@ This class imports `sin`, `cos`, `tan`, and `atan2` from Python's `math` module,
 
 ---
 
-### 4.1.1 Constructor
+#### 4.1.1.1 Constructor
 
 ```python
 def __init__(self, spec, course=None):
@@ -100,9 +100,9 @@ The constructor takes a `VehicleSpecification` object and an optional `CubicSpli
 
 ---
 
-## 4.2 Private Methods
+### 4.1.2 Private Methods
 
-### 4.2.1 `_calculate_front_axle_state`
+#### 4.1.2.1 `_calculate_front_axle_state`
 
 ```python
 def _calculate_front_axle_state(self, state):
@@ -131,7 +131,7 @@ where `L` is the wheelbase.
 
 ---
 
-### 4.2.3 `_calculate_target_course_index`
+#### 4.1.2.2 `_calculate_target_course_index`
 
 ```python
 def _calculate_target_course_index(self, state):
@@ -143,7 +143,7 @@ This method finds the index of the nearest point on the course to the front axle
 
 ---
 
-### 4.2.4 `_decide_target_speed_mps`
+#### 4.1.2.3 `_decide_target_speed_mps`
 
 ```python
 def _decide_target_speed_mps(self):
@@ -154,7 +154,7 @@ The target speed is read directly from the course at the nearest point index. Th
 
 ---
 
-### 4.2.4 `_calculate_target_acceleration_mps2`
+#### 4.1.2.4 `_calculate_target_acceleration_mps2`
 
 ```python
 def _calculate_target_acceleration_mps2(self, state):
@@ -170,7 +170,7 @@ accel = Kp * (target_speed - current_speed)
 
 ---
 
-### 4.2.5 `_calculate_tracking_error`
+#### 4.1.2.5 `_calculate_tracking_error`
 
 ```python
 def _calculate_tracking_error(self, state):
@@ -190,7 +190,7 @@ Only `error_lat_m` and `error_yaw_rad` are used for steering.
 
 ---
 
-### 4.2.6 `_calculate_control_input`
+#### 4.1.2.6 `_calculate_control_input`
 
 ```python
 def _calculate_control_input(self, state, error_lat_m, error_yaw_rad):
@@ -231,9 +231,9 @@ tan(δ) = L / R => R = L / tan(δ)
 
 ---
 
-## 4.3 Public Methods
+### 4.1.3 Public Methods
 
-### 4.3.1 `update`
+#### 4.1.3.1 `update`
 
 ```python
 def update(self, state, time_s):
@@ -263,7 +263,7 @@ If no course is set, the method returns early without computing anything.
 
 ---
 
-### 4.3.2 Getter Methods
+#### 4.1.3.2 Getter Methods
 
 ```python
 def get_target_accel_mps2(self):
@@ -280,7 +280,7 @@ These three getter methods expose the computed control outputs. They are called 
 
 ---
 
-### 4.3.3 `draw`
+#### 4.1.3.3 `draw`
 
 ```python
 def draw(self, axes, elems):
