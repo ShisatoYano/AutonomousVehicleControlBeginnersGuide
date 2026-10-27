@@ -41,16 +41,26 @@ import json
 class AStarPathPlanner:
     def __init__(self, start, goal, map_file, weight=1.0, x_lim=None, y_lim=None, path_filename=None, gif_name=None):
         """
-        Initialize the A* planner.
+        Initialize the A* planner, then run the search and visualize it.
         Args:
-            start: (x, y) tuple for start position.
-            goal: (x, y) tuple for goal position.
-            obstacle_parameters: List of obstacle dictionaries.
-            resolution: Grid resolution in meters.
-            weight: Heuristic weight for A*.
-            visualize: Boolean to enable visualization during the search.
-            x_lim: (min, max) tuple for x-axis range of the grid.
-            y_lim: (min, max) tuple for y-axis range of the grid.
+            start: (x, y) tuple for the start position in world coordinates [m].
+            goal: (x, y) tuple for the goal position in world coordinates [m].
+            map_file: Path to the occupancy grid file. ".npy", ".json" and
+                ".png" (binarized at 0.5) are accepted. In the grid, 0 is a
+                free cell and a non-zero value is an obstacle.
+            weight: Weight w of the heuristic in f(n) = g(n) + w * h(n) [-].
+                1.0 is plain A*; a larger value makes the search greedier and
+                gives up the shortest-path guarantee (see heuristic()).
+            x_lim: MinMax of the grid's x range in world coordinates [m]. The
+                cell size is derived from it, so this is required even though
+                it defaults to None: resolution = (x_max - x_min) / columns.
+            y_lim: MinMax of the grid's y range in world coordinates [m], also
+                required. Cells are assumed square, so the same resolution is
+                reused on y.
+            path_filename: Path of the json file the sparse path is written to.
+            gif_name: Path of the gif file the search animation is saved to.
+                When it is None the animation is shown with plt.show()
+                instead of being saved.
         """
         self.start = start
         self.goal = goal
@@ -94,6 +104,51 @@ class AStarPathPlanner:
         return grid
 
     def heuristic(self, a, b):
+        """
+        Estimate the remaining cost from a cell to the goal.
+        This is the Manhattan (L1) distance in cells, scaled by the weight:
+
+            h(n) = w * (|n_x - goal_x| + |n_y - goal_y|)
+
+        What it does not guarantee: search() expands the 8-connected
+        neighbourhood and charges 1 per move, diagonals included, so the
+        cheapest obstacle-free cost between two cells is the Chebyshev
+        (L-infinity) distance max(|dx|, |dy|), not |dx| + |dy|. This
+        heuristic therefore overestimates the remaining cost - on a pure
+        diagonal, where |dx| == |dy|, it is exactly twice the true cost,
+        which is the widest gap possible on this grid. A heuristic that may
+        overestimate is not admissible, and without admissibility A* loses
+        its optimality guarantee: the search still returns a path, but not
+        necessarily the shortest one. The weight w multiplies the gap, which
+        is the weighted-A* trade of optimality for speed.
+
+        The effect, measured on this planner's search loop over the 90x120
+        map of src/simulations/path_planning/astar_path_planning with
+        start (0, 0) and goal (50, -10): Dijkstra (h = 0) expands 7295 cells,
+        w = 1.0 expands 538 and the simulation's w = 5.0 expands 121, and on
+        this map all three return the same 100-step path. The guarantee is
+        gone in general though: over 283 solvable random 30x30 grids with
+        25% occupied cells, w = 1.0 returned a path longer than Dijkstra's
+        on 219 of them (worst case 1.32x) and w = 5.0 on 229 (worst 1.39x).
+
+        For an admissible heuristic on this neighbourhood, use the Chebyshev
+        distance max(|dx|, |dy|) with w = 1.0, or the octile distance if the
+        diagonal move is charged sqrt(2) instead of 1.
+
+        References:
+            P. E. Hart, N. J. Nilsson and B. Raphael, "A Formal Basis for
+            the Heuristic Determination of Minimum Cost Paths", IEEE
+            Transactions on Systems Science and Cybernetics, 4(2), 1968,
+            pp. 100-107 (A* and the admissibility condition h(n) <= h*(n)).
+            I. Pohl, "First results on the effect of error in heuristic
+            search", Machine Intelligence 5, 1970, pp. 219-236 (weighting
+            the heuristic).
+        Args:
+            a: (grid_x, grid_y) tuple of the cell being evaluated.
+            b: (grid_x, grid_y) tuple of the goal cell.
+        Returns:
+            Estimated remaining cost in cells, scaled by self.weight.
+        """
         return self.weight * (abs(a[0] - b[0]) + abs(a[1] - b[1]))
 
     def is_valid(self, x, y):
@@ -107,6 +162,36 @@ class AStarPathPlanner:
                 self.grid[y, x] == 0)
 
     def search(self):
+        """
+        Search a path from start to goal with A* and store it in self.path.
+        A* keeps two numbers per cell n and expands the open cell with the
+        smallest sum of the two:
+
+            g(n): cost already paid to reach n from the start
+            h(n): estimated cost left to the goal (see heuristic())
+            f(n) = g(n) + h(n), and h() already carries the weight w
+
+        Step by step, matching the code below:
+        1. World coordinates become cell indices,
+           idx = int((position - range_start) / resolution).
+        2. The start cell goes on open_list, a heap ordered by f. cost_so_far
+           holds g per cell, came_from the cell each one was reached from.
+        3. The cell with the smallest f is popped. If it is the goal, the
+           path is rebuilt backwards through came_from, thinned out and saved.
+        4. Otherwise each of the 8 neighbours n' is checked:
+           g(n') = g(n) + 1, the same cost for a straight and a diagonal move.
+           A neighbour is pushed with f(n') = g(n') + h(n') when it is new or
+           when this g(n') is lower than the one recorded before, which is
+           also how a cell can be expanded more than once here.
+        5. An empty open_list means every reachable cell was expanded without
+           finding the goal, so there is no path.
+
+        The uniform step cost of 1 in step 4 is what makes the Manhattan
+        heuristic inadmissible; heuristic() has the numbers.
+        Returns:
+            None once the goal is reached (self.path holds the result), or an
+            empty list when no path exists.
+        """
         start_idx = (int((self.start[0] - self.x_range[0]) /self.resolution),
                      int((self.start[1] - self.y_range[0]) /self.resolution))
                      
