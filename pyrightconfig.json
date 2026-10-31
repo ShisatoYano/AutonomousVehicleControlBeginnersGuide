@@ -47,6 +47,7 @@
     "src/simulations/localization/ekf_ukf_pf_comparison",
     "src/simulations/localization/ekf_vs_ukf_comparison",
     "src/simulations/localization/extended_kalman_filter_localization",
+    "src/simulations/localization/kalman_filter_1d",
     "src/simulations/localization/particle_filter_localization",
     "src/simulations/localization/unscented_kalman_filter_localization",
     "src/simulations/mapping/binary_grid_map_construction",
