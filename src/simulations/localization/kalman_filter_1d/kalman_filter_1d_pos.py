@@ -1,15 +1,19 @@
 """
-Linear Kalman Filter sample program to estimate 1 dimenonal position.
+kalman_filter_1d_pos.py
 
-A vehicle drives at a velocity, v.
-A LiDAR observes a distance to the vehicle, z.
-The velocity and the observation include Gaussian noise.
-This system can predict the position with the velocity and
-observe it with the LiDAR. And then, the position can be estimated
-by Kalman Filter.
-
+Title: Kalman Filter 1D
+Description: Estimates a 1 dimensional position with a Linear Kalman Filter using a noisy velocity and LiDAR observation
 Author: Shisato Yano
 """
+
+# Linear Kalman Filter sample program to estimate 1 dimenonal position.
+#
+# A vehicle drives at a velocity, v.
+# A LiDAR observes a distance to the vehicle, z.
+# The velocity and the observation include Gaussian noise.
+# This system can predict the position with the velocity and
+# observe it with the LiDAR. And then, the position can be estimated
+# by Kalman Filter.
 
 import numpy as np
 import matplotlib.pyplot as plt
