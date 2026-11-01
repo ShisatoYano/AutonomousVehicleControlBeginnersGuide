@@ -10,7 +10,7 @@ Python sample codes and documents about Autonomous vehicle control algorithm. Th
 * [What is this?](#what-is-this)
 * [Goal of this project](#goal-of-this-project)
 * [Requirements](#requirements)
-* [How to use](#how-to-use)
+* [Quick Start](#quick-start)
 * [Examples of Simulation](#examples-of-simulation)
 * [Documents](#documents)
 * [License](#license)
@@ -42,34 +42,76 @@ For running each sample codes:
 For development:
 * [pytest](https://docs.pytest.org/en/7.4.x/) (for unit tests)
 
-For setting up the environment with Docker:
-* [VS Code](https://code.visualstudio.com/)
+For setting up the environment with Docker (see [Quick Start](#quick-start)):
 * [Docker](https://www.docker.com/)
+* [VS Code](https://code.visualstudio.com/) with the [Dev Containers extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) (only for option A)
 
 
-## How to use
-1. Clone this repository  
+## Quick Start
+### 1. Clone this repository
+```bash
+$ git clone https://github.com/ShisatoYano/AutonomousVehicleControlBeginnersGuide
+$ cd AutonomousVehicleControlBeginnersGuide
+```
+
+### 2. Set up the environment
+Choose one of the following options.
+
+Note for options A and B: The container shows the animations through your host's X11 display.
+* Linux: Allow local connections to your X server before starting the container. This setting is reset when you log out, so run it again after logging in (or run it automatically at login).
     ```bash
-    $ git clone https://github.com/ShisatoYano/AutonomousVehicleControlBeginnersGuide
+    $ xhost +local:
     ```
+    This allows any local process on your machine to connect to your X server, so be careful on a shared machine.
+* Windows / macOS: You need an X server that the container can connect to, such as [WSLg](https://github.com/microsoft/wslg) on WSL2 or [XQuartz](https://www.xquartz.org/) on macOS.
 
-2. Set up the environment for running each codes
-    * Set up with Docker on WSL:
-        * Before cloning thi repo, [install Docker](https://docs.docker.com/desktop/install/linux-install/) in advance
-        * Clone this repo following the above Step 1
-        * Open this repo's folder by VSCode
-        * [Create Dev Container](https://code.visualstudio.com/docs/devcontainers/create-dev-container)
-        * And then, all required libraries are installed automatically
-3. Execute unit tests to confirm the environment were installed successfully
+#### A. VS Code + Docker (Dev Container)
+1. Install [Docker](https://www.docker.com/) and [VS Code](https://code.visualstudio.com/) with the [Dev Containers extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers)
+2. Open this repository's folder in VS Code
+3. Run `Dev Containers: Reopen in Container` from the Command Palette
+4. All required libraries are installed automatically. Run the commands in the following steps in VS Code's terminal
+
+#### B. Docker only
+1. Install [Docker](https://www.docker.com/)
+2. Build and start the container, and then open a shell in it
     ```bash
-    $ . run_test_suites.sh
+    $ docker compose up -d --build
+    $ docker compose exec simulation bash
     ```
-4. Execute a python script at src/simulations directory
-    * For example, when you want to execute localization simulation of Extended Kalman Filter:
+3. Run the commands in the following steps in this shell. To stop the container, run `docker compose down` on your host
+
+
+#### C. Local (without Docker)
+1. Install [Python 3.13.x](https://www.python.org/)
+2. Create a virtual environment and install the required libraries
+    * Linux / macOS:
         ```bash
-        $ python src/simulations/localization/extended_kalman_filter_localization/extended_kalman_filter_localization.py
+        $ python3 -m venv .venv
+        $ source .venv/bin/activate
+        $ pip install -r requirements.txt
         ```
-5. Add star to this repository if you like it!!
+    * Windows (PowerShell):
+        ```powershell
+        > python -m venv .venv
+        > .venv\Scripts\Activate.ps1
+        > pip install -r requirements.txt
+        ```
+
+### 3. Run a simulation
+Each simulation runs with one command. For example, A* path planning:
+```bash
+$ python src/simulations/path_planning/astar_path_planning/astar_path_planning.py
+```
+You can find all simulations in [doc/EXAMPLES.md](/doc/EXAMPLES.md).
+
+### 4. (Optional) Run unit tests
+You can confirm that the environment is set up correctly by running the unit tests.
+```bash
+$ . run_test_suites.sh
+```
+On Windows without Docker, run `run_test_suites.bat` instead.
+
+Add star to this repository if you like it!!
 
 
 ## Code completion / import resolution in your editor

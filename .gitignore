@@ -7099,3 +7099,6 @@ __pycache__
 .venv/share/python-wheels/webencodings-0.5.1-py2.py3-none-any.whl
 .venv/share/python-wheels/wheel-0.34.2-py2.py3-none-any.whl
 .vscode/
+
+# Virtual environment created by the Quick Start (option C)
+.venv/
