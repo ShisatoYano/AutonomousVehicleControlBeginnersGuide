@@ -325,11 +325,14 @@ def _build_search_gif(planner, initial_path, initial_explored,
         print(f"D* search animation: {total_frames} frames")
         anime = anm.FuncAnimation(fig, update_frame, fargs=(ax,),
                                   frames=total_frames, interval=30, repeat=False)
-        try:
-            anime.save(gif_path, writer="pillow", fps=20)
-            print(f"Search GIF saved to {gif_path}")
-        except Exception as e:
-            print(f"Error saving search GIF: {e}")
+        if "--save-gif" in sys.argv:
+            try:
+                anime.save(gif_path, writer="pillow", fps=20)
+                print(f"Search GIF saved to {gif_path}")
+            except Exception as e:
+                print(f"Error saving search GIF: {e}")
+        else:
+            plt.show()
     else:
         test_frames = set()
         for s in offsets[:-1]:

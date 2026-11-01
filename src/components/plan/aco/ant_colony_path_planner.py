@@ -559,11 +559,14 @@ class AntColonyPathPlanner:
             interval=60,
             repeat=False,
         )
-        try:
-            anime.save(gif_name, writer="pillow", fps=12)
-            print(f"Search GIF saved to {gif_name}")
-        except Exception as e:
-            print(f"Error saving search GIF: {e}")
+        if "--save-gif" in sys.argv:
+            try:
+                anime.save(gif_name, writer="pillow", fps=12)
+                print(f"Search GIF saved to {gif_name}")
+            except Exception as e:
+                print(f"Error saving search GIF: {e}")
+        else:
+            plt.show()
         plt.clf()
         plt.close()
 

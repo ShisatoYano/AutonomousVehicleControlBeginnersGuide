@@ -363,7 +363,7 @@ class AStarHybridPathPlanner:
             repeat=False,
         )
 
-        if gif_name is not None:
+        if gif_name is not None and "--save-gif" in sys.argv:
             try:
                 print("Saving animation...")
                 self.anime.save(gif_name, writer="pillow")

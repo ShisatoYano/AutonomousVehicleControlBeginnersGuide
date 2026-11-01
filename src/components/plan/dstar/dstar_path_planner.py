@@ -494,12 +494,15 @@ class DStarPathPlanner:
             frames=total_frames, interval=50, repeat=False,
         )
 
-        try:
-            print("Saving D* animation …")
-            self.anime.save(gif_name, writer="pillow", fps=20)
-            print("Animation saved successfully.")
-        except Exception as e:
-            print(f"Error saving animation: {e}")
+        if "--save-gif" in sys.argv:
+            try:
+                print("Saving D* animation...")
+                self.anime.save(gif_name, writer="pillow", fps=20)
+                print("Animation saved successfully.")
+            except Exception as e:
+                print(f"Error saving animation: {e}")
+        else:
+            plt.show()
 
         plt.clf()
         plt.close()

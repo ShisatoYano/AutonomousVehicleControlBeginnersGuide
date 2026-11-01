@@ -368,6 +368,9 @@ class InformedRrtStarPathPlanner:
             ax.set_title(f"Iteration {i} | Cost: {c_best:.2f}")
             
         ani = anm.FuncAnimation(fig, update, frames=len(frames), interval=40)
-        ani.save(gif_name, writer=PillowWriter(fps=25))
-        print(f"GIF saved to {gif_name}")
+        if "--save-gif" in sys.argv:
+            ani.save(gif_name, writer=PillowWriter(fps=25))
+            print(f"GIF saved to {gif_name}")
+        else:
+            plt.show()
         plt.close(fig)

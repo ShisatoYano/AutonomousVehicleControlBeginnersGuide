@@ -491,10 +491,13 @@ class ElasticBandsPathPlanner:
         print(f"Elastic Bands search animation: {total} frames")
         anime = anm.FuncAnimation(fig, update, fargs=(ax,),
                                   frames=total, interval=30, repeat=False)
-        try:
-            anime.save(gif_name, writer="pillow", fps=20)
-            print(f"Search GIF saved to {gif_name}")
-        except Exception as e:
-            print(f"Error saving search GIF: {e}")
+        if "--save-gif" in sys.argv:
+            try:
+                anime.save(gif_name, writer="pillow", fps=20)
+                print(f"Search GIF saved to {gif_name}")
+            except Exception as e:
+                print(f"Error saving search GIF: {e}")
+        else:
+            plt.show()
         plt.clf()
         plt.close()

@@ -6,6 +6,7 @@ Author: Shisato Yano
 
 import matplotlib.pyplot as plt
 import matplotlib.animation as anm
+import sys
 
 
 class GlobalXYVisualizer:
@@ -20,7 +21,7 @@ class GlobalXYVisualizer:
         y_lim: MinMax object of y axis
         time_params: TimeParameters object
         show_zoom: Zoom around vehicle when this flag is true
-        gif_name: Gif file's name as string
+        gif_name: GIF file's name as string. Saving requires --save-gif.
         """
         
         self.objects = []
@@ -98,7 +99,7 @@ class GlobalXYVisualizer:
                                            frames=self.time_params.get_frame_num(), 
                                            interval=self.time_params.get_interval_msec(), 
                                            repeat=False)
-            if self.gif_name:
+            if self.gif_name and "--save-gif" in sys.argv:
                 self.anime.save(self.gif_name, writer="pillow")
             else:
                 plt.show()

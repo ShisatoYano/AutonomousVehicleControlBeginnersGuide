@@ -380,12 +380,15 @@ class AStarBidirectionalPathPlanner:
             repeat=False,
         )
 
-        try:
-            print("Saving animation...")
-            self.anime.save(gif_name, writer="pillow")
-            print("Animation saved successfully.")
-        except Exception as e:
-            print(f"Error saving animation: {e}")
+        if "--save-gif" in sys.argv:
+            try:
+                print("Saving animation...")
+                self.anime.save(gif_name, writer="pillow")
+                print("Animation saved successfully.")
+            except Exception as e:
+                print(f"Error saving animation: {e}")
+        else:
+            plt.show()
 
         # clear existing plot and close existing figure
         plt.clf()

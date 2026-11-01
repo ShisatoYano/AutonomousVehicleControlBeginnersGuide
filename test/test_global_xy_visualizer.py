@@ -11,6 +11,7 @@ import sys
 from pathlib import Path
 
 sys.path.append(str(Path(__file__).absolute().parent) + "/../src/components/visualization")
+import global_xy_visualizer
 from global_xy_visualizer import GlobalXYVisualizer
 from min_max import MinMax
 from time_parameters import TimeParameters
@@ -42,3 +43,49 @@ def test_draw_without_plot_runs_frame_num_frames():
     vis.draw()
 
     assert obj.update_count == time_params.get_frame_num()
+
+
+def test_gif_name_shows_animation_without_save_flag(monkeypatch):
+    shown = []
+    saved = []
+
+    class FakeAnimation:
+        def save(self, *args, **kwargs):
+            saved.append((args, kwargs))
+
+    monkeypatch.setattr(global_xy_visualizer.anm, "FuncAnimation",
+                        lambda *args, **kwargs: FakeAnimation())
+    monkeypatch.setattr(global_xy_visualizer.plt, "show",
+                        lambda: shown.append(True))
+    monkeypatch.setattr(sys, "argv", ["pytest"])
+
+    vis = GlobalXYVisualizer(
+        MinMax(), MinMax(), TimeParameters(span_sec=1), gif_name="demo.gif"
+    )
+    vis.draw()
+
+    assert shown == [True]
+    assert saved == []
+
+
+def test_gif_name_saves_animation_with_save_flag(monkeypatch):
+    shown = []
+    saved = []
+
+    class FakeAnimation:
+        def save(self, *args, **kwargs):
+            saved.append((args, kwargs))
+
+    monkeypatch.setattr(global_xy_visualizer.anm, "FuncAnimation",
+                        lambda *args, **kwargs: FakeAnimation())
+    monkeypatch.setattr(global_xy_visualizer.plt, "show",
+                        lambda: shown.append(True))
+    monkeypatch.setattr(sys, "argv", ["pytest", "--save-gif"])
+
+    vis = GlobalXYVisualizer(
+        MinMax(), MinMax(), TimeParameters(span_sec=1), gif_name="demo.gif"
+    )
+    vis.draw()
+
+    assert shown == []
+    assert saved == [(("demo.gif",), {"writer": "pillow"})]
