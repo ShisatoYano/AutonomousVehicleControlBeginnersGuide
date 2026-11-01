@@ -98,9 +98,9 @@ Note for options A and B: The container shows the animations through your host's
         ```
 
 ### 3. Run a simulation
-Each simulation runs with one command. For example, A* path planning:
+Each simulation runs with one command. For example, localization with an Extended Kalman Filter, where the vehicle estimates its position from sensor observations while following a course:
 ```bash
-$ python src/simulations/path_planning/astar_path_planning/astar_path_planning.py
+$ python src/simulations/localization/extended_kalman_filter_localization/extended_kalman_filter_localization.py
 ```
 You can find all simulations in [doc/EXAMPLES.md](/doc/EXAMPLES.md).
 
