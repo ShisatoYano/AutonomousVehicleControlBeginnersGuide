@@ -5,7 +5,6 @@ Author: Rajat Arora
 Informed RRT* (Informed Rapidly-exploring Random Tree Star) path planner.
 """
 
-import matplotlib
 
 from matplotlib.patches import Ellipse
 import numpy as np
@@ -36,13 +35,6 @@ class InformedRrtStarPathPlanner:
         goal_sample_rate=0.05,
         visualize_live=False,
     ):
-
-        if visualize_live:
-            matplotlib.use("TkAgg")
-        else:
-            matplotlib.use("Agg")
-
-        np.random.seed(42)
 
         self.start = start
         self.goal = goal
