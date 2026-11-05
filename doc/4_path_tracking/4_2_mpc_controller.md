@@ -1,4 +1,4 @@
-# 5. MPC Controller
+## 4.2 MPC Controller
 
 In this chapter, the MPC (Model Predictive Control) path tracking controller class is implemented. This class implements the MPC path tracking algorithm, which computes a steering angle and acceleration command by solving an **optimization problem** over a finite prediction horizon at every time step.
 
@@ -45,7 +45,7 @@ Before getting into the code, let's get some basic understanding behind the algo
 
 ---
 
-## 5.1 MpcController Class
+### 4.2.1 MpcController Class
 
 The controller class is located at:
 [mpc_controller.py](/src/components/control/mpc/mpc_controller.py)
@@ -74,7 +74,7 @@ This class uses **do-mpc** as the MPC framework and **CasADi** as the symbolic a
 
 ---
 
-### 5.1.1 Constructor
+#### 4.2.1.1 Constructor
 
 ```python
 def __init__(self, spec, course=None, color="r",
@@ -135,9 +135,9 @@ The constructor takes a `VehicleSpecification` object and an optional `CubicSpli
 
 ---
 
-## 5.2 Algorithm Background
+### 4.2.2 Algorithm Background
 
-### 5.2.1 State and Control Vectors
+#### 4.2.2.1 State and Control Vectors
 
 MPC operates on a **state vector** $x$ and a **control vector** $u$:
 
@@ -161,7 +161,7 @@ At each time step, MPC finds the sequence $U = {u_0, u_1, …, u_{N-1}}$ that mi
 
 ---
 
-### 5.2.2 Vehicle Model - Discrete Bicycle Kinematics
+#### 4.2.2.2 Vehicle Model - Discrete Bicycle Kinematics
 
 MPC uses an internal motion model to predict how the vehicle will move in response to each control. The **kinematic bicycle model** is used:
 
@@ -180,7 +180,7 @@ CasADi writes these equations as symbolic expressions, meaning it can automatica
 
 ---
 
-### 5.2.3 The Optimization Problem
+#### 4.2.2.3 The Optimization Problem
 
 At every time step, MPC solves the optimization problem:
 
@@ -221,11 +221,11 @@ The constraints are **hard constraints**, meaning the optimizer (e.g., IPOPT) en
 
 ---
 
-### 5.2.4 Stage Cost $\ell(x_t, u_t, u_{t-1})$
+#### 4.2.2.4 Stage Cost $\ell(x_t, u_t, u_{t-1})$
 
 The stage cost is evaluated at every step $t = 0,\ldots,N-1$ of the horizon. It has three parts:
 
-#### 1. Tracking Error
+##### 1. Tracking Error
 
 Penalises deviation from the reference trajectory:
 
@@ -244,7 +244,7 @@ The heading error uses **$\text{atan2}$** rather than a direct subtraction. This
 
 ---
 
-#### 2. Control Effort
+##### 2. Control Effort
 
 Penalises large control inputs:
 
@@ -254,7 +254,7 @@ $$
 
 ---
 
-#### 3. Smoothness
+##### 3. Smoothness
 
 Penalises rapid changes between consecutive control inputs:
 
@@ -275,7 +275,7 @@ mpc.set_rterm(
 
 ---
 
-### 5.2.5 Terminal Cost $\phi(x_N)$
+#### 4.2.2.5 Terminal Cost $\phi(x_N)$
 
 The terminal cost is evaluated only at the **last step** $t = N$ of the horizon:
 
@@ -292,7 +292,7 @@ The terminal weights $W$ are set heavier than the stage weights (default: $W = 2
 
 ---
 
-### 5.2.6 The Receding Horizon Principle
+#### 4.2.2.6 The Receding Horizon Principle
 
 MPC solves for the full sequence $\{u_0, u_1, \ldots, u_{N-1}\}$ but **only applies $u_0$** - the first control action. At the next time step, the horizon shifts forward by one step, the current state is re-measured, and the problem is solved again from scratch. This is why it is called a **receding horizon controller**.
 
@@ -312,9 +312,9 @@ This strategy is known as the **receding horizon** (or **moving horizon**) princ
 
 ---
 
-## 5.3 Private Methods
+### 4.2.3 Private Methods
 
-### 5.3.1 `_build_arclength_table()`
+#### 4.2.3.1 `_build_arclength_table()`
 
 ```python
 def _build_arclength_table(self):
@@ -342,7 +342,7 @@ The tiling handles closed or looping courses: when a vehicle near the end of the
 
 ---
 
-### 5.3.2 `_build_model()`
+#### 4.2.3.2 `_build_model()`
 
 ```python
 def _build_model(self):
@@ -390,7 +390,7 @@ The `yaw_err` auxiliary expression is registered separately so it can be referen
 
 ---
 
-### 5.3.3 `_build_mpc(model)`
+#### 4.2.3.3 `_build_mpc(model)`
 
 ```python
 def _build_mpc(self, model):
@@ -438,7 +438,7 @@ This method assembles the full MPC optimization problem using the do-mpc API:
 
 ---
 
-### 5.3.4 `_get_reference_trajectory(x0, y0, current_speed)`
+#### 4.2.3.4 `_get_reference_trajectory(x0, y0, current_speed)`
 
 ```python
 def _get_reference_trajectory(self, x0, y0, current_speed):
@@ -484,9 +484,9 @@ where $s_0$ is the cumulative arc-length at the vehicle's current nearest point,
 
 ---
 
-## 5.4 Public Methods
+### 4.2.4 Public Methods
 
-### 5.4.1 `update`
+#### 4.2.4.1 `update`
 
 ```python
 def update(self, state, time_s):
@@ -541,7 +541,7 @@ $$
 
 ---
 
-### 5.4.2 Getter Methods
+#### 4.2.4.2 Getter Methods
 
 ```python
 def get_target_accel_mps2(self):
@@ -558,7 +558,7 @@ These three getter methods expose the computed control outputs. They are called 
 
 ---
 
-### 5.4.3 `draw`
+#### 4.2.4.3 `draw`
 
 ```python
 def draw(self, axes, elems):
