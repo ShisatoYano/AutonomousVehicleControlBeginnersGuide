@@ -1,7 +1,7 @@
 """
 astar_bidirectional_path_planner.py
 
-Author: Auto-generated
+Author: Erwin Lejeune
 
 This module implements the Bidirectional A* algorithm for path planning.
 Bidirectional A* runs two A* searches simultaneously - one from start to goal
