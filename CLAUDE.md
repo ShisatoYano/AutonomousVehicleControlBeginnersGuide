@@ -44,3 +44,5 @@ Conversations with the AI tool itself can be in any language.
 ## Development flow
 
 To add a new algorithm, follow Steps 1–4 of `HOWTOCONTRIBUTE.md` (Issue proposal → implementation → test → PR).
+
+When creating a PR as the maintainer, assign it to `ShisatoYano` and add one type label (`bug`, `enhancement` or `documentation`) with `gh pr create --assignee ShisatoYano --label <label>`. Don't request a reviewer, since GitHub doesn't allow requesting the author.

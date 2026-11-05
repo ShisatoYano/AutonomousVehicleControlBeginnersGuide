@@ -1,16 +1,16 @@
 ---
 name: pr-review
-description: Use when reviewing a pull request to this repository on the maintainer's behalf, or re-reviewing it after the contributor pushed fixes. Covers local verification (tests, runtime, demo GIF), project-specific review points, and an English comment draft. Contributors can also use it to self-review before opening a PR. Delegated from the maintainer's `pr-workflow` for this repository; never posts comments or changes PR state.
+description: Use when reviewing a pull request to this repository on the maintainer's behalf, or re-reviewing it after the contributor pushed fixes. Covers local verification (tests, runtime, demo GIF), project-specific review points, and an English comment draft. Contributors can also use it to self-review before opening a PR. Delegated from the maintainer's `pr-workflow` for this repository; sets the PR's label, assignee and reviewer, but never posts comments, approves or merges.
 ---
 
 # PR Review
 
-Reviews a pull request against this project's conventions and its purpose as learning material, verifies it locally, and prepares findings and an English comment draft. Posting, approving and merging are always done by the maintainer.
+Reviews a pull request against this project's conventions and its purpose as learning material, verifies it locally, and prepares findings and an English comment draft. It also sets the PR's label, assignee and reviewer. Posting, approving and merging are always done by the maintainer.
 
 ## Prerequisites
 
 - Read `CLAUDE.md` and `HOWTOCONTRIBUTE.md` first. They define the conventions checked here
-- Never run commands that change PR state (`gh pr review`, `gh pr comment`, `gh pr merge`). Draft text only
+- Never post, approve or merge (`gh pr review`, `gh pr comment`, `gh pr merge`). Draft text only. The only PR change allowed is setting the label, assignee and reviewer
 - Don't switch branches or create worktrees in the user's checkout. Export the PR snapshot with `git archive <sha> | tar -x -C <temp dir>` into a temporary directory (the session scratchpad if available) and run everything there
 - Base every finding on something checked (code read, test run, measurement). Mark anything unverified as a question, not a finding
 
@@ -19,6 +19,7 @@ Reviews a pull request against this project's conventions and its purpose as lea
 1. Get the PR body, commits and changed files (`gh pr view <number> --json body,commits,files,headRefOid`), and read the linked issue to see what was agreed with the maintainer
 2. If the PR is stacked on other open PRs, review only the commits of this step (`git show <sha>`), since earlier steps are reviewed in their own PRs
 3. If the body has images or videos (`https://github.com/user-attachments/assets/...` or `![...](...)`), tell the user they need to check them in the browser
+4. When reviewing as the maintainer, if the PR has no label, assignee or reviewer yet, set the missing ones with `gh pr edit <number> --add-label <label> --add-assignee <author> --add-reviewer ShisatoYano`. Pick one type label from the main change (`bug`, `enhancement` or `documentation`), and assign the PR's author, since they are the one who addresses the review. For the maintainer's own PR, skip the reviewer (GitHub doesn't allow requesting the author)
 
 ## Local verification
 
