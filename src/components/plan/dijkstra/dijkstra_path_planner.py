@@ -23,10 +23,12 @@ sys.path.append(abs_dir_path + relative_path + "state")
 sys.path.append(abs_dir_path + relative_path + "obstacle")
 sys.path.append(abs_dir_path + relative_path + "plan/dijkstra")
 sys.path.append(abs_dir_path + relative_path + "mapping/grid")
+sys.path.append(abs_dir_path + relative_path + "common")
 
 
 
 
+from save_gif import is_save_gif_enabled
 from state import State
 from obstacle import Obstacle
 from obstacle_list import ObstacleList
@@ -229,7 +231,7 @@ class DijkstraPathPlanner:
             repeat=False,
         )
 
-        if "--save-gif" in sys.argv:
+        if is_save_gif_enabled():
             try:
                 print("Saving animation...")
                 try:
@@ -334,4 +336,3 @@ if __name__ == "__main__":
 
     # Create the Dijkstra planner
     planner = DijkstraPathPlanner(start, goal, map_file, x_lim=x_lim, y_lim=y_lim, path_filename=path_file, gif_name=gif_path)
-

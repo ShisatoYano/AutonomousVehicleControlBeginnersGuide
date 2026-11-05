@@ -20,7 +20,9 @@ import sys
 abs_dir_path = str(Path(__file__).absolute().parent)
 relative_path = "/../../../components/"
 sys.path.append(abs_dir_path + relative_path + "mapping/grid")
+sys.path.append(abs_dir_path + relative_path + "common")
 
+from save_gif import is_save_gif_enabled
 class InformedRrtStarPathPlanner:
     def __init__(
         self,
@@ -368,7 +370,7 @@ class InformedRrtStarPathPlanner:
             ax.set_title(f"Iteration {i} | Cost: {c_best:.2f}")
             
         ani = anm.FuncAnimation(fig, update, frames=len(frames), interval=40)
-        if "--save-gif" in sys.argv:
+        if is_save_gif_enabled():
             ani.save(gif_name, writer=PillowWriter(fps=25))
             print(f"GIF saved to {gif_name}")
         else:

@@ -32,7 +32,9 @@ sys.path.append(abs_dir_path + relative_path + "visualization")
 sys.path.append(abs_dir_path + relative_path + "state")
 sys.path.append(abs_dir_path + relative_path + "obstacle")
 sys.path.append(abs_dir_path + relative_path + "mapping/grid")
+sys.path.append(abs_dir_path + relative_path + "common")
 
+from save_gif import is_save_gif_enabled
 from min_max import MinMax  # noqa: E402
 
 
@@ -410,7 +412,7 @@ class PrmPathPlanner:
         print(f"PRM search animation: {total} frames")
         anime = anm.FuncAnimation(fig, update, fargs=(ax,),
                                   frames=total, interval=50, repeat=False)
-        if "--save-gif" in sys.argv:
+        if is_save_gif_enabled():
             try:
                 anime.save(gif_name, writer="pillow", fps=20)
                 print(f"Search GIF saved to {gif_name}")
