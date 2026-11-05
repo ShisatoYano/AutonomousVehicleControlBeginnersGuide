@@ -13,7 +13,7 @@ Author: Shisato Yano
 
 import matplotlib.pyplot as plt
 import matplotlib.animation as anm
-import sys
+from save_gif import is_save_gif_enabled
 
 
 class GlobalXYVisualizer:
@@ -221,7 +221,7 @@ Finally, this `draw` method is defined to execute simulation including updating 
                                            frames=self.time_params.get_frame_num(), 
                                            interval=self.time_params.get_interval_msec(), 
                                            repeat=False)
-            if self.gif_name and "--save-gif" in sys.argv:
+            if self.gif_name and is_save_gif_enabled():
                 self.anime.save(self.gif_name, writer="pillow")
             else:
                 plt.show()
