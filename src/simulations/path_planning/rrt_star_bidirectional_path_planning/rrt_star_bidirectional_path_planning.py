@@ -52,6 +52,9 @@ def main():
     Main process function
     """
 
+    # seed the random number generator for reproducible runs
+    np.random.seed(42)
+
     # set simulation parameters
     x_lim, y_lim = MinMax(-5, 55), MinMax(-20, 25)
     navigation_gif_path = abs_dir_path + relative_simulations + "path_planning/rrt_star_bidirectional_path_planning/rrt_star_bidirectional_navigate.gif"

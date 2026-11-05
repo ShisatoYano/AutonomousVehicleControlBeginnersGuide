@@ -1,4 +1,6 @@
 """
+conftest.py
+
 Test configuration for deterministic test runs
 
 Selects a non-interactive matplotlib backend and reseeds the random number

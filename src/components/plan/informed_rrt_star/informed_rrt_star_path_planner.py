@@ -5,7 +5,6 @@ Author: Rajat Arora
 Informed RRT* (Informed Rapidly-exploring Random Tree Star) path planner.
 """
 
-
 from matplotlib.patches import Ellipse
 import numpy as np
 import matplotlib.pyplot as plt

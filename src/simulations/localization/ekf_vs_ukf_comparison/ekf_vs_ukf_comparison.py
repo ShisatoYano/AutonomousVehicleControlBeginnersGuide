@@ -7,6 +7,7 @@ Author: Bruno DOKPOMIWA
 """
 
 # import path setting
+import numpy as np
 import sys
 from pathlib import Path
 
@@ -49,6 +50,9 @@ def main():
     Comparison between EKF and UKF localization
     """
     
+    # seed the random number generator for reproducible runs
+    np.random.seed(42)
+
     # set simulation parameters
     x_lim, y_lim = MinMax(-5, 55), MinMax(-20, 25)
     vis = GlobalXYVisualizer(x_lim, y_lim, TimeParameters(span_sec=30))
