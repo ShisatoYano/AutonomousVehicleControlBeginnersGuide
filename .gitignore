@@ -4,6 +4,3 @@ __pycache__/
 .pytest_cache/
 .coverage
 .vscode/
-
-# Virtual environment created by the Quick Start (option C)
-.venv/
