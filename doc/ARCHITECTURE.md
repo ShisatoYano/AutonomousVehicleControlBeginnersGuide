@@ -18,7 +18,7 @@ Today the project covers localization, sensing, global mapping, global path plan
 4. **Simulation, autonomy and visualization are separate.** The simulator advances time, the stack decides, and the visualizer only observes. Simulations can then run without drawing (fast tests and comparisons).
 5. **Units and frames are explicit.** Names carry units (`_m`, `_rad`, `_mps`), and data states which frame it is in (global, vehicle or sensor).
 6. **The system grows one stage at a time.** A learner starts from a vehicle that only follows given commands and adds one stage at a time until it is a full autonomous driving system. Adding a stage doesn't require changing the code written for the earlier ones.
-7. **Algorithms work outside the simulator.** The core of each algorithm depends only on NumPy, SciPy and the standard library. It takes and returns plain data (arrays and numbers) and doesn't know about the simulator, `State` or drawing. This keeps the code close to the equations in the book, and lets other projects (for example a ROS 2 node) import and call it.
+7. **Algorithms work outside the simulator.** The core of each algorithm depends only on NumPy, SciPy and the standard library. It takes and returns plain data (arrays and numbers) and doesn't know about the simulator, `State` or drawing. This keeps the code close to the equations in the book, and lets any other Python project (an application, research code, a ROS 2 node, ...) import and call it.
 
 ## Current architecture and its limits
 
@@ -194,7 +194,7 @@ flowchart TB
 |---|---|---|
 | **0. Foundation** (in progress) | Fix test/CI issues, faster drawing (persistent plot objects), separate showing and saving GIFs, deterministic tests, README and learning path | Fast feedback for the next phases |
 | **1. Core separation** | Separate truth and estimate; `Command(accel, steer)` and swappable `VehicleModel` (move today's kinematic model into a kinematic bicycle model); odometry/IMU sensor as localization input; `Simulator` loop independent of drawing; interfaces as `Protocol`; installable package (drawing as an optional extra) | Measurable estimation, vehicle model swapping, headless runs |
-| **2. Navigation stack** | `NavigationStack` and `Frame`; port existing localizers, sensors, detectors, mappers, planners and controllers to the stages, splitting each into core, adapter and drawing; `Trajectory`; metrics and comparison runner; first end-to-end demo (global planning → localization → tracking control); library release with ROS 2 examples (#172) | Swapping and comparing algorithms in one scenario; using the algorithms from other projects |
+| **2. Navigation stack** | `NavigationStack` and `Frame`; port existing localizers, sensors, detectors, mappers, planners and controllers to the stages, splitting each into core, adapter and drawing; `Trajectory`; metrics and comparison runner; first end-to-end demo (global planning → localization → tracking control); library release with usage examples (#172) | Swapping and comparing algorithms in one scenario; using the algorithms from other projects |
 | **3. Perception** | Object tracking (Kalman filter + data association), local rolling occupancy map, scenarios with moving agents | Seeing and predicting other objects |
 | **4. Planning in the loop** | `LocalPlanner` with replanning; obstacle avoidance (VFH, DWA, Frenet); road and lane model | Local path planning, obstacle avoidance |
 | **5. Behavior** | `BehaviorPlanner` (state machine); lane change on a multi-lane road with traffic | Lane change while driving |
