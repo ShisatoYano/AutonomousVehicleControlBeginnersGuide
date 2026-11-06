@@ -17,6 +17,7 @@ Today the project covers localization, sensing, global mapping, global path plan
 3. **Truth and estimate are separate.** The simulator owns the true state of the world. The autonomy stack only sees sensor measurements and its own estimates. This is what makes estimation errors visible and measurable.
 4. **Simulation, autonomy and visualization are separate.** The simulator advances time, the stack decides, and the visualizer only observes. Simulations can then run without drawing (fast tests and comparisons).
 5. **Units and frames are explicit.** Names carry units (`_m`, `_rad`, `_mps`), and data states which frame it is in (global, vehicle or sensor).
+6. **The system grows one stage at a time.** A learner starts from a vehicle that only follows given commands and adds one stage at a time until it is a full autonomous driving system. Adding a stage doesn't require changing the code written for the earlier ones.
 
 ## Current architecture and its limits
 
@@ -126,6 +127,39 @@ Simulator(world, stack, dt_s=0.1).run(span_sec=30, observers=[GlobalXYVisualizer
 
 A comparison runner runs the same scenario with different stacks without drawing and reports metrics such as localization RMSE, lateral tracking error, minimum distance to obstacles, travel time and lateral acceleration.
 
+### How the system grows
+
+The book (issue #165) builds the stack in this order. Each step adds one stage to the previous step's simulation, usually as one more argument to `NavigationStack`:
+
+| Step | Stage added | What the learner sees |
+|---|---|---|
+| 0 | none: the vehicle follows a fixed list of commands | The vehicle model and the simulator loop |
+| 1 | `Controller` on a given course | The vehicle follows a course |
+| 2 | `Sensor`s | Measurements with noise, next to the truth |
+| 3 | `Localizer` | The controller now uses the estimate; the estimation error becomes visible |
+| 4 | `Mapper` | A map built while driving |
+| 5 | `GlobalPlanner` | The course comes from a planned route instead of being given |
+| 6 | `Detector` and `Tracker` | Other objects found and followed |
+| 7 | `LocalPlanner` | Obstacles avoided in the loop |
+| 8 | `BehaviorPlanner` | Lane changes in traffic |
+
+```python
+# Step 1: follow a given course
+stack = NavigationStack(controller=PurePursuitController(course))
+
+# Step 3: the same stack with a localizer added (one line)
+stack = NavigationStack(
+    localizer=ExtendedKalmanFilterLocalizer(...),
+    controller=PurePursuitController(course),
+)
+```
+
+For this to work, a missing stage has a defined, visible default:
+
+- No localizer: the stack passes the true pose as the ego estimate, and the drawing labels it as truth
+- No planner: the controller follows the course given to the stack
+- No detector, tracker or mapper: the later stages get empty detections, tracks or maps
+
 ### Decision: package structure
 
 Scripts currently load modules with `sys.path.append(...)` (282 calls in 41 simulations). As modules start to depend on each other through shared interfaces, this gets harder to follow and risks silent name collisions. In Phase 1 we move to an installable package (`pip install -e .`, then `from <package>.control.pure_pursuit import PurePursuitController`). Until then, new code keeps following the current `sys.path.append(...)` convention.
@@ -154,7 +188,7 @@ flowchart TB
 | **4. Planning in the loop** | `LocalPlanner` with replanning; obstacle avoidance (VFH, DWA, Frenet); road and lane model | Local path planning, obstacle avoidance |
 | **5. Behavior** | `BehaviorPlanner` (state machine); lane change on a multi-lane road with traffic | Lane change while driving |
 | **6. Vehicle dynamics** (can start after Phase 1) | Dynamic bicycle model with a tire model; comparison with the kinematic model at higher speeds; controllers that use dynamics | Dynamic model |
-| **7. Learning experience** (ongoing) | Lessons per stage linked from the learning path, design documents per stage, playground to select components and parameters | Learning by recombining |
+| **7. Learning experience** (ongoing) | The book (#165), with one chapter per stage in the order of "How the system grows"; playground to select components and parameters | Learning by building up and recombining |
 
 ### Ongoing contributions
 
