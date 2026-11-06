@@ -18,6 +18,7 @@ Today the project covers localization, sensing, global mapping, global path plan
 4. **Simulation, autonomy and visualization are separate.** The simulator advances time, the stack decides, and the visualizer only observes. Simulations can then run without drawing (fast tests and comparisons).
 5. **Units and frames are explicit.** Names carry units (`_m`, `_rad`, `_mps`), and data states which frame it is in (global, vehicle or sensor).
 6. **The system grows one stage at a time.** A learner starts from a vehicle that only follows given commands and adds one stage at a time until it is a full autonomous driving system. Adding a stage doesn't require changing the code written for the earlier ones.
+7. **Algorithms work outside the simulator.** The core of each algorithm depends only on NumPy, SciPy and the standard library. It takes and returns plain data (arrays and numbers) and doesn't know about the simulator, `State` or drawing. This keeps the code close to the equations in the book, and lets other projects (for example a ROS 2 node) import and call it.
 
 ## Current architecture and its limits
 
@@ -164,6 +165,16 @@ For this to work, a missing stage has a defined, visible default:
 
 Scripts currently load modules with `sys.path.append(...)` (282 calls in 41 simulations). As modules start to depend on each other through shared interfaces, this gets harder to follow and risks silent name collisions. In Phase 1 we move to an installable package (`pip install -e .`, then `from <package>.control.pure_pursuit import PurePursuitController`). Until then, new code keeps following the current `sys.path.append(...)` convention.
 
+The package is also meant to be imported by other projects, not only by the simulations in this repository. For this, each algorithm is split into three parts:
+
+| Part | Depends on | Example (EKF localization) |
+|---|---|---|
+| Core | NumPy, SciPy, standard library | Predict and update steps on the state vector and covariance matrix |
+| Stage adapter | Stage interfaces, `Frame` | `ExtendedKalmanFilterLocalizer` implements `Localizer` by calling the core |
+| Drawing | matplotlib | Draws the covariance ellipse |
+
+Drawing dependencies (matplotlib, Pillow) and MPC dependencies (CasADi, do-mpc) are optional extras (`pip install <package>[viz]`, `[mpc]`). Each component is split when its stage is ported in Phase 2, not in one big rewrite, so open pull requests are affected as little as possible. Until Phase 2 is done the API can change between versions (0.x). A stable release on PyPI follows after it. The library is for learning, research and prototyping. It is pure Python and not meant for real-time control of real vehicles.
+
 ## Roadmap
 
 Each phase keeps existing simulations working. Phases are split into issues tracked in the roadmap issue. Phase 6 only needs the vehicle model interface from Phase 1, so it can run in parallel with Phases 2-5. Phase 7 continues alongside all phases.
@@ -182,8 +193,8 @@ flowchart TB
 | Phase | Content | Enables |
 |---|---|---|
 | **0. Foundation** (in progress) | Fix test/CI issues, faster drawing (persistent plot objects), separate showing and saving GIFs, deterministic tests, README and learning path | Fast feedback for the next phases |
-| **1. Core separation** | Separate truth and estimate; `Command(accel, steer)` and swappable `VehicleModel` (move today's kinematic model into a kinematic bicycle model); odometry/IMU sensor as localization input; `Simulator` loop independent of drawing; interfaces as `Protocol`; installable package | Measurable estimation, vehicle model swapping, headless runs |
-| **2. Navigation stack** | `NavigationStack` and `Frame`; port existing localizers, sensors, detectors, mappers and controllers to the stages; `Trajectory`; metrics and comparison runner; first end-to-end demo (global planning → localization → tracking control) | Swapping and comparing algorithms in one scenario |
+| **1. Core separation** | Separate truth and estimate; `Command(accel, steer)` and swappable `VehicleModel` (move today's kinematic model into a kinematic bicycle model); odometry/IMU sensor as localization input; `Simulator` loop independent of drawing; interfaces as `Protocol`; installable package (drawing as an optional extra) | Measurable estimation, vehicle model swapping, headless runs |
+| **2. Navigation stack** | `NavigationStack` and `Frame`; port existing localizers, sensors, detectors, mappers, planners and controllers to the stages, splitting each into core, adapter and drawing; `Trajectory`; metrics and comparison runner; first end-to-end demo (global planning → localization → tracking control); library release with ROS 2 examples (#172) | Swapping and comparing algorithms in one scenario; using the algorithms from other projects |
 | **3. Perception** | Object tracking (Kalman filter + data association), local rolling occupancy map, scenarios with moving agents | Seeing and predicting other objects |
 | **4. Planning in the loop** | `LocalPlanner` with replanning; obstacle avoidance (VFH, DWA, Frenet); road and lane model | Local path planning, obstacle avoidance |
 | **5. Behavior** | `BehaviorPlanner` (state machine); lane change on a multi-lane road with traffic | Lane change while driving |
