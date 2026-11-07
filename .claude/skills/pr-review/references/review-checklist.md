@@ -8,6 +8,7 @@ Points to check in a PR to this repository. Add new points here as they come up 
 - Modules are loaded with `sys.path.append(...)` like existing files, not as packages
 - Simulation scripts have the docstring template in `generate_example_gallery.py` (file name, `Title:`, `Description:`, `Author:`, nothing else). Other files have the `file name / Author` docstring
 - Class and constructor docstrings state the meaning and unit of each argument, and variable names include units (`_m`, `_rad`, `_mps`)
+- New functions and methods have type hints for their arguments and return values, in the simple forms of `HOWTOCONTRIBUTE.md`. Don't ask for them in PRs opened before this rule was added (#175), or for unrelated existing code
 - Simulation scripts have a `show_plot` flag and keep the logic in `main()`
 - A new simulation has `test/test_<simulation_name>.py`, and new components have unit tests for their logic
 - `pyrightconfig.json` and `.devcontainer/devcontainer.json` are regenerated when new module directories are added
