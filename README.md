@@ -1,9 +1,19 @@
 # AutonomousVehicleControlBeginnersGuide
-[![Linux_CI](https://github.com/ShisatoYano/AutonomousDrivingSamplePrograms/actions/workflows/Linux_CI.yml/badge.svg)](https://github.com/ShisatoYano/AutonomousDrivingSamplePrograms/actions/workflows/Linux_CI.yml) [![Windows_CI](https://github.com/ShisatoYano/AutonomousDrivingSamplePrograms/actions/workflows/Windows_CI.yml/badge.svg)](https://github.com/ShisatoYano/AutonomousDrivingSamplePrograms/actions/workflows/Windows_CI.yml) [![MacOS_CI](https://github.com/ShisatoYano/AutonomousDrivingSamplePrograms/actions/workflows/MacOS_CI.yml/badge.svg)](https://github.com/ShisatoYano/AutonomousDrivingSamplePrograms/actions/workflows/MacOS_CI.yml) [![CodeFactor](https://www.codefactor.io/repository/github/shisatoyano/autonomousvehiclecontrolbeginnersguide/badge)](https://www.codefactor.io/repository/github/shisatoyano/autonomousvehiclecontrolbeginnersguide)  
+[![Linux_CI](https://github.com/ShisatoYano/AutonomousVehicleControlBeginnersGuide/actions/workflows/Linux_CI.yml/badge.svg)](https://github.com/ShisatoYano/AutonomousVehicleControlBeginnersGuide/actions/workflows/Linux_CI.yml) [![Windows_CI](https://github.com/ShisatoYano/AutonomousVehicleControlBeginnersGuide/actions/workflows/Windows_CI.yml/badge.svg)](https://github.com/ShisatoYano/AutonomousVehicleControlBeginnersGuide/actions/workflows/Windows_CI.yml) [![MacOS_CI](https://github.com/ShisatoYano/AutonomousVehicleControlBeginnersGuide/actions/workflows/MacOS_CI.yml/badge.svg)](https://github.com/ShisatoYano/AutonomousVehicleControlBeginnersGuide/actions/workflows/MacOS_CI.yml) [![CodeFactor](https://www.codefactor.io/repository/github/shisatoyano/autonomousvehiclecontrolbeginnersguide/badge)](https://www.codefactor.io/repository/github/shisatoyano/autonomousvehiclecontrolbeginnersguide)
 
 Python sample codes and documents about Autonomous vehicle control algorithm. This project can be used as a technical guide book to study the algorithms and the software architectures for beginners.  
 
-![](src/simulations/mapping/ndt_map_construction/ndt_map_construction.gif)  
+Explore localization, mapping, planning, and tracking through runnable Python simulations.
+
+**[Browse all simulation demos](doc/EXAMPLES.md)**
+
+<!-- featured-demos:start -->
+| Localization | Mapping |
+| --- | --- |
+| ![EKF localization](src/simulations/localization/extended_kalman_filter_localization/extended_kalman_filter_localization.gif) | ![NDT mapping](src/simulations/mapping/ndt_map_construction/ndt_map_construction.gif) |
+| **Planning** | **Tracking** |
+| ![A* navigation](src/simulations/path_planning/astar_path_planning/astar_navigate.gif) | ![Pure pursuit tracking](src/simulations/path_tracking/pure_pursuit_path_tracking/pure_pursuit_path_tracking.gif) |
+<!-- featured-demos:end -->
 
 
 ## Table of Contents
@@ -24,7 +34,7 @@ This is a sample codes collections about Autonomous vehicle control algorithm. E
 
 
 ## Goal of this project
-I want to release my own technical book about Autonomous Vehicle algorithms in the future. The book will include all of codes and documents in this repository as contents.  
+We propose building a collaborative web book about autonomous vehicle algorithms using the code and documents in this repository. Help shape the book by commenting on [the web-book proposal (#165)](https://github.com/ShisatoYano/AutonomousVehicleControlBeginnersGuide/issues/165) or opening an issue with your feedback.
 
 The next goal is a simulator where you can learn the whole navigation of an autonomous vehicle, swapping algorithms at each stage and comparing the results. See the [architecture and roadmap](/doc/ARCHITECTURE.md) and the [roadmap issue](https://github.com/ShisatoYano/AutonomousVehicleControlBeginnersGuide/issues/131).  
 
@@ -41,6 +51,7 @@ For running each sample codes:
 
 For development:
 * [pytest](https://docs.pytest.org/en/7.4.x/) (for unit tests)
+* [Pillow](https://python-pillow.github.io/) (for generating the documentation social-preview image)
 
 For setting up the environment with Docker (see [Quick Start](#quick-start)):
 * [Docker](https://www.docker.com/)
@@ -114,33 +125,7 @@ On Windows without Docker, run `run_test_suites.bat` instead.
 Add star to this repository if you like it!!
 
 
-## Code completion / import resolution in your editor
-Each simulation script adds its own module search paths at runtime with
-`sys.path.append(...)`, since this project doesn't use a standard Python
-package layout. Static analysis tools (Pylance/pyright) can't see those
-runtime `sys.path.append(...)` calls, so without extra configuration your
-editor will show false "import could not be resolved" errors and code
-completion won't work for these modules.
-
-To fix this, `pyrightconfig.json` (for pyright/Pylance, e.g. Neovim or VS
-Code without Dev Containers) and `.devcontainer/devcontainer.json`'s
-`python.analysis.extraPaths` (for VS Code + Dev Containers) list every
-directory under `src/components` and `src/simulations` that directly
-contains a `.py` file.
-
-Whenever you add a new module (a new directory under `src/components` or
-`src/simulations`), regenerate both files by running:
-```bash
-$ python generate_pyrightconfig.py
-```
-This scans the project and rewrites both files automatically, so you don't
-need to edit them by hand.
-
-Run this script on your host machine, not inside the container. It only
-uses the Python standard library (`json`, `pathlib`), and since the project
-directory is bind-mounted into the container as-is, the files it writes are
-the same on both sides either way. Running it on the host is simplest since
-it doesn't depend on the container's Python environment at all.
+For editor setup, see [Code completion / import resolution](/HOWTOCONTRIBUTE.md#code-completion--import-resolution-in-your-editor).
 
 
 ## Examples of Simulation
