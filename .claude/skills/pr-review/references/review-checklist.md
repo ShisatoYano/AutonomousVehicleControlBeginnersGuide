@@ -34,3 +34,11 @@ Points to check in a PR to this repository. Add new points here as they come up 
 
 - A demo GIF is added under the simulation directory, shows the algorithm working, and is not much larger than existing ones (a few MB)
 - The `Title` reads well as a gallery heading and is consistent in style with existing titles
+
+## Security
+
+- No network access (`requests`, `urllib`, `socket`), `subprocess`, `eval`/`exec`, `pickle` or `np.load(allow_pickle=True)`, unless the algorithm needs it and the PR explains why
+- No obfuscated code, long encoded strings (base64, hex) or downloaded binaries
+- New dependencies in `requirements.txt` are well-known packages with the exact name (watch for look-alike names)
+- Changes to `.github/`, `Dockerfile`, `*.sh`, `*.bat` and `generate_*.py` get extra care: `generate_example_gallery.py` runs with write access after merge
+- Added files are what their extension says (a GIF is a GIF, a JSON file is data)
