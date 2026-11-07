@@ -1,16 +1,20 @@
 """
-Linear Kalman Filter sample program to estimate 1 dimensional position and speed.
+kalman_filter_1d_pos_spd.py
 
-A vehicle drives at a velocity, v.
-The velocity, v is accelerated by acceleration, a.
-A LiDAR observes a distance to the vehicle, z.
-The acceleration, a and distance, z include Gussian noise.
-This system can predict the position and velocity with the acceleration
-and observe the distance with the LiDAR. And then, the position and velocity
-can be estimated by Kalman Filter.
-
+Title: Kalman Filter 1D
+Description: Estimates a 1 dimensional position and speed with a Linear Kalman Filter using a noisy acceleration and LiDAR observation
 Author: Shisato Yano
 """
+
+# Linear Kalman Filter sample program to estimate 1 dimensional position and speed.
+#
+# A vehicle drives at a velocity, v.
+# The velocity, v is accelerated by acceleration, a.
+# A LiDAR observes a distance to the vehicle, z.
+# The acceleration, a and distance, z include Gussian noise.
+# This system can predict the position and velocity with the acceleration
+# and observe the distance with the LiDAR. And then, the position and velocity
+# can be estimated by Kalman Filter.
 
 import numpy as np
 import matplotlib.pyplot as plt
