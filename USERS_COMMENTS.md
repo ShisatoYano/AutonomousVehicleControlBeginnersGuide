@@ -1,5 +1,7 @@
 # User's comments
 
+To share your own project, course or paper that uses this repository, please post it in [Show and tell](https://github.com/ShisatoYano/AutonomousVehicleControlBeginnersGuide/discussions/categories/show-and-tell).  
+
 ## Pure Persuit Algorithm inspired by Shisato Yano's Python Example
 [Link to demo video](https://vimeo.com/1046921330)  
 
