@@ -19,6 +19,13 @@ Estimates the vehicle pose by fusing a motion model and GNSS observations with a
 Author: Shisato Yano  
 ![](../src/simulations/localization/extended_kalman_filter_localization/extended_kalman_filter_localization.gif)  
 
+### Kalman Filter 1D
+Estimates a 1 dimensional position with a Linear Kalman Filter using a noisy velocity and LiDAR observation  
+Estimates a 1 dimensional position and speed with a Linear Kalman Filter using a noisy acceleration and LiDAR observation  
+Author: Shisato Yano  
+![](../src/simulations/localization/kalman_filter_1d/kalman_filter_1d_pos.png)  
+![](../src/simulations/localization/kalman_filter_1d/kalman_filter_1d_pos_spd.png)  
+
 ### Particle Filter Localization
 Estimates the vehicle pose with weighted samples (particles) and GNSS observations  
 Author: Sahruday Patti  
