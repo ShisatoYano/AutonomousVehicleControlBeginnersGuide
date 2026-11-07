@@ -65,7 +65,7 @@ Copy this into a new page and fill in each section. Delete the comments.
 
 ## References
 
-1. Author, "Title", Venue, Year. URL or DOI
+1. Author, "Title", Venue, Year. [PDF](URL) or [DOI](URL)
 ````
 
 ## Math and notation
@@ -104,7 +104,7 @@ Never copy code into the text. Copied code goes out of date when the code change
 
 ## References
 
-- List them at the end of the chapter, numbered, in the form: Author, "Title", Venue, Year, with a URL or DOI.
+- List them at the end of the chapter, numbered, in the form: Author, "Title", Venue, Year, followed by a link such as `[PDF](URL)` or `[DOI](URL)`. Don't write a bare URL: a long URL doesn't wrap and runs off the page.
 - Cite them in the text by number, for example [1].
 - Prefer the original paper, and add a freely available version when there is one.
 
