@@ -13,8 +13,10 @@ This web book is built from the documents in the [GitHub repository](https://git
 
 ## Appendix
 
+- [Notation and Units](NOTATION.md)
 - [Examples of Simulation](EXAMPLES.md)
 - [Architecture and Roadmap](ARCHITECTURE.md)
+- [Writing Guide](WRITING_GUIDE.md)
 
 ```{toctree}
 :caption: Chapters
@@ -32,6 +34,8 @@ This web book is built from the documents in the [GitHub repository](https://git
 :maxdepth: 1
 :hidden:
 
+NOTATION
 EXAMPLES
 ARCHITECTURE
+WRITING_GUIDE
 ```

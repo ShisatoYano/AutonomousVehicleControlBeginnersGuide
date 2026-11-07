@@ -72,7 +72,7 @@ Additionally, you can see existing reported issues and fix the defect. And then,
 
 ## Add documentation about existing program
 Adding a documentation about existing programs is also welcome.  
-There have not been any rules about documentation yet. If you had any suggestion of how to write documentations, please submit a PR and I will review it.  
+To write or improve a chapter of the book, follow the [Writing Guide](https://shisatoyano.github.io/AutonomousVehicleControlBeginnersGuide/WRITING_GUIDE.html) and the [Notation and Units](https://shisatoyano.github.io/AutonomousVehicleControlBeginnersGuide/NOTATION.html) page (sources: [doc/WRITING_GUIDE.md](/doc/WRITING_GUIDE.md), [doc/NOTATION.md](/doc/NOTATION.md)). If you have a suggestion about how to write the documents, please submit a PR and I will review it.  
 
 The documents under `doc/` are published as a [web book](https://shisatoyano.github.io/AutonomousVehicleControlBeginnersGuide/) with Sphinx and MyST, so they stay in Markdown. To check your changes, build the book locally and open `doc/_build/html/index.html` in a browser:
 
