@@ -11,13 +11,7 @@ This web book is built from the documents in the [GitHub repository](https://git
 1_world_visualization/1_world_visualization
 2_vehicle_model/2_vehicle_model
 3_sensor_models/3_sensor_models
-3_sensor_models/3_1_obstacle
-3_sensor_models/3_2_lidar
-3_sensor_models/3_3_sensors
 4_path_tracking/4_path_tracking
-4_path_tracking/4_1_stanley_controller
-4_path_tracking/4_2_mpc_controller
-4_path_tracking/4_3_mppi_controller
 ```
 
 ```{toctree}
