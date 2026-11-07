@@ -68,3 +68,54 @@ There have not been any rules about documentation yet. If you had any suggestion
 ## Support this project
 Supporting this project financially is also a great contribution!!.  
 If you or your company could support this project, please consider [Sponsor @ShisatoYano on GitHub Sponsors](https://github.com/sponsors/ShisatoYano).  
+
+## Code completion / import resolution in your editor
+Each simulation script adds its own module search paths at runtime with
+`sys.path.append(...)`, since this project doesn't use a standard Python
+package layout. Static analysis tools (Pylance/pyright) can't see those
+runtime `sys.path.append(...)` calls, so without extra configuration your
+editor will show false "import could not be resolved" errors and code
+completion won't work for these modules.
+
+To fix this, `pyrightconfig.json` (for pyright/Pylance, e.g. Neovim or VS
+Code without Dev Containers) and `.devcontainer/devcontainer.json`'s
+`python.analysis.extraPaths` (for VS Code + Dev Containers) list every
+directory under `src/components` and `src/simulations` that directly
+contains a `.py` file.
+
+Whenever you add a new module (a new directory under `src/components` or
+`src/simulations`), regenerate both files by running:
+```bash
+$ python generate_pyrightconfig.py
+```
+This scans the project and rewrites both files automatically, so you don't
+need to edit them by hand.
+
+Run this script on your host machine, not inside the container. It only
+uses the Python standard library (`json`, `pathlib`), and since the project
+directory is bind-mounted into the container as-is, the files it writes are
+the same on both sides either way. Running it on the host is simplest since
+it doesn't depend on the container's Python environment at all.
+
+
+## Regenerate the social preview
+The featured-demo table between `<!-- featured-demos:start -->` and
+`<!-- featured-demos:end -->` in README.md supplies the four images and their
+alt-text labels for the social preview. To replace a demo, edit its Markdown
+image path and descriptive alt text inside that block. Keep exactly four local
+GIFs, with paths relative to README.md, in row order.
+
+After installing requirements.txt, run from the repository root:
+```bash
+python generate_social_preview.py
+```
+The generator selects each GIF's midpoint frame and writes an optimized
+1280×640 RGB PNG below 1,000,000 bytes to `doc/social-preview.png`.
+It also supports `--readme path/to/README.md` and `--output path/to/preview.png`.
+Default paths are rooted at the script's repository, even from another working
+directory; explicit relative arguments use the current working directory.
+Inspect the result and include the regenerated image with your README changes.
+
+A maintainer must manually upload `doc/social-preview.png` in the repository's
+**Settings → General → Social preview**. Generation does not upload the image.
+The examples-gallery workflow remains independent of this featured selection.

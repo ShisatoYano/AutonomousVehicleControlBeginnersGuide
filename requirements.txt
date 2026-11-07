@@ -4,3 +4,4 @@ scipy
 pytest
 casadi>=3.6.5
 do-mpc>=4.6.4
+Pillow>=10.1
