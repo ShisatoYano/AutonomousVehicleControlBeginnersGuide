@@ -1,5 +1,5 @@
 sphinx
 myst-parser
-sphinx-book-theme
+sphinx-rtd-theme
 sphinxcontrib-mermaid
 sphinx-copybutton

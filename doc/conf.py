@@ -29,15 +29,18 @@ exclude_patterns = ["_build", "DESIGN_DOCUMENT.md"]
 # Section pages of chapters 3 and 4 start at H2 until they are moved into the book (#170)
 suppress_warnings = ["myst.header"]
 
-html_theme = "sphinx_book_theme"
+html_theme = "sphinx_rtd_theme"
 html_title = "Autonomous Vehicle Control Beginners Guide"
 html_theme_options = {
-    "repository_url": "https://github.com/ShisatoYano/AutonomousVehicleControlBeginnersGuide",
-    "repository_branch": "main",
-    "path_to_docs": "doc",
-    "use_repository_button": True,
-    "use_edit_page_button": True,
-    "use_issues_button": True,
+    "navigation_depth": 3,
+}
+# Shows the "Edit on GitHub" link at the top of each page
+html_context = {
+    "display_github": True,
+    "github_user": "ShisatoYano",
+    "github_repo": "AutonomousVehicleControlBeginnersGuide",
+    "github_version": "main",
+    "conf_py_path": "/doc/",
 }
 
 GITHUB_URL = "https://github.com/ShisatoYano/AutonomousVehicleControlBeginnersGuide"
