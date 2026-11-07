@@ -7,6 +7,7 @@ Author: Sahruday Patti
 """
 
 # import path setting
+import numpy as np
 import sys
 from pathlib import Path
 import matplotlib.lines as mlines
@@ -85,6 +86,9 @@ def main():
     All filters use identical noise parameters for fair comparison.
     """
     
+    # seed the random number generator for reproducible runs
+    np.random.seed(42)
+
     # set simulation parameters
     x_lim, y_lim = MinMax(-5, 55), MinMax(-20, 25)
     vis = GlobalXYVisualizer(x_lim, y_lim, TimeParameters(span_sec=30))

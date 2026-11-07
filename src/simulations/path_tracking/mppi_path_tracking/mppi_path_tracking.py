@@ -6,6 +6,7 @@ Description: Samples many input sequences, weights them by cost, and shows all e
 Author: Erwin Lejeune
 """
 
+import numpy as np
 import sys
 from pathlib import Path
 
@@ -31,6 +32,9 @@ show_plot = True
 
 
 def main():
+    # seed the random number generator for reproducible runs
+    np.random.seed(42)
+
     x_lim, y_lim = MinMax(-5, 55), MinMax(-20, 25)
     gif_path = str(Path(__file__).absolute().parent / "mppi_path_tracking.gif")
     vis = GlobalXYVisualizer(
