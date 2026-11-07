@@ -18,7 +18,17 @@ from plot_lib import draw_covariance_ellipse
 
 class NdtMap:
     """
-    NDT grid map class
+    Normal Distributions Transform (NDT) map of a 2D point cloud.
+
+    Each populated grid cell represents its points by a normal distribution,
+    storing their mean position and 2-by-2 covariance matrix in an NdtGrid.
+    See update_map for the estimators used by this implementation.
+
+    Reference:
+        P. Biber and W. Straßer, "The normal distributions transform: a new
+        approach to laser scan matching," Proceedings of the 2003 IEEE/RSJ
+        International Conference on Intelligent Robots and Systems (IROS),
+        pp. 2743-2748, 2003. DOI: 10.1109/IROS.2003.1249285.
     """
 
     def __init__(self, width_m=60.0, height_m=60.0, resolution_m=5.0,
@@ -58,9 +68,27 @@ class NdtMap:
 
     def update_map(self, points_x_list, points_y_list):
         """
-        Function to update map
-        points_x_list: List of point cloud x coordinates
-        points_y_list: List of point cloud y coordinates
+        Update eligible cells using the supplied point cloud.
+
+        For N points in one cell, let p_i = [x_i, y_i]^T be a column vector.
+        The mean vector mu and sample covariance matrix Sigma are:
+
+            mu = (1 / N) * sum_{i=1}^{N} p_i
+            Sigma = (1 / (N - 1)) * sum_{i=1}^{N}
+                    (p_i - mu) (p_i - mu)^T
+
+        Here T denotes transpose, so each covariance summand is an outer
+        product. The components of mu are stored in mean_x_m and mean_y_m
+        (meters); Sigma is stored in covariance (square meters). The N - 1
+        normalization matches the default np.cov estimator and requires N > 1.
+
+        A cell is replaced only if N >= MIN_POINTS_NUM and N is at least its
+        previously stored point count. Statistics use only the current input
+        points in that cell; they are not merged with previous observations.
+        Other cells remain unchanged.
+
+        points_x_list: List of point cloud x coordinates in meters
+        points_y_list: List of point cloud y coordinates in meters
         """
         
         points_x_array, points_y_array = np.array(points_x_list), np.array(points_y_list)
