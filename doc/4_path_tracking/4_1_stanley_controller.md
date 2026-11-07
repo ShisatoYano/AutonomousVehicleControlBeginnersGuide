@@ -1,293 +1,120 @@
-## 4.1 Stanley Controller
+# 4.1 Stanley Controller
 
-In this chapter, the Stanley steering controller class is implemented for path tracking. This class implements the Stanley path tracking algorithm, which computes a steering angle to guide a vehicle's front axle back onto a reference course by correcting both heading error and lateral (cross-track) error.
+The Stanley controller steers a vehicle along a reference course by looking at two errors at the front axle: how far the axle is from the course, and how much the vehicle's heading differs from the course's direction. After this chapter, you can compute its steering angle by hand and change its gain in the simulation.
 
-Before getting into the code, let's get some basic understanding behind the algorithm:
-### **Stanley Controller**
+## Problem and intuition
 
-- This algorithm is also known sometimes as `Hoffmann-Stanley-control`.
-- Developed at Stanford for autonomous vehicles DARPA challenge
-- Combines heading error and cross-track error.
+A path tracking controller has to decide the steering angle at every time step so that the vehicle follows a given course. The Stanley controller was used by Stanford's car "Stanley", which won the DARPA Grand Challenge in 2005 [1].
 
-1. **Heading error** ($\large{\psi_e}$)— the difference between the vehicle's heading and the path's tangent
+It combines two simple ideas:
 
-2. **Cross-track error** ($\large{e}$) — lateral distance from the front axle to the nearest path point
+- **Align with the course.** If the vehicle points in a different direction from the course, turn the wheels by that difference.
+- **Steer back toward the course.** If the front axle is off to one side, turn toward the course. The farther away, the more you turn, but the faster you drive, the less you turn, so the vehicle doesn't swerve at high speed.
 
-![alt text](./path_ref.png)
+Both are measured at the **front axle**, because the front wheels are the ones that steer.
+
+![Stanley controller tracking a course in the simulation](/src/simulations/path_tracking/stanley_path_tracking/stanley_path_tracking.gif)
+
+## Theory
+
+The symbols follow [Notation and Units](../NOTATION.md).
+
+**Front axle position.** The vehicle's state $(x, y, \theta, v)$ is given at the rear axle. The front axle is the wheelbase $L$ ahead along the heading:
 
 $$
-\delta = \psi_e + \arctan\!\left(\frac{k \cdot e}{v}\right)
+x_f = x + L\cos\theta, \qquad y_f = y + L\sin\theta \tag{1}
 $$
 
-Image credit: https://ai.stanford.edu/~gabeh/papers/hoffmann_stanley_control07.pdf
-Ref: https://www.ri.cmu.edu/pub_files/2009/2/Automatic_Steering_Methods_for_Autonomous_Automobile_Path_Tracking.pdf
+**Errors.** Let $(x_r, y_r, \theta_r)$ be the point on the course nearest to the front axle and the course's yaw there. The heading error $\theta_e$ and the lateral error $e$ are
 
+$$
+\theta_e = \theta - \theta_r, \qquad
+e = -\sin\theta\,(x_f - x_r) + \cos\theta\,(y_f - y_r) \tag{2}
+$$
 
-**Advantages over Pure Pursuit**:
+$e$ is the front axle's offset from the course point, measured along the vehicle's left direction: it is positive when the axle is on the left of the course.
 
-- Directly minimizes cross-track error at the front axle.
-- Better performance at higher speeds.
-- Naturally speed-adaptive.
-- Pure Pursuit is great for robots, low-speed vehicles, and when simplicity matters.
-- Stanley is preferred for autonomous cars and situations where you need tighter path adherence at varying speeds.
+**Steering law.** The steering angle $\delta$ (positive to the left) is
 
-**Disadvantages**:
-- needs tuning of parameter $k$.
-- can be unstable at low speed(divison be 0) and steady state error.
+$$
+\delta = -\left(\theta_e + \arctan\frac{k\,e}{v}\right) \tag{3}
+$$
 
+- The first term turns the wheels back by the heading error. If the vehicle points 0.1 rad to the left of the course, the wheels turn 0.1 rad to the right.
+- The second term steers toward the course. For a small offset, $\arctan(k e / v) \approx k e / v$: the correction grows with the offset and shrinks with the speed. For a large offset it saturates at $\pi/2$, so the vehicle heads straight for the course instead of turning more and more.
 
-### 4.1.1 StanleyController Class
+The minus sign comes from the sign convention of (2): both errors are positive when the vehicle is to the left of or turned to the left of the course, and the correction turns right. Snider [2] defines the errors with the opposite signs and writes the same law without the minus sign.
 
-The controller class is located at:  
-[stanley_controller.py](/src/components/control/stanley/stanley_controller.py)
+**Yaw rate.** The vehicle model of this project takes a yaw rate as its input, so the steering angle is turned into a yaw rate with the kinematic bicycle model:
 
-```python
-"""
-stanley_controller.py
+$$
+\omega = \frac{v \tan\delta}{L} \tag{4}
+$$
 
-Author: Shisato Yano
-"""
+**Speed.** The speed follows the course's target speed $v_r$ with a proportional controller, $a = k_v (v_r - v)$.
 
-import sys
-from pathlib import Path
-from math import sin, cos, tan, atan2
+## Algorithm
 
-abs_dir_path = str(Path(__file__).absolute().parent)
-relative_path = "/../../../components/"
-
-sys.path.append(abs_dir_path + relative_path + "state")
-
-from state import State
-
-
-class StanleyController:
-    """
-    Controller class by Stanley steering control algorithm
-    """
+```text
+At every time step, given the state (x, y, theta, v) at the rear axle:
+1. Compute the front axle position with (1)
+2. Find the course point nearest to the front axle
+3. Compute the heading error and the lateral error with (2)
+4. Compute the steering angle with (3), using 0 for the arctan term when v = 0
+5. Compute the yaw rate with (4), and the acceleration from the target speed
 ```
 
-This class imports `sin`, `cos`, `tan`, and `atan2` from Python's `math` module, as these trigonometric functions are used throughout the steering calculations. It also imports the `State` class to construct a virtual front axle state from the vehicle's rear axle state.
+## Limits
 
----
+- **Low speed.** $k e / v$ grows without bound as $v \to 0$, so the steering can jump at very low speed. The original paper adds a softening constant, $\arctan(k e / (k_s + v))$ [1]. This implementation has no softening constant, and only skips the term when $v = 0$.
+- **Gain tuning.** A small $k$ returns to the course slowly. A large $k$ returns quickly but can oscillate.
+- **Lateral error in the vehicle's frame.** (2) measures the offset along the vehicle's left direction, not perpendicular to the course. The two agree when the heading error is small, which is the normal case while tracking.
+- **Kinematic model only.** The law ignores tire slip and actuator delay. The paper adds terms for them at high speed [1].
 
-#### 4.1.1.1 Constructor
+## Where the equations live in the code
 
-```python
-def __init__(self, spec, course=None):
-    self.SPEED_PROPORTIONAL_GAIN = 1.0
-    self.CONTROL_GAIN = 0.5
-    self.WHEEL_BASE_M = spec.wheel_base_m
+The controller is `StanleyController` in `src/components/control/stanley/stanley_controller.py`. Its `update()` runs the five steps of the algorithm:
 
-    self.course = course
-    self.target_course_index = 0
-    self.target_accel_mps2 = 0.0
-    self.target_speed_mps = 0.0
-    self.target_yaw_rate_rps = 0.0
-    self.target_steer_rad = 0.0
+```{literalinclude} ../../src/components/control/stanley/stanley_controller.py
+:language: python
+:pyobject: StanleyController.update
 ```
 
-The constructor takes a `VehicleSpecification` object and an optional `CubicSplineCourse` object. The key member variables are:
+Equation (1), the front axle position:
 
-| Variable | Value | Description |
-|---|---|---|
-| `SPEED_PROPORTIONAL_GAIN` | 1.0 | Gain for proportional speed control |
-| `CONTROL_GAIN` | 0.5 | Stanley gain `k` for cross-track error correction |
-| `WHEEL_BASE_M` | from spec | Distance between front and rear axles [m] |
-| `target_course_index` | 0 | Index of the nearest point on course |
-| `target_accel_mps2` | 0.0 | Computed acceleration command [m/s²] |
-| `target_steer_rad` | 0.0 | Computed steering angle command [rad] |
-| `target_yaw_rate_rps` | 0.0 | Computed yaw rate command [rad/s] |
-
----
-
-### 4.1.2 Private Methods
-
-#### 4.1.2.1 `_calculate_front_axle_state`
-
-```python
-def _calculate_front_axle_state(self, state):
-    curr_rear_x = state.get_x_m()
-    curr_rear_y = state.get_y_m()
-    curr_yaw = state.get_yaw_rad()
-    curr_spd = state.get_speed_mps()
-
-    curr_front_x = curr_rear_x + self.WHEEL_BASE_M * cos(curr_yaw)
-    curr_front_y = curr_rear_y + self.WHEEL_BASE_M * sin(curr_yaw)
-    curr_front_state = State(curr_front_x, curr_front_y, curr_yaw, curr_spd)
-
-    return curr_front_state
+```{literalinclude} ../../src/components/control/stanley/stanley_controller.py
+:language: python
+:pyobject: StanleyController._calculate_front_axle_state
 ```
 
-The Stanley algorithm is applied at the **front axle**, not the rear axle. This method projects the rear axle position forward by `WHEEL_BASE_M` along the vehicle's current heading to compute where the front axle is, and returns it as a new `State` object.
+Equation (2) is computed by the course, which knows the target point. `error_yaw_rad` is $\theta_e$ and `error_lat_m` is $e$:
 
-The front axle position is calculated as:
-
-```
-front_x = rear_x + L * cos(yaw)
-front_y = rear_y + L * sin(yaw)
+```{literalinclude} ../../src/components/course/cubic_spline_course/cubic_spline_course.py
+:language: python
+:pyobject: CubicSplineCourse.calculate_lonlat_error
 ```
 
-where `L` is the wheelbase.
+Equations (3) and (4). `CONTROL_GAIN` is $k$, and `atan2(k e, v)` equals $\arctan(k e / v)$ for $v > 0$:
 
----
-
-#### 4.1.2.2 `_calculate_target_course_index`
-
-```python
-def _calculate_target_course_index(self, state):
-    nearest_index = self.course.search_nearest_point_index(state)
-    self.target_course_index = nearest_index
+```{literalinclude} ../../src/components/control/stanley/stanley_controller.py
+:language: python
+:pyobject: StanleyController._calculate_control_input
 ```
 
-This method finds the index of the nearest point on the course to the front axle's current position. This index is used in subsequent steps to look up the target speed and compute tracking errors.
+## Experiments
 
----
+Run the simulation `src/simulations/path_tracking/stanley_path_tracking/stanley_path_tracking.py`, and change `self.CONTROL_GAIN` in the constructor of `StanleyController` (0.5 by default):
 
-#### 4.1.2.3 `_decide_target_speed_mps`
+- With 0.1, the vehicle comes back to the course slowly after the curves.
+- With 2.0, it comes back quickly. Watch whether it starts to weave around the course.
 
-```python
-def _decide_target_speed_mps(self):
-    self.target_speed_mps = self.course.point_speed_mps(self.target_course_index)
-```
+## Exercises
 
-The target speed is read directly from the course at the nearest point index. This allows the course to specify variable speed profiles along its length.
+1. A vehicle drives at $v = 5$ m/s with its front axle $e = 1$ m to the left of a straight course, pointing along the course ($\theta_e = 0$). With $k = 0.5$, compute $\delta$ with (3). Then compute it for $v = 1$ m/s. Why does the vehicle steer harder at the lower speed?
+2. Add the softening constant $k_s$ of the original paper to `_calculate_control_input()`, and check how the steering behaves when the simulation starts from rest.
+3. Run the Pure Pursuit simulation (`src/simulations/path_tracking/pure_pursuit_path_tracking`) on the same course, and compare how closely the two controllers follow the curves.
 
----
+## References
 
-#### 4.1.2.4 `_calculate_target_acceleration_mps2`
-
-```python
-def _calculate_target_acceleration_mps2(self, state):
-    diff_speed_mps = self.target_speed_mps - state.get_speed_mps()
-    self.target_accel_mps2 = self.SPEED_PROPORTIONAL_GAIN * diff_speed_mps
-```
-
-A simple proportional speed controller is used. The acceleration command is proportional to the difference between the target speed and the current front axle speed:
-
-```
-accel = Kp * (target_speed - current_speed)
-```
-
----
-
-#### 4.1.2.5 `_calculate_tracking_error`
-
-```python
-def _calculate_tracking_error(self, state):
-    error_lon_m, error_lat_m, error_yaw_rad = self.course.calculate_lonlat_error(state, self.target_course_index)
-    return error_lon_m, error_lat_m, error_yaw_rad
-```
-
-This method delegates to the course object to compute three error terms between the front axle and the nearest course point:
-
-| Error | Description |
-|---|---|
-| `error_lon_m` | Longitudinal error along the course tangent [m] |
-| `error_lat_m` | Lateral (cross-track) error perpendicular to the course [m] |
-| `error_yaw_rad` | Heading error between vehicle and course tangent [rad] |
-
-Only `error_lat_m` and `error_yaw_rad` are used for steering.
-
----
-
-#### 4.1.2.6 `_calculate_control_input`
-
-```python
-def _calculate_control_input(self, state, error_lat_m, error_yaw_rad):
-    curr_spd = state.get_speed_mps()
-    if abs(curr_spd) != 0.0:
-        error_steer_rad = atan2(self.CONTROL_GAIN * error_lat_m, curr_spd)
-    else:
-        error_steer_rad = 0.0
-    self.target_steer_rad = -1 * (error_steer_rad + error_yaw_rad)
-
-    self.target_yaw_rate_rps = curr_spd * tan(self.target_steer_rad) / self.WHEEL_BASE_M
-```
-
-This is the core of the Stanley algorithm. The steering angle is computed as:
-
-```
-δ = -(ψ_error + arctan(k * e_lat / v))
-```
-- minus sign comes due to the sign convention of steering angle.
-
-where:
-- `ψ_error` (`error_yaw_rad`) - heading error between vehicle and course tangent
-- `e_lat` (`error_lat_m`) - lateral cross-track error
-- `k` (`CONTROL_GAIN`) - Stanley gain constant
-- `v` (`curr_spd`) - current vehicle speed
-
-The `atan2` term increases steering correction as lateral error grows, and decreases it at higher speeds to prevent overcorrection. A guard against zero speed is included to avoid division by zero.
-
-The yaw rate is then derived from the steering angle using the kinematic bicycle model:
-
-```
-yaw_rate = v * tan(δ) / L
-```
-since, for kinematic bicycle model: 
-```
-tan(δ) = L / R => R = L / tan(δ)
-```
-
----
-
-### 4.1.3 Public Methods
-
-#### 4.1.3.1 `update`
-
-```python
-def update(self, state, time_s):
-    if not self.course: return
-
-    front_axle_state = self._calculate_front_axle_state(state)
-    self._calculate_target_course_index(front_axle_state)
-    self._decide_target_speed_mps()
-    self._calculate_target_acceleration_mps2(front_axle_state)
-    _, error_lat_m, error_yaw_rad = self._calculate_tracking_error(front_axle_state)
-    self._calculate_control_input(front_axle_state, error_lat_m, error_yaw_rad)
-```
-
-This is the main entry point called every simulation frame by `FourWheelsVehicle`. It orchestrates all private methods in order:
-
-```
-update()
-1. Project rear axle - front axle state
-2. Find nearest course index from front axle
-4. Read target speed at that index
-4. Compute acceleration from speed error
-5. Compute lateral and heading errors
-6. Compute steering angle and yaw rate (Stanley law)
-```
-
-If no course is set, the method returns early without computing anything.
-
----
-
-#### 4.1.3.2 Getter Methods
-
-```python
-def get_target_accel_mps2(self):
-    return self.target_accel_mps2
-
-def get_target_yaw_rate_rps(self):
-    return self.target_yaw_rate_rps
-
-def get_target_steer_rad(self):
-    return self.target_steer_rad
-```
-
-These three getter methods expose the computed control outputs. They are called by `FourWheelsVehicle` after each `update()` to apply the commands to the vehicle's state.
-
----
-
-#### 4.1.3.3 `draw`
-
-```python
-def draw(self, axes, elems):
-    pass
-```
-
-This method is required by the visualizer interface - all objects registered with `GlobalXYVisualizer` must have a `draw` method. For the controller, no visual element needs to be drawn, so the body is left empty with `pass`.
-
-**Author**: Mohit Kumar
-
+1. G. M. Hoffmann, C. J. Tomlin, M. Montemerlo and S. Thrun, "Autonomous Automobile Trajectory Tracking for Off-Road Driving: Controller Design, Experimental Validation and Racing", American Control Conference, 2007. https://ai.stanford.edu/~gabeh/papers/hoffmann_stanley_control07.pdf
+2. J. M. Snider, "Automatic Steering Methods for Autonomous Automobile Path Tracking", Technical Report CMU-RI-TR-09-08, Carnegie Mellon University, 2009. https://www.ri.cmu.edu/pub_files/2009/2/Automatic_Steering_Methods_for_Autonomous_Automobile_Path_Tracking.pdf
