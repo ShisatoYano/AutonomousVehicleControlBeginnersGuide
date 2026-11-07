@@ -26,8 +26,10 @@ sys.path.append(abs_dir_path + relative_path + "mapping/grid")
 sys.path.append(abs_dir_path + relative_path + "course/cubic_spline_course")
 sys.path.append(abs_dir_path + relative_path + "control/pure_pursuit")
 sys.path.append(abs_dir_path + relative_path + "plan/dstar")
+sys.path.append(abs_dir_path + relative_path + "common")
 
 from global_xy_visualizer import GlobalXYVisualizer
+from save_gif import is_save_gif_enabled
 from min_max import MinMax
 from time_parameters import TimeParameters
 from vehicle_specification import VehicleSpecification
@@ -325,11 +327,14 @@ def _build_search_gif(planner, initial_path, initial_explored,
         print(f"D* search animation: {total_frames} frames")
         anime = anm.FuncAnimation(fig, update_frame, fargs=(ax,),
                                   frames=total_frames, interval=30, repeat=False)
-        try:
-            anime.save(gif_path, writer="pillow", fps=20)
-            print(f"Search GIF saved to {gif_path}")
-        except Exception as e:
-            print(f"Error saving search GIF: {e}")
+        if is_save_gif_enabled():
+            try:
+                anime.save(gif_path, writer="pillow", fps=20)
+                print(f"Search GIF saved to {gif_path}")
+            except Exception as e:
+                print(f"Error saving search GIF: {e}")
+        else:
+            plt.show()
     else:
         test_frames = set()
         for s in offsets[:-1]:

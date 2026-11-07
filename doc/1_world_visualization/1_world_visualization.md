@@ -13,6 +13,7 @@ Author: Shisato Yano
 
 import matplotlib.pyplot as plt
 import matplotlib.animation as anm
+from save_gif import is_save_gif_enabled
 
 
 class GlobalXYVisualizer:
@@ -141,7 +142,7 @@ class TimeParameters:
 ```
 
 ### 1.1.3 Other member variables
-`gif_name` is a string object for saving the animation's gif file. The boolean `show_plot` is used to toggle whether the visualization's figure window is displayed when a unit test is executed. While the test is running, the figure window should not be displayed to continue the test. `show_zoom` determines whether to limit the visualization area to the vicinity of the vehicle or to show the full world.  
+`gif_name` is a string object identifying the demo GIF path. The GIF is saved only when the simulation is run with `--save-gif`; otherwise the animation is displayed. The boolean `show_plot` is used to toggle whether the visualization's figure window is displayed when a unit test is executed. While the test is running, the figure window should not be displayed to continue the test. `show_zoom` determines whether to limit the visualization area to the vicinity of the vehicle or to show the full world.
 
 ### 1.1.4 Member methods
 The member method `add_object()` is defined to add objects that are located in the world. An object can be added to the `objects` list by calling this method.  
@@ -194,7 +195,7 @@ The member method `update` is used to periodically update each object's data and
             axes.set_ylim(self.y_lim.min_value(), self.y_lim.max_value())
 ```
 
-Finally, this `draw` method is defined to execute simulation including updating and visualization. If a specific GIF filename is assigned to `gif_name`, the simulation will be saved as a GIF file instead of being displayed.
+Finally, this `draw` method is defined to execute simulation including updating and visualization. If a specific GIF filename is assigned to `gif_name`, the simulation is saved as a GIF only when `--save-gif` is supplied; otherwise it is displayed.
 ```python
     def draw(self):
         """
@@ -220,7 +221,7 @@ Finally, this `draw` method is defined to execute simulation including updating 
                                            frames=self.time_params.get_frame_num(), 
                                            interval=self.time_params.get_interval_msec(), 
                                            repeat=False)
-            if self.gif_name:
+            if self.gif_name and is_save_gif_enabled():
                 self.anime.save(self.gif_name, writer="pillow")
             else:
                 plt.show()

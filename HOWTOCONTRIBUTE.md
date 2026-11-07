@@ -40,6 +40,14 @@ If you added a new sample program, please add a unit test code for it under test
 
 If your sample program has a demo GIF/image under its `src/simulations/...` directory, it is added to [doc/EXAMPLES.md](/doc/EXAMPLES.md) automatically after your PR is merged, so you don't need to update that file. Please don't edit `doc/EXAMPLES.md` by hand, because it is overwritten. To change the heading or description, edit the docstring of your simulation script (see Step 2).  
 
+Run a simulation normally to display its animation in a window. To regenerate a committed demo GIF, run the simulation with the `--save-gif` option, for example:
+
+```bash
+python src/simulations/path_tracking/mppi_path_tracking/mppi_path_tracking.py --save-gif
+```
+
+The option saves the GIF at the path defined by the simulation. Without it, existing GIF paths are not overwritten and the animation is displayed instead.
+
 ### Step 4: Submit a pull request and modify code based on review
 If your sample program and test were ready, let's create a pull request and submit it. When you create the PR, please write a description about the following items.  
 
