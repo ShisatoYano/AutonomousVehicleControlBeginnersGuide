@@ -14,9 +14,11 @@ from math import sin, cos
 
 abs_dir_path = str(Path(__file__).absolute().parent)
 sys.path.append(abs_dir_path + "/../../search/kd_tree")
+sys.path.append(abs_dir_path + "/../../common")
 
 from kd_tree import KdTree
 from rectangle import Rectangle
+from matrix_lib import rot_mat_22
 
 class LShapeFittingDetector:
     """
@@ -101,13 +103,8 @@ class LShapeFittingDetector:
         Return rotated points array
         """
         
-        angle_cos = cos(angle_rad)
-        angle_sin = sin(angle_rad)
-
-        rotation_matrix = np.array([[angle_cos, angle_sin], 
-                                    [-angle_sin, angle_cos]])
-        
-        return rotation_matrix @ points_array
+        # Transpose of the rotation matrix rotates the points by -angle_rad
+        return rot_mat_22(angle_rad).T @ points_array
 
     def _calculate_variance_criterion(self, points_array):
         """

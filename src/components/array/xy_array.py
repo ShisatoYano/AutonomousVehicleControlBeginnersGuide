@@ -4,8 +4,12 @@ xy_array.py
 Author: Shisato Yano
 """
 
-from math import sin, cos
+import sys
 import numpy as np
+from pathlib import Path
+
+sys.path.append(str(Path(__file__).absolute().parent) + "/../common")
+from matrix_lib import rot_mat_22
 
 
 class XYArray:
@@ -30,15 +34,9 @@ class XYArray:
         Return transformed XYArray object
         """
         
-        angle_cos = cos(angle_rad)
-        angle_sin = sin(angle_rad)
+        rotated_data = rot_mat_22(angle_rad) @ self.data
 
-        rotation_matrix = np.array([[angle_cos, -angle_sin],
-                                    [angle_sin, angle_cos]])
-        
-        rotated_data = rotation_matrix @ self.data
-
-        translated_data = rotated_data + np.ones(rotated_data.shape) * np.array([[x], [y]])
+        translated_data = rotated_data + np.array([[x], [y]])
 
         return XYArray(translated_data)
     
