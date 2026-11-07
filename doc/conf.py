@@ -46,6 +46,14 @@ html_context = {
 GITHUB_URL = "https://github.com/ShisatoYano/AutonomousVehicleControlBeginnersGuide"
 IMAGE_SUFFIXES = (".gif", ".png", ".jpg", ".jpeg", ".svg")
 LINK_PATTERN = re.compile(r"(\]\(|src=\")([^)\"\s]+)")
+# Section pages nested under their chapter in the sidebar. A toctree directive in the
+# Markdown files would show up as a code block on GitHub, so it is added at build time
+SECTION_PAGES = {
+    "3_sensor_models/3_sensor_models": ["3_1_obstacle", "3_2_lidar", "3_3_sensors"],
+    "4_path_tracking/4_path_tracking": [
+        "4_1_stanley_controller", "4_2_mpc_controller", "4_3_mppi_controller"
+    ],
+}
 
 
 def rewrite_link(docname: str, target: str, in_html: bool) -> str:
@@ -81,5 +89,15 @@ def rewrite_links(app: Sphinx, docname: str, source: list[str]) -> None:
     )
 
 
+def add_section_toctree(app: Sphinx, docname: str, source: list[str]) -> None:
+    pages = SECTION_PAGES.get(docname)
+    if pages is None:
+        return
+    title, _, body = source[0].partition("\n")
+    toctree = "```{toctree}\n:hidden:\n\n" + "\n".join(pages) + "\n```\n"
+    source[0] = title + "\n\n" + toctree + body
+
+
 def setup(app: Sphinx) -> None:
     app.connect("source-read", rewrite_links)
+    app.connect("source-read", add_section_toctree)
