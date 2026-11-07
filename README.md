@@ -158,8 +158,8 @@ The full list with demo GIFs is generated from `src/simulations` — see [doc/EX
 
 
 ## Documents
-Design documents of each Python programs are prepared here. The documents are still not completed. They have been being updated. If you found any problems in them, please tell me by creating an issue.  
-[Documents link](/doc/DESIGN_DOCUMENT.md)  
+The documents are published as a web book: [https://shisatoyano.github.io/AutonomousVehicleControlBeginnersGuide/](https://shisatoyano.github.io/AutonomousVehicleControlBeginnersGuide/)  
+They are still being written and reorganized into a book (see the [documentation roadmap](https://github.com/ShisatoYano/AutonomousVehicleControlBeginnersGuide/issues/165)). If you find any problems in them, please tell me by creating an issue.  
 
 
 ## License

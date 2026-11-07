@@ -74,6 +74,15 @@ Additionally, you can see existing reported issues and fix the defect. And then,
 Adding a documentation about existing programs is also welcome.  
 There have not been any rules about documentation yet. If you had any suggestion of how to write documentations, please submit a PR and I will review it.  
 
+The documents under `doc/` are published as a [web book](https://shisatoyano.github.io/AutonomousVehicleControlBeginnersGuide/) with Sphinx and MyST, so they stay in Markdown. To check your changes, build the book locally and open `doc/_build/html/index.html` in a browser:
+
+```bash
+pip install -r doc/requirements.txt
+sphinx-build -W --keep-going -b html doc doc/_build/html
+```
+
+`-W` turns warnings such as broken links into errors, as in GitHub Actions. A pull request that changes `doc/` builds the book there, and the book is published again after the merge.  
+
 ## Support this project
 Supporting this project financially is also a great contribution!!.  
 If you or your company could support this project, please consider [Sponsor @ShisatoYano on GitHub Sponsors](https://github.com/sponsors/ShisatoYano).  
