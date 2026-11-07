@@ -1,0 +1,24 @@
+cff-version: 1.2.0
+message: "If you use this project in your research or teaching, please cite it as below."
+type: software
+title: "AutonomousVehicleControlBeginnersGuide"
+abstract: >-
+  Python sample programs and documents for learning autonomous driving
+  algorithms. Each algorithm is implemented as simply as possible and runs
+  in a 2D simulation, so localization, mapping, path planning, path tracking
+  and perception can be studied one stage at a time.
+authors:
+  - family-names: Yano
+    given-names: Shisato
+repository-code: "https://github.com/ShisatoYano/AutonomousVehicleControlBeginnersGuide"
+license: MIT
+keywords:
+  - autonomous driving
+  - autonomous vehicles
+  - robotics
+  - localization
+  - path planning
+  - path tracking
+  - perception
+  - education
+  - python

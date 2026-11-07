@@ -1,7 +1,7 @@
 # AutonomousVehicleControlBeginnersGuide
 [![Linux_CI](https://github.com/ShisatoYano/AutonomousDrivingSamplePrograms/actions/workflows/Linux_CI.yml/badge.svg)](https://github.com/ShisatoYano/AutonomousDrivingSamplePrograms/actions/workflows/Linux_CI.yml) [![Windows_CI](https://github.com/ShisatoYano/AutonomousDrivingSamplePrograms/actions/workflows/Windows_CI.yml/badge.svg)](https://github.com/ShisatoYano/AutonomousDrivingSamplePrograms/actions/workflows/Windows_CI.yml) [![MacOS_CI](https://github.com/ShisatoYano/AutonomousDrivingSamplePrograms/actions/workflows/MacOS_CI.yml/badge.svg)](https://github.com/ShisatoYano/AutonomousDrivingSamplePrograms/actions/workflows/MacOS_CI.yml) [![CodeFactor](https://www.codefactor.io/repository/github/shisatoyano/autonomousvehiclecontrolbeginnersguide/badge)](https://www.codefactor.io/repository/github/shisatoyano/autonomousvehiclecontrolbeginnersguide)  
 
-Python sample codes and documents about Autonomous vehicle control algorithm. This project can be used as a technical guide book to study the algorithms and the software architectures for beginners.  
+Learn autonomous driving by building it: Python simulations and an open textbook where the system grows one stage at a time. Swap and compare localization, planning and control algorithms in the same system.  
 
 ![](src/simulations/mapping/ndt_map_construction/ndt_map_construction.gif)  
 
@@ -14,6 +14,7 @@ Python sample codes and documents about Autonomous vehicle control algorithm. Th
 * [Examples of Simulation](#examples-of-simulation)
 * [Documents](#documents)
 * [License](#license)
+* [Citing](#citing)
 * [Use Case](#use-case)
 * [Contribution](#contribution)
 * [Author](#author)
@@ -165,10 +166,14 @@ Design documents of each Python programs are prepared here. The documents are st
 MIT  
 
 
+## Citing
+If you use this project in your research or teaching, please cite it. Click "Cite this repository" on the right side of the repository page to get the citation in APA or BibTeX format, or see [CITATION.cff](/CITATION.cff).  
+
+
 ## Use Case
 I started this project to study an algorithm and software development for Autonomous Vehicle system by myself. You can also use this repo for your own studying, education, researching and development.  
 
-If this project helps your task, please let me know by creating a issue.  
+If this project helps your task, please let me know in [Show and tell](https://github.com/ShisatoYano/AutonomousVehicleControlBeginnersGuide/discussions/categories/show-and-tell).  
 Any paper, animation, video as your output, always welcome!! It will encourage me to continue this project.  
 
 Your comment and output is added to [this list of user comments](/USERS_COMMENTS.md).  
@@ -176,6 +181,7 @@ Your comment and output is added to [this list of user comments](/USERS_COMMENTS
 
 ## Contribution
 Any contribution by creating an issue or sending a pull request is welcome!! Please check [this document about how to contribute](/HOWTOCONTRIBUTE.md).  
+Questions about the algorithms or the code are welcome in [Q&A](https://github.com/ShisatoYano/AutonomousVehicleControlBeginnersGuide/discussions/categories/q-a), and feedback on the book in [Book](https://github.com/ShisatoYano/AutonomousVehicleControlBeginnersGuide/discussions/categories/book).  
 If you are looking for a place to start, see the [good first issues](https://github.com/ShisatoYano/AutonomousVehicleControlBeginnersGuide/issues?q=is%3Aissue%20state%3Aopen%20label%3A%22good%20first%20issue%22) and the [roadmap issue](https://github.com/ShisatoYano/AutonomousVehicleControlBeginnersGuide/issues/131).  
 
 

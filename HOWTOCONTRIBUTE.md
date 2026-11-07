@@ -2,6 +2,7 @@
 This document describes how to contribute this project.  
 Before starting your contribution, please check [README](/README.md) to understand what this project is and setup your development environment.  
 If you use an AI coding tool such as Claude Code, the project's conventions are summarized in [CLAUDE.md](/CLAUDE.md), which Claude Code loads automatically.  
+For questions and ideas, please use [Discussions](https://github.com/ShisatoYano/AutonomousVehicleControlBeginnersGuide/discussions). Issues are for bug reports and agreed tasks.  
 
 ## Add new sample program of algorithm
 Steps to add a new sample program.  
