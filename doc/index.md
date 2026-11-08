@@ -54,6 +54,5 @@ exercise_answers/index
 :caption: "Design documents (being moved into the chapters)"
 :maxdepth: 1
 
-3_sensor_models/3_sensor_models
 4_path_tracking/4_path_tracking
 ```

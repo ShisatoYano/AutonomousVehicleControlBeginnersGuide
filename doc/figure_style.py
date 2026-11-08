@@ -13,6 +13,8 @@ VEHICLE = "#1f5fa8"    # vehicle body, axles and heading
 ERROR = "#c0392b"      # errors (lateral error, heading error)
 CONTROL = "#2e8b57"    # control inputs (steering angle, acceleration)
 ESTIMATE = "#e08a1e"   # estimates and their uncertainty
+MEASUREMENT = "#7b4fa0"  # sensor measurements (LiDAR points, GNSS positions)
+OBSTACLE = "#333333"   # obstacles
 
 RC_PARAMS = {
     "figure.figsize": (6.4, 4.0),
