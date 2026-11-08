@@ -55,7 +55,6 @@ LINK_PATTERN = re.compile(r"(\]\(|src=\")([^)\"\s]+)")
 # Section pages nested under their chapter in the sidebar. A toctree directive in the
 # Markdown files would show up as a code block on GitHub, so it is added at build time
 SECTION_PAGES = {
-    "3_sensor_models/3_sensor_models": ["3_1_obstacle", "3_2_lidar", "3_3_sensors"],
     "4_path_tracking/4_path_tracking": [
         "4_1_stanley_controller", "4_2_mpc_controller", "4_3_mppi_controller"
     ],

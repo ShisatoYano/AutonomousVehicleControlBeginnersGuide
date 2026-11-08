@@ -44,6 +44,19 @@ This page defines the symbols and units used in the whole book. Each chapter fol
 
 With these symbols, the EKF prediction is $\bar{P}_t = F P_{t-1} F^\top + G Q G^\top$, and the innovation covariance is $S = H \bar{P}_t H^\top + R$.
 
+## Sensors
+
+| Symbol | Meaning | Unit | In the code |
+|---|---|---|---|
+| $r$, $\phi$ | Range and bearing of a LiDAR return in the sensor frame | m, rad | `distance_m`, `angle_rad` |
+| $\Delta\phi$ | Angle between two LiDAR beams | rad | `reso_deg` (in degrees) |
+| $r_{\min}$, $r_{\max}$ | Shortest and longest range the LiDAR measures | m | `min_m`, `max_m` |
+| $\sigma_\phi$ | Standard deviation of the bearing noise | rad | `angle_std_scale` |
+| $c_r$ | Standard deviation of the range noise per meter of range | - | `dist_std_rate` |
+| $l_x$, $l_y$, $\theta_s$ | Mounting position and yaw of the sensor in the vehicle frame | m, rad | `lon_m`, `lat_m`, `yaw_deg` (in degrees) |
+| $T(x, y, \theta)$ | $3 \times 3$ homogeneous transformation matrix of a pose | - | `hom_mat_33()` |
+| ${}^{A}T_{B}$ | Pose of frame $\{B\}$ in frame $\{A\}$, as a homogeneous transformation matrix | - | - |
+
 ## Path tracking
 
 | Symbol | Meaning | Unit |
@@ -61,6 +74,7 @@ With these symbols, the EKF prediction is $\bar{P}_t = F P_{t-1} F^\top + G Q G^
 | Global $\{G\}$ | Fixed to the world. x to the right and y up in the plots, angles counterclockwise from x |
 | Vehicle $\{V\}$ | Rear axle center. x forward, y to the left |
 | Sensor $\{S\}$ | Mounting point of the sensor. x along the sensor's forward direction |
+| Obstacle $\{O\}$ | Center of an obstacle. x along its length |
 
 A point $\mathbf{p}$ written in frame $\{A\}$ is ${}^{A}\mathbf{p}$. The 2D rotation matrix is written $\mathrm{Rot}(\theta)$, not $R$, so it is not mixed up with the observation noise covariance:
 

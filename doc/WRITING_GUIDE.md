@@ -114,7 +114,7 @@ The caption. It can use math such as $\theta_e$.
 ````
 
 - See [`4_path_tracking/figures/stanley_errors.py`](/doc/4_path_tracking/figures/stanley_errors.py) for an example.
-- Use the colors of [`doc/figure_style.py`](/doc/figure_style.py), which have a fixed meaning in every figure (course, vehicle, errors, control inputs, estimates). The font sizes and line widths are applied automatically.
+- Use the colors of [`doc/figure_style.py`](/doc/figure_style.py), which have a fixed meaning in every figure (course, vehicle, errors, control inputs, estimates, measurements, obstacles). The font sizes and line widths are applied automatically.
 - Label the figure with the same symbols as the equations, written as math (`r"$\theta_e$"`).
 - A figure script can compute its geometry with the equations of the chapter, so the figure is right by construction. Fix the random seed if it uses random numbers.
 - The figure shows as a plain directive on GitHub. Check it in the web book.
