@@ -75,6 +75,7 @@ Copy this into a new page and fill in each section. Delete the comments.
 - Use the symbols of [Notation and Units](NOTATION.md). If a reference uses different symbols, say so once and use the book's symbols.
 - Define each symbol the first time it appears, with its unit.
 - Write inline math with `$...$` and display math with `$$...$$`.
+- Number an equation with `\tag{n}` at its end. If a numbered equation has a line break `\\` anywhere (several lines, or a matrix), write it in `\begin{equation*} ... \tag{n} \end{equation*}` without `$$`, with `aligned` inside for several lines: the book wraps `$$` math in a `split` environment, where `\tag` and `\\` don't work together.
 - When the code and the paper differ (a sign, a simplification, a fixed parameter), say so in the text.
 
 ## Code in the text

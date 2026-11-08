@@ -58,14 +58,14 @@ The equations (2) are in continuous time, but the simulator moves in steps of $\
 
 The simulator uses a slightly better version: during one step it keeps the heading $\theta_t$ and the acceleration $a_t$ constant, and integrates the speed exactly, so the distance traveled is $v_t \Delta t + \frac{1}{2} a_t \Delta t^2$:
 
-$$
+\begin{equation*}
 \begin{aligned}
 x_{t+1} &= x_t + \left(v_t \Delta t + \tfrac{1}{2} a_t \Delta t^2\right)\cos\theta_t \\
 y_{t+1} &= y_t + \left(v_t \Delta t + \tfrac{1}{2} a_t \Delta t^2\right)\sin\theta_t \\
 \theta_{t+1} &= \theta_t + \omega_t \Delta t \\
 v_{t+1} &= v_t + a_t \Delta t
 \end{aligned} \tag{4}
-$$
+\end{equation*}
 
 Written with the state $\mathbf{x}_t = [x_t, y_t, \theta_t, v_t]^\top$, this is $\mathbf{x}_{t+1} = A(\theta_t)\,\mathbf{x}_t + B(\theta_t)\,\mathbf{u}_t$ with
 
