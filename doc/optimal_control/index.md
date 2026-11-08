@@ -1,4 +1,4 @@
-# Chapter 10: Following a Course Optimally: Optimal Control
+# Chapter 10: Optimal Control
 
 ```{note}
 This chapter is planned. This page lists what it will cover and the simulations that already exist for it.
