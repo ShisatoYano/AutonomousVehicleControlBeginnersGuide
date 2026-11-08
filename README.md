@@ -8,14 +8,14 @@
 <!-- The same demos as doc/social_preview.py, which draws the social preview image from them -->
 <table>
   <tr>
-    <td align="center" width="33%"><a href="https://shisatoyano.github.io/AutonomousVehicleControlBeginnersGuide/localization/index.html"><img src="src/simulations/localization/ekf_ukf_pf_comparison/ekf_ukf_pf_comparison.gif" alt="Localization: EKF vs UKF vs PF" width="260"><br>Localization: EKF vs UKF vs PF</a></td>
-    <td align="center" width="33%"><a href="https://shisatoyano.github.io/AutonomousVehicleControlBeginnersGuide/optimal_control/mppi.html"><img src="src/simulations/path_tracking/mppi_path_tracking/mppi_path_tracking.gif" alt="Path tracking: MPPI" width="260"><br>Path tracking: MPPI</a></td>
-    <td align="center" width="33%"><a href="https://shisatoyano.github.io/AutonomousVehicleControlBeginnersGuide/path_planning/index.html"><img src="src/simulations/path_planning/astar_hybrid_path_planning/astar_hybrid_navigate.gif" alt="Path planning: Hybrid A*" width="260"><br>Path planning: Hybrid A*</a></td>
+    <td align="center" width="33%"><img src="src/simulations/localization/ekf_ukf_pf_comparison/ekf_ukf_pf_comparison.gif" alt="Localization: EKF vs UKF vs PF" width="260"><br><a href="https://shisatoyano.github.io/AutonomousVehicleControlBeginnersGuide/localization/index.html">Localization: EKF vs UKF vs PF</a></td>
+    <td align="center" width="33%"><img src="src/simulations/path_tracking/mppi_path_tracking/mppi_path_tracking.gif" alt="Path tracking: MPPI" width="260"><br><a href="https://shisatoyano.github.io/AutonomousVehicleControlBeginnersGuide/optimal_control/mppi.html">Path tracking: MPPI</a></td>
+    <td align="center" width="33%"><img src="src/simulations/path_planning/astar_hybrid_path_planning/astar_hybrid_navigate.gif" alt="Path planning: Hybrid A*" width="260"><br><a href="https://shisatoyano.github.io/AutonomousVehicleControlBeginnersGuide/path_planning/index.html">Path planning: Hybrid A*</a></td>
   </tr>
   <tr>
-    <td align="center" width="33%"><a href="https://shisatoyano.github.io/AutonomousVehicleControlBeginnersGuide/mapping/index.html"><img src="src/simulations/mapping/ndt_map_construction/ndt_map_construction.gif" alt="Mapping: NDT" width="260"><br>Mapping: NDT</a></td>
-    <td align="center" width="33%"><a href="https://shisatoyano.github.io/AutonomousVehicleControlBeginnersGuide/mapping/index.html"><img src="src/simulations/mapping/cost_grid_map_construction/cost_grid_map_construction.gif" alt="Mapping: cost map" width="260"><br>Mapping: cost map</a></td>
-    <td align="center" width="33%"><a href="https://shisatoyano.github.io/AutonomousVehicleControlBeginnersGuide/perception/index.html"><img src="src/simulations/perception/point_cloud_rectangle_fitting/point_cloud_rectangle_fitting.gif" alt="Perception: rectangle fitting" width="260"><br>Perception: rectangle fitting</a></td>
+    <td align="center" width="33%"><img src="src/simulations/mapping/ndt_map_construction/ndt_map_construction.gif" alt="Mapping: NDT" width="260"><br><a href="https://shisatoyano.github.io/AutonomousVehicleControlBeginnersGuide/mapping/index.html">Mapping: NDT</a></td>
+    <td align="center" width="33%"><img src="src/simulations/mapping/cost_grid_map_construction/cost_grid_map_construction.gif" alt="Mapping: cost map" width="260"><br><a href="https://shisatoyano.github.io/AutonomousVehicleControlBeginnersGuide/mapping/index.html">Mapping: cost map</a></td>
+    <td align="center" width="33%"><img src="src/simulations/perception/point_cloud_rectangle_fitting/point_cloud_rectangle_fitting.gif" alt="Perception: rectangle fitting" width="260"><br><a href="https://shisatoyano.github.io/AutonomousVehicleControlBeginnersGuide/perception/index.html">Perception: rectangle fitting</a></td>
   </tr>
 </table>
 
