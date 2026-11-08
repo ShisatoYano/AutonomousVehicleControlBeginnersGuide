@@ -31,9 +31,7 @@ myst_enable_extensions = ["dollarmath", "amsmath"]
 myst_fence_as_directive = ["mermaid"]
 myst_heading_anchors = 3
 
-exclude_patterns = ["_build", "DESIGN_DOCUMENT.md"]
-# Section pages of chapters 3 and 4 start at H2 until they are moved into the book (#170)
-suppress_warnings = ["myst.header"]
+exclude_patterns = ["_build"]
 
 html_theme = "sphinx_rtd_theme"
 html_title = "Autonomous Vehicle Control Beginners Guide"
@@ -52,13 +50,8 @@ html_context = {
 GITHUB_URL = "https://github.com/ShisatoYano/AutonomousVehicleControlBeginnersGuide"
 IMAGE_SUFFIXES = (".gif", ".png", ".jpg", ".jpeg", ".svg")
 LINK_PATTERN = re.compile(r"(\]\(|src=\")([^)\"\s]+)")
-# Section pages nested under their chapter in the sidebar. A toctree directive in the
-# Markdown files would show up as a code block on GitHub, so it is added at build time
-SECTION_PAGES = {
-    "4_path_tracking/4_path_tracking": [
-        "4_1_stanley_controller", "4_2_mpc_controller", "4_3_mppi_controller"
-    ],
-}
+# A link from a chapter page to a page in its own folder, after rewrite_links()
+SECTION_LINK_PATTERN = re.compile(r"\]\(([^)/#\s]+)\.md[)#]")
 
 
 def rewrite_link(docname: str, target: str, in_html: bool) -> str:
@@ -100,12 +93,25 @@ def rewrite_links(app: Sphinx, docname: str, source: list[str]) -> None:
 
 
 def add_section_toctree(app: Sphinx, docname: str, source: list[str]) -> None:
-    pages = SECTION_PAGES.get(docname)
-    if pages is None:
+    # Nests the section pages that a chapter page links to under it in the sidebar, in the
+    # order of the links. A toctree in the Markdown would show as a code block on GitHub
+    if not docname.endswith("/index"):
+        return
+    pages = list(dict.fromkeys(
+        page for page in SECTION_LINK_PATTERN.findall(source[0]) if page != "index"
+    ))
+    if not pages:
         return
     title, _, body = source[0].partition("\n")
     toctree = "```{toctree}\n:hidden:\n\n" + "\n".join(pages) + "\n```\n"
     source[0] = title + "\n\n" + toctree + body
+
+
+def drop_front_page_title_suffix(app: Sphinx, pagename: str, templatename: str,
+                                 context: dict, doctree) -> None:
+    # The front page's heading is the book's title, so "<title> — <html_title>" would repeat it
+    if pagename == app.config.root_doc:
+        context["docstitle"] = None
 
 
 def draw_figures(app: Sphinx) -> None:
@@ -133,3 +139,4 @@ def setup(app: Sphinx) -> None:
     app.connect("builder-inited", draw_figures)
     app.connect("source-read", rewrite_links)
     app.connect("source-read", add_section_toctree)
+    app.connect("html-page-context", drop_front_page_title_suffix)

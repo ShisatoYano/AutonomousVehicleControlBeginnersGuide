@@ -1,6 +1,6 @@
-# 4.1 Stanley Controller
+# 4.3 Stanley
 
-The Stanley controller steers a vehicle along a reference course by looking at two errors at the front axle: how far the axle is from the course, and how much the vehicle's heading differs from the course's direction. After this chapter, you can compute its steering angle by hand and change its gain in the simulation.
+The Stanley controller steers a vehicle along a reference course by looking at two errors at the front axle: how far the axle is from the course, and how much the vehicle's heading differs from the course's direction. After this section, you can compute its steering angle by hand and change its gain in the simulation.
 
 ## Problem and intuition
 

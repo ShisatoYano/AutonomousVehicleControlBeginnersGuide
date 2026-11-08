@@ -67,6 +67,21 @@ With these symbols, the EKF prediction is $\bar{P}_t = F P_{t-1} F^\top + G Q G^
 | $\kappa$ | Curvature of the course | 1/m |
 | $k$ | Gain of a controller (each chapter states which one) | - |
 
+
+## Optimal control
+
+| Symbol | Meaning | In the code |
+|---|---|---|
+| $N$ | Horizon: number of steps that a plan looks ahead | `horizon_step_T` |
+| $k$ | Step inside the horizon, $k = 0$ is the current state | - |
+| $\mathbf{u}_k = [\delta_k, a_k]^\top$ | Input of the plan at step $k$ (steering angle and acceleration) | `steer`, `accel` |
+| $J$ | Cost of a plan | - |
+| $W$, $W_N$ | Diagonal weights of the errors at each step and at the end of the horizon. Many books write them as $Q$ and $R$, which this book uses for noise | `stage_cost_weight`, `terminal_cost_weight` |
+| $W_\Delta$ | Diagonal weights of the change of the input between steps | `smoothness_cost_weight` |
+| $M$, $i$ | Number of samples of MPPI, and the index of a sample | `number_of_samples_K` |
+| $\boldsymbol{\varepsilon}_{i,k}$, $\Sigma$ | Noise added to a sample, and its covariance | `epsilon`, `Sigma` |
+| $\lambda$ | Temperature of the MPPI weights | `param_lambda` |
+
 ## Frames
 
 | Frame | Origin and axes |
@@ -133,4 +148,4 @@ This book keeps $Q$ for the input noise and $R$ for the observation noise, as in
 | This book | Snider | Note |
 |---|---|---|
 | $e$ | $e_{fa}$ | Lateral error at the front axle |
-| $\theta_e$ | $\theta_e$ | Heading error. The sign convention differs, see the [Stanley chapter](4_path_tracking/4_1_stanley_controller.md) |
+| $\theta_e$ | $\theta_e$ | Heading error. The sign convention differs, see the [Stanley section](path_tracking/stanley.md) |
