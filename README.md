@@ -1,7 +1,7 @@
 # AutonomousVehicleControlBeginnersGuide
 [![Linux_CI](https://github.com/ShisatoYano/AutonomousVehicleControlBeginnersGuide/actions/workflows/Linux_CI.yml/badge.svg)](https://github.com/ShisatoYano/AutonomousVehicleControlBeginnersGuide/actions/workflows/Linux_CI.yml) [![Windows_CI](https://github.com/ShisatoYano/AutonomousVehicleControlBeginnersGuide/actions/workflows/Windows_CI.yml/badge.svg)](https://github.com/ShisatoYano/AutonomousVehicleControlBeginnersGuide/actions/workflows/Windows_CI.yml) [![MacOS_CI](https://github.com/ShisatoYano/AutonomousVehicleControlBeginnersGuide/actions/workflows/MacOS_CI.yml/badge.svg)](https://github.com/ShisatoYano/AutonomousVehicleControlBeginnersGuide/actions/workflows/MacOS_CI.yml) [![Book](https://github.com/ShisatoYano/AutonomousVehicleControlBeginnersGuide/actions/workflows/Book.yml/badge.svg)](https://shisatoyano.github.io/AutonomousVehicleControlBeginnersGuide/) [![CodeFactor](https://www.codefactor.io/repository/github/shisatoyano/autonomousvehiclecontrolbeginnersguide/badge)](https://www.codefactor.io/repository/github/shisatoyano/autonomousvehiclecontrolbeginnersguide)
 
-**Learn autonomous driving by building it.** Python simulations and an [open textbook](https://shisatoyano.github.io/AutonomousVehicleControlBeginnersGuide/) of self-driving car algorithms: localization, mapping, path planning, path tracking, perception and control. The system grows one stage at a time, and you can swap and compare the algorithms of each stage in the same system.
+**Learn autonomous driving by building it.** Python simulations and an [open textbook](https://shisatoyano.github.io/AutonomousVehicleControlBeginnersGuide/) of self-driving car algorithms (localization, mapping, path planning, path tracking, perception and control), and of the [software architecture](/doc/ARCHITECTURE.md) that connects them into one autonomous driving system. The system grows one stage at a time, and you can swap and compare the algorithms of each stage in the same system.
 
 **[Read the book](https://shisatoyano.github.io/AutonomousVehicleControlBeginnersGuide/)** · **[See all simulations](/doc/EXAMPLES.md)** · **[Quick start](#quick-start)**
 
@@ -36,7 +36,7 @@
 ## About this project
 Every algorithm is a small Python simulation with an animation, written to be easy to read rather than fast or complete. You can run each one with a single command, change its parameters and see what happens. Fork it and use it for studying, teaching or your own work.
 
-The project is growing into a simulator where you can learn the whole navigation of an autonomous vehicle, swapping algorithms at each stage and comparing the results. See the [architecture and roadmap](/doc/ARCHITECTURE.md) and the [roadmap issue](https://github.com/ShisatoYano/AutonomousVehicleControlBeginnersGuide/issues/131).
+Beyond single algorithms, the project shows how they work together: how the stages of an autonomous driving system pass data to each other, why the true state and the estimates are kept apart, and how small interfaces let you swap one algorithm for another. The [architecture and roadmap](/doc/ARCHITECTURE.md) explain the design, which the code is moving toward step by step (see the [roadmap issue](https://github.com/ShisatoYano/AutonomousVehicleControlBeginnersGuide/issues/131)).
 
 
 ## Requirements
