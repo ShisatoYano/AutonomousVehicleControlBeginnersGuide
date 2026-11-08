@@ -2,7 +2,7 @@
 social_preview.py
 
 Draws the social preview image (1280x640 px): the title of the project and a
-frame of each demo shown at the top of the README. The book build saves it in
+frame of the first four demos shown at the top of the README. The book build saves it in
 doc/_extra, and it is published at the root of the web book
 
 Author: Shisato Yano
@@ -15,7 +15,7 @@ from PIL import Image, ImageChops
 
 REPO_DIR = Path(__file__).absolute().parent.parent
 
-# The same demos, in the same order, as the grid at the top of README.md
+# The same demos, in the same order, as the grid at the top of README.md (the image shows the first four)
 DEMOS = [
     ("Localization: EKF vs UKF vs PF", "localization/ekf_ukf_pf_comparison/ekf_ukf_pf_comparison.gif"),
     ("Path tracking: MPPI", "path_tracking/mppi_path_tracking/mppi_path_tracking.gif"),
@@ -42,22 +42,21 @@ def frame(gif_path: Path) -> Image.Image:
 def draw(out_path: Path) -> None:
     """Save the 1280x640 px preview image to out_path"""
     fig = plt.figure(figsize=(12.8, 6.4), dpi=100, facecolor="white")
-    fig.text(0.5, 0.94, TITLE, ha="center", va="center", fontsize=30, fontweight="bold", color="#1f2933")
-    fig.text(0.5, 0.875, SUBTITLE, ha="center", va="center", fontsize=15, color="#52606d")
+    # GitHub's repository cards show the image at about 2.6:1, cropping the top and bottom
+    # 80 px of 640, so everything stays between y = 100 and 540 px
+    fig.text(0.5, 0.81, TITLE, ha="center", va="center", fontsize=30, fontweight="bold", color="#1f2933")
+    fig.text(0.5, 0.745, SUBTITLE, ha="center", va="center", fontsize=15, color="#52606d")
 
-    columns = 3
-    for i, (label, gif) in enumerate(DEMOS):
-        left = 0.02 + (i % columns) * 0.33
-        bottom = 0.43 - (i // columns) * 0.41
-        ax = fig.add_axes((left, bottom, 0.29, 0.36))
+    for i, (label, gif) in enumerate(DEMOS[:4]):
+        left = 0.02 + i * 0.245
+        ax = fig.add_axes((left, 0.17, 0.225, 0.5))
         ax.imshow(frame(REPO_DIR / "src" / "simulations" / gif))
         ax.set_axis_off()
-        fig.text(left + 0.145, bottom + 0.375, label, ha="center", fontsize=12, color="#1f2933")
+        fig.text(left + 0.1125, 0.685, label, ha="center", fontsize=12, color="#1f2933")
 
     out_path.parent.mkdir(parents=True, exist_ok=True)
     fig.savefig(out_path, dpi=100, facecolor="white")
     plt.close(fig)
-
 
 if __name__ == "__main__":
     draw(Path(__file__).absolute().parent / "_extra" / "social_preview.png")
