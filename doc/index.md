@@ -54,7 +54,6 @@ exercise_answers/index
 :caption: "Design documents (being moved into the chapters)"
 :maxdepth: 1
 
-1_world_visualization/1_world_visualization
 2_vehicle_model/2_vehicle_model
 3_sensor_models/3_sensor_models
 4_path_tracking/4_path_tracking
