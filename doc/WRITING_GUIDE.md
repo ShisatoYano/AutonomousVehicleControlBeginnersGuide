@@ -23,6 +23,8 @@ Every chapter has the same sections, in two layers ([documentation roadmap](http
 6. **Comparison experiments**: change a parameter or swap the algorithm, and show what changes.
 7. **Exercises**: small tasks the reader can run.
 
+**Pages.** A chapter is a folder (`doc/<topic>/`) with the chapter page `index.md`. Put each section on its own page in the folder and list the pages on the chapter page. A short chapter can be written on the chapter page alone, with its sections as `##` headings, like [Chapter 2](simulator/index.md).
+
 ## Template
 
 Copy this into a new page and fill in each section. Delete the comments.
