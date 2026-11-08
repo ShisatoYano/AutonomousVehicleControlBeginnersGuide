@@ -4,7 +4,7 @@
 This chapter is planned. This page lists what it will cover and the simulations that already exist for it.
 ```
 
-Find a route from the start to the goal on a map, from graph search to sampling-based, optimization-based and learning-based planners.
+Path planning algorithms for autonomous vehicles in Python: find a route from the start to the goal on a map with Dijkstra, A*, Hybrid A*, D*, RRT, RRT*, PRM and optimization-based and learning-based planners.
 
 ## Sections
 

@@ -4,7 +4,7 @@
 This chapter is being written. Some sections already exist, the others are planned.
 ```
 
-Generate a smooth course, and steer the vehicle along it with geometric controllers that use the model of [Chapter 3](/doc/vehicle_model/index.md) as geometry.
+Path tracking algorithms in Python: generate a smooth course with cubic splines, and steer the vehicle along it with the Pure Pursuit, Stanley and rear wheel feedback controllers, which use the model of [Chapter 3](/doc/vehicle_model/index.md) as geometry.
 
 ## Sections
 

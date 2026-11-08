@@ -1,6 +1,6 @@
 # Chapter 2: The Simulator: Frames, Units and the Loop
 
-Every simulation in this book runs in the same small simulator: a 2D world in which objects (a vehicle, obstacles, a course, sensors, ...) are updated and drawn at regular time steps. This chapter explains the coordinate frames and units of that world, and how the simulator moves time forward. After it, you can create an empty world and know where every later chapter's objects plug in.
+A simple 2D simulator for autonomous driving algorithms in Python: its coordinate frames, units and simulation loop. Every simulation in this book runs in the same small simulator: a 2D world in which objects (a vehicle, obstacles, a course, sensors, ...) are updated and drawn at regular time steps. This chapter explains the coordinate frames and units of that world, and how the simulator moves time forward. After it, you can create an empty world and know where every later chapter's objects plug in.
 
 ## 2.1 Frames and units
 

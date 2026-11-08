@@ -4,7 +4,7 @@
 This chapter is planned. This page lists what it will cover and the simulations that already exist for it.
 ```
 
-Turn LiDAR point clouds into maps that a planner can use.
+Mapping from LiDAR point clouds in Python: occupancy grid maps, cost maps, potential field maps and NDT maps that a planner can use.
 
 ## Sections
 

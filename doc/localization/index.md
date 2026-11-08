@@ -4,7 +4,7 @@
 This chapter is planned. This page lists what it will cover and the simulations that already exist for it.
 ```
 
-Estimate the vehicle's pose from noisy inputs and GNSS with Bayes filters, using the motion model of [Chapter 3](/doc/vehicle_model/index.md) with noise. Then give the controller the estimate instead of the true state, and see how the tracking changes.
+Vehicle localization in Python with the Kalman filter, the extended Kalman filter (EKF), the unscented Kalman filter (UKF) and the particle filter. Estimate the vehicle's pose from noisy inputs and GNSS with these Bayes filters, using the motion model of [Chapter 3](/doc/vehicle_model/index.md) with noise. Then give the controller the estimate instead of the true state, and see how the tracking changes.
 
 ## Sections
 
