@@ -8,6 +8,9 @@ Author: Shisato Yano
 
 import posixpath
 import re
+import runpy
+import sys
+from pathlib import Path
 
 from sphinx.application import Sphinx
 
@@ -20,6 +23,9 @@ extensions = [
     "sphinxcontrib.mermaid",
     "sphinx_copybutton",
 ]
+
+DOC_DIR = Path(__file__).absolute().parent
+sys.path.append(str(DOC_DIR))
 
 myst_enable_extensions = ["dollarmath", "amsmath"]
 myst_fence_as_directive = ["mermaid"]
@@ -103,6 +109,28 @@ def add_section_toctree(app: Sphinx, docname: str, source: list[str]) -> None:
     source[0] = title + "\n\n" + toctree + body
 
 
+def draw_figures(app: Sphinx) -> None:
+    """
+    Run every figure script (doc/**/figures/*.py) and save its figure as an SVG
+    next to it, so the pages include figures that are never committed as images
+    """
+
+    # matplotlib's plot directive would do this, but it doesn't work in MyST Markdown
+    import matplotlib
+
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+
+    import figure_style
+
+    for script in sorted(DOC_DIR.glob("**/figures/*.py")):
+        with plt.rc_context(figure_style.RC_PARAMS):
+            runpy.run_path(str(script))
+            plt.savefig(script.with_suffix(".svg"))
+            plt.close("all")
+
+
 def setup(app: Sphinx) -> None:
+    app.connect("builder-inited", draw_figures)
     app.connect("source-read", rewrite_links)
     app.connect("source-read", add_section_toctree)

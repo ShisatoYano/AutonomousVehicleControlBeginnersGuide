@@ -7,10 +7,13 @@ on:
       - main
     paths:
       - 'doc/**'
+      # The pages include code from src/ with literalinclude
+      - 'src/**'
       - '.github/workflows/Book.yml'
   pull_request:
     paths:
       - 'doc/**'
+      - 'src/**'
       - '.github/workflows/Book.yml'
 
 permissions:

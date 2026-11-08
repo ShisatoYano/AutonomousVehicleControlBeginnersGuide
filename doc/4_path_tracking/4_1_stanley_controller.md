@@ -34,6 +34,12 @@ $$
 
 $e$ is the front axle's offset from the course point, measured along the vehicle's left direction: it is positive when the axle is on the left of the course.
 
+```{figure} figures/stanley_errors.svg
+:alt: The vehicle with its rear axle at (x, y) and its front axle the wheelbase L ahead. The lateral error e is the distance from the nearest course point to the front axle, the heading error theta_e is the angle between the course direction theta_r and the heading theta, and the front wheel is turned by the steering angle delta toward the course.
+
+The errors at the front axle and the steering angle of equation (3). Here the front axle is on the left of the course and the vehicle points to the left of it, so both $e$ and $\theta_e$ are positive and $\delta$ turns right.
+```
+
 **Steering law.** The steering angle $\delta$ (positive to the left) is
 
 $$
