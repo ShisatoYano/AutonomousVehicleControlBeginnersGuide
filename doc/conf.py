@@ -56,6 +56,7 @@ ogp_image = ("https://raw.githubusercontent.com/ShisatoYano/AutonomousVehicleCon
              "main/src/simulations/mapping/ndt_map_construction/ndt_map_construction.gif")
 ogp_image_alt = "A vehicle building a map from LiDAR points in the simulation"
 ogp_social_cards = {"enable": False}
+GOOGLE_SITE_VERIFICATION = "-jqdmEvaEhWDv2hYifGImJuaC1xrupOK6EFNfzg7h9w"
 # Shows the "Edit on GitHub" link at the top of each page
 html_context = {
     "display_github": True,
@@ -144,11 +145,14 @@ def add_section_toctree(app: Sphinx, docname: str, source: list[str]) -> None:
     source[0] = title + "\n\n" + toctree + body
 
 
-def drop_front_page_title_suffix(app: Sphinx, pagename: str, templatename: str,
-                                 context: dict, doctree) -> None:
+def set_front_page_context(app: Sphinx, pagename: str, templatename: str,
+                           context: dict, doctree) -> None:
+    if pagename != app.config.root_doc:
+        return
     # The front page's heading is the book's title, so "<title> — <html_title>" would repeat it
-    if pagename == app.config.root_doc:
-        context["docstitle"] = None
+    context["docstitle"] = None
+    # Proves to Google Search Console that the maintainer owns the site; removing it unverifies it
+    context["metatags"] += f'\n<meta name="google-site-verification" content="{GOOGLE_SITE_VERIFICATION}" />'
 
 
 def draw_figures(app: Sphinx) -> None:
@@ -176,4 +180,4 @@ def setup(app: Sphinx) -> None:
     app.connect("builder-inited", draw_figures)
     app.connect("source-read", rewrite_links)
     app.connect("source-read", add_section_toctree)
-    app.connect("html-page-context", drop_front_page_title_suffix)
+    app.connect("html-page-context", set_front_page_context)
