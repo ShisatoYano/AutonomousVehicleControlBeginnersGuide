@@ -51,10 +51,10 @@ sitemap_excludes = ["search.html", "genindex.html"]
 ogp_site_url = BOOK_URL
 ogp_site_name = html_title
 ogp_description_length = 160
-# The demo GIF at the top of the README, until the social preview image of #88 exists
-ogp_image = ("https://raw.githubusercontent.com/ShisatoYano/AutonomousVehicleControlBeginnersGuide/"
-             "main/src/simulations/mapping/ndt_map_construction/ndt_map_construction.gif")
-ogp_image_alt = "A vehicle building a map from LiDAR points in the simulation"
+# Drawn by social_preview.py at build time; also uploaded as the repository's social preview
+html_extra_path = ["_extra"]
+ogp_image = BOOK_URL + "social_preview.png"
+ogp_image_alt = "Autonomous Vehicle Control Beginners Guide: demos of localization, path tracking, path planning, mapping and perception"
 ogp_social_cards = {"enable": False}
 GOOGLE_SITE_VERIFICATION = "-jqdmEvaEhWDv2hYifGImJuaC1xrupOK6EFNfzg7h9w"
 # Shows the "Edit on GitHub" link at the top of each page
@@ -155,6 +155,12 @@ def set_front_page_context(app: Sphinx, pagename: str, templatename: str,
     context["metatags"] += f'\n<meta name="google-site-verification" content="{GOOGLE_SITE_VERIFICATION}" />'
 
 
+def draw_social_preview(app: Sphinx, config) -> None:
+    import social_preview
+
+    social_preview.draw(DOC_DIR / "_extra" / "social_preview.png")
+
+
 def draw_figures(app: Sphinx) -> None:
     """
     Run every figure script (doc/**/figures/*.py) and save its figure as an SVG
@@ -178,6 +184,8 @@ def draw_figures(app: Sphinx) -> None:
 
 def setup(app: Sphinx) -> None:
     app.connect("builder-inited", draw_figures)
+    # Before Sphinx checks that html_extra_path exists (priority 800)
+    app.connect("config-inited", draw_social_preview, priority=100)
     app.connect("source-read", rewrite_links)
     app.connect("source-read", add_section_toctree)
     app.connect("html-page-context", set_front_page_context)

@@ -36,6 +36,34 @@ Author: Your Name
 
 7. Add type hints to the arguments and return values of functions and methods. Keep them simple (`list[float]`, `float | None`), write NumPy arrays as `npt.NDArray[np.float64]`, and write their shapes in the docstring. Existing code without type hints doesn't need to be changed in your PR.  
 
+#### Code completion and import resolution in your editor
+Each simulation script adds its own module search paths at runtime with
+`sys.path.append(...)`, since this project doesn't use a standard Python
+package layout. Static analysis tools (Pylance/pyright) can't see those
+runtime `sys.path.append(...)` calls, so without extra configuration your
+editor will show false "import could not be resolved" errors and code
+completion won't work for these modules.
+
+To fix this, `pyrightconfig.json` (for pyright/Pylance, e.g. Neovim or VS
+Code without Dev Containers) and `.devcontainer/devcontainer.json`'s
+`python.analysis.extraPaths` (for VS Code + Dev Containers) list every
+directory under `src/components` and `src/simulations` that directly
+contains a `.py` file.
+
+Whenever you add a new module (a new directory under `src/components` or
+`src/simulations`), regenerate both files by running:
+```bash
+$ python generate_pyrightconfig.py
+```
+This scans the project and rewrites both files automatically, so you don't
+need to edit them by hand.
+
+Run this script on your host machine, not inside the container. It only
+uses the Python standard library (`json`, `pathlib`), and since the project
+directory is bind-mounted into the container as-is, the files it writes are
+the same on both sides either way. Running it on the host is simplest since
+it doesn't depend on the container's Python environment at all.
+
 ### Step 3: Implement unit test
 If you added a new sample program, please add a unit test code for it under test directory. When you implement the test code, please refer to the existing code. Additionally, each unit tests should be able to run without animation because test process stops and an exception occurs. After you completed to implement the test code, confirm the test passes by executing the script, run_test_suites.sh/bat.  
 
