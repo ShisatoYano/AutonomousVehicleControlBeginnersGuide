@@ -1,6 +1,6 @@
 # Writing Guide
 
-This page explains how to write a chapter of the book. It is for anyone who wants to add or improve a chapter, including first-time contributors. The [Stanley chapter](4_path_tracking/4_1_stanley_controller.md) is written with this guide and can be used as an example.
+This page explains how to write a chapter of the book. It is for anyone who wants to add or improve a chapter, including first-time contributors. The [Stanley section](path_tracking/stanley.md) is written with this guide and can be used as an example.
 
 ## What a chapter should do
 
@@ -114,7 +114,7 @@ The caption. It can use math such as $\theta_e$.
 ```
 ````
 
-- See [`4_path_tracking/figures/stanley_errors.py`](/doc/4_path_tracking/figures/stanley_errors.py) for an example.
+- See [`path_tracking/figures/stanley_errors.py`](/doc/path_tracking/figures/stanley_errors.py) for an example.
 - Use the colors of [`doc/figure_style.py`](/doc/figure_style.py), which have a fixed meaning in every figure (course, vehicle, errors, control inputs, estimates, measurements, obstacles). The font sizes and line widths are applied automatically.
 - Label the figure with the same symbols as the equations, written as math (`r"$\theta_e$"`).
 - A figure script can compute its geometry with the equations of the chapter, so the figure is right by construction. Fix the random seed if it uses random numbers.

@@ -49,10 +49,3 @@ ARCHITECTURE
 WRITING_GUIDE
 exercise_answers/index
 ```
-
-```{toctree}
-:caption: "Design documents (being moved into the chapters)"
-:maxdepth: 1
-
-4_path_tracking/4_path_tracking
-```

@@ -48,7 +48,7 @@ $$
 \omega = \frac{v\tan\delta}{L} \tag{3}
 $$
 
-so the model the simulator runs is (2) with $\dot\theta = \omega$. Controllers compute a steering angle, because that is what a driver or an actuator sets, and convert it with (3) before giving it to the vehicle (see equation (4) of the [Stanley section](../4_path_tracking/4_1_stanley_controller.md)).
+so the model the simulator runs is (2) with $\dot\theta = \omega$. Controllers compute a steering angle, because that is what a driver or an actuator sets, and convert it with (3) before giving it to the vehicle (see equation (4) of the [Stanley section](../path_tracking/stanley.md)).
 
 Both forms describe the same motion while the vehicle moves. They differ at $v = 0$: a stopped vehicle can't turn whatever the steering angle, which (3) gives as $\omega = 0$. The input of the simulator will be unified with the code roadmap ([#108](https://github.com/ShisatoYano/AutonomousVehicleControlBeginnersGuide/issues/108)).
 
