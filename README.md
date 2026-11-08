@@ -1,18 +1,31 @@
 # AutonomousVehicleControlBeginnersGuide
-[![Linux_CI](https://github.com/ShisatoYano/AutonomousDrivingSamplePrograms/actions/workflows/Linux_CI.yml/badge.svg)](https://github.com/ShisatoYano/AutonomousDrivingSamplePrograms/actions/workflows/Linux_CI.yml) [![Windows_CI](https://github.com/ShisatoYano/AutonomousDrivingSamplePrograms/actions/workflows/Windows_CI.yml/badge.svg)](https://github.com/ShisatoYano/AutonomousDrivingSamplePrograms/actions/workflows/Windows_CI.yml) [![MacOS_CI](https://github.com/ShisatoYano/AutonomousDrivingSamplePrograms/actions/workflows/MacOS_CI.yml/badge.svg)](https://github.com/ShisatoYano/AutonomousDrivingSamplePrograms/actions/workflows/MacOS_CI.yml) [![CodeFactor](https://www.codefactor.io/repository/github/shisatoyano/autonomousvehiclecontrolbeginnersguide/badge)](https://www.codefactor.io/repository/github/shisatoyano/autonomousvehiclecontrolbeginnersguide)  
+[![Linux_CI](https://github.com/ShisatoYano/AutonomousVehicleControlBeginnersGuide/actions/workflows/Linux_CI.yml/badge.svg)](https://github.com/ShisatoYano/AutonomousVehicleControlBeginnersGuide/actions/workflows/Linux_CI.yml) [![Windows_CI](https://github.com/ShisatoYano/AutonomousVehicleControlBeginnersGuide/actions/workflows/Windows_CI.yml/badge.svg)](https://github.com/ShisatoYano/AutonomousVehicleControlBeginnersGuide/actions/workflows/Windows_CI.yml) [![MacOS_CI](https://github.com/ShisatoYano/AutonomousVehicleControlBeginnersGuide/actions/workflows/MacOS_CI.yml/badge.svg)](https://github.com/ShisatoYano/AutonomousVehicleControlBeginnersGuide/actions/workflows/MacOS_CI.yml) [![Book](https://github.com/ShisatoYano/AutonomousVehicleControlBeginnersGuide/actions/workflows/Book.yml/badge.svg)](https://shisatoyano.github.io/AutonomousVehicleControlBeginnersGuide/) [![CodeFactor](https://www.codefactor.io/repository/github/shisatoyano/autonomousvehiclecontrolbeginnersguide/badge)](https://www.codefactor.io/repository/github/shisatoyano/autonomousvehiclecontrolbeginnersguide)
 
-Learn autonomous driving by building it: Python simulations and an open textbook where the system grows one stage at a time. Swap and compare localization, planning and control algorithms in the same system.  
+**Learn autonomous driving by building it.** Python simulations and an [open textbook](https://shisatoyano.github.io/AutonomousVehicleControlBeginnersGuide/) of self-driving car algorithms: localization, mapping, path planning, path tracking, perception and control. The system grows one stage at a time, and you can swap and compare the algorithms of each stage in the same system.
 
-![](src/simulations/mapping/ndt_map_construction/ndt_map_construction.gif)  
+**[Read the book](https://shisatoyano.github.io/AutonomousVehicleControlBeginnersGuide/)** · **[See all simulations](/doc/EXAMPLES.md)** · **[Quick start](#quick-start)**
+
+<!-- The same demos as doc/social_preview.py, which draws the social preview image from them -->
+<table>
+  <tr>
+    <td align="center" width="33%"><img src="src/simulations/localization/ekf_ukf_pf_comparison/ekf_ukf_pf_comparison.gif" alt="Localization: EKF vs UKF vs PF" width="260"><br><a href="https://shisatoyano.github.io/AutonomousVehicleControlBeginnersGuide/localization/index.html">Localization: EKF vs UKF vs PF</a></td>
+    <td align="center" width="33%"><img src="src/simulations/path_tracking/mppi_path_tracking/mppi_path_tracking.gif" alt="Path tracking: MPPI" width="260"><br><a href="https://shisatoyano.github.io/AutonomousVehicleControlBeginnersGuide/optimal_control/mppi.html">Path tracking: MPPI</a></td>
+    <td align="center" width="33%"><img src="src/simulations/path_planning/astar_hybrid_path_planning/astar_hybrid_navigate.gif" alt="Path planning: Hybrid A*" width="260"><br><a href="https://shisatoyano.github.io/AutonomousVehicleControlBeginnersGuide/path_planning/index.html">Path planning: Hybrid A*</a></td>
+  </tr>
+  <tr>
+    <td align="center" width="33%"><img src="src/simulations/mapping/ndt_map_construction/ndt_map_construction.gif" alt="Mapping: NDT" width="260"><br><a href="https://shisatoyano.github.io/AutonomousVehicleControlBeginnersGuide/mapping/index.html">Mapping: NDT</a></td>
+    <td align="center" width="33%"><img src="src/simulations/mapping/cost_grid_map_construction/cost_grid_map_construction.gif" alt="Mapping: cost map" width="260"><br><a href="https://shisatoyano.github.io/AutonomousVehicleControlBeginnersGuide/mapping/index.html">Mapping: cost map</a></td>
+    <td align="center" width="33%"><img src="src/simulations/perception/point_cloud_rectangle_fitting/point_cloud_rectangle_fitting.gif" alt="Perception: rectangle fitting" width="260"><br><a href="https://shisatoyano.github.io/AutonomousVehicleControlBeginnersGuide/perception/index.html">Perception: rectangle fitting</a></td>
+  </tr>
+</table>
 
 
 ## Table of Contents
-* [What is this?](#what-is-this)
-* [Goal of this project](#goal-of-this-project)
+* [About this project](#about-this-project)
 * [Requirements](#requirements)
 * [Quick Start](#quick-start)
 * [Examples of Simulation](#examples-of-simulation)
-* [Documents](#documents)
+* [The book](#the-book)
 * [License](#license)
 * [Citing](#citing)
 * [Use Case](#use-case)
@@ -20,14 +33,10 @@ Learn autonomous driving by building it: Python simulations and an open textbook
 * [Author](#author)
 
 
-## What is this?
-This is a sample codes collections about Autonomous vehicle control algorithm. Each source codes are implemented with Python to help your understanding. You can fork this repository and use for studying, education or work freely.  
+## About this project
+Every algorithm is a small Python simulation with an animation, written to be easy to read rather than fast or complete. You can run each one with a single command, change its parameters and see what happens. Fork it and use it for studying, teaching or your own work.
 
-
-## Goal of this project
-I want to release my own technical book about Autonomous Vehicle algorithms in the future. The book will include all of codes and documents in this repository as contents.  
-
-The next goal is a simulator where you can learn the whole navigation of an autonomous vehicle, swapping algorithms at each stage and comparing the results. See the [architecture and roadmap](/doc/ARCHITECTURE.md) and the [roadmap issue](https://github.com/ShisatoYano/AutonomousVehicleControlBeginnersGuide/issues/131).  
+The project is growing into a simulator where you can learn the whole navigation of an autonomous vehicle, swapping algorithms at each stage and comparing the results. See the [architecture and roadmap](/doc/ARCHITECTURE.md) and the [roadmap issue](https://github.com/ShisatoYano/AutonomousVehicleControlBeginnersGuide/issues/131).
 
 
 ## Requirements
@@ -115,51 +124,12 @@ On Windows without Docker, run `run_test_suites.bat` instead.
 Add star to this repository if you like it!!
 
 
-## Code completion / import resolution in your editor
-Each simulation script adds its own module search paths at runtime with
-`sys.path.append(...)`, since this project doesn't use a standard Python
-package layout. Static analysis tools (Pylance/pyright) can't see those
-runtime `sys.path.append(...)` calls, so without extra configuration your
-editor will show false "import could not be resolved" errors and code
-completion won't work for these modules.
-
-To fix this, `pyrightconfig.json` (for pyright/Pylance, e.g. Neovim or VS
-Code without Dev Containers) and `.devcontainer/devcontainer.json`'s
-`python.analysis.extraPaths` (for VS Code + Dev Containers) list every
-directory under `src/components` and `src/simulations` that directly
-contains a `.py` file.
-
-Whenever you add a new module (a new directory under `src/components` or
-`src/simulations`), regenerate both files by running:
-```bash
-$ python generate_pyrightconfig.py
-```
-This scans the project and rewrites both files automatically, so you don't
-need to edit them by hand.
-
-Run this script on your host machine, not inside the container. It only
-uses the Python standard library (`json`, `pathlib`), and since the project
-directory is bind-mounted into the container as-is, the files it writes are
-the same on both sides either way. Running it on the host is simplest since
-it doesn't depend on the container's Python environment at all.
-
-
 ## Examples of Simulation
-Every algorithm has a runnable simulation with an animated demo, organized into these categories:
-
-* Localization
-* Mapping
-* Path Planning
-* Path Tracking
-* Perception
-* Course
-
-The full list with demo GIFs is generated from `src/simulations` — see [doc/EXAMPLES.md](/doc/EXAMPLES.md).
+Every algorithm has a runnable simulation with an animated demo, in these categories: localization, mapping, path planning, path tracking, perception and course generation. The full list with the demo GIFs is generated from `src/simulations`: see [doc/EXAMPLES.md](/doc/EXAMPLES.md).
 
 
-## Documents
-The documents are published as a web book: [https://shisatoyano.github.io/AutonomousVehicleControlBeginnersGuide/](https://shisatoyano.github.io/AutonomousVehicleControlBeginnersGuide/)  
-They are still being written and reorganized into a book (see the [documentation roadmap](https://github.com/ShisatoYano/AutonomousVehicleControlBeginnersGuide/issues/165)). If you find any problems in them, please tell me by creating an issue.  
+## The book
+The explanations are published as a free web book: **[https://shisatoyano.github.io/AutonomousVehicleControlBeginnersGuide/](https://shisatoyano.github.io/AutonomousVehicleControlBeginnersGuide/)**. Each chapter adds one stage to the system, and explains the theory with equations and figures, where each equation lives in the code, and experiments to try. It is being written in the open (see the [documentation roadmap](https://github.com/ShisatoYano/AutonomousVehicleControlBeginnersGuide/issues/165)). Comments and ideas are welcome in the [Book](https://github.com/ShisatoYano/AutonomousVehicleControlBeginnersGuide/discussions/categories/book) category of Discussions, and anyone can help write a chapter: see the [writing guide](https://shisatoyano.github.io/AutonomousVehicleControlBeginnersGuide/WRITING_GUIDE.html).
 
 
 ## License
