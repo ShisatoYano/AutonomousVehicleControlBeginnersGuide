@@ -1,6 +1,6 @@
 # 10.3 Model Predictive Control (MPC)
 
-Model predictive control computes the steering angle and the acceleration by **predicting** the vehicle's motion a few seconds ahead with the kinematic bicycle model, and choosing the inputs that make that prediction follow the course best while respecting the vehicle's limits. After this section, you can write down the optimization problem that the MPC controller solves at every step, and know which part of it each parameter changes.
+Model predictive control (MPC) for path tracking explained: the kinematic bicycle model, the cost and the constraints, with Python code using CasADi and do-mpc. Model predictive control computes the steering angle and the acceleration by **predicting** the vehicle's motion a few seconds ahead with the kinematic bicycle model, and choosing the inputs that make that prediction follow the course best while respecting the vehicle's limits. After this section, you can write down the optimization problem that the MPC controller solves at every step, and know which part of it each parameter changes.
 
 ## Problem and intuition
 
@@ -15,6 +15,8 @@ MPC plans instead:
 Because the plan is redone at every step from the measured state, errors of the model and disturbances are corrected, like in a feedback controller. This is the **receding horizon** principle: the horizon of $N$ steps moves forward with the vehicle.
 
 ![The MPC controller tracking a course; the dashed line is the predicted trajectory of the current plan](/src/simulations/path_tracking/mpc_path_tracking/mpc_path_tracking.gif)
+
+**Run it** from the repository root: `python src/simulations/path_tracking/mpc_path_tracking/mpc_path_tracking.py` ([code on GitHub](/src/simulations/path_tracking/mpc_path_tracking))
 
 ## Theory
 

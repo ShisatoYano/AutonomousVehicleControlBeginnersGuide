@@ -1,6 +1,6 @@
 # 10.4 Model Predictive Path Integral Control (MPPI)
 
-MPPI plans like MPC, over a horizon with the vehicle's model, but it doesn't solve an optimization problem. It **samples** many input sequences around its current plan, simulates each one, and moves the plan toward the samples that tracked the course best. After this section, you can compute one MPPI update by hand for a few samples, and know what the temperature $\lambda$ and the noise $\Sigma$ change.
+Model predictive path integral (MPPI) control explained: sampling, weighting and updating the plan, with a Python path tracking simulation and a comparison with MPC. MPPI plans like MPC, over a horizon with the vehicle's model, but it doesn't solve an optimization problem. It **samples** many input sequences around its current plan, simulates each one, and moves the plan toward the samples that tracked the course best. After this section, you can compute one MPPI update by hand for a few samples, and know what the temperature $\lambda$ and the noise $\Sigma$ change.
 
 ## Problem and intuition
 
@@ -22,6 +22,8 @@ One MPPI update from a plan that goes straight ahead. The samples that turn towa
 ```
 
 ![The MPPI controller tracking a course, with the sampled trajectories around the vehicle](/src/simulations/path_tracking/mppi_path_tracking/mppi_path_tracking.gif)
+
+**Run it** from the repository root: `python src/simulations/path_tracking/mppi_path_tracking/mppi_path_tracking.py` ([code on GitHub](/src/simulations/path_tracking/mppi_path_tracking))
 
 ## Theory
 
@@ -84,7 +86,7 @@ flowchart TD
 
 The simulation [`mppi_path_tracking`](/src/simulations/path_tracking/mppi_path_tracking) uses $M = 200$ samples over $N = 22$ steps of 0.1 s, $\lambda = 50$, $\sigma_\delta = 0.2$ rad and $\sigma_a = 0.8$ m/s², the same weights and limits as the MPC of 10.3, and fixes the random seed.
 
-## MPC and MPPI
+## MPC vs MPPI
 
 | | MPC (10.3) | MPPI (10.4) |
 |---|---|---|

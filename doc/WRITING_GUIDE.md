@@ -23,7 +23,11 @@ Every chapter has the same sections, in two layers ([documentation roadmap](http
 6. **Comparison experiments**: change a parameter or swap the algorithm, and show what changes.
 7. **Exercises**: small tasks the reader can run.
 
-**Pages.** A chapter is a folder (`doc/<topic>/`) with the chapter page `index.md`. Put each section on its own page in the folder and list the pages on the chapter page. A short chapter can be written on the chapter page alone, with its sections as `##` headings, like [Chapter 2](simulator/index.md).
+**Pages.** A chapter is a folder (`doc/<topic>/`) with the chapter page `index.md`. Put each section on its own page in the folder and link the pages from the chapter page; the linked pages are nested under the chapter in the sidebar. A short chapter can be written on the chapter page alone, with its sections as `##` headings, like [Chapter 2](simulator/index.md).
+
+**Being found by search.** Many readers arrive from a search engine, typing the algorithm's name with words such as "explained", "equations", "python", "example" or "github", or comparing two algorithms ("stanley vs pure pursuit", "ekf vs ukf", "mppi vs mpc"). The first sentence of each page becomes its description in search results and link previews (about 160 characters), so:
+- Start each page with one sentence that names the algorithm (with its common abbreviation) and says what the page gives, for example "The Stanley controller for path tracking explained, with its equations and a Python simulation."
+- Name comparison sections "A vs B" (for example "MPC vs MPPI"), the words people search for.
 
 ## Template
 
@@ -32,11 +36,14 @@ Copy this into a new page and fill in each section. Delete the comments.
 ````markdown
 # N.M Algorithm Name
 
-<!-- One or two sentences: what this chapter is about and what the reader will be able to do -->
+<!-- First a search sentence: the algorithm's name, abbreviation, and "explained, with its equations and a Python simulation".
+     Then one or two sentences: what this section is about and what the reader will be able to do -->
 
 ## Problem and intuition
 
 <!-- The problem, the idea, and a figure or GIF of the algorithm working -->
+
+**Run it** from the repository root: `python src/simulations/<category>/<name>/<name>.py` ([code on GitHub](/src/simulations/<category>/<name>))
 
 ## Theory
 

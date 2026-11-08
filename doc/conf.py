@@ -22,6 +22,8 @@ extensions = [
     "myst_parser",
     "sphinxcontrib.mermaid",
     "sphinx_copybutton",
+    "sphinx_sitemap",
+    "sphinxext.opengraph",
 ]
 
 DOC_DIR = Path(__file__).absolute().parent
@@ -38,6 +40,22 @@ html_title = "Autonomous Vehicle Control Beginners Guide"
 html_theme_options = {
     "navigation_depth": 3,
 }
+templates_path = ["_templates"]
+
+# Search engines and link previews: canonical URLs and sitemap.xml come from html_baseurl,
+# and the description of each page from its first paragraph (notes are skipped)
+BOOK_URL = "https://shisatoyano.github.io/AutonomousVehicleControlBeginnersGuide/"
+html_baseurl = BOOK_URL
+sitemap_url_scheme = "{link}"
+sitemap_excludes = ["search.html", "genindex.html"]
+ogp_site_url = BOOK_URL
+ogp_site_name = html_title
+ogp_description_length = 160
+# The demo GIF at the top of the README, until the social preview image of #88 exists
+ogp_image = ("https://raw.githubusercontent.com/ShisatoYano/AutonomousVehicleControlBeginnersGuide/"
+             "main/src/simulations/mapping/ndt_map_construction/ndt_map_construction.gif")
+ogp_image_alt = "A vehicle building a map from LiDAR points in the simulation"
+ogp_social_cards = {"enable": False}
 # Shows the "Edit on GitHub" link at the top of each page
 html_context = {
     "display_github": True,
@@ -50,6 +68,7 @@ html_context = {
 GITHUB_URL = "https://github.com/ShisatoYano/AutonomousVehicleControlBeginnersGuide"
 IMAGE_SUFFIXES = (".gif", ".png", ".jpg", ".jpeg", ".svg")
 LINK_PATTERN = re.compile(r"(\]\(|src=\")([^)\"\s]+)")
+CODE_FENCE_PATTERN = re.compile(r"^\s*(`{3,}|~{3,})\s*(.*)$")
 # A link from a chapter page to a page in its own folder, after rewrite_links()
 SECTION_LINK_PATTERN = re.compile(r"\]\(([^)/#\s]+)\.md[)#]")
 
@@ -85,11 +104,29 @@ def rewrite_link(docname: str, target: str, in_html: bool) -> str:
 
 
 def rewrite_links(app: Sphinx, docname: str, source: list[str]) -> None:
-    # The pages use repository-root links (/doc/..., /src/...) so they also work on GitHub
-    source[0] = LINK_PATTERN.sub(
-        lambda m: m.group(1) + rewrite_link(docname, m.group(2), m.group(1) == 'src="'),
-        source[0],
-    )
+    # The pages use repository-root links (/doc/..., /src/...) so they also work on GitHub.
+    # Code blocks are shown as written; directive blocks such as {figure} and {note} are not code
+    lines = []
+    fences = []  # open blocks as (fence, is_code), innermost last
+    for line in source[0].split("\n"):
+        match = CODE_FENCE_PATTERN.match(line)
+        closes = (match is not None and match.group(2) == "" and bool(fences)
+                  and match.group(1)[0] == fences[-1][0][0]
+                  and len(match.group(1)) >= len(fences[-1][0]))
+        in_code = bool(fences) and fences[-1][1]
+        if closes:
+            fences.pop()
+        elif in_code:
+            pass
+        elif match:
+            fences.append((match.group(1), not match.group(2).startswith("{")))
+        else:
+            line = LINK_PATTERN.sub(
+                lambda m: m.group(1) + rewrite_link(docname, m.group(2), m.group(1) == 'src="'),
+                line,
+            )
+        lines.append(line)
+    source[0] = "\n".join(lines)
 
 
 def add_section_toctree(app: Sphinx, docname: str, source: list[str]) -> None:

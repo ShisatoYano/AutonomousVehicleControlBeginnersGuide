@@ -1,6 +1,6 @@
 # Chapter 5: Sensing the World
 
-A vehicle that only follows its commands doesn't know where it is or what is around it. This chapter adds the sensors: obstacles to be sensed, a LiDAR that measures their outlines as a point cloud, and a GNSS receiver that measures the vehicle's position with noise. Each sensor is a model, **what it would measure if the world were as the simulator says, plus noise**. The later chapters estimate the vehicle's pose (Chapter 6), build maps (Chapter 7) and find objects (Chapter 9) from these measurements.
+LiDAR and GNSS sensor models for autonomous driving in Python: point clouds with occlusion and noise, noisy positions, and calibration of the sensor's mounting position. A vehicle that only follows its commands doesn't know where it is or what is around it. This chapter adds the sensors: obstacles to be sensed, a LiDAR that measures their outlines as a point cloud, and a GNSS receiver that measures the vehicle's position with noise. Each sensor is a model, **what it would measure if the world were as the simulator says, plus noise**. The later chapters estimate the vehicle's pose (Chapter 6), build maps (Chapter 7) and find objects (Chapter 9) from these measurements.
 
 ## 5.1 Obstacles
 

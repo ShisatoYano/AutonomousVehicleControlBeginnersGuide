@@ -4,7 +4,7 @@
 This chapter is being written. Some sections already exist, the others are planned.
 ```
 
-Linearize and discretize the model of [Chapter 3](/doc/vehicle_model/index.md), and use it to compute the controls that minimize a cost: as a linear model (LQR), as the constraints of an optimization (MPC), and to roll out sampled controls (MPPI).
+Optimal control for path tracking in Python: LQR, model predictive control (MPC) and MPPI. Linearize and discretize the model of [Chapter 3](/doc/vehicle_model/index.md), and use it to compute the controls that minimize a cost: as a linear model (LQR), as the constraints of an optimization (MPC), and to roll out sampled controls (MPPI).
 
 ## Sections
 

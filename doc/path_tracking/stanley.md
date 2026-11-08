@@ -1,6 +1,6 @@
 # 4.3 Stanley
 
-The Stanley controller steers a vehicle along a reference course by looking at two errors at the front axle: how far the axle is from the course, and how much the vehicle's heading differs from the course's direction. After this section, you can compute its steering angle by hand and change its gain in the simulation.
+The Stanley controller for path tracking explained, with its equations and a Python simulation. The Stanley controller steers a vehicle along a reference course by looking at two errors at the front axle: how far the axle is from the course, and how much the vehicle's heading differs from the course's direction. After this section, you can compute its steering angle by hand and change its gain in the simulation.
 
 ## Problem and intuition
 
@@ -14,6 +14,8 @@ It combines two simple ideas:
 Both are measured at the **front axle**, because the front wheels are the ones that steer.
 
 ![Stanley controller tracking a course in the simulation](/src/simulations/path_tracking/stanley_path_tracking/stanley_path_tracking.gif)
+
+**Run it** from the repository root: `python src/simulations/path_tracking/stanley_path_tracking/stanley_path_tracking.py` ([code on GitHub](/src/simulations/path_tracking/stanley_path_tracking))
 
 ## Theory
 

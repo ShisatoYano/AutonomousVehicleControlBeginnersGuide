@@ -1,6 +1,6 @@
 # Autonomous Vehicle Control Beginners Guide
 
-Learn autonomous driving by building it: Python simulations and an open textbook where the system grows one stage at a time.
+Learn autonomous driving by building it: Python simulations and an open textbook of self-driving car algorithms (path planning, path tracking, localization, mapping and control), where the system grows one stage at a time.
 
 The book starts from a bare world and a vehicle that moves by given commands, and **adds one stage per chapter**: following a course, sensing, localization, mapping, planning, perception and optimal control, then driving among other vehicles and obstacles. Each chapter ends with a runnable "system so far", and the alternative algorithms of a stage are swapped into the same system and compared.
 

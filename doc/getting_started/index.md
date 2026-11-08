@@ -4,7 +4,7 @@
 This chapter is planned. This page lists what it will cover and the simulations that already exist for it.
 ```
 
-Set up the environment, run a simulation, and find your way around the repository.
+Get started with the autonomous driving simulations in Python: set up the environment, run a simulation, and find your way around the repository.
 
 ## Sections
 

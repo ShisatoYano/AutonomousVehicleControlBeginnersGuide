@@ -5,3 +5,5 @@ sphinxcontrib-mermaid
 sphinx-copybutton
 matplotlib
 numpy
+sphinx-sitemap
+sphinxext-opengraph

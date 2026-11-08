@@ -1,6 +1,6 @@
 # Chapter 3: The Vehicle Model
 
-To simulate a vehicle, we need equations that say how its position and heading change when it accelerates and steers. This chapter derives the **kinematic bicycle model**, the motion model that every later chapter uses: the path tracking controllers as geometry, the localization filters with noise, the planners as a constraint, and the optimal controllers in a linearized form. It then turns the model into the discrete-time update that the simulator runs, and shows where the model stops being valid.
+The kinematic bicycle model explained, with its equations, derivation, discretization and Python code. To simulate a vehicle, we need equations that say how its position and heading change when it accelerates and steers. This chapter derives the **kinematic bicycle model**, the motion model that every later chapter uses: the path tracking controllers as geometry, the localization filters with noise, the planners as a constraint, and the optimal controllers in a linearized form. It then turns the model into the discrete-time update that the simulator runs, and shows where the model stops being valid.
 
 ![The vehicle of the simulator moving in the world](visualize_vehicle.gif)
 

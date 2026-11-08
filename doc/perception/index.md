@@ -4,7 +4,7 @@
 This chapter is planned. This page lists what it will cover and the simulations that already exist for it.
 ```
 
-Find objects in a LiDAR point cloud: search for neighboring points, then fit rectangles to the clusters.
+Object detection from a LiDAR point cloud in Python: search for neighboring points with a kd-tree, then fit rectangles to the clusters (L-shape fitting).
 
 ## Sections
 
