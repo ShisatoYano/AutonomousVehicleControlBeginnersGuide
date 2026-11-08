@@ -5,3 +5,4 @@ __pycache__/
 .coverage
 .vscode/
 doc/_build/
+doc/**/figures/*.svg
