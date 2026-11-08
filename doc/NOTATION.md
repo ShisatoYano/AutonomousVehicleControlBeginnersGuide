@@ -65,6 +65,9 @@ With these symbols, the EKF prediction is $\bar{P}_t = F P_{t-1} F^\top + G Q G^
 | $\theta_e$ | Heading error: $\theta - \theta_r$, the vehicle's yaw minus the course's yaw at the target point, wrapped into $[-\pi, \pi)$ | rad |
 | $\theta_r$, $v_r$ | Yaw and speed of the reference course at the target point | rad, m/s |
 | $\kappa$ | Curvature of the course | 1/m |
+| $s$ | Distance along the course, the parameter of the course's spline | m |
+| $l_d$ | Look-ahead distance of Pure Pursuit, from the rear axle to the look-ahead point | m |
+| $\alpha$ | Angle from the vehicle's heading to the look-ahead point | rad |
 | $k$ | Gain of a controller (each chapter states which one) | - |
 
 
