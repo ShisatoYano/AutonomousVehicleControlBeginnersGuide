@@ -3,6 +3,6 @@ This document provides an explanation of each Python programs design in this rep
 
 ## Table of contents
 1. [World Visualization](/doc/simulator/index.md)
-2. [Vehicle Model](/doc/2_vehicle_model/2_vehicle_model.md)
+2. [Vehicle Model](/doc/vehicle_model/index.md)
 3. [Sensor Models](/doc/3_sensor_models/3_sensor_models.md)
 4. [Path Tracking](/doc/4_path_tracking/4_path_tracking.md)
