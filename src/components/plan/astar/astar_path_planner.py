@@ -50,19 +50,26 @@ class AStarPathPlanner:
             map_file: Path to the occupancy grid file. ".npy", ".json" and
                 ".png" (binarized at 0.5) are accepted. In the grid, 0 is a
                 free cell and a non-zero value is an obstacle.
-            weight: Weight w of the heuristic in f(n) = g(n) + w * h(n) [-].
-                1.0 is plain A*; a larger value makes the search greedier and
-                gives up the shortest-path guarantee (see heuristic()).
+            weight: Weight w of the heuristic in f(n) = g(n) + w * h(n) [-],
+                with h(n) = |dx| + |dy| in cells (see heuristic()). Even at
+                1.0 that h overestimates the remaining cost on this
+                8-connected unit-cost grid, so the shortest path is not
+                guaranteed here either; a larger w makes the search greedier
+                and widens the gap.
             x_lim: MinMax of the grid's x range in world coordinates [m]. The
                 cell size is derived from it, so this is required even though
                 it defaults to None: resolution = (x_max - x_min) / columns.
             y_lim: MinMax of the grid's y range in world coordinates [m], also
                 required. Cells are assumed square, so the same resolution is
                 reused on y.
-            path_filename: Path of the json file the sparse path is written to.
+            path_filename: Path of the json file the sparse path is written
+                to. Required as well: once the goal is reached, save_path()
+                calls Path() on it, which raises TypeError on None.
             gif_name: Path of the gif file the search animation is saved to.
-                When it is None the animation is shown with plt.show()
-                instead of being saved.
+                When it is None there is no visualization at all. With a path
+                the animation is shown with plt.show(), and written to that
+                path only when --save-gif is on the command line
+                (common/save_gif.py).
         """
         self.start = start
         self.goal = goal
@@ -110,7 +117,9 @@ class AStarPathPlanner:
         Estimate the remaining cost from a cell to the goal.
         This is the Manhattan (L1) distance in cells, scaled by the weight:
 
-            h(n) = w * (|n_x - goal_x| + |n_y - goal_y|)
+            h(n) = |n_x - goal_x| + |n_y - goal_y|
+
+        and this method returns w * h(n).
 
         What it does not guarantee: search() expands the 8-connected
         neighbourhood and charges 1 per move, diagonals included, so the
@@ -128,10 +137,9 @@ class AStarPathPlanner:
         map of src/simulations/path_planning/astar_path_planning with
         start (0, 0) and goal (50, -10): Dijkstra (h = 0) expands 7295 cells,
         w = 1.0 expands 538 and the simulation's w = 5.0 expands 121, and on
-        this map all three return the same 100-step path. The guarantee is
-        gone in general though: over 283 solvable random 30x30 grids with
-        25% occupied cells, w = 1.0 returned a path longer than Dijkstra's
-        on 219 of them (worst case 1.32x) and w = 5.0 on 229 (worst 1.39x).
+        this map all three return the same 100-step path. That is a property
+        of this map, not of the heuristic: on random grids w = 1.0 already
+        returns paths longer than Dijkstra's (figures in the pull request).
 
         For an admissible heuristic on this neighbourhood, use the Chebyshev
         distance max(|dx|, |dy|) with w = 1.0, or the octile distance if the
@@ -170,8 +178,8 @@ class AStarPathPlanner:
         smallest sum of the two:
 
             g(n): cost already paid to reach n from the start
-            h(n): estimated cost left to the goal (see heuristic())
-            f(n) = g(n) + h(n), and h() already carries the weight w
+            h(n): estimated cost left to the goal, |dx| + |dy| in cells
+            f(n) = g(n) + w * h(n), which is what heuristic() returns
 
         Step by step, matching the code below:
         1. World coordinates become cell indices,
@@ -182,9 +190,9 @@ class AStarPathPlanner:
            path is rebuilt backwards through came_from, thinned out and saved.
         4. Otherwise each of the 8 neighbours n' is checked:
            g(n') = g(n) + 1, the same cost for a straight and a diagonal move.
-           A neighbour is pushed with f(n') = g(n') + h(n') when it is new or
-           when this g(n') is lower than the one recorded before, which is
-           also how a cell can be expanded more than once here.
+           A neighbour is pushed with f(n') = g(n') + w * h(n') when it is
+           new or when this g(n') is lower than the one recorded before,
+           which is also how a cell can be expanded more than once here.
         5. An empty open_list means every reachable cell was expanded without
            finding the goal, so there is no path.
 
