@@ -5,7 +5,7 @@ This section explains the obstacle models used by the sensor simulations. The re
 - [obstacle_list.py](/src/components/obstacle/obstacle_list.py): Manages multiple obstacles.
 
 ### 3.1.1 Rectangle Obstacle
-The `Obstacle` class stores its own state and geometric shape. The constructor takes a [State class](/doc/2_vehicle_model/2_vehicle_model.md) instance and shape/motion parameters.
+The `Obstacle` class stores its own state and geometric shape. The constructor takes a [State class](/src/components/state/state.py) instance and shape/motion parameters.
 
 ```python
 class Obstacle:
