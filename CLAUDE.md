@@ -41,6 +41,7 @@ Conversations with the AI tool itself can be in any language.
 
 - Run: `. run_test_suites.sh` (internally `pytest -l --durations=0`)
 - When adding a new simulation, add a matching `test/test_<simulation_name>.py`. The basic pattern is a simple smoke test that sets `show_plot = False` and then calls `main()` (to check it runs without exceptions and without showing the animation)
+- Also add the new simulation's folder to the "Sections" list of the book chapter it belongs to (`doc/<chapter>/index.md`). `test/test_book_chapters.py` fails if a simulation is in no chapter or in more than one
 
 ## Development flow
 

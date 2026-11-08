@@ -11,6 +11,7 @@ Points to check in a PR to this repository. Add new points here as they come up 
 - New functions and methods have type hints for their arguments and return values, in the simple forms of `HOWTOCONTRIBUTE.md`. Don't ask for them in PRs opened before this rule was added (#175), or for unrelated existing code
 - Simulation scripts have a `show_plot` flag and keep the logic in `main()`
 - A new simulation has `test/test_<simulation_name>.py`, and new components have unit tests for their logic
+- A new simulation is linked from the right chapter page (`doc/<chapter>/index.md`), checked by `test/test_book_chapters.py`
 - `pyrightconfig.json` and `.devcontainer/devcontainer.json` are regenerated when new module directories are added
 - Comments, docstrings, messages and docs are in English
 

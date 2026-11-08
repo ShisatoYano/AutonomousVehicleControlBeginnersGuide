@@ -41,6 +41,8 @@ If you added a new sample program, please add a unit test code for it under test
 
 If your sample program has a demo GIF/image under its `src/simulations/...` directory, it is added to [doc/EXAMPLES.md](/doc/EXAMPLES.md) automatically after your PR is merged, so you don't need to update that file. Please don't edit `doc/EXAMPLES.md` by hand, because it is overwritten. To change the heading or description, edit the docstring of your simulation script (see Step 2).  
 
+Also add your simulation to the chapter of the [book](https://shisatoyano.github.io/AutonomousVehicleControlBeginnersGuide/) it belongs to: add a link to its folder in the "Sections" list of `doc/<chapter>/index.md`, for example ``[`ndt_map_construction`](/src/simulations/mapping/ndt_map_construction)`` in `doc/mapping/index.md`. The test `test/test_book_chapters.py` checks that every simulation is in exactly one chapter. If you are not sure which chapter fits, ask in your issue or pull request.  
+
 Run a simulation normally to display its animation in a window. To regenerate a committed demo GIF, run the simulation with the `--save-gif` option, for example:
 
 ```bash

@@ -77,7 +77,12 @@ def rewrite_link(docname: str, target: str, in_html: bool) -> str:
         relative = posixpath.relpath(repo_path[len("doc/"):], posixpath.dirname(docname) or ".")
         return relative + ("#" + anchor if anchor else "")
 
-    kind = "raw" if repo_path.lower().endswith(IMAGE_SUFFIXES) else "blob"
+    if repo_path.lower().endswith(IMAGE_SUFFIXES):
+        kind = "raw"
+    elif posixpath.splitext(repo_path)[1] == "":
+        kind = "tree"  # a directory, such as a simulation's folder
+    else:
+        kind = "blob"
     return f"{GITHUB_URL}/{kind}/main/{repo_path}" + ("#" + anchor if anchor else "")
 
 
