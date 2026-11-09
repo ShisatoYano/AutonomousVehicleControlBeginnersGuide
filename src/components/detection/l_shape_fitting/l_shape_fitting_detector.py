@@ -69,6 +69,10 @@ class LShapeFittingDetector:
 
         where d[m] is the distance from the sensor to the point being checked.
 
+        This threshold is adapted from the paper: Zhang et al. use
+        r = alpha0 * ||x|| with no minimum term, while the code adds
+        MIN_RNG_TH_M as a minimum term.
+
         point_cloud: Input original point cloud
         Return list of small clusters
         """
@@ -179,6 +183,12 @@ class LShapeFittingDetector:
 
             gamma = -Var(E1) - Var(E2)
 
+        Note: this is a simplification of the paper. In Alg. 5, the paper
+        picks, per axis, the single edge the whole point set is closer to,
+        while the code picks the nearer edge for each point on its own
+        (the np.minimum calls below). The paper also proposes area and
+        closeness criteria; only the variance criterion is implemented here.
+
         If the points hug the edges, the distances are all about the same
         (near zero), the variances are small, and gamma is close to 0, its
         maximum. A poor direction spreads the distances out and makes gamma
@@ -211,7 +221,8 @@ class LShapeFittingDetector:
         Tries a rectangle direction theta every CHANGE_ANGLE_RAD, rotates the
         cluster by theta, scores it with the variance criterion and keeps the
         theta with the largest score. A rectangle looks the same after a
-        quarter turn, so only directions in [0, 90 deg) need to be searched.
+        quarter turn, so the search covers [0, 90 deg): with the default
+        1 deg step, np.arange(0, pi/2 - delta, delta) tries 0 deg to 88 deg.
 
         With the best theta, the rectangle is the box around the rotated
         points. Its four edges are lines a*x + b*y = c in the original frame:
