@@ -84,12 +84,12 @@ class SensorParameters:
 
         # convert sensor's global pose to homegeneous transformation matrix
         if self.first_sensor_pos:
-            self.prev_sensor_tf = hom_mat_33(self.global_x_m[0], self.global_y_m[0], pose[2, 0])
+            self.prev_sensor_tf = hom_mat_33(self.global_x_m[0], self.global_y_m[0], pose[2, 0] + self.INST_YAW_RAD)
             self.curr_sensor_tf = self.prev_sensor_tf
             self.first_sensor_pos = False
         else:
             self.prev_sensor_tf = self.curr_sensor_tf
-            self.curr_sensor_tf = hom_mat_33(self.global_x_m[0], self.global_y_m[0], pose[2, 0])
+            self.curr_sensor_tf = hom_mat_33(self.global_x_m[0], self.global_y_m[0], pose[2, 0] + self.INST_YAW_RAD)
 
     def calibrate_extrinsic_params(self, vehicle_state):
         """
