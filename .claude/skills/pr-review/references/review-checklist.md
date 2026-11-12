@@ -8,8 +8,10 @@ Points to check in a PR to this repository. Add new points here as they come up 
 - Modules are loaded with `sys.path.append(...)` like existing files, not as packages
 - Simulation scripts have the docstring template in `generate_example_gallery.py` (file name, `Title:`, `Description:`, `Author:`, nothing else). Other files have the `file name / Author` docstring
 - Class and constructor docstrings state the meaning and unit of each argument, and variable names include units (`_m`, `_rad`, `_mps`)
+- New functions and methods have type hints for their arguments and return values, in the simple forms of `HOWTOCONTRIBUTE.md`. Don't ask for them in PRs opened before this rule was added (#175), or for unrelated existing code
 - Simulation scripts have a `show_plot` flag and keep the logic in `main()`
 - A new simulation has `test/test_<simulation_name>.py`, and new components have unit tests for their logic
+- A new simulation is linked from the right chapter page (`doc/<chapter>/index.md`), checked by `test/test_book_chapters.py`
 - `pyrightconfig.json` and `.devcontainer/devcontainer.json` are regenerated when new module directories are added
 - Comments, docstrings, messages and docs are in English
 
@@ -33,3 +35,11 @@ Points to check in a PR to this repository. Add new points here as they come up 
 
 - A demo GIF is added under the simulation directory, shows the algorithm working, and is not much larger than existing ones (a few MB)
 - The `Title` reads well as a gallery heading and is consistent in style with existing titles
+
+## Security
+
+- No network access (`requests`, `urllib`, `socket`), `subprocess`, `eval`/`exec`, `pickle` or `np.load(allow_pickle=True)`, unless the algorithm needs it and the PR explains why
+- No obfuscated code, long encoded strings (base64, hex) or downloaded binaries
+- New dependencies in `requirements.txt` are well-known packages with the exact name (watch for look-alike names)
+- Changes to `.github/`, `Dockerfile`, `*.sh`, `*.bat` and `generate_*.py` get extra care: `generate_example_gallery.py` runs with write access after merge
+- Added files are what their extension says (a GIF is a GIF, a JSON file is data)

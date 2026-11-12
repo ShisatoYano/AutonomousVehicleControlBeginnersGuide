@@ -1,6 +1,8 @@
 """
 mppi_controller.py
 
+Author: Erwin Lejeune
+
 Model Predictive Path Integral (MPPI) controller for path tracking.
 Follows the standard MPPI formulation: warm-started control sequence, additive
 noise sampling, stage and terminal costs, information-theoretic weighting,

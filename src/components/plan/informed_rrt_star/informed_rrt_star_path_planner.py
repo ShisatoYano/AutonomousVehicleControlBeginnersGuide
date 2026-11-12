@@ -5,8 +5,6 @@ Author: Rajat Arora
 Informed RRT* (Informed Rapidly-exploring Random Tree Star) path planner.
 """
 
-import matplotlib
-
 from matplotlib.patches import Ellipse
 import numpy as np
 import matplotlib.pyplot as plt
@@ -21,8 +19,9 @@ abs_dir_path = str(Path(__file__).absolute().parent)
 relative_path = "/../../../components/"
 sys.path.append(abs_dir_path + relative_path + "mapping/grid")
 sys.path.append(abs_dir_path + relative_path + "common")
-from matrix_lib import rot_mat_22
 
+from save_gif import is_save_gif_enabled
+from matrix_lib import rot_mat_22
 class InformedRrtStarPathPlanner:
     def __init__(
         self,
@@ -38,13 +37,6 @@ class InformedRrtStarPathPlanner:
         goal_sample_rate=0.05,
         visualize_live=False,
     ):
-
-        if visualize_live:
-            matplotlib.use("TkAgg")
-        else:
-            matplotlib.use("Agg")
-
-        np.random.seed(42)
 
         self.start = start
         self.goal = goal
@@ -368,6 +360,9 @@ class InformedRrtStarPathPlanner:
             ax.set_title(f"Iteration {i} | Cost: {c_best:.2f}")
             
         ani = anm.FuncAnimation(fig, update, frames=len(frames), interval=40)
-        ani.save(gif_name, writer=PillowWriter(fps=25))
-        print(f"GIF saved to {gif_name}")
+        if is_save_gif_enabled():
+            ani.save(gif_name, writer=PillowWriter(fps=25))
+            print(f"GIF saved to {gif_name}")
+        else:
+            plt.show()
         plt.close(fig)

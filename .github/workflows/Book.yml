@@ -1,0 +1,73 @@
+name: Book
+
+# Build the web book from doc/ on pull requests, and publish it to GitHub Pages from main
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'doc/**'
+      # The pages include code from src/ with literalinclude
+      - 'src/**'
+      - '.github/workflows/Book.yml'
+  pull_request:
+    paths:
+      - 'doc/**'
+      - 'src/**'
+      - '.github/workflows/Book.yml'
+
+permissions:
+  contents: read
+
+# Serialize deployments so back-to-back merges don't race
+concurrency:
+  group: book-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    name: Build the book
+
+    steps:
+    - uses: actions/checkout@v7
+
+    - name: Setup python
+      uses: actions/setup-python@v7
+      with:
+        python-version: '3.13'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        python -m pip install -r doc/requirements.txt
+
+    - name: Build
+      # Warnings (broken links, pages missing from the table of contents) fail the build
+      run: sphinx-build -W --keep-going -b html doc doc/_build/html
+
+    - name: Upload the site
+      if: github.event_name == 'push'
+      uses: actions/upload-pages-artifact@v5
+      with:
+        path: doc/_build/html
+
+  deploy:
+    if: github.event_name == 'push'
+    needs: build
+    runs-on: ubuntu-latest
+    name: Publish to GitHub Pages
+
+    # Only this job can write to Pages
+    permissions:
+      pages: write
+      id-token: write
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+    - name: Deploy
+      id: deployment
+      uses: actions/deploy-pages@v5

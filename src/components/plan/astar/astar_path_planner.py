@@ -23,10 +23,12 @@ sys.path.append(abs_dir_path + relative_path + "state")
 sys.path.append(abs_dir_path + relative_path + "obstacle")
 sys.path.append(abs_dir_path + relative_path + "plan/astar")
 sys.path.append(abs_dir_path + relative_path + "mapping/grid")
+sys.path.append(abs_dir_path + relative_path + "common")
 
 
 
 
+from save_gif import is_save_gif_enabled
 from state import State
 from obstacle import Obstacle
 from obstacle_list import ObstacleList
@@ -228,12 +230,15 @@ class AStarPathPlanner:
             repeat=False,
         )
 
-        try:
-            print("Saving animation...")
-            self.anime.save(gif_name, writer="pillow")
-            print("Animation saved successfully.")
-        except Exception as e:
-            print(f"Error saving animation: {e}")
+        if is_save_gif_enabled():
+            try:
+                print("Saving animation...")
+                self.anime.save(gif_name, writer="pillow")
+                print("Animation saved successfully.")
+            except Exception as e:
+                print(f"Error saving animation: {e}")
+        else:
+            plt.show()
 
         # clear existing plot and close existing figure
         plt.clf()
@@ -306,5 +311,3 @@ if __name__ == "__main__":
 
     # Create the A* planner
     planner = AStarPathPlanner(start, goal, map_file, weight=5.0, x_lim=x_lim, y_lim=y_lim, path_filename=path_file, gif_name=gif_path)
-
-

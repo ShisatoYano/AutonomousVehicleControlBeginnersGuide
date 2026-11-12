@@ -38,7 +38,9 @@ sys.path.append(abs_dir_path + relative_path + "visualization")
 sys.path.append(abs_dir_path + relative_path + "state")
 sys.path.append(abs_dir_path + relative_path + "obstacle")
 sys.path.append(abs_dir_path + relative_path + "mapping/grid")
+sys.path.append(abs_dir_path + relative_path + "common")
 
+from save_gif import is_save_gif_enabled
 from min_max import MinMax  # noqa: E402
 
 
@@ -491,10 +493,13 @@ class ElasticBandsPathPlanner:
         print(f"Elastic Bands search animation: {total} frames")
         anime = anm.FuncAnimation(fig, update, fargs=(ax,),
                                   frames=total, interval=30, repeat=False)
-        try:
-            anime.save(gif_name, writer="pillow", fps=20)
-            print(f"Search GIF saved to {gif_name}")
-        except Exception as e:
-            print(f"Error saving search GIF: {e}")
+        if is_save_gif_enabled():
+            try:
+                anime.save(gif_name, writer="pillow", fps=20)
+                print(f"Search GIF saved to {gif_name}")
+            except Exception as e:
+                print(f"Error saving search GIF: {e}")
+        else:
+            plt.show()
         plt.clf()
         plt.close()

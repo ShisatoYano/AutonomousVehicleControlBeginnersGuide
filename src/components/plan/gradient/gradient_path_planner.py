@@ -9,8 +9,13 @@ Follows the negative gradient from start to goal.
 
 import numpy as np
 import json
+import sys
+from pathlib import Path
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
+
+sys.path.append(str(Path(__file__).absolute().parent) + "/../../common")
+from save_gif import is_save_gif_enabled
 
 
 class GradientPathPlanner:
@@ -211,7 +216,7 @@ class GradientPathPlanner:
 
         path = result['path']
 
-        if output_gif and len(path) > 1:
+        if output_gif and is_save_gif_enabled() and len(path) > 1:
             line, = ax.plot([], [], 'w-', linewidth=2, label='Path')
             point, = ax.plot([], [], 'wo', markersize=8,
                              markeredgecolor='black')

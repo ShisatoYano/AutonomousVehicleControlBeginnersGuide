@@ -1,0 +1,9 @@
+sphinx
+myst-parser
+sphinx-rtd-theme
+sphinxcontrib-mermaid
+sphinx-copybutton
+matplotlib
+numpy
+sphinx-sitemap
+sphinxext-opengraph

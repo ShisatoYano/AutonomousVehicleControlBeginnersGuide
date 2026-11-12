@@ -23,10 +23,12 @@ sys.path.append(abs_dir_path + relative_path + "state")
 sys.path.append(abs_dir_path + relative_path + "obstacle")
 sys.path.append(abs_dir_path + relative_path + "plan/dijkstra")
 sys.path.append(abs_dir_path + relative_path + "mapping/grid")
+sys.path.append(abs_dir_path + relative_path + "common")
 
 
 
 
+from save_gif import is_save_gif_enabled
 from state import State
 from obstacle import Obstacle
 from obstacle_list import ObstacleList
@@ -229,25 +231,25 @@ class DijkstraPathPlanner:
             repeat=False,
         )
 
-        try:
-            print("Saving animation...")
-            # Use FFmpeg writer if available for better memory efficiency
+        if is_save_gif_enabled():
             try:
-                self.anime.save(gif_name, writer="pillow", fps=20, 
-                              savefig_kwargs={'bbox_inches': 'tight', 'dpi': 100})
-            except Exception:
-                # Fallback to pillow with reduced quality
-                self.anime.save(gif_name, writer="pillow")
-            print("Animation saved successfully.")
-        except Exception as e:
-            print(f"Error saving animation: {e}")
-            # Try saving as MP4 instead if GIF fails
-            try:
-                mp4_name = gif_name.replace('.gif', '.mp4')
-                self.anime.save(mp4_name, writer="ffmpeg", fps=20)
-                print(f"Saved as MP4 instead: {mp4_name}")
-            except Exception as e2:
-                print(f"Both GIF and MP4 saving failed: {e2}")
+                print("Saving animation...")
+                try:
+                    self.anime.save(gif_name, writer="pillow", fps=20,
+                                    savefig_kwargs={'bbox_inches': 'tight', 'dpi': 100})
+                except Exception:
+                    self.anime.save(gif_name, writer="pillow")
+                print("Animation saved successfully.")
+            except Exception as e:
+                print(f"Error saving animation: {e}")
+                try:
+                    mp4_name = gif_name.replace('.gif', '.mp4')
+                    self.anime.save(mp4_name, writer="ffmpeg", fps=20)
+                    print(f"Saved as MP4 instead: {mp4_name}")
+                except Exception as e2:
+                    print(f"Both GIF and MP4 saving failed: {e2}")
+        else:
+            plt.show()
 
         # clear existing plot and close existing figure
         plt.clf()
@@ -334,5 +336,3 @@ if __name__ == "__main__":
 
     # Create the Dijkstra planner
     planner = DijkstraPathPlanner(start, goal, map_file, x_lim=x_lim, y_lim=y_lim, path_filename=path_file, gif_name=gif_path)
-
-

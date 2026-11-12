@@ -33,8 +33,10 @@ abs_dir_path = str(Path(__file__).absolute().parent)
 relative_path = "/../../../components/"
 
 sys.path.append(abs_dir_path + relative_path + "visualization")
+sys.path.append(abs_dir_path + relative_path + "common")
 
 from min_max import MinMax  # noqa: E402
+from save_gif import is_save_gif_enabled 
 
 
 @dataclass(frozen=True)
@@ -664,11 +666,14 @@ class GeneticAlgorithmPathPlanner:
             interval=60,
             repeat=False,
         )
-        try:
-            anime.save(gif_name, writer="pillow", fps=12)
-            print(f"Search GIF saved to {gif_name}")
-        except Exception as e:
-            print(f"Error saving search GIF: {e}")
+        if is_save_gif_enabled():
+            try:
+                anime.save(gif_name, writer="pillow", fps=12)
+                print(f"Search GIF saved to {gif_name}")
+            except Exception as e:
+                print(f"Error saving search GIF: {e}")
+        else:
+            plt.show()
         plt.clf()
         plt.close()
 
