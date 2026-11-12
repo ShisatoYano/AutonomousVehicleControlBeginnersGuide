@@ -19,12 +19,14 @@ relative_path = "/../../../components/"
 sys.path.append(abs_dir_path + relative_path + "visualization")
 sys.path.append(abs_dir_path + relative_path + "obstacle")
 sys.path.append(abs_dir_path + relative_path + "state")
+sys.path.append(abs_dir_path + relative_path + "common")
 
 
 from min_max import MinMax
 from obstacle_list import ObstacleList
 from obstacle import Obstacle
 from state import State
+from matrix_lib import rot_mat_22
 import json
 
 
@@ -94,10 +96,7 @@ class BinaryOccupancyGrid:
             ])
 
             # Apply rotation to both obstacle and clearance corners
-            rotation_matrix = np.array([
-                [np.cos(yaw), -np.sin(yaw)],
-                [np.sin(yaw), np.cos(yaw)]
-            ])
+            rotation_matrix = rot_mat_22(yaw)
             rotated_clearance_corners = np.dot(clearance_corners, rotation_matrix.T) + np.array([x_c, y_c])
             rotated_obstacle_corners = np.dot(obstacle_corners, rotation_matrix.T) + np.array([x_c, y_c])
 
