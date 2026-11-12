@@ -51,11 +51,9 @@ class AStarPathPlanner:
                 ".png" (binarized at 0.5) are accepted. In the grid, 0 is a
                 free cell and a non-zero value is an obstacle.
             weight: Weight w of the heuristic in f(n) = g(n) + w * h(n) [-],
-                with h(n) = |dx| + |dy| in cells (see heuristic()). Even at
-                1.0 that h overestimates the remaining cost on this
-                8-connected unit-cost grid, so the shortest path is not
-                guaranteed here either; a larger w makes the search greedier
-                and widens the gap.
+                with h(n) = |dx| + |dy| in cells. 1.0 is plain A*; a larger
+                w makes the search greedier. Why even 1.0 gives up the
+                shortest-path guarantee on this grid: see heuristic().
             x_lim: MinMax of the grid's x range in world coordinates [m]. The
                 cell size is derived from it, so this is required even though
                 it defaults to None: resolution = (x_max - x_min) / columns.
@@ -133,13 +131,8 @@ class AStarPathPlanner:
         necessarily the shortest one. The weight w multiplies the gap, which
         is the weighted-A* trade of optimality for speed.
 
-        The effect, measured on this planner's search loop over the 90x120
-        map of src/simulations/path_planning/astar_path_planning with
-        start (0, 0) and goal (50, -10): Dijkstra (h = 0) expands 7295 cells,
-        w = 1.0 expands 538 and the simulation's w = 5.0 expands 121, and on
-        this map all three return the same 100-step path. That is a property
-        of this map, not of the heuristic: on random grids w = 1.0 already
-        returns paths longer than Dijkstra's (figures in the pull request).
+        In practice a larger w expands fewer cells but may return a longer
+        path.
 
         For an admissible heuristic on this neighbourhood, use the Chebyshev
         distance max(|dx|, |dy|) with w = 1.0, or the octile distance if the
@@ -179,7 +172,8 @@ class AStarPathPlanner:
 
             g(n): cost already paid to reach n from the start
             h(n): estimated cost left to the goal, |dx| + |dy| in cells
-            f(n) = g(n) + w * h(n), which is what heuristic() returns
+            f(n) = g(n) + w * h(n); heuristic() returns the w * h(n) term and
+            the sum is formed where neighbours are pushed (step 4)
 
         Step by step, matching the code below:
         1. World coordinates become cell indices,
@@ -197,7 +191,7 @@ class AStarPathPlanner:
            finding the goal, so there is no path.
 
         The uniform step cost of 1 in step 4 is what makes the Manhattan
-        heuristic inadmissible; heuristic() has the numbers.
+        heuristic inadmissible (see heuristic()).
         Returns:
             None once the goal is reached (self.path holds the result), or an
             empty list when no path exists.
