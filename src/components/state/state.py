@@ -34,9 +34,12 @@ class State:
 
         self.x_history = [self.x_m]
         self.y_history = [self.y_m]
-        self.hist_plot = None
+        self._hist_plot = None
     
     def _limit_speed(self):
+        """
+        Function to clamp speed to the stop/max/min limits
+        """
         if abs(self.speed_mps) < self.STOP_SPEED_MPS: self.speed_mps = 0.0
         if self.speed_mps > self.MAX_SPEED_MPS: self.speed_mps = self.MAX_SPEED_MPS
         if self.speed_mps < self.MIN_SPEED_MPS: self.speed_mps = self.MIN_SPEED_MPS
@@ -159,9 +162,12 @@ class State:
         Function to draw x-y history and speed
         """
         
-        if self.hist_plot is None:
-            self.hist_plot, = axes.plot(self.x_history, self.y_history, linewidth=0, marker='.', color=self.DRAW_COLOR)
+        # The history line is intentionally not appended to elems: it is
+        # created once and kept, so set_data can update it every frame
+        # instead of re-creating it like the elements in elems.
+        if self._hist_plot is None or self._hist_plot.axes is not axes:
+            self._hist_plot, = axes.plot(self.x_history, self.y_history, linewidth=0, marker='.', color=self.DRAW_COLOR, zorder=2.5)
         else:
-            self.hist_plot.set_data(self.x_history, self.y_history)
+            self._hist_plot.set_data(self.x_history, self.y_history)
             
         elems.append(axes.text(self.x_m, self.y_m + 2, "Speed: " + str(round(self.speed_mps * 3.6, 1)) + "[km/h]", fontsize=10))
