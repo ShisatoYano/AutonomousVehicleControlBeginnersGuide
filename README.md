@@ -30,6 +30,7 @@
 * [Citing](#citing)
 * [Use Case](#use-case)
 * [Contribution](#contribution)
+* [Support this project](#support-this-project)
 * [Author](#author)
 
 
@@ -153,6 +154,18 @@ Your comment and output is added to [this list of user comments](/USERS_COMMENTS
 Any contribution by creating an issue or sending a pull request is welcome!! Please check [this document about how to contribute](/HOWTOCONTRIBUTE.md).  
 Questions about the algorithms or the code are welcome in [Q&A](https://github.com/ShisatoYano/AutonomousVehicleControlBeginnersGuide/discussions/categories/q-a), and feedback on the book in [Book](https://github.com/ShisatoYano/AutonomousVehicleControlBeginnersGuide/discussions/categories/book).  
 If you are looking for a place to start, see the [good first issues](https://github.com/ShisatoYano/AutonomousVehicleControlBeginnersGuide/issues?q=is%3Aissue%20state%3Aopen%20label%3A%22good%20first%20issue%22) and the [roadmap issue](https://github.com/ShisatoYano/AutonomousVehicleControlBeginnersGuide/issues/131).  
+
+
+## Support this project
+This project is free and will stay free. If it helps you, you can support it through [GitHub Sponsors](https://github.com/sponsors/ShisatoYano). Your sponsorship pays for:
+- Time to write the [web book](https://shisatoyano.github.io/AutonomousVehicleControlBeginnersGuide/) ([#165](https://github.com/ShisatoYano/AutonomousVehicleControlBeginnersGuide/issues/165))
+- Time to add algorithms and grow the code into a full navigation system ([#131](https://github.com/ShisatoYano/AutonomousVehicleControlBeginnersGuide/issues/131))
+- Time to review pull requests and keep the project maintained
+
+Sponsors are thanked by name on the book's [acknowledgments page](https://shisatoyano.github.io/AutonomousVehicleControlBeginnersGuide/ACKNOWLEDGMENTS.html) and, depending on the [tier](https://github.com/sponsors/ShisatoYano), also here in the README; corporate sponsors with their logo. Only public sponsors are listed; if you'd rather not be listed, just tell me. Sponsorship doesn't include individual support: questions are answered for everyone in [Q&A](https://github.com/ShisatoYano/AutonomousVehicleControlBeginnersGuide/discussions/categories/q-a).
+
+### Sponsors
+No sponsors yet. [Be the first one!](https://github.com/sponsors/ShisatoYano)
 
 
 ## Author
