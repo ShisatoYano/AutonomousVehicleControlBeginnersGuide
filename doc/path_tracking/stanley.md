@@ -116,6 +116,32 @@ Run the simulation `src/simulations/path_tracking/stanley_path_tracking/stanley_
 - With 0.1, the vehicle comes back to the course slowly after the curves.
 - With 2.0, it comes back quickly. Watch whether it starts to weave around the course.
 
+## Check your understanding
+
+1. The front axle is exactly on the course ($e = 0$), but the vehicle points 0.2 rad to the right of it. What steering angle does (3) give, and which way do the wheels turn?
+
+   <details><summary>Answer</summary>
+
+   Pointing to the right means $\theta_e = -0.2$ rad, and the second term is 0, so $\delta = -(-0.2) = 0.2$ rad: the wheels turn 0.2 rad to the left, back to the course's direction.
+
+   </details>
+
+2. Why does the second term of (3) use $\arctan$ instead of $k e / v$ directly?
+
+   <details><summary>Answer</summary>
+
+   $k e / v$ grows without bound with the offset. $\arctan$ is close to it for a small offset but saturates at $\pi/2$, so for a large offset the vehicle heads straight for the course instead of turning more and more.
+
+   </details>
+
+3. The lateral error $e$ of (2) is measured along the vehicle's left direction. When does it differ noticeably from the perpendicular distance to the course?
+
+   <details><summary>Answer</summary>
+
+   When the heading error $\theta_e$ is large. The offset from the nearest course point is perpendicular to the course, and its component along the vehicle's left direction is the perpendicular distance times $\cos\theta_e$. While tracking, $\theta_e$ is small and the two agree (see Limits).
+
+   </details>
+
 ## Exercises
 
 1. A vehicle drives at $v = 5$ m/s with its front axle $e = 1$ m to the left of a straight course, pointing along the course ($\theta_e = 0$). With $k = 0.5$, compute $\delta$ with (3). Then compute it for $v = 1$ m/s. Why does the vehicle steer harder at the lower speed?

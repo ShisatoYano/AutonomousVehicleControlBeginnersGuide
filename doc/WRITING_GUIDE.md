@@ -16,12 +16,13 @@ Every chapter has the same sections, in two layers ([documentation roadmap](http
 2. **Theory and derivation**: the equations, derived step by step with the symbols of [Notation and Units](NOTATION.md).
 3. **Algorithm**: the computation as numbered steps.
 4. **Limits and references**: when it fails or needs tuning, what the implementation simplifies compared with the paper, and the references.
+5. **Check your understanding**: two or three short questions that the reader answers from the text alone, without running code, each with its answer folded under it. Ask *why* or *what happens if*, not for a definition to repeat, for example "Why does the second term of the Stanley controller use $\arctan$ instead of $k e / v$ directly?"
 
 **Code layer**: depends on the code structure, which the [code roadmap](https://github.com/ShisatoYano/AutonomousVehicleControlBeginnersGuide/issues/131) changes. Write it for a stage once its interface is stable.
 
-5. **Where the equations live in the code**: each equation next to the code that computes it.
-6. **Comparison experiments**: change a parameter or swap the algorithm, and show what changes.
-7. **Exercises**: small tasks the reader can run.
+6. **Where the equations live in the code**: each equation next to the code that computes it.
+7. **Comparison experiments**: change a parameter or swap the algorithm, and show what changes.
+8. **Exercises**: small tasks the reader can run.
 
 **Pages.** A chapter is a folder (`doc/<topic>/`) with the chapter page `index.md`. Put each section on its own page in the folder and link the pages from the chapter page; the linked pages are nested under the chapter in the sidebar. A short chapter can be written on the chapter page alone, with its sections as `##` headings, like [Chapter 2](simulator/index.md).
 
@@ -67,6 +68,16 @@ Copy this into a new page and fill in each section. Delete the comments.
 ## Experiments
 
 <!-- Which parameter to change, in which simulation, and what to look for -->
+
+## Check your understanding
+
+1. <!-- A "why" or "what happens if" question answered by the text above -->
+
+   <details><summary>Answer</summary>
+
+   <!-- Two or three sentences, pointing to the equation that explains it -->
+
+   </details>
 
 ## Exercises
 
