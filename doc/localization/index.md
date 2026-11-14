@@ -13,7 +13,7 @@ Vehicle localization in Python with the Kalman filter, the extended Kalman filte
 - 6.3 Unscented Kalman filter: [`unscented_kalman_filter_localization`](/src/simulations/localization/unscented_kalman_filter_localization)
 - 6.4 Particle filter: [`particle_filter_localization`](/src/simulations/localization/particle_filter_localization)
 - 6.5 Comparing the filters: [`ekf_vs_ukf_comparison`](/src/simulations/localization/ekf_vs_ukf_comparison), [`ekf_ukf_pf_comparison`](/src/simulations/localization/ekf_ukf_pf_comparison)
-- 6.6 (Planned) EKF SLAM, [#65](https://github.com/ShisatoYano/AutonomousVehicleControlBeginnersGuide/issues/65)
+- 6.6 (Planned) EKF SLAM, [#64](https://github.com/ShisatoYano/AutonomousVehicleControlBeginnersGuide/issues/64)
 
 ## The system so far
 
