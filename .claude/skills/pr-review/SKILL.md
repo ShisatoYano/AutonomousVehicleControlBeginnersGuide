@@ -1,6 +1,6 @@
 ---
 name: pr-review
-description: Use when reviewing a pull request to this repository on the maintainer's behalf, or re-reviewing it after the contributor pushed fixes. Covers local verification (tests, runtime, demo GIF), project-specific review points, and an English comment draft. Contributors can also use it to self-review before opening a PR. Delegated from the maintainer's `pr-workflow` for this repository; sets the PR's label, assignee and reviewer, but never posts comments, approves or merges.
+description: Use when reviewing a pull request to this repository on the maintainer's behalf, or re-reviewing it after the contributor pushed fixes. Covers local verification (tests, runtime, demo GIF), project-specific review points, which parts the maintainer checks by eye, and an English comment draft. Contributors can also use it to self-review before opening a PR. Delegated from the maintainer's `pr-workflow` for this repository; sets the PR's label, assignee and reviewer, but never posts comments, approves or merges.
 ---
 
 # PR Review
@@ -20,6 +20,7 @@ Reviews a pull request against this project's conventions and its purpose as lea
 2. If the PR is stacked on other open PRs, review only the commits of this step (`git show <sha>`), since earlier steps are reviewed in their own PRs
 3. If the body has images or videos (`https://github.com/user-attachments/assets/...` or `![...](...)`), tell the user they need to check them in the browser
 4. When reviewing as the maintainer, if the PR has no label, assignee or reviewer yet, set the missing ones with `gh pr edit <number> --add-label <label> --add-assignee <author> --add-reviewer ShisatoYano`. Pick one type label from the main change (`bug`, `enhancement` or `documentation`), and assign the PR's author, since they are the one who addresses the review. For the maintainer's own PR, skip the reviewer (GitHub doesn't allow requesting the author)
+5. Classify the PR with `references/review-scope.md`, and note the places the maintainer checks by eye (file:line, GIF)
 
 ## Local verification
 
@@ -29,6 +30,7 @@ Reviews a pull request against this project's conventions and its purpose as lea
 4. Copy the current `generate_example_gallery.py` from main into the export and run `generate()`, because old PR branches may not have the latest docstring validation
 5. Extract a frame from each demo GIF (Pillow `Image.seek`) and look at it to check that it shows the algorithm working
 6. Check conflicts with main with `git merge-tree --write-tree origin/main <sha>`, and whether CI has run or still needs the maintainer's approval (fork PRs show `action_required`)
+7. For a type C PR (`references/review-scope.md`), find the simulations that use the changed components, run each on `main` and on the PR with `show_plot = False`, save the last frame (`plt.gcf().savefig(...)`), and show the pairs side by side, since the smoke tests don't catch a change in behavior
 
 ## Review
 
@@ -41,11 +43,11 @@ Reviews a pull request against this project's conventions and its purpose as lea
 
 1. Write the draft in English, starting with thanks and good points, then numbered requests and suggestions
 2. Keep each item short: the problem, the measured impact, and the suggested fix
-3. Show the Japanese summary of findings and the English draft to the user, and remind them that posting and approving are theirs to do
+3. Show the user the PR's type and the places they check by eye first, then the Japanese summary of findings and the English draft, and remind them that posting and approving are theirs to do
 
 ## Re-review
 
 1. List the commits added since the last review and check that each earlier finding is addressed, fixed or reasonably declined (a documented trade-off counts if its reasoning is correct; verify it)
 2. Rerun the local verification for the changed parts and report numbers against the previous ones
 3. Conclude whether the PR can be merged, and draft a short follow-up comment
-4. After the maintainer merges, check that `Update_Examples_Gallery` ran and that the bot's commit added the entry as expected
+4. After the maintainer merges, check that `Update_Examples_Gallery` ran and that the bot's commit added the entry as expected, and tell the user in 2-3 lines what changed in the project (behavior, affected simulations and book chapters)
