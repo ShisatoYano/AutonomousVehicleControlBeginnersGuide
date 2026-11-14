@@ -80,10 +80,11 @@ python src/simulations/path_tracking/mppi_path_tracking/mppi_path_tracking.py --
 The option saves the GIF at the path defined by the simulation. Without it, existing GIF paths are not overwritten and the animation is displayed instead.
 
 ### Step 4: Submit a pull request and modify code based on review
-If your sample program and test were ready, let's create a pull request and submit it. When you create the PR, please write a description about the following items.  
+If your sample program and test were ready, let's create a pull request and submit it. The description starts with a template; please fill in the following items.  
 
 * The overview of your PR.  
 * How did you confirm that your program works well.  
+* Images or GIFs that show the result, so the reviewer can see it without running the code: the demo GIF of a new simulation, or for a change to code under `src/components/`, the last frame of one or two simulations that use it, before and after your change. Drag and drop them into the description.  
 
 After you submitted your PR, each unit tests is executed automatically by GitHub Actions. If an error occurred and unit tests failed, please investigate the reason and fix it. After all tests passed and any problems were not found by code review, I will allow you to merge your PR into main branch.  
 
