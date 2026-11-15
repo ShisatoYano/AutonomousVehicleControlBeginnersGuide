@@ -36,6 +36,11 @@ Points to check in a PR to this repository. Add new points here as they come up 
 - A demo GIF is added under the simulation directory, shows the algorithm working, and is not much larger than existing ones (a few MB)
 - The `Title` reads well as a gallery heading and is consistent in style with existing titles
 
+## Evidence and book
+
+- The description says how the change was checked, and any new or changed code under `src/` has images: the demo GIF of new code, or the last frames of simulations that use the changed code before and after (bug fixes, improvements and refactoring alike). The `PR_Evidence` check enforces their presence; the review checks that they show what the PR claims
+- A change to code that a book page describes (text, equations, figures, `literalinclude` names) updates that page in the same PR (#131). Find the pages with `grep -rn <class or function name> doc/`
+
 ## Security
 
 - No network access (`requests`, `urllib`, `socket`), `subprocess`, `eval`/`exec`, `pickle` or `np.load(allow_pickle=True)`, unless the algorithm needs it and the PR explains why
