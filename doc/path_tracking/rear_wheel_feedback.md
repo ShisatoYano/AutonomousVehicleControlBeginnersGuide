@@ -38,7 +38,7 @@ The errors of rear wheel feedback, at the rear axle. Here the rear axle is on th
 
 ### How the errors change
 
-Describe the rear axle's position by the distance $s$ along the course to its nearest point, and by the lateral error $e$. The rear axle moves with speed $v$ along the heading, which is turned by $\theta_e$ from the course, so it moves sideways at $v\sin\theta_e$ and along the course direction at $v\cos\theta_e$.
+Describe the rear axle's position by the distance $s$ along the course to its nearest point, and by the lateral error $e$. Here $s$ is the true distance driven along the course (the $\sigma$ of [4.1](cubic_spline.md)), not the spline's chord-length parameter, which is only close to it. The rear axle moves with speed $v$ along the heading, which is turned by $\theta_e$ from the course, so it moves sideways at $v\sin\theta_e$ and along the course direction at $v\cos\theta_e$.
 
 Along the course, the nearest point doesn't move at the same speed as the rear axle. The course turns around its center of curvature, at the distance $1/\kappa$ on the left of the course. The rear axle is $e$ to the left, so it is at the distance $1/\kappa - e$ from that center, and a motion of $v\cos\theta_e$ there moves the nearest point by a factor $(1/\kappa) / (1/\kappa - e) = 1 / (1 - \kappa e)$ more. The heading error changes as the vehicle turns, minus as the course turns under it. Together:
 
@@ -129,7 +129,7 @@ At every time step, given the state (x, y, theta, v) at the rear axle:
 | Looks ahead | Yes, by $l_d$ | No | No, but knows how the course bends where the vehicle is |
 | Output | Steering angle $\delta$ | Steering angle $\delta$ | Yaw rate $\omega$ |
 | Parameters | $l_d$, or $k$ and $l_{d,\min}$ | $k$ | $k_\theta$, $k_e$ |
-| Coming back to the course | Over about $2\,l_d$: a fixed distance with a fixed $l_d$, a fixed time with $l_d \propto v$ | At the rate $k$ per second: over a distance that grows with $v$ | Over a fixed distance, set by $k_\theta$ and $k_e$ |
+| Coming back to the course | Reaches the course after about $2.4\,l_d$: a fixed distance with a fixed $l_d$, a fixed time with $l_d \propto v$ | At the rate $k$ per second: over a distance that grows with $v$ | Over a fixed distance, set by $k_\theta$ and $k_e$ |
 | At high speed | Needs a longer $l_d$, otherwise it corrects too fast | Its correction $k e / v$ softens by itself | Corrects as fast per meter as at low speed, so the gains must be lowered |
 | Needs from the course | Positions only | Positions and yaw | Positions, yaw and a smooth curvature |
 
