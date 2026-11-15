@@ -24,7 +24,7 @@ class Obstacle:
         state: Obstacle's state object
         accel_mps2: acceleration input to move[m/s2]
         yaw_rate_rps: yaw rate input to move[rad/s]
-        length_m: Obstacle's longitudinal size[m]
+        length_m: Half of the obstacle's longitudinal size[m]
         width_m: Obstacle's half of lateral size[m]
         """
 
