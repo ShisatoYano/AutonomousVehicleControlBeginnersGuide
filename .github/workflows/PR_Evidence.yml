@@ -1,0 +1,65 @@
+name: PR_Evidence
+
+# Checks that the PR description shows how the change was checked,
+# and has images when it changes code under src/ (see HOWTOCONTRIBUTE.md, Step 4).
+# pull_request_target runs without the approval that first-time contributors' PRs need.
+# It is safe only because this job never checks out or runs the PR's code: keep it that way.
+on:
+  pull_request_target:
+    types: [opened, edited, synchronize, reopened, labeled, unlabeled]
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    name: PR description has evidence
+    steps:
+    - name: Check the description
+      env:
+        # Passed through env, never expanded into the script, since the body is untrusted text
+        PR_BODY: ${{ github.event.pull_request.body }}
+        PR_NUMBER: ${{ github.event.pull_request.number }}
+        PR_CREATED_AT: ${{ github.event.pull_request.created_at }}
+        NO_IMAGES_LABEL: ${{ contains(github.event.pull_request.labels.*.name, 'no images needed') }}
+        GH_TOKEN: ${{ github.token }}
+        GH_REPO: ${{ github.repository }}
+      run: |
+        gh api "repos/$GH_REPO/pulls/$PR_NUMBER/files" --paginate --jq '.[].filename' > changed_files.txt
+        python3 - <<'EOF'
+        import os
+        import re
+        import sys
+
+        # PRs opened before the PR template was added are reviewed by hand
+        if os.environ["PR_CREATED_AT"] < "2026-11-14":
+            print("Opened before the PR template; not checked.")
+            sys.exit(0)
+
+        body =re.sub(r"<!--.*?-->", "", os.environ.get("PR_BODY") or "", flags=re.S)
+        files = open("changed_files.txt").read().split()
+        errors = []
+
+        checked = re.search(r"^##\s*How I checked it works\s*$(.*?)(?=^##\s|\Z)", body, flags=re.M | re.S)
+        if not checked or not checked.group(1).strip():
+            errors.append('Fill in "How I checked it works": the tests you ran and what you looked at.')
+
+        changes_code = any(f.startswith("src/") and f.endswith(".py") for f in files)
+        has_image = re.search(r"!\[[^\]]*\]\(|<img\s|https://github\.com/user-attachments/assets/", body)
+        if changes_code and not has_image and os.environ["NO_IMAGES_LABEL"] != "true":
+            errors.append(
+                "This PR changes code under src/, so add images or GIFs under \"Images\" "
+                "(drag and drop them into the description): the demo GIF of a new simulation or algorithm, "
+                "or for a change to existing code, the last frame of one or two simulations that use it, "
+                "before and after your change."
+            )
+
+        for e in errors:
+            print(f"::error::{e}")
+        if errors:
+            print("See Step 4 of HOWTOCONTRIBUTE.md. Editing the description runs this check again.")
+            sys.exit(1)
+        print("The description has the evidence the reviewer needs.")
+        EOF
