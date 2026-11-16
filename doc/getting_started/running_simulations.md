@@ -20,7 +20,7 @@ The window itself — the world it shows, the time steps it advances by, and the
 
 ## Save the animation as a GIF
 
-Every script accepts a `--save-gif` command line option. About half of the simulations define a GIF output file (most of the path planners, and controllers such as MPPI and MPC). For them, the option writes the GIF file into the simulation's own folder, next to its script, instead of opening the window:
+Every script accepts a `--save-gif` command line option. Some simulations define a GIF output file (all the path planners, and controllers such as MPPI and MPC). For them, the option writes the GIF file into the simulation's own folder, next to its script, instead of opening the window:
 
 ```bash
 $ python src/simulations/path_planning/astar_hybrid_path_planning/astar_hybrid_path_planning.py --save-gif
@@ -32,10 +32,10 @@ A simulation without a GIF output file ignores the option and shows the window a
 
 ## Run the tests
 
-Each script keeps its animation behind a `show_plot` flag at the top of the file (`show_plot = True`). The test suite imports every script and calls its `main()` with the flag off, so the unit tests run the same computation as the animation, windowless. Running them is the quickest way to confirm that your environment is complete:
+Each script keeps its animation behind a `show_plot` flag at the top of the file (`show_plot = True`). The test suite imports every script and calls its `main()` with the flag off, so the tests run the same computation as the animation, windowless. Running them is the quickest way to confirm that your environment is complete:
 
 ```bash
 $ . run_test_suites.sh
 ```
 
-This runs pytest over the whole `test/` directory (the script is `pytest -l --durations=0`), which takes a few minutes. A final line like `110 passed` means every simulation ran through its computation without errors, and your setup is ready.
+The script requires a bash shell. On Windows, use `run_test_suites.bat`; from any shell, `pytest -l --durations=0` at the repository root runs the same tests. The full suite takes several minutes. A final line like `110 passed` means every simulation ran through its computation without errors, and your setup is ready.
