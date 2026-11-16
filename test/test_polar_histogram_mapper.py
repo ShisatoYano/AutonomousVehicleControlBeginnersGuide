@@ -90,7 +90,9 @@ def test_update_detects_valley_between_two_obstacle_clusters():
     mapper.update(point_cloud, state)
 
     valleys = mapper.get_valley_detector().get_valleys()
-    assert len(valleys) >= 1
+    # exactly two valleys: (1, 16) and (18, 35), one gap on each side
+    # of the two blocked sectors(0 and 17)
+    assert len(valleys) == 2
 
 
 def test_get_valley_detector_returns_configured_threshold():

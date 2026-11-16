@@ -89,6 +89,9 @@ def test_valley_wraps_across_zero_index():
     assert valleys[0].get_start_index() == 4
     assert valleys[0].get_end_index() == 1
     assert valleys[0].get_width_sectors() == 6
+    # mid_index(6.5) runs past the last sector(7) here, so this is the
+    # case most likely to break if that wrap-around math regresses
+    assert np.isclose(valleys[0].get_center_angle_rad(), np.deg2rad(-45))
 
 
 def test_valley_center_angle():
