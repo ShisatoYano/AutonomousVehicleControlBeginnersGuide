@@ -16,6 +16,20 @@ class AdaptivePurePursuitController:
     Controller class by Adaptive Pure Pursuit algorithm.
     Look-ahead distance is adapted by speed (longer at higher speed) and by
     path curvature at the current nearest point (shorter on sharp curves).
+
+    Like Pure Pursuit, it takes the course point at the look-ahead distance
+    l_d ahead of the rear axle, and steers along the circular arc that starts
+    at the rear axle in the heading direction and passes through that point.
+    That arc is the ideal geometry: the code takes the first course point
+    at least l_d away and still uses l_d in (4), as the Algorithm part of
+    4.2 explains.
+    The equation numbers below are those of section 4.2 of the book:
+    https://shisatoyano.github.io/AutonomousVehicleControlBeginnersGuide/path_tracking/pure_pursuit.html
+
+    Reference
+        R. C. Coulter, "Implementation of the Pure Pursuit Path Tracking
+        Algorithm", Technical Report CMU-RI-TR-92-01, Carnegie Mellon
+        University, 1992.
     """
 
     def __init__(self, spec, course=None, color='g',
@@ -54,7 +68,13 @@ class AdaptivePurePursuitController:
     def _calculate_look_ahead_distance(self, state):
         """
         Adaptive look-ahead: base term from speed, reduced by path curvature.
-        L = clamp((L0 + k * v) / (1 + K_curv * |curvature|), L_min, L_max)
+        l_d = min(max((k * v + l_d_min) / (1 + k_kappa * |kappa_n|), l_d_min), l_d_max)    (8)
+        k: LOOK_FORWARD_GAIN[s], k_kappa: CURVATURE_ADAPT_GAIN[m],
+        kappa_n: curvature of the course point nearest to the rear axle[1/m],
+        l_d_min, l_d_max: MIN_LOOK_AHEAD_DISTANCE_M, MAX_LOOK_AHEAD_DISTANCE_M
+        The code clamps as max(l_d_min, min(l_d_max, ...)), the same as (8)
+        while l_d_min <= l_d_max. A course without point_curvature gives
+        kappa_n = 0 in (8).
         """
         base_look_ahead = self.LOOK_FORWARD_GAIN * state.get_speed_mps() + self.MIN_LOOK_AHEAD_DISTANCE_M
 
@@ -73,6 +93,10 @@ class AdaptivePurePursuitController:
     def _calculate_target_course_index(self, state):
         """
         Private function to calculate target point's index on course
+        From the course point nearest to the rear axle, walk forward to the
+        first point at least l_d away: the look-ahead point (step 2 of the
+        algorithm in 4.2). The nearest point is used if it is already that
+        far, and the last course point if no point is.
         state: Vehicle's state object
         """
         nearest_index = self.course.search_nearest_point_index(state)
@@ -83,16 +107,30 @@ class AdaptivePurePursuitController:
         self.target_course_index = nearest_index
 
     def _decide_target_speed_mps(self):
-        """Private function to decide target speed [m/s]."""
+        """
+        Private function to decide target speed [m/s].
+        v_r: the course's target speed at the look-ahead point
+        """
         self.target_speed_mps = self.course.point_speed_mps(self.target_course_index)
 
     def _calculate_target_acceleration_mps2(self, state):
-        """Private function to calculate acceleration input."""
+        """
+        Private function to calculate acceleration input.
+        a = k_v * (v_r - v)    ("Speed" in 4.2, not numbered)
+        k_v: SPEED_PROPORTIONAL_GAIN
+        """
         diff_speed_mps = self.target_speed_mps - state.get_speed_mps()
         self.target_accel_mps2 = self.SPEED_PROPORTIONAL_GAIN * diff_speed_mps
 
     def _calculate_target_steer_angle_rad(self, state):
-        """Private function to calculate steering angle input."""
+        """
+        Private function to calculate steering angle input.
+        delta = atan(2 * L * sin(alpha) / l_d)    (4)
+        alpha = atan2(y_p - y, x_p - x) - theta    (1)
+        alpha is diff_angle_rad, the angle from the heading to the look-ahead
+        point (x_p, y_p). L: WHEEL_BASE_M. The code writes (4) as
+        atan2(2 * L * sin(alpha), l_d), which is the same because l_d > 0.
+        """
         diff_angle_rad = self.course.calculate_angle_difference_rad(state, self.target_course_index)
         self.target_steer_rad = atan2(
             (2 * self.WHEEL_BASE_M * sin(diff_angle_rad)),
@@ -100,7 +138,10 @@ class AdaptivePurePursuitController:
         )
 
     def _calculate_target_yaw_rate_rps(self, state):
-        """Private function to calculate yaw rate input."""
+        """
+        Private function to calculate yaw rate input.
+        omega = v * tan(delta) / L    (5)
+        """
         self.target_yaw_rate_rps = state.get_speed_mps() * tan(self.target_steer_rad) / self.WHEEL_BASE_M
 
     def update(self, state, time_s):

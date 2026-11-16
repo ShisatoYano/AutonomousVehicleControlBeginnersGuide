@@ -10,6 +10,20 @@ from math import sin, tan, atan2
 class PurePursuitController:
     """
     Controller class by Pure Pursuit algorithm
+
+    Pure Pursuit takes the course point at the look-ahead distance l_d ahead
+    of the rear axle, and steers along the circular arc that starts at the
+    rear axle in the heading direction and passes through that point.
+    That arc is the ideal geometry: the code takes the first course point
+    at least l_d away and still uses l_d in (4), as the Algorithm part of
+    4.2 explains.
+    The equation numbers below are those of section 4.2 of the book:
+    https://shisatoyano.github.io/AutonomousVehicleControlBeginnersGuide/path_tracking/pure_pursuit.html
+
+    Reference
+        R. C. Coulter, "Implementation of the Pure Pursuit Path Tracking
+        Algorithm", Technical Report CMU-RI-TR-92-01, Carnegie Mellon
+        University, 1992.
     """
     
     def __init__(self, spec, course=None, color='g'):
@@ -37,6 +51,8 @@ class PurePursuitController:
     def _calculate_look_ahead_distance(self, state):
         """
         Private function to calculate look ahead distance to target point
+        l_d = k * v + l_d_min    (6)
+        k: LOOK_FORWARD_GAIN[s], v: speed[m/s], l_d_min: MIN_LOOK_AHEAD_DISTANCE_M
         state: Vehicle's state object
         """
         
@@ -45,6 +61,10 @@ class PurePursuitController:
     def _calculate_target_course_index(self, state):
         """
         Private function to calculate target point's index on course
+        From the course point nearest to the rear axle, walk forward to the
+        first point at least l_d away: the look-ahead point (step 2 of the
+        algorithm in 4.2). The nearest point is used if it is already that
+        far, and the last course point if no point is.
         state: Vehicle's state object
         """
         
@@ -57,6 +77,7 @@ class PurePursuitController:
     def _decide_target_speed_mps(self):
         """
         Private function to decide target speed[m/s]
+        v_r: the course's target speed at the look-ahead point
         """
         
         self.target_speed_mps = self.course.point_speed_mps(self.target_course_index)
@@ -64,6 +85,8 @@ class PurePursuitController:
     def _calculate_target_acceleration_mps2(self, state):
         """
         Private function to calculate acceleration input
+        a = k_v * (v_r - v)    ("Speed" in 4.2, not numbered)
+        k_v: SPEED_PROPORTIONAL_GAIN
         state: Vehicle's state object
         """
 
@@ -73,6 +96,11 @@ class PurePursuitController:
     def _calculate_target_steer_angle_rad(self, state):
         """
         Private function to calculate steering angle input
+        delta = atan(2 * L * sin(alpha) / l_d)    (4)
+        alpha = atan2(y_p - y, x_p - x) - theta    (1)
+        alpha is diff_angle_rad, the angle from the heading to the look-ahead
+        point (x_p, y_p). L: WHEEL_BASE_M. The code writes (4) as
+        atan2(2 * L * sin(alpha), l_d), which is the same because l_d > 0.
         state: Vehicle's state object
         """
         
@@ -82,6 +110,7 @@ class PurePursuitController:
     def _calculate_target_yaw_rate_rps(self, state):
         """
         Private function to calculate yaw rate input
+        omega = v * tan(delta) / L    (5)
         state: Vehicle's state object
         """
 
