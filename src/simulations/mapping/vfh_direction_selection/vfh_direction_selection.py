@@ -73,11 +73,15 @@ def main():
     spec = VehicleSpecification(area_size=30.0)  # spec instance
     sensor_params = SensorParameters(lon_m=spec.wheel_base_m/2)
     lidar = OmniDirectionalLidar(obst_list, sensor_params)  # lidar instance
+    # target_weight > heading_weight + previous_weight(5 > 2 + 2), following
+    # VFH+(Ulrich and Borenstein, 1998)'s own example weights, so the vehicle
+    # keeps making progress toward the goal instead of favoring smooth turns
+    # over actually reaching it
     mapper = PolarHistogramMapper(sensor_params=sensor_params, num_sectors=72,
                                   smoothing_window=5, valley_density_threshold=0.2,
                                   target_x_m=25.0, target_y_m=5.0,
-                                  target_weight=1.0, heading_weight=0.5,
-                                  previous_weight=0.8)  # Step 3 mapper instance
+                                  target_weight=5.0, heading_weight=2.0,
+                                  previous_weight=2.0)  # Step 3 mapper instance
     vehicle = FourWheelsVehicle(State(color=spec.color), spec,
                                 sensors=Sensors(lidar=lidar), mapper=mapper)  # set state, spec, lidar, mapper as arguments
     vis.add_object(vehicle)

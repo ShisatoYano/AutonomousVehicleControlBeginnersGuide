@@ -16,8 +16,10 @@ from direction_selector import DirectionSelector
 
 def _valley_at(center_angle_deg):
     """
-    Helper to build a minimal Valley with only its center angle set, since
-    DirectionSelector only reads get_center_angle_rad()
+    Helper to build a minimal 1-sector-wide Valley, since that keeps it
+    "narrow"(width_sectors <= DirectionSelector's default s_max_sectors)
+    regardless of center angle, so DirectionSelector only reads
+    get_center_angle_rad() and get_width_sectors() for these
     """
 
     return Valley(start_index=0, end_index=0, width_sectors=1,
@@ -126,3 +128,67 @@ def test_angle_wraps_correctly_near_boundary():
     result = selector.select(valleys, vehicle_yaw_rad=0.0, target_angle_rad=np.deg2rad(-170))
 
     assert np.isclose(result, np.deg2rad(170))
+def test_narrow_valley_still_uses_only_its_center():
+    # width_sectors(4) at or below the default s_max_sectors(5) stays
+    # "narrow": even though the target is outside it, no border
+    # candidates are added - the single candidate is still just the center
+    selector = DirectionSelector(target_weight=1.0, heading_weight=0.0, previous_weight=0.0)
+    narrow_valley = Valley(start_index=0, end_index=0, width_sectors=4,
+                           center_angle_rad=np.deg2rad(10))
+
+    result = selector.select([narrow_valley], vehicle_yaw_rad=0.0, target_angle_rad=np.deg2rad(60))
+
+    assert np.isclose(result, np.deg2rad(10))
+
+
+def test_wide_valley_offers_both_border_candidates_when_target_is_outside_it():
+    # width_sectors=20, sector_angle_rad defaults to 5[deg]: half_span =
+    # 20*5/2 = 50[deg], so the two border-inset candidates
+    # (s_max_sectors/2 = 2.5 sectors = 12.5[deg] in from each border) sit
+    # at -37.5[deg] and +37.5[deg] from the center(0[deg])
+    selector = DirectionSelector(target_weight=1.0, heading_weight=0.0, previous_weight=0.0)
+    wide_valley = Valley(start_index=0, end_index=0, width_sectors=20,
+                         center_angle_rad=0.0)
+
+    # target(60[deg]) is outside the valley's -50..+50[deg] span, so it
+    # is not itself offered as a candidate; only the two border-inset
+    # candidates are, and the one closer to the target(+37.5[deg]) wins
+    result = selector.select([wide_valley], vehicle_yaw_rad=0.0, target_angle_rad=np.deg2rad(60))
+
+    assert np.isclose(result, np.deg2rad(37.5))
+
+
+def test_full_circle_valley_selects_target_straight_ahead():
+    """
+    Regression test for the maintainer's first PR #82 review repro: with
+    no obstacles at all, candidate valley detection(Step 2) returns one
+    valley spanning the entire circle(72 sectors), whose center sits
+    roughly opposite the target. Before this wide-valley handling, only
+    that center was ever offered as a candidate, so a target straight
+    ahead(0[deg]) could never actually be selected
+    """
+
+    selector = DirectionSelector()
+    full_circle_valley = Valley(start_index=0, end_index=71, width_sectors=72,
+                                center_angle_rad=np.deg2rad(180))
+
+    result = selector.select([full_circle_valley], vehicle_yaw_rad=0.0, target_angle_rad=0.0)
+
+    assert np.isclose(result, 0.0)
+
+
+def test_wide_valley_selects_free_target_instead_of_its_center():
+    """
+    Regression test for the maintainer's second PR #82 review repro: one
+    small obstacle behind the vehicle(sectors 40-44 of 72 blocked) leaves
+    one wide valley whose center sits at 32.5[deg], even though the
+    target direction(0[deg]) is itself free and inside that same valley
+    """
+
+    selector = DirectionSelector()
+    wide_valley = Valley(start_index=45, end_index=39, width_sectors=67,
+                         center_angle_rad=np.deg2rad(32.5))
+
+    result = selector.select([wide_valley], vehicle_yaw_rad=0.0, target_angle_rad=0.0)
+
+    assert np.isclose(result, 0.0)

@@ -46,7 +46,8 @@ class PolarHistogramMapper:
     def __init__(self, sensor_params=None, num_sectors=72, smoothing_window=5,
                 ring_radius_m=8.0, valley_density_threshold=0.2,
                 target_x_m=None, target_y_m=None,
-                target_weight=1.0, heading_weight=1.0, previous_weight=1.0):
+                target_weight=5.0, heading_weight=2.0, previous_weight=2.0,
+                s_max_sectors=5):
         """
         Constructor
         sensor_params: LiDAR's SensorParameters object, used for max sensing range
@@ -57,7 +58,12 @@ class PolarHistogramMapper:
         target_x_m, target_y_m: Fixed goal point[m] the target direction points toward.
                                  When not given, the vehicle's current heading is used as
                                  the target direction(i.e. "keep going straight")
-        target_weight, heading_weight, previous_weight: Direction selection cost weights
+        target_weight, heading_weight, previous_weight: Direction selection cost
+                         weights. See DirectionSelector for why the defaults are 5, 2, 2
+        s_max_sectors: Valley width threshold(sectors) separating "narrow"
+                       valleys(center only) from "wide" ones(two
+                       border-inset candidates plus the target, when
+                       inside). See DirectionSelector
         """
 
         max_range_m = sensor_params.MAX_RANGE_M if sensor_params else 40.0
@@ -68,7 +74,9 @@ class PolarHistogramMapper:
         self.valley_detector = CandidateValleyDetector(density_threshold=valley_density_threshold)
         self.direction_selector = DirectionSelector(target_weight=target_weight,
                                                      heading_weight=heading_weight,
-                                                     previous_weight=previous_weight)
+                                                     previous_weight=previous_weight,
+                                                     s_max_sectors=s_max_sectors,
+                                                     sector_angle_rad=self.histogram.get_sector_angle_rad())
         self.ring_radius_m = ring_radius_m
         self.target_x_m = target_x_m
         self.target_y_m = target_y_m
