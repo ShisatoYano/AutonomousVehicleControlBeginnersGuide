@@ -5,8 +5,7 @@ Author: Shisato Yano
 """
 
 import numpy as np
-
-from VehiclePart import VehiclePart
+from vehicle_part import VehiclePart
 
 
 class FourWheelsVehicle:
