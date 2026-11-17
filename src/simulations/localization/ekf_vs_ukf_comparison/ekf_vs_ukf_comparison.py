@@ -55,7 +55,8 @@ def main():
 
     # set simulation parameters
     x_lim, y_lim = MinMax(-5, 55), MinMax(-20, 25)
-    vis = GlobalXYVisualizer(x_lim, y_lim, TimeParameters(span_sec=30))
+    gif_path = str(Path(__file__).absolute().parent / "ekf_vs_ukf_comparison.gif")
+    vis = GlobalXYVisualizer(x_lim, y_lim, TimeParameters(span_sec=30), gif_name=gif_path)
 
     # create course data instance (trajectory)
     course = CubicSplineCourse([0.0, 10.0, 25, 40, 50],
