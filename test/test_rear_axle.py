@@ -1,5 +1,5 @@
 """
-Unit test of RearAxle
+Unit test of the rear axle and rear tires of FourWheelsVehicle
 
 Author: Dipak Chaudhari
 """

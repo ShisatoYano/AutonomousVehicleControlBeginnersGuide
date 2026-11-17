@@ -41,7 +41,7 @@ class FourWheelsVehicle:
 
         self.show_zoom = show_zoom
 
-    def _create_vehicle_parts(self):
+    def _create_vehicle_parts(self) -> None:
         """Create the vehicle outline, frame, axles, and tires."""
 
         tire_outline = np.array([
