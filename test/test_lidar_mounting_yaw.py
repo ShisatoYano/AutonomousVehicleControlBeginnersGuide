@@ -1,13 +1,14 @@
 """
 Test of Omni directional LiDAR with a mounting yaw angle
 
-Author: Shisato Yano
+Author: qwist1233-cpu
 """
 
 from pathlib import Path
 import sys
 
 import numpy as np
+import numpy.typing as npt
 
 sys.path.append(str(Path(__file__).absolute().parent) + "/../src/components/sensors")
 sys.path.append(str(Path(__file__).absolute().parent) + "/../src/components/sensors/lidar")
@@ -20,7 +21,7 @@ from obstacle import Obstacle
 from obstacle_list import ObstacleList
 
 
-def _noiseless_points(mount_yaw_deg, vehicle_yaw_deg=0.0):
+def _noiseless_points(mount_yaw_deg: float, vehicle_yaw_deg: float = 0.0) -> tuple[npt.NDArray[np.float64], SensorParameters]:
     # one 2 m x 2 m obstacle in front of the vehicle, its near face at x = 9 m
     obst_list = ObstacleList()
     obst_list.add_obstacle(Obstacle(State(x_m=10.0, y_m=0.0), length_m=1.0, width_m=1.0))
@@ -47,6 +48,13 @@ def test_points_lie_on_obstacle_face_without_mounting_yaw():
 
 def test_points_lie_on_obstacle_face_with_mounting_yaw():
     points, _ = _noiseless_points(mount_yaw_deg=30.0)
+    assert len(points) > 0
+    assert np.allclose(points[:, 0], 9.0, atol=0.05)
+    assert np.all(np.abs(points[:, 1]) <= 1.0 + 1e-6)
+
+
+def test_points_lie_on_obstacle_face_with_vehicle_and_mounting_yaw():
+    points, _ = _noiseless_points(mount_yaw_deg=30.0, vehicle_yaw_deg=10.0)
     assert len(points) > 0
     assert np.allclose(points[:, 0], 9.0, atol=0.05)
     assert np.all(np.abs(points[:, 1]) <= 1.0 + 1e-6)
