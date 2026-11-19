@@ -145,7 +145,7 @@ class OmniDirectionalLidar:
                 diff_x = x - self.params.get_global_x_m()
                 diff_y = y - self.params.get_global_y_m()
                 distance_m = np.hypot(diff_x, diff_y)
-                angle_rad = atan2(diff_y, diff_x) - state.get_yaw_rad()
+                angle_rad = atan2(diff_y, diff_x) - (state.get_yaw_rad() + self.params.INST_YAW_RAD)
                 distance_list.append(distance_m)
                 angle_list.append(angle_rad)
         
