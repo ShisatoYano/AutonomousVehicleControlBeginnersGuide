@@ -87,6 +87,8 @@ If your sample program and test were ready, let's create a pull request and subm
 * Images or GIFs that show the result, so the reviewer can see it without running the code. They are needed for any new or changed code under `src/`: the demo GIF of a new simulation or algorithm, and for a change to existing code (a bug fix, an improvement or a refactoring), the last frame of one or two simulations that use it, before and after your change. Drag and drop them into the description.  
 * If your change touches code that the [book](https://shisatoyano.github.io/AutonomousVehicleControlBeginnersGuide/) describes, the updated book pages in the same PR.  
 
+If your PR does one part of an issue labeled `multiple PRs` (for example one section of a book chapter, or one category of simulations), write "Part of #123" in the description instead of "Closes #123", so the issue stays open for the other parts.  
+
 "How I checked it works" and, for a change to code under `src/`, the images are required: the `PR_Evidence` check fails without them, and the review starts once they are there. Editing the description runs the check again. If a change under `src/` has nothing to show (for example a docstring only), say why under "Images", and the maintainer adds the `no images needed` label.  
 
 After you submitted your PR, each unit tests is executed automatically by GitHub Actions. If an error occurred and unit tests failed, please investigate the reason and fix it. After all tests passed and any problems were not found by code review, I will allow you to merge your PR into main branch.  
