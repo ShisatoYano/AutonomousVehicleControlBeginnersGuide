@@ -78,40 +78,76 @@ def draw_banner(out_path: Path) -> None:
 
 
 def draw_logo(out_path: Path) -> None:
-    """Save the logo of the sidebar (600x300 px, transparent): a car following a curved course"""
+    """
+    Save the logo of the sidebar (600x300 px, transparent): a car on a curved road that
+    scans with a LiDAR, detects an obstacle and follows its planned path
+    """
     import numpy as np
 
     fig = plt.figure(figsize=(6.0, 3.0), dpi=100)
     ax = fig.add_axes((0, 0, 1, 1))
     ax.set_xlim(0, 8)
-    ax.set_ylim(-2.0, 2.0)
+    ax.set_ylim(-1.7, 2.3)
     ax.set_aspect("equal")
     ax.set_axis_off()
 
-    # The sidebar's header is blue, so the road is a light band with a white dashed center line
-    x = np.linspace(-0.5, 8.5, 200)
-    y = 1.0 * np.sin(0.7 * x - 0.6)
-    ax.plot(x, y, color="#dbe9f6", linewidth=56, solid_capstyle="butt")
-    ax.plot(x, y, color="white", linewidth=2.5, linestyle=(0, (6, 5)))
+    def course_y(x: np.ndarray | float) -> np.ndarray | float:
+        return np.sin(0.7 * x - 0.6)
 
-    # The car: body and tires in the vehicle's frame, turned to the course's heading at x = 4.6
-    x0 = 4.6
-    y0 = 1.0 * np.sin(0.7 * x0 - 0.6)
-    yaw = np.arctan(1.0 * 0.7 * np.cos(0.7 * x0 - 0.6))
+    # The sidebar's header is blue, so the road is a light band and the sensing is drawn in white and yellow
+    x = np.linspace(-0.5, 8.5, 200)
+    ax.plot(x, course_y(x), color="#dbe9f6", linewidth=56, solid_capstyle="butt")
+
+    # Planned path: dots along the course ahead of the car
+    x_path = np.arange(3.5, 8.2, 0.3)
+    ax.plot(x_path, course_y(x_path), "o", color="#1f2933", markersize=4.5, zorder=2)
+
+    # Obstacle beside the road ahead, with the box that the detector fits to the LiDAR points
+    obstacle = (5.6, 0.35, 0.9, 0.6)  # left, bottom, width, height
+    left, bottom, width, height = obstacle
+    ax.fill([left, left + width, left + width, left], [bottom, bottom, bottom + height, bottom + height],
+            color="#52606d", zorder=2)
+    ax.plot([left - 0.12, left + width + 0.12, left + width + 0.12, left - 0.12, left - 0.12],
+            [bottom - 0.12, bottom - 0.12, bottom + height + 0.12, bottom + height + 0.12, bottom - 0.12],
+            color="#ffcf33", linewidth=2.5, linestyle=(0, (4, 3)), zorder=4)
+
+    x0 = 2.6
+    y0 = course_y(x0)
+    yaw = np.arctan(0.7 * np.cos(0.7 * x0 - 0.6))
+
+    # LiDAR: rays from the front of the car, stopped where they hit the obstacle
+    sensor = np.array([x0 + 0.75 * np.cos(yaw), y0 + 0.75 * np.sin(yaw)])
+    for angle in yaw + np.radians(np.linspace(-40, 40, 17)):
+        direction = np.array([np.cos(angle), np.sin(angle)])
+        end, hit = sensor + 2.6 * direction, False
+        for distance in np.arange(0.0, 2.6, 0.02):
+            px, py = sensor + distance * direction
+            if left <= px <= left + width and bottom <= py <= bottom + height:
+                end, hit = np.array([px, py]), True
+                break
+        ax.plot([sensor[0], end[0]], [sensor[1], end[1]], color="white", alpha=0.55, linewidth=1.2, zorder=3)
+        if hit:
+            ax.plot(*end, "o", color="#ffcf33", markersize=5, zorder=5)
+
+    # The car: body and tires in the vehicle's frame, turned to the course's heading
     rotation = np.array([[np.cos(yaw), -np.sin(yaw)], [np.sin(yaw), np.cos(yaw)]])
 
     def place(outline_xy: list[list[float]]) -> tuple[np.ndarray, np.ndarray]:
-        points = rotation @ np.array(outline_xy)
+        points = rotation @ (0.7 * np.array(outline_xy))
         return points[0] + x0, points[1] + y0
 
     for tire_x, tire_y in [(0.75, 0.45), (0.75, -0.45), (-0.75, 0.45), (-0.75, -0.45)]:
         tx, ty = place([[tire_x - 0.25, tire_x + 0.25, tire_x + 0.25, tire_x - 0.25],
                         [tire_y - 0.1, tire_y - 0.1, tire_y + 0.1, tire_y + 0.1]])
-        ax.fill(tx, ty, color="#1f2933", zorder=3)
+        ax.fill(tx, ty, color="#1f2933", zorder=6)
     bx, by = place([[-1.1, 1.1, 1.1, -1.1], [-0.42, -0.42, 0.42, 0.42]])
-    ax.fill(bx, by, color="#e8505b", edgecolor="#1f2933", linewidth=2.5, zorder=3)
+    ax.fill(bx, by, color="#e8505b", edgecolor="#1f2933", linewidth=2.5, zorder=6)
     wx, wy = place([[0.25, 0.65, 0.65, 0.25], [-0.32, -0.32, 0.32, 0.32]])
-    ax.fill(wx, wy, color="#dbe9f6", zorder=3)
+    ax.fill(wx, wy, color="#dbe9f6", zorder=6)
+    # The LiDAR on the roof
+    lx, ly = place([[-0.15], [0.0]])
+    ax.plot(lx, ly, "o", color="#1f2933", markersize=9, zorder=7)
+    ax.plot(lx, ly, "o", color="#ffcf33", markersize=4, zorder=8)
 
     out_path.parent.mkdir(parents=True, exist_ok=True)
     fig.savefig(out_path, dpi=100, transparent=True)
