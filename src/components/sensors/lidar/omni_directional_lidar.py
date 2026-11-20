@@ -4,11 +4,16 @@ omni_directional_lidar.py
 Author: Shisato Yano
 """
 
+import sys
 import numpy as np
+from pathlib import Path
 from math import atan2, sin, cos
 from scipy.stats import norm
 
 from scan_point import ScanPoint
+
+sys.path.append(str(Path(__file__).absolute().parent) + "/../../common")
+from angle_lib import pi_to_pi, zero_to_2pi
 
 class OmniDirectionalLidar:
     """
@@ -45,24 +50,6 @@ class OmniDirectionalLidar:
         
         return (self.params.MIN_RANGE_M <= distance_m <= self.params.MAX_RANGE_M)
     
-    def _normalize_angle_until_2pi(self, angle_rad):
-        """
-        Private function to normalize sensing angle between 0 and 360 deg
-        angle_rad: Sensing angle[rad]
-        """
-
-        if 0.0 > angle_rad: return (angle_rad + np.pi * 2.0)
-        else: return angle_rad
-    
-    def _normalize_angle_pi_2_pi(self, angle_rad):
-        """
-        Private function to normalize sensing angle between -180 and 180 deg
-        angle_rad: Sensing angle[rad]
-        """
-
-        if angle_rad > np.pi: return (angle_rad - np.pi * 2.0)
-        else: return angle_rad
-    
     def _ray_casting_filter(self, distance_list, angle_list, state):
         """
         Private function to filter point cloud by Ray casting
@@ -74,14 +61,14 @@ class OmniDirectionalLidar:
         dist_db = [self.MAX_DB_VALUE for _ in range(self.DIST_DB_SIZE)]
 
         for i in range(len(angle_list)):
-            normalized_angle_2pi = self._normalize_angle_until_2pi(angle_list[i])
+            normalized_angle_2pi = zero_to_2pi(angle_list[i])
             angle_id = int(round(normalized_angle_2pi / self.params.RESO_RAD)) % self.DIST_DB_SIZE
             if dist_db[angle_id] > distance_list[i]:
                 dist_db[angle_id] = distance_list[i]
         
         for i in range(len(dist_db)):
             angle_rad = i * self.params.RESO_RAD
-            angle_pi_2_pi = self._normalize_angle_pi_2_pi(angle_rad)
+            angle_pi_2_pi = pi_to_pi(angle_rad)
             distance_m = dist_db[i]
             if (distance_m != self.MAX_DB_VALUE) and self._visible(distance_m):
                 angle_with_noise = norm.rvs(loc=angle_pi_2_pi, scale=self.params.ANGLE_STD_SCALE)
