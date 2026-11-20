@@ -17,6 +17,7 @@ sys.path.append(str(Path(__file__).absolute().parent) + "/../../array")
 sys.path.append(str(Path(__file__).absolute().parent) + "/../../sensors/gnss")
 sys.path.append(str(Path(__file__).absolute().parent) + "/../../common")
 from state import State
+from angle_lib import pi_to_pi
 from plot_lib import draw_covariance_ellipse
 
 
@@ -321,7 +322,7 @@ class ParticleFilterLocalizer:
             
             # Wrap yaw difference to [-pi, pi]
             # Without this, a particle at -170° and mean at 170° would show diff of -340° instead of 20°
-            diff[2, 0] = np.arctan2(np.sin(diff[2, 0]), np.cos(diff[2, 0]))
+            diff[2, 0] = pi_to_pi(diff[2, 0])
             
             cov += self.weights[i] * (diff @ diff.T)
         

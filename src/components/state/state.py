@@ -4,8 +4,13 @@ state.py
 Author: Shisato Yano
 """
 
+import sys
 from math import cos, sin
+from pathlib import Path
 import numpy as np
+
+sys.path.append(str(Path(__file__).absolute().parent) + "/../common")
+from angle_lib import pi_to_pi
 
 
 class State:
@@ -91,7 +96,7 @@ class State:
 
         self.x_m = next_state[0, 0]
         self.y_m = next_state[1, 0]
-        self.yaw_rad = next_state[2, 0]
+        self.yaw_rad = pi_to_pi(next_state[2, 0])
         self.speed_mps = next_state[3, 0]
         
         self._limit_speed()
