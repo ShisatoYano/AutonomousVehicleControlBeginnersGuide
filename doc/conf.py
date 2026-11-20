@@ -41,6 +41,8 @@ html_theme_options = {
     "navigation_depth": 3,
 }
 templates_path = ["_templates"]
+# Drawn by social_preview.py at build time, like the banner of the front page
+html_logo = "_extra/logo.png"
 
 # Search engines and link previews: canonical URLs and sitemap.xml come from html_baseurl,
 # and the description of each page from its first paragraph (notes are skipped)
@@ -159,6 +161,8 @@ def draw_social_preview(app: Sphinx, config) -> None:
     import social_preview
 
     social_preview.draw(DOC_DIR / "_extra" / "social_preview.png")
+    social_preview.draw_banner(DOC_DIR / "_extra" / "banner.png")
+    social_preview.draw_logo(DOC_DIR / "_extra" / "logo.png")
 
 
 def draw_figures(app: Sphinx) -> None:
