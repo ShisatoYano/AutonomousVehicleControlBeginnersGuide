@@ -22,6 +22,9 @@ class NdtMap:
 
     Each populated grid cell represents its points by a normal distribution,
     storing their mean position and 2-by-2 covariance matrix in an NdtGrid.
+    NDT is used for scan matching: a new scan is registered by maximizing
+    its likelihood under these per-cell distributions. This class only
+    builds the map.
     See update_map for the estimators used by this implementation.
 
     Reference:
