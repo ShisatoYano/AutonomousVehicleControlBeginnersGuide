@@ -55,6 +55,8 @@ ogp_site_name = html_title
 ogp_description_length = 160
 # Drawn by social_preview.py at build time; also uploaded as the repository's social preview
 html_extra_path = ["_extra"]
+html_static_path = ["_static"]
+html_css_files = ["custom.css"]
 ogp_image = BOOK_URL + "social_preview.png"
 ogp_image_alt = "Autonomous Vehicle Control Beginners Guide: demos of localization, path tracking, path planning, mapping and perception"
 ogp_social_cards = {"enable": False}

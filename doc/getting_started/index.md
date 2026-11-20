@@ -8,6 +8,6 @@ Get started with the autonomous driving simulations in Python: set up the enviro
 
 ## Sections
 
-- 1.1 Setting up Python and the dependencies
+- [1.1 Setting up Python and the dependencies](/doc/getting_started/setup.md)
 - [1.2 Running a simulation and the tests](/doc/getting_started/running_simulations.md)
 - 1.3 How the repository is organized
