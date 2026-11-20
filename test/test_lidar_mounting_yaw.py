@@ -64,3 +64,12 @@ def test_sensor_odometry_includes_mounting_yaw():
     _, params = _noiseless_points(mount_yaw_deg=30.0, vehicle_yaw_deg=10.0)
     yaw_rad = np.arctan2(params.curr_sensor_tf[1, 0], params.curr_sensor_tf[0, 0])
     assert np.isclose(yaw_rad, np.deg2rad(40.0))
+
+
+def test_points_lie_on_obstacle_face_after_vehicle_turned_several_times():
+    # the vehicle yaw is not normalized while it drives, so it can be several turns away from 0
+    for vehicle_yaw_deg in [720.0, -720.0, 1090.0]:
+        points, _ = _noiseless_points(mount_yaw_deg=30.0, vehicle_yaw_deg=vehicle_yaw_deg)
+        assert len(points) > 0
+        assert np.allclose(points[:, 0], 9.0, atol=0.05)
+        assert np.all(np.abs(points[:, 1]) <= 1.0 + 1e-6)
