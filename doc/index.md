@@ -2,6 +2,8 @@
 
 Learn autonomous driving by building it: Python simulations and an open textbook of self-driving car algorithms (path planning, path tracking, localization, mapping and control), where the system grows one stage at a time.
 
+![Demos of the simulations: localization with EKF, UKF and particle filter, path tracking with MPPI, path planning with Hybrid A*, and NDT mapping](/doc/_extra/banner.png)
+
 The book starts from a bare world and a vehicle that moves by given commands, and **adds one stage per chapter**: following a course, sensing, localization, mapping, planning, perception and optimal control, then driving among other vehicles and obstacles. Each chapter ends with a runnable "system so far", and the alternative algorithms of a stage are swapped into the same system and compared.
 
 The book is a work in progress: most chapters are planned, and list the simulations that already exist for them. See the [documentation roadmap](https://github.com/ShisatoYano/AutonomousVehicleControlBeginnersGuide/issues/165) for the plan. Comments and ideas are welcome in the [Book](https://github.com/ShisatoYano/AutonomousVehicleControlBeginnersGuide/discussions/categories/book) category of Discussions.
