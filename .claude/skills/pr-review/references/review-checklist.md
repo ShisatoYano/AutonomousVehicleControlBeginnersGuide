@@ -39,6 +39,7 @@ Points to check in a PR to this repository. Add new points here as they come up 
 ## Evidence and book
 
 - The description says how the change was checked, and any new or changed code under `src/` has images: the demo GIF of new code, or the last frames of simulations that use the changed code before and after (bug fixes, improvements and refactoring alike). The `PR_Evidence` check enforces their presence; the review checks that they show what the PR claims
+- A PR that does one part of an issue labeled `multiple PRs` says "Part of #N", not "Closes #N" (the `PR_Evidence` check fails otherwise). When it is the last part, the maintainer closes the issue by hand after merging
 - A change to code that a book page describes (text, equations, figures, `literalinclude` names) updates that page in the same PR (#131). Find the pages with `grep -rn <class or function name> doc/`
 
 ## Security
