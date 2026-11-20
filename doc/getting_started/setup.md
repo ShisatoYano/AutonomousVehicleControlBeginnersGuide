@@ -21,12 +21,12 @@ The commands for each way are in the [Quick Start of the README](/README.md#2-se
 
 The README describes three ways. They give the same result; they differ in what you install on your computer, and in how the animation window reaches your screen.
 
-| | A. VS Code + Dev Container | B. Docker only | C. Local Python |
+| | A. Dev Container | B. Docker only | C. Local Python |
 |---|---|---|---|
-| You install | Docker, VS Code and its Dev Containers extension | Docker | Python |
-| Python version | Set by the container | Set by the container | The one you install |
-| Animation window | Through an X server (see below) | Through an X server | Opens directly |
-| Good when | You want an editor and an environment that are set up for you | You don't use VS Code, or work on a remote machine | You want the shortest setup, on any operating system |
+| You install | Docker, VS Code and its extension | Docker | Python |
+| Python version | Set by the container | Set by the container | Yours |
+| Animation window | Through an X server | Through an X server | Opens directly |
+| Best for | An editor set up for you | No VS Code, or a remote machine | The shortest setup, on any OS |
 
 If you are not sure, start with **C**. It works the same way on Linux, macOS and Windows, and the windows open without extra setup. The automatic tests of the repository (GitHub Actions) also run on a local Python, without a container, on all three operating systems.
 
