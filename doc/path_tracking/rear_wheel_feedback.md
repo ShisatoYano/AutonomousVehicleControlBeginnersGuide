@@ -145,6 +145,36 @@ All three use the kinematic bicycle model, so all three lose accuracy when the t
 - **Sign convention of the reference.** [1] gives the same law (3) and the same equations (2); its figure draws $e$ with the opposite sign. The signs of this page follow [Notation and Units](../NOTATION.md).
 - **Kinematic model only.** The law ignores tire slip and actuator delay, like the other controllers of this chapter.
 
+## Check your understanding
+
+1. The vehicle drives exactly on a circular course of radius 20 m ($e = \theta_e = 0$) at 5 m/s. What yaw rate does (3) give, and which of its terms gives it?
+
+   <details><summary>Answer</summary>
+
+   $\omega = v\kappa = 5 \cdot 0.05 = 0.25$ rad/s, all from the first term, the feedforward. The other two terms are 0 because both errors are 0. This is why rear wheel feedback follows a curve without waiting for an error to build up.
+
+   </details>
+
+2. Why does the third term of (3) contain the factor $\sin\theta_e / \theta_e$, when a plain $-k_e v e$ would also steer toward the course?
+
+   <details><summary>Answer</summary>
+
+   So that the Lyapunov function (4) never grows. With the factor, the third term contributes $-2ev\sin\theta_e$ to $\dot V$ in (5), which cancels the $+2ev\sin\theta_e$ coming from $\dot e$, and $\dot V \le 0$ is left. Without it, the two terms don't cancel for a large heading error, and the argument fails.
+
+   </details>
+
+3. Near a straight course, (7) of rear wheel feedback is the same equation as Pure Pursuit's (7) with $k_\theta = 2/l_d$ and $k_e = 2/l_d^2$. Which behavior can rear wheel feedback choose that Pure Pursuit with a fixed $l_d$ can't?
+
+   <details><summary>Answer</summary>
+
+   The damping. Pure Pursuit has one parameter, so both coefficients come from $l_d$, and its damping ratio is always $1/\sqrt{2}$. Rear wheel feedback has two gains, and its damping ratio $k_\theta / (2\sqrt{k_e})$ can be set apart from how fast it comes back. For example $k_\theta = 1$ 1/m and $k_e = 1$ 1/m² give $\zeta = 0.5$, which no $l_d$ gives.
+
+   </details>
+
+```{note}
+This section has its theory. The code walkthrough, experiments and exercises are added after the code roadmap's Phase 1 ([#131](https://github.com/ShisatoYano/AutonomousVehicleControlBeginnersGuide/issues/131)), when the interfaces they show are stable.
+```
+
 ## References
 
 1. B. Paden, M. Čáp, S. Z. Yong, D. Yershov and E. Frazzoli, "A Survey of Motion Planning and Control Techniques for Self-Driving Urban Vehicles", IEEE Transactions on Intelligent Vehicles, vol. 1, no. 1, pp. 33–55, 2016. Section V-A2. [DOI](https://doi.org/10.1109/TIV.2016.2578706), [arXiv](https://arxiv.org/abs/1604.07446)
