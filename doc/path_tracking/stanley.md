@@ -53,6 +53,8 @@ $$
 
 The minus sign comes from the sign convention of (2): both errors are positive when the vehicle is to the left of or turned to the left of the course, and the correction turns right. Snider [2] defines the errors with the opposite signs and writes the same law without the minus sign.
 
+**In short**, the Stanley controller is made of three parts: the **heading error** term $\theta_e$, the **cross-track error** term $\arctan(k e / v)$ with its gain $k$ and the speed $v$, and the **front axle** as the point where both errors are measured. It doesn't look ahead along the course, as [Pure Pursuit](pure_pursuit.md) does, and it doesn't use the course's curvature, as [rear wheel feedback](rear_wheel_feedback.md) does. The original paper adds a softening constant for low speed and terms for tire slip and actuator delay; this implementation leaves them out (see Limits).
+
 **Yaw rate.** The vehicle model of this project takes a yaw rate as its input, so the steering angle is turned into a yaw rate with the kinematic bicycle model:
 
 $$
