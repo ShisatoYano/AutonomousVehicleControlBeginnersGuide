@@ -123,6 +123,36 @@ In step 2, the point found is a little farther than $l_d$, by less than the 0.1 
 - **Kinematic model only.** The steering law assumes that the wheels don't slip and that the steering acts at once. At high speed, tire slip and actuator delay make the vehicle drift off the arc, and the look-ahead distance has to be tuned for each speed.
 - **Pure Pursuit vs Stanley.** Pure Pursuit looks at one point $l_d$ ahead of the rear axle. The [Stanley controller](stanley.md) looks at the course point nearest to the front axle and uses the heading error and the lateral error there; it doesn't look ahead. At speed, Stanley's steering toward the course shrinks as $k e / v$, so the front axle's offset decays at the rate $k$ per second at any speed, over a distance $v / k$ that grows with the speed [3]. Pure Pursuit with a fixed $l_d$ comes back over a fixed distance instead, and with (6) it behaves like Stanley at high speed. The [rear wheel feedback section](rear_wheel_feedback.md#pure-pursuit-vs-stanley-vs-rear-wheel-feedback) compares all three.
 
+## Check your understanding
+
+1. The look-ahead point is $l_d = 5$ m from the rear axle and 1 m to the left of the vehicle's heading. What is the radius of the arc that Pure Pursuit drives?
+
+   <details><summary>Answer</summary>
+
+   The lateral offset is $e_p = 1$ m, so (3) gives $\kappa = 2 e_p / l_d^2 = 2 / 25 = 0.08$ 1/m, a radius of $R = 12.5$ m, to the left.
+
+   </details>
+
+2. With a fixed $l_d = 4$ m, the vehicle starts 0.5 m beside a straight course, parallel to it, once at 5 m/s and once at 10 m/s. How far does it drive before it first reaches the course, and how long does it take?
+
+   <details><summary>Answer</summary>
+
+   The same distance at both speeds, $\frac{3\pi}{4}\,l_d \approx 9.4$ m, because (7) written per meter doesn't contain the speed. It takes about 1.9 s at 5 m/s and 0.94 s at 10 m/s.
+
+   </details>
+
+3. Why does a long look-ahead distance make the vehicle cut the inside of a curve, and why doesn't the adaptive version of (8) prevent it on the straight part before the curve?
+
+   <details><summary>Answer</summary>
+
+   A far look-ahead point is already in the curve while the vehicle is still on the straight part, so the vehicle starts turning early. The adaptive version shortens $l_d$ with the curvature at the point nearest to the vehicle, which is still 0 on the straight part, so it only shortens $l_d$ once the vehicle is in the curve (see Limits).
+
+   </details>
+
+```{note}
+This section has its theory. The code walkthrough, experiments and exercises are added after the code roadmap's Phase 1 ([#131](https://github.com/ShisatoYano/AutonomousVehicleControlBeginnersGuide/issues/131)), when the interfaces they show are stable.
+```
+
 ## References
 
 1. R. C. Coulter, "Implementation of the Pure Pursuit Path Tracking Algorithm", Technical Report CMU-RI-TR-92-01, Carnegie Mellon University, 1992. [PDF](https://www.ri.cmu.edu/pub_files/pub3/coulter_r_craig_1992_1/coulter_r_craig_1992_1.pdf)
