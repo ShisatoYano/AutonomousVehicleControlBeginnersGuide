@@ -5,6 +5,7 @@ Author: Shisato Yano
 """
 
 import numpy as np
+import numpy.typing as npt
 import sys
 from pathlib import Path
 
@@ -29,15 +30,11 @@ class Body:
                             [self.spec.width_m, self.spec.width_m, -self.spec.width_m, -self.spec.width_m, self.spec.width_m]])
         self.array = XYArray(contour)
 
-    def draw(self, axes, pose, elems):
+    def transformed_outline(self, pose: npt.NDArray[np.float64]) -> XYArray:
         """
-        Function to plot vehicle's body lines
-        axes: Axes object of figure
+        Function to get vehicle's body outline transformed by vehicle's pose
         pose: Vehicle's pose vector
-        elems: List of plot objects
+        Return transformed XYArray object
         """
 
-        transformed_array = self.array.homogeneous_transformation(pose[0, 0], pose[1, 0], pose[2, 0])
-        body_plot, = axes.plot(transformed_array.get_x_data(), transformed_array.get_y_data(), 
-                               lw=self.spec.line_w, color=self.spec.color, ls=self.spec.line_type)
-        elems.append(body_plot)
+        return self.array.homogeneous_transformation(pose[0, 0], pose[1, 0], pose[2, 0])

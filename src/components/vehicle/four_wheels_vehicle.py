@@ -4,6 +4,12 @@ four_wheels_vehicle.py
 Author: Shisato Yano
 """
 
+import sys
+from pathlib import Path
+
+sys.path.append(str(Path(__file__).absolute().parent) + "/../array")
+from xy_array import XYArray
+
 from body import Body
 from chassis import Chassis
 from front_left_tire import FrontLeftTire
@@ -212,15 +218,22 @@ class FourWheelsVehicle:
         x_y_yaw_array = self.state.x_y_yaw()
         x_m = self.state.get_x_m()
         y_m = self.state.get_y_m()
-        
-        self.body.draw(axes, x_y_yaw_array, elems)
-        self.chassis.draw(axes, x_y_yaw_array, elems)
-        self.front_left_tire.draw(axes, x_y_yaw_array, steer_rad, elems)
-        self.front_right_tire.draw(axes, x_y_yaw_array, steer_rad, elems)
-        self.rear_left_tire.draw(axes, x_y_yaw_array, elems)
-        self.rear_right_tire.draw(axes, x_y_yaw_array, elems)
-        self.front_axle.draw(axes, x_y_yaw_array, elems)
-        self.rear_axle.draw(axes, x_y_yaw_array, elems)
+
+        # all the part outlines are concatenated with NaN separators and
+        # drawn by a single plot call, which is faster than one call per part
+        vehicle_outline = XYArray.concatenate([
+            self.body.transformed_outline(x_y_yaw_array),
+            self.chassis.transformed_outline(x_y_yaw_array),
+            self.front_left_tire.transformed_outline(x_y_yaw_array, steer_rad),
+            self.front_right_tire.transformed_outline(x_y_yaw_array, steer_rad),
+            self.rear_left_tire.transformed_outline(x_y_yaw_array),
+            self.rear_right_tire.transformed_outline(x_y_yaw_array),
+            self.front_axle.transformed_outline(x_y_yaw_array),
+            self.rear_axle.transformed_outline(x_y_yaw_array),
+        ])
+        vehicle_plot, = axes.plot(vehicle_outline.get_x_data(), vehicle_outline.get_y_data(),
+                                  lw=self.spec.line_w, color=self.spec.color, ls=self.spec.line_type)
+        elems.append(vehicle_plot)
 
         if self.show_zoom:
             axes.set_xlim(x_m - self.spec.area_size, x_m + self.spec.area_size)
