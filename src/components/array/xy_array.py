@@ -39,7 +39,23 @@ class XYArray:
         translated_data = rotated_data + np.array([[x], [y]])
 
         return XYArray(translated_data)
-    
+
+    @classmethod
+    def concatenate(cls, xy_arrays: list["XYArray"]) -> "XYArray":
+        """
+        Function to concatenate multiple array data with NaN separators
+        NaN breaks the line between each array, so concatenated data can be drawn by a single plot call
+        xy_arrays: List of XYArray objects
+        Return concatenated XYArray object
+        """
+
+        nan_column = np.full((2, 1), np.nan)
+        data_list = []
+        for xy_array in xy_arrays:
+            data_list.append(xy_array.get_data())
+            data_list.append(nan_column)
+        return cls(np.hstack(data_list))
+
     def get_data(self):
         """
         Return array data

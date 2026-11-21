@@ -5,6 +5,7 @@ Author: Shisato Yano
 """
 
 import numpy as np
+import numpy.typing as npt
 import sys
 from pathlib import Path
 
@@ -31,17 +32,13 @@ class FrontLeftTire:
                             [self.spec.tire_w_m, self.spec.tire_w_m, -self.spec.tire_w_m, -self.spec.tire_w_m, self.spec.tire_w_m]])
         self.array = XYArray(contour)
     
-    def draw(self, axes, pose, steer_rad, elems):
+    def transformed_outline(self, pose: npt.NDArray[np.float64], steer_rad: float) -> XYArray:
         """
-        Function to plot vehicle's front left tire's lines
-        axes: Axes object of figure
+        Function to get vehicle's front left tire outline transformed by vehicle's pose
         pose: Vehicle's pose vector
         steer_rad: Tire's steering angle[rad]
-        elems: List of plot objects
+        Return transformed XYArray object
         """
 
         translated_array = self.array.homogeneous_transformation(self.offset_x_m, self.offset_y_m, steer_rad)
-        transformed_array = translated_array.homogeneous_transformation(pose[0, 0], pose[1, 0], pose[2, 0])
-        tire_plot, = axes.plot(transformed_array.get_x_data(), transformed_array.get_y_data(), 
-                               lw=self.spec.line_w, color=self.spec.color, ls=self.spec.line_type)
-        elems.append(tire_plot)
+        return translated_array.homogeneous_transformation(pose[0, 0], pose[1, 0], pose[2, 0])
