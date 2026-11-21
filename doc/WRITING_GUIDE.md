@@ -24,6 +24,16 @@ Every chapter has the same sections, in two layers ([documentation roadmap](http
 7. **Comparison experiments**: change a parameter or swap the algorithm, and show what changes.
 8. **Exercises**: small tasks the reader can run.
 
+**Headings.** A section page uses the `##` headings of the [template](#template), in its order: "Problem and intuition", "Theory", "Algorithm", "Limits", "Check your understanding" and "References" always; "Where the equations live in the code", "Experiments" and "Exercises" once its code layer is written. Other `##` headings can come in between, such as a comparison "A vs B". Until the code layer is written, put this note right before "References", so readers see why the section is shorter than [4.3 Stanley](path_tracking/stanley.md):
+
+````markdown
+```{note}
+This section has its theory. The code walkthrough, experiments and exercises are added after the code roadmap's Phase 1 ([#131](https://github.com/ShisatoYano/AutonomousVehicleControlBeginnersGuide/issues/131)), when the interfaces they show are stable.
+```
+````
+
+`test/test_book_chapters.py` checks the headings and the note on every section page (Chapter 1, a practical guide, is not checked).
+
 **Pages.** A chapter is a folder (`doc/<topic>/`) with the chapter page `index.md`. Put each section on its own page in the folder and link the pages from the chapter page; the linked pages are nested under the chapter in the sidebar. A short chapter can be written on the chapter page alone, with its sections as `##` headings, like [Chapter 2](simulator/index.md).
 
 **Being found by search.** Many readers arrive from a search engine, typing the algorithm's name with words such as "explained", "equations", "python", "example" or "github", or comparing two algorithms ("stanley vs pure pursuit", "ekf vs ukf", "mppi vs mpc"). The first sentence of each page becomes its description in search results and link previews (about 160 characters), so:

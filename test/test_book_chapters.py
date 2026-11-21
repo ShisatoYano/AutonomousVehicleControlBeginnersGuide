@@ -1,5 +1,6 @@
 """
-Test that every simulation has a chapter in the book
+Test that every simulation has a chapter in the book, and that every section page has the
+headings of the writing guide
 
 Author: Shisato Yano
 """
@@ -44,3 +45,39 @@ def test_every_simulation_is_in_exactly_one_chapter():
 
     unknown = sorted(set(links) - set(sims))
     assert not unknown, f"Chapter pages link to simulations that don't exist: {unknown}"
+
+
+# The headings of the theory layer, in this order (doc/WRITING_GUIDE.md, "Structure of a chapter")
+SECTION_HEADINGS = [
+    "Problem and intuition",
+    "Theory",
+    "Algorithm",
+    "Limits",
+    "Check your understanding",
+    "References",
+]
+CODE_LAYER_HEADING = "Where the equations live in the code"
+CODE_LAYER_NOTE = "The code walkthrough, experiments and exercises are added after the code roadmap's Phase 1"
+
+
+def section_pages() -> list[Path]:
+    # Chapter 1 is a practical guide, not algorithm sections
+    return sorted(
+        page for page in DOC_DIR.glob("*/*.md")
+        if page.name != "index.md" and page.parent.name != "getting_started"
+    )
+
+
+def test_every_section_has_the_headings_of_the_writing_guide():
+    for page in section_pages():
+        text = page.read_text(encoding="utf-8")
+        headings = re.findall(r"^## (.+?)\s*$", text, flags=re.M)
+        required = [h for h in headings if h in SECTION_HEADINGS]
+        name = page.relative_to(ROOT_DIR)
+        assert required == SECTION_HEADINGS, (
+            f"{name} must have the headings {SECTION_HEADINGS} in this order, but has {required}"
+        )
+        if CODE_LAYER_HEADING not in headings:
+            assert CODE_LAYER_NOTE in text, (
+                f"{name} has no code layer yet, so it needs the note of the writing guide about it"
+            )
