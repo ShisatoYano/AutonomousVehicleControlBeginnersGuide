@@ -87,6 +87,7 @@ The simulation [`mpc_path_tracking`](/src/simulations/path_tracking/mpc_path_tra
 - **Local minima.** The solver finds a plan where the cost doesn't decrease any more nearby, which is not always the best plan. The warm start helps it stay near a good solution.
 - **The model has to be right.** The plan is only as good as the prediction. A model that ignores tire slip ([Chapter 14](../dynamic_vehicle_model/index.md)) predicts wrongly at high speed, and the constraints are then satisfied only for the model, not for the vehicle.
 - **Stopping at the goal is outside the optimization.** Near the end of the course, the controller lowers the reference speed and, in the last meters, overrides the acceleration to brake and stop. These rules are in `update()`, not in problem (3).
+- **MPC or MPPI?** [10.4](mppi.md#mpc-vs-mppi) compares the two controllers on the same course: tracking, smoothness of the steering and computation.
 
 ## Where the equations live in the code
 

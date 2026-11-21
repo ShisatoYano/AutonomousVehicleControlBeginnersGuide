@@ -97,6 +97,21 @@ The simulation [`mppi_path_tracking`](/src/simulations/path_tracking/mppi_path_t
 | Computation | One nonlinear program per step | $M \times N$ model steps per step, easy to run in parallel |
 | Result | Deterministic | Random, unless the seed is fixed |
 
+**On the same course.** `mpc_path_tracking` and `mppi_path_tracking` use the same course, the same time step of 0.1 s, a horizon of about 2 s and the same weights $W$ and $W_N$, so they can be compared directly. Over the 25 s of the simulations:
+
+| | MPC | MPPI |
+|---|---|---|
+| Average distance to the course | 0.13 m | 0.16 m |
+| Largest distance to the course | 1.0 m | 1.3 m |
+| Step-to-step change of the steering | 0.108 rad | 0.064 rad |
+| Computation per step in this project | about 10 ms | about 1 s |
+
+(The distance is from the rear axle to the nearest course point; the step-to-step change is the root mean square of the difference between consecutive steering angles. The times depend on the machine: 7 ms and 0.8 s in our run for this table; the Limits of 10.3 and of this section give the numbers of other runs.)
+
+MPC tracks the course a little more closely, since the solver finds the minimum of the cost instead of an average around it. MPPI steers more smoothly, thanks to its moving average, and the noise of the samples hardly shows. The difference in computation comes from the implementation more than from the methods: the solver of MPC is compiled code, while the rollouts of MPPI run in Python loops here (see Limits).
+
+**Which one to choose.** Use MPC when the model and the cost are smooth and some limits must never be broken, such as a speed limit, since the solver keeps hard constraints. Use MPPI when the cost is not smooth, for example a cost that jumps when the vehicle touches an obstacle, or when the model is only available as a simulation, and when the samples can be computed in parallel on a GPU, which is how MPPI is used on real vehicles [1].
+
 ## Limits
 
 - **Computation in Python.** Every update simulates $M \times N = 4400$ steps and searches the nearest of the 1026 course points for each. In plain Python loops one update took more than a second in our runs, about a hundred times the MPC solve of 10.3, so `mppi_path_tracking` runs much slower than real time. MPPI is fast when the samples are computed in parallel, for example with NumPy arrays or on a GPU.
