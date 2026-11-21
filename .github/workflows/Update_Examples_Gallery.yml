@@ -33,7 +33,7 @@ jobs:
     - name: Setup python
       uses: actions/setup-python@v7
       with:
-        python-version: '3.13'
+        python-version: '3.14'
 
     # The script uses only the standard library, so no dependency install is needed
     - name: Generate examples gallery
