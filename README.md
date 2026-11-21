@@ -43,7 +43,7 @@ Beyond single algorithms, the project shows how they work together: how the stag
 ## Requirements
 Please satisfy with the following requirements on native or VM Linux in advance.  
 For running each sample codes:  
-* [Python 3.13.x](https://www.python.org/)
+* [Python 3.14.x](https://www.python.org/)
 * [Matplotlib](https://matplotlib.org/)
 * [NumPy](https://numpy.org/)
 * [SciPy](https://scipy.org/)
@@ -93,7 +93,7 @@ Note for options A and B: The container shows the animations through your host's
 
 
 #### C. Local (without Docker)
-1. Install [Python 3.13.x](https://www.python.org/)
+1. Install [Python 3.14.x](https://www.python.org/)
 2. Create a virtual environment and install the required libraries
     * Linux / macOS:
         ```bash

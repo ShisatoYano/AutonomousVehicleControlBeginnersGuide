@@ -4,6 +4,40 @@ Before starting your contribution, please check [README](/README.md) to understa
 If you use an AI coding tool such as Claude Code, the project's conventions are summarized in [CLAUDE.md](/CLAUDE.md), which Claude Code loads automatically.  
 For questions and ideas, please use [Discussions](https://github.com/ShisatoYano/AutonomousVehicleControlBeginnersGuide/discussions). Issues are for bug reports and agreed tasks.  
 
+## Supported Python versions
+
+The project supports every Python version that has not reached its end of life,
+so learners can use the interpreter that ships with their OS. The Linux, macOS
+and Windows CI workflows run the test suite on every supported version.
+
+| Role | Version | Used by |
+|---|---|---|
+| Newest supported | 3.15 | CI matrix |
+| Recommended | 3.14 | README, Dockerfile, dev container, book and gallery workflows |
+| Oldest supported | 3.11 | CI matrix |
+
+The recommended version is the newest release minus one. A new Python version is
+not recommended right after its release because the dependencies (NumPy, SciPy,
+matplotlib, CasADi, do-mpc) may not have wheels for it yet. The Dockerfile names
+the minor version without a patch number (`python:3.14`), so rebuilding the image
+also picks up patch and security fixes.
+
+"Supported" means the code runs and the test suite passes on that version. It
+does not mean every dependency publishes wheels for it: pip installs the newest
+release of each dependency that still supports the interpreter, so Python 3.11
+gets older NumPy and SciPy releases than Python 3.15.
+
+### Yearly review
+
+Review the policy every year in December or January, after the October Python
+release:
+
+1. Add the new version to the CI matrix once its dependencies publish wheels.
+   If one of them does not, leave the version out and add a comment in the
+   workflow saying which dependency blocks it.
+2. Move the recommended version up by one, and update the files in the table.
+3. Remove versions that reached their end of life from the matrix and the table.
+
 ## Add new sample program of algorithm
 Steps to add a new sample program.  
 
