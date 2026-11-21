@@ -6,4 +6,5 @@ __pycache__/
 .vscode/
 doc/_build/
 doc/**/figures/*.svg
-doc/_extra/
+# Drawn by doc/banner.py at build time; the other files in doc/_extra are committed
+doc/_extra/banner.png
