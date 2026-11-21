@@ -64,7 +64,7 @@ $$
 
 ### A course in the plane
 
-A course can turn back on itself in $x$ (the five points above go right, then left, then right again in $y$), so $y$ can't be written as a function of $x$. Instead, $x$ and $y$ are both written as functions of a parameter $s$, and each gets its own spline (1) to (5). The parameter is the **cumulative chord length**, the distance along the straight lines between the given points:
+A course can turn back on itself, for example in a U-turn or a loop, so in general $y$ can't be written as a function of $x$. Instead, $x$ and $y$ are both written as functions of a parameter $s$, and each gets its own spline (1) to (5). The parameter is the **cumulative chord length**, the distance along the straight lines between the given points:
 
 $$
 s_0 = 0, \qquad
@@ -128,6 +128,36 @@ Given the points (x_0, y_0), ..., (x_n, y_n) and a target speed:
 - **Chord length is not distance.** $s$ from (6) is shorter than the distance along the curve, more so where the course bends sharply between two given points. The samples taken every 0.1 m of $s$ are therefore not exactly 0.1 m apart. The curvature (8) is exact anyway.
 - **Distinct points.** Two neighboring given points must differ, otherwise $h_i = 0$ and (3) divides by zero.
 - **Switch-back detection is a heuristic.** It only checks the change of yaw between two samples, so it depends on the sampling distance, and a sharp but forward turn could be taken for a reversal.
+
+## Check your understanding
+
+1. What is the curvature of the course at its first and last points, and which condition makes it so?
+
+   <details><summary>Answer</summary>
+
+   Zero. The natural end conditions (5) set $c_0 = c_n = 0$, and $c$ is half the second derivative, so $x'' = y'' = 0$ at both ends. The numerator of (8) is then zero: the course is straight where it starts and ends, as the figure shows.
+
+   </details>
+
+2. You move only the third of the five points. Which segments of the course change, and why?
+
+   <details><summary>Answer</summary>
+
+   All four, not only the two next to the point. Moving the point changes the equations (4) of the knots around it, and the $c_i$ of every knot come from solving all of (4) and (5) together, so every $c_i$ changes, and with (3) every segment. The change fades quickly with the distance from the moved point (see Limits).
+
+   </details>
+
+3. In the sharp turn of the simulations' course, $|\kappa| \approx 1$ 1/m. What target speed would keep the lateral acceleration $v^2 |\kappa|$ below 8 m/s²?
+
+   <details><summary>Answer</summary>
+
+   $v \le \sqrt{8 / 1} \approx 2.8$ m/s, about 10 km/h, half the 20 km/h that the course uses everywhere (see Limits).
+
+   </details>
+
+```{note}
+This section has its theory. The code walkthrough, experiments and exercises are added after the code roadmap's Phase 1 ([#131](https://github.com/ShisatoYano/AutonomousVehicleControlBeginnersGuide/issues/131)), when the interfaces they show are stable.
+```
 
 ## References
 
