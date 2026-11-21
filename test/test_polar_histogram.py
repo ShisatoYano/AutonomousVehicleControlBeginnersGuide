@@ -46,6 +46,8 @@ def test_angle_to_sector_index():
     assert hist.angle_to_sector_index(np.deg2rad(91)) == 1
     assert hist.angle_to_sector_index(np.deg2rad(-91)) == 2  # -91deg == 269deg
     assert hist.angle_to_sector_index(np.deg2rad(-1)) == 3   # -1deg == 359deg
+    assert hist.angle_to_sector_index(np.deg2rad(721)) == 0  # 721deg == 1deg
+    assert hist.angle_to_sector_index(np.deg2rad(-611)) == 1 # -611deg == 109deg
 
 
 def test_sector_center_angle_rad_is_normalized():

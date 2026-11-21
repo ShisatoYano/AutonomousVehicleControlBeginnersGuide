@@ -10,7 +10,7 @@ from pathlib import Path
 import numpy as np
 
 sys.path.append(str(Path(__file__).absolute().parent) + "/../../common")
-from angle_lib import pi_to_pi
+from angle_lib import pi_to_pi, zero_to_2pi
 
 
 class PolarHistogram:
@@ -70,7 +70,7 @@ class PolarHistogram:
         angle_rad: Angle relative to vehicle heading[rad], any range
         """
 
-        angle_0_2pi = angle_rad % (2.0 * np.pi)
+        angle_0_2pi = zero_to_2pi(angle_rad)
         index = int(np.floor(angle_0_2pi / self.sector_angle_rad)) % self.num_sectors
         return index
 

@@ -21,8 +21,10 @@ abs_dir_path = str(Path(__file__).absolute().parent)
 relative_path = "/../../../components/"
 sys.path.append(abs_dir_path + relative_path + "state")
 sys.path.append(abs_dir_path + relative_path + "course/cubic_spline_course")
+sys.path.append(abs_dir_path + relative_path + "common")
 
 from state import State
+from angle_lib import pi_to_pi
 
 
 class _StateView:
@@ -177,10 +179,8 @@ class MppiController:
             float(x_t[2, 0]),
             float(x_t[3, 0]),
         )
-        yaw = (yaw + 2.0 * np.pi) % (2.0 * np.pi)
         ref_x, ref_y, ref_yaw, ref_v = self._get_nearest_waypoint(x, y)
-        ref_yaw = (ref_yaw + 2.0 * np.pi) % (2.0 * np.pi)
-        yaw_diff = np.arctan2(np.sin(yaw - ref_yaw), np.cos(yaw - ref_yaw))
+        yaw_diff = pi_to_pi(yaw - ref_yaw)
         cost = (
             self.stage_cost_weight[0] * (x - ref_x) ** 2
             + self.stage_cost_weight[1] * (y - ref_y) ** 2
@@ -197,10 +197,8 @@ class MppiController:
             float(x_T[2, 0]),
             float(x_T[3, 0]),
         )
-        yaw = (yaw + 2.0 * np.pi) % (2.0 * np.pi)
         ref_x, ref_y, ref_yaw, ref_v = self._get_nearest_waypoint(x, y)
-        ref_yaw = (ref_yaw + 2.0 * np.pi) % (2.0 * np.pi)
-        yaw_diff = np.arctan2(np.sin(yaw - ref_yaw), np.cos(yaw - ref_yaw))
+        yaw_diff = pi_to_pi(yaw - ref_yaw)
         cost = (
             self.terminal_cost_weight[0] * (x - ref_x) ** 2
             + self.terminal_cost_weight[1] * (y - ref_y) ** 2
