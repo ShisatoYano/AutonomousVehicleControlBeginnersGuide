@@ -5,7 +5,7 @@
 
 **[Read the book](https://shisatoyano.github.io/AutonomousVehicleControlBeginnersGuide/)** · **[See all simulations](/doc/EXAMPLES.md)** · **[Quick start](#quick-start)**
 
-<!-- The same demos as doc/social_preview.py, which draws the social preview image from them -->
+<!-- The same demos as doc/banner.py, which draws the banner of the book's front page from them -->
 <table>
   <tr>
     <td align="center" width="33%"><img src="src/simulations/localization/ekf_ukf_pf_comparison/ekf_ukf_pf_comparison.gif" alt="Localization: EKF vs UKF vs PF" width="260"><br><a href="https://shisatoyano.github.io/AutonomousVehicleControlBeginnersGuide/localization/index.html">Localization: EKF vs UKF vs PF</a></td>

@@ -39,9 +39,10 @@ html_theme = "sphinx_rtd_theme"
 html_title = "Autonomous Vehicle Control Beginners Guide"
 html_theme_options = {
     "navigation_depth": 3,
+    # The logo already shows the title, which the theme would otherwise repeat above it
+    "logo_only": True,
 }
 templates_path = ["_templates"]
-# Drawn by social_preview.py at build time, like the banner of the front page
 html_logo = "_extra/logo.png"
 
 # Search engines and link previews: canonical URLs and sitemap.xml come from html_baseurl,
@@ -53,7 +54,7 @@ sitemap_excludes = ["search.html", "genindex.html"]
 ogp_site_url = BOOK_URL
 ogp_site_name = html_title
 ogp_description_length = 160
-# Drawn by social_preview.py at build time; also uploaded as the repository's social preview
+# The preview image is also uploaded as the repository's social preview
 html_extra_path = ["_extra"]
 html_static_path = ["_static"]
 html_css_files = ["custom.css"]
@@ -159,12 +160,10 @@ def set_front_page_context(app: Sphinx, pagename: str, templatename: str,
     context["metatags"] += f'\n<meta name="google-site-verification" content="{GOOGLE_SITE_VERIFICATION}" />'
 
 
-def draw_social_preview(app: Sphinx, config) -> None:
-    import social_preview
+def draw_banner(app: Sphinx, config) -> None:
+    import banner
 
-    social_preview.draw(DOC_DIR / "_extra" / "social_preview.png")
-    social_preview.draw_banner(DOC_DIR / "_extra" / "banner.png")
-    social_preview.draw_logo(DOC_DIR / "_extra" / "logo.png")
+    banner.draw_banner(DOC_DIR / "_extra" / "banner.png")
 
 
 def draw_figures(app: Sphinx) -> None:
@@ -191,7 +190,7 @@ def draw_figures(app: Sphinx) -> None:
 def setup(app: Sphinx) -> None:
     app.connect("builder-inited", draw_figures)
     # Before Sphinx checks that html_extra_path exists (priority 800)
-    app.connect("config-inited", draw_social_preview, priority=100)
+    app.connect("config-inited", draw_banner, priority=100)
     app.connect("source-read", rewrite_links)
     app.connect("source-read", add_section_toctree)
     app.connect("html-page-context", set_front_page_context)
