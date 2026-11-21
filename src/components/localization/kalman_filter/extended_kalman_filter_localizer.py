@@ -101,7 +101,7 @@ class ExtendedKalmanFilterLocalizer:
         # behavior of the simulation does not change.
         input_org = np.array([[accel_mps2],
                               [yaw_rate_rps]])
-        input_noise = self.INPUT_NOISE_VAR_MAT @ np.random.randn(2, 1)
+        input_noise = np.sqrt(self.INPUT_NOISE_VAR_MAT) @ np.random.randn(2, 1)
         next_input = input_org + input_noise
         
         # predict state
