@@ -154,6 +154,32 @@ Change the parameters of `MppiController` in `mppi_path_tracking.py` and compare
 - **A low temperature** lets the best few samples decide, so the vehicle reacts strongly and the steering jumps. **A high temperature** averages almost all the samples, the noise cancels out, and the plan barely moves: smooth, but late in the curves.
 - **Without the moving average**, the steering changes three times as much from step to step, with about the same tracking.
 
+## Check your understanding
+
+1. Two samples have the costs $J_1 = 100$ and $J_2 = 110$. What are their weights (3) with $\lambda = 50$, as in the simulation, and with $\lambda = 5$?
+
+   <details><summary>Answer</summary>
+
+   $\rho = 100$, so the unnormalized weights are $\exp(0) = 1$ and $\exp(-10/\lambda)$. With $\lambda = 50$: $\exp(-0.2) = 0.82$, and the weights are 0.55 and 0.45. With $\lambda = 5$: $\exp(-2) = 0.14$, and the weights are 0.88 and 0.12. A lower temperature lets the better sample decide.
+
+   </details>
+
+2. A cost is 1 when the vehicle touches an obstacle and 0 otherwise. Why can MPPI use it, while the MPC of 10.3 can't?
+
+   <details><summary>Answer</summary>
+
+   MPPI only evaluates the cost of each sampled trajectory and weights the samples by it. The solver of MPC needs the derivatives of the cost, and a cost that jumps from 0 to 1 has no useful derivative: it is zero almost everywhere.
+
+   </details>
+
+3. With $\lambda$ very large, what does the update (4) do, and why?
+
+   <details><summary>Answer</summary>
+
+   It barely moves the plan. All the samples get nearly the same weight $1/M$, so the update is the plain average of the noises, which is close to zero because the noise has zero mean.
+
+   </details>
+
 ## References
 
 1. G. Williams, P. Drews, B. Goldfain, J. M. Rehg and E. A. Theodorou, "Information-Theoretic Model Predictive Control: Theory and Applications to Autonomous Driving", IEEE Transactions on Robotics, 34(6), 2018.

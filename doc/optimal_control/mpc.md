@@ -115,6 +115,32 @@ Change the parameters of `MPCController` in `mpc_path_tracking.py` and compare t
 - **No terminal weight.** With the terminal weights set to almost zero, the tracking hardly changes (0.14 m on average). With a 2 s horizon, the last step is far enough ahead that it barely affects the first input. Try it again with a short horizon.
 - **Smoother steering.** Multiply the steering weight of `smoothness_cost_weight` by ten. The step-to-step change of the steering angle drops by about 40 %, while the distance to the course stays almost the same.
 
+## Check your understanding
+
+1. MPC computes a plan of $N = 20$ inputs, 2 s ahead, but applies only the first one. Why doesn't it apply the whole plan, and solve again only after 2 s?
+
+   <details><summary>Answer</summary>
+
+   The prediction is only as good as the model, and disturbances act on the real vehicle. Planning again at every step from the measured state corrects these errors, like a feedback controller does: this is the receding horizon. A plan applied for 2 s would be an open-loop control during that time.
+
+   </details>
+
+2. Why is problem (3) a nonlinear program, and why does that make the warm start useful?
+
+   <details><summary>Answer</summary>
+
+   The model (1) contains $\cos\theta$, $\sin\theta$ and $\tan\delta$, so the constraints $\mathbf{x}_{k+1} = f(\mathbf{x}_k, \mathbf{u}_k)$ are nonlinear. The solver improves a plan step by step from where it starts and can stop in a local minimum. Starting from the previous plan shifted by one step, which is already close to the new solution, it needs few iterations and stays near a good plan.
+
+   </details>
+
+3. A geometric controller of Chapter 4 computes a steering angle of 0.7 rad, beyond the limit $\delta_{\max} = 0.523$ rad, and it is clipped. What does MPC do differently with the same limit?
+
+   <details><summary>Answer</summary>
+
+   The limit is a hard constraint of (3), so the solver only returns plans that satisfy it. The plan already takes the limit into account, for example by turning earlier or slowing down before a sharp curve, instead of being cut off after it was computed.
+
+   </details>
+
 ## References
 
 1. J. B. Rawlings, D. Q. Mayne and M. M. Diehl, "Model Predictive Control: Theory, Computation, and Design", 2nd ed., Nob Hill Publishing, 2017.
