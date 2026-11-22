@@ -4,8 +4,6 @@ vehicle_part.py
 Author: Aikaterini Katsampoula
 """
 
-from typing import Any
-
 import numpy as np
 import numpy.typing as npt
 import sys
@@ -22,7 +20,6 @@ class VehiclePart:
 
     def __init__(
         self,
-        spec: Any,
         outline_xy: npt.NDArray[np.float64],
         offset_x_m: float,
         offset_y_m: float,
@@ -30,7 +27,6 @@ class VehiclePart:
     ) -> None:
         """
         Constructor
-        spec: object of VehicleSpecification class
         outline_xy: part outline as a 2 x n array of x and y coordinates in
             meters, in the part's own frame
         offset_x_m: part's x offset from the vehicle origin[m]
@@ -38,7 +34,6 @@ class VehiclePart:
         steerable: whether the part rotates with the steering angle
         """
 
-        self.spec = spec
         self.offset_x_m = offset_x_m
         self.offset_y_m = offset_y_m
         self.steerable = steerable

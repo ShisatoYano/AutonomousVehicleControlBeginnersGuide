@@ -56,7 +56,6 @@ class FourWheelsVehicle:
         ])
 
         self.body = VehiclePart(
-            self.spec,
             np.array([
                 [self.spec.f_edge_m, -self.spec.r_edge_m, -self.spec.r_edge_m,
                  self.spec.f_edge_m, self.spec.f_edge_m],
@@ -67,7 +66,6 @@ class FourWheelsVehicle:
             0.0,
         )
         self.chassis = VehiclePart(
-            self.spec,
             np.array([
                 [self.spec.f_len_m, -self.spec.r_len_m],
                 [0.0, 0.0],
@@ -76,22 +74,22 @@ class FourWheelsVehicle:
             0.0,
         )
         self.front_left_tire = VehiclePart(
-            self.spec, tire_outline, self.spec.f_len_m, self.spec.axle_half_m, True
+            tire_outline, self.spec.f_len_m, self.spec.axle_half_m, True
         )
         self.front_right_tire = VehiclePart(
-            self.spec, tire_outline, self.spec.f_len_m, -self.spec.axle_half_m, True
+            tire_outline, self.spec.f_len_m, -self.spec.axle_half_m, True
         )
         self.rear_left_tire = VehiclePart(
-            self.spec, tire_outline, -self.spec.r_len_m, self.spec.axle_half_m
+            tire_outline, -self.spec.r_len_m, self.spec.axle_half_m
         )
         self.rear_right_tire = VehiclePart(
-            self.spec, tire_outline, -self.spec.r_len_m, -self.spec.axle_half_m
+            tire_outline, -self.spec.r_len_m, -self.spec.axle_half_m
         )
         self.front_axle = VehiclePart(
-            self.spec, axle_outline, self.spec.f_len_m, 0.0
+            axle_outline, self.spec.f_len_m, 0.0
         )
         self.rear_axle = VehiclePart(
-            self.spec, axle_outline, -self.spec.r_len_m, 0.0
+            axle_outline, -self.spec.r_len_m, 0.0
         )
 
         self.parts = (
