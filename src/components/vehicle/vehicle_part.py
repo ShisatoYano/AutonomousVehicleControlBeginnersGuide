@@ -44,20 +44,18 @@ class VehiclePart:
         self.steerable = steerable
         self.array = XYArray(np.asarray(outline_xy))
 
-    def draw(
+    def transformed_outline(
         self,
-        axes: Any,
         pose: npt.NDArray[np.float64],
         steer_rad: float,
-        elems: list[Any],
-    ) -> None:
+    ) -> npt.NDArray[np.float64]:
         """
-        Plot the part's outline.
-        axes: Axes object of figure
+        Transform the part's outline into the global frame.
         pose: Vehicle's pose vector as a 3 x 1 array of x and y positions in
             meters and yaw angle in radians
         steer_rad: steering angle[rad]
-        elems: List of plot objects
+        Return: outline as a 2 x n array of global x and y coordinates in
+            meters
         """
         part_steer_rad = steer_rad if self.steerable else 0.0
         translated_array = self.array.homogeneous_transformation(
@@ -66,11 +64,4 @@ class VehiclePart:
         transformed_array = translated_array.homogeneous_transformation(
             pose[0, 0], pose[1, 0], pose[2, 0]
         )
-        part_plot, = axes.plot(
-            transformed_array.get_x_data(),
-            transformed_array.get_y_data(),
-            lw=self.spec.line_w,
-            color=self.spec.color,
-            ls=self.spec.line_type,
-        )
-        elems.append(part_plot)
+        return transformed_array.get_data()
