@@ -4,14 +4,8 @@ four_wheels_vehicle.py
 Author: Shisato Yano
 """
 
-from body import Body
-from chassis import Chassis
-from front_left_tire import FrontLeftTire
-from front_right_tire import FrontRightTire
-from rear_left_tire import RearLeftTire
-from rear_right_tire import RearRightTire
-from front_axle import FrontAxle
-from rear_axle import RearAxle
+import numpy as np
+from vehicle_part import VehiclePart
 
 
 class FourWheelsVehicle:
@@ -36,14 +30,7 @@ class FourWheelsVehicle:
         self.state = state
 
         self.spec = spec
-        self.body = Body(spec)
-        self.chassis = Chassis(spec)
-        self.front_left_tire = FrontLeftTire(spec)
-        self.front_right_tire = FrontRightTire(spec)
-        self.rear_left_tire = RearLeftTire(spec)
-        self.rear_right_tire = RearRightTire(spec)
-        self.front_axle = FrontAxle(spec)
-        self.rear_axle = RearAxle(spec)
+        self._create_vehicle_parts()
 
         self.controller = controller
         self.sensors = sensors
@@ -53,6 +40,70 @@ class FourWheelsVehicle:
         self.localizer = localizer
 
         self.show_zoom = show_zoom
+
+    def _create_vehicle_parts(self) -> None:
+        """Create the vehicle outline, frame, axles, and tires."""
+
+        tire_outline = np.array([
+            [self.spec.tire_r_m, -self.spec.tire_r_m, -self.spec.tire_r_m,
+             self.spec.tire_r_m, self.spec.tire_r_m],
+            [self.spec.tire_w_m, self.spec.tire_w_m, -self.spec.tire_w_m,
+             -self.spec.tire_w_m, self.spec.tire_w_m],
+        ])
+        axle_outline = np.array([
+            [0.0, 0.0],
+            [self.spec.axle_half_m, -self.spec.axle_half_m],
+        ])
+
+        self.body = VehiclePart(
+            self.spec,
+            np.array([
+                [self.spec.f_edge_m, -self.spec.r_edge_m, -self.spec.r_edge_m,
+                 self.spec.f_edge_m, self.spec.f_edge_m],
+                [self.spec.width_m, self.spec.width_m, -self.spec.width_m,
+                 -self.spec.width_m, self.spec.width_m],
+            ]),
+            0.0,
+            0.0,
+        )
+        self.chassis = VehiclePart(
+            self.spec,
+            np.array([
+                [self.spec.f_len_m, -self.spec.r_len_m],
+                [0.0, 0.0],
+            ]),
+            0.0,
+            0.0,
+        )
+        self.front_left_tire = VehiclePart(
+            self.spec, tire_outline, self.spec.f_len_m, self.spec.axle_half_m, True
+        )
+        self.front_right_tire = VehiclePart(
+            self.spec, tire_outline, self.spec.f_len_m, -self.spec.axle_half_m, True
+        )
+        self.rear_left_tire = VehiclePart(
+            self.spec, tire_outline, -self.spec.r_len_m, self.spec.axle_half_m
+        )
+        self.rear_right_tire = VehiclePart(
+            self.spec, tire_outline, -self.spec.r_len_m, -self.spec.axle_half_m
+        )
+        self.front_axle = VehiclePart(
+            self.spec, axle_outline, self.spec.f_len_m, 0.0
+        )
+        self.rear_axle = VehiclePart(
+            self.spec, axle_outline, -self.spec.r_len_m, 0.0
+        )
+
+        self.parts = (
+            self.body,
+            self.chassis,
+            self.front_left_tire,
+            self.front_right_tire,
+            self.rear_left_tire,
+            self.rear_right_tire,
+            self.front_axle,
+            self.rear_axle,
+        )
 
     def _install_sensors(self, state):
         """
@@ -213,14 +264,8 @@ class FourWheelsVehicle:
         x_m = self.state.get_x_m()
         y_m = self.state.get_y_m()
         
-        self.body.draw(axes, x_y_yaw_array, elems)
-        self.chassis.draw(axes, x_y_yaw_array, elems)
-        self.front_left_tire.draw(axes, x_y_yaw_array, steer_rad, elems)
-        self.front_right_tire.draw(axes, x_y_yaw_array, steer_rad, elems)
-        self.rear_left_tire.draw(axes, x_y_yaw_array, elems)
-        self.rear_right_tire.draw(axes, x_y_yaw_array, elems)
-        self.front_axle.draw(axes, x_y_yaw_array, elems)
-        self.rear_axle.draw(axes, x_y_yaw_array, elems)
+        for part in self.parts:
+            part.draw(axes, x_y_yaw_array, steer_rad, elems)
 
         if self.show_zoom:
             axes.set_xlim(x_m - self.spec.area_size, x_m + self.spec.area_size)
