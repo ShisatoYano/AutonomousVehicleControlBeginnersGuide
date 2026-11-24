@@ -273,8 +273,8 @@ class AStarPathPlanner:
             sparse_path: A sparse path with evenly spaced world coordinates.
         """
         if len(path) <= num_points:
-            # If the path already has fewer points than num_points, return as-is
-            return path
+            # The path is already short enough: keep every point, in world coordinates
+            return [self._grid_to_world(node) for node in path]
 
         # Use linear spacing to select points
         indices = np.linspace(0, len(path) - 1, num_points, dtype=int)
