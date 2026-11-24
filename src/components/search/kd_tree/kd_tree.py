@@ -97,13 +97,21 @@ class KdTree:
         node: node object of kd-tree
         """
         
-        if node:
-            axis = node.axis
-            diff_axis = abs(target_point_array[axis] - node.data.get_point_array()[axis])
-            if search_radius >= diff_axis: 
-                self.candidates_stack.append(node)
-            self._search_nearest_neighbor_candidates(target_point_array, search_radius, node.left_child)
-            self._search_nearest_neighbor_candidates(target_point_array, search_radius, node.right_child)
+        if not node: return
+
+        axis = node.axis
+        diff_axis = target_point_array[axis] - node.data.get_point_array()[axis]
+        if search_radius >= abs(diff_axis):
+            self.candidates_stack.append(node)
+
+        if diff_axis <= 0:
+            near_child, far_child = node.left_child, node.right_child
+        else:
+            near_child, far_child = node.right_child, node.left_child
+
+        self._search_nearest_neighbor_candidates(target_point_array, search_radius, near_child)
+        if search_radius >= abs(diff_axis):
+            self._search_nearest_neighbor_candidates(target_point_array, search_radius, far_child)
 
     def search_nearest_neighbor_point(self, target_point):
         """
