@@ -70,6 +70,17 @@ With these symbols, the EKF prediction is $\bar{P}_t = F P_{t-1} F^\top + G Q G^
 | $\alpha$ | Angle from the vehicle's heading to the look-ahead point | rad |
 | $k$ | Gain of a controller (each chapter states which one) | - |
 
+## Perception
+
+| Symbol | Meaning | Unit | In the code |
+|---|---|---|---|
+| $\mathbf{p}_i$, $n$ | Source points of a point cloud, and their number | m, - | `scan_points_list` |
+| $\mathbf{q}$ | Query point of a search | m | `target_point` |
+| $k$ | Number of coordinates of a point (the k of kd-tree) | - | `get_dimension()` |
+| $j$, $\ell$ | Axis that a kd-tree node splits on, and the node's depth | - | `axis`, `depth` |
+| $\mathbf{s}$ | Point stored in a kd-tree node | m | `node.data` |
+| $d_{\min}$ | Distance to the nearest point found so far | m | `min_dist` |
+| $r_s$ | Radius of a radius search | m | `r` |
 
 ## Optimal control
 
