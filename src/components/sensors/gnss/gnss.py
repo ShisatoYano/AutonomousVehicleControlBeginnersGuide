@@ -49,7 +49,7 @@ class Gnss:
         state: Vehicle's state (x, y, yaw, speed) object
         """
         
-        observed_noise = self.NOISE_VAR_MAT @ np.random.randn(2, 1)
+        observed_noise = np.sqrt(self.NOISE_VAR_MAT) @ np.random.randn(2, 1)
         observed_xy = self.observation_model(state) + observed_noise
         
         self.latest_observed_xy = observed_xy

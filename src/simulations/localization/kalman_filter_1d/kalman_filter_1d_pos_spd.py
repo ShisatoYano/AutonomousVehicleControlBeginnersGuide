@@ -102,12 +102,12 @@ class ObservationModel:
     
     def observe(self, x_true):
         """
-        Function to simulate observation by including noise variance
+        Function to simulate observation by including noise with the given standard deviation
         parameter, R
         x_true: true position
         """
 
-        return x_true[0, 0] + np.random.randn() * self.R
+        return x_true[0, 0] + np.random.randn() * np.sqrt(self.R)
     
     def calculate_observation(self, x_pred):
         """
@@ -240,8 +240,7 @@ def add_noise_input_accel(input_accel_ms2):
     input_accel_ms2: true acceleration input
     """
 
-    input_accel_noise_ms2 = input_accel_ms2[0, 0] + np.random.randn() * INPUT_NOISE_VARIANCE
-    if input_accel_noise_ms2 < 0.0: input_accel_noise_ms2 = 0.0
+    input_accel_noise_ms2 = input_accel_ms2[0, 0] + np.random.randn() * np.sqrt(INPUT_NOISE_VARIANCE)
     return np.array([[input_accel_noise_ms2]])
 
 
@@ -251,6 +250,8 @@ def main():
     """
 
     print(__file__ + " start!!")
+
+    np.random.seed(42)
 
     # generate instances
     mm = MotionModel(interval_sec=INTERVAL_SEC, input_noise_variance=INPUT_NOISE_VARIANCE)
@@ -297,8 +298,8 @@ def main():
         input_accel_noise_ms2 = add_noise_input_accel(input_accel_ms2)
 
         # calculate data
-        obsrv = om.observe(true_state)
         true_state = mm.calculate_state(x_prev=true_state, u=input_accel_ms2)
+        obsrv = om.observe(true_state)
         pred_state = mm.calculate_state(x_prev=pred_state, u=input_accel_noise_ms2)
         est_state, est_cov = kf.estimate_state(x_prev=est_state, p_prev=est_cov, 
                                                u=input_accel_noise_ms2, z=obsrv)

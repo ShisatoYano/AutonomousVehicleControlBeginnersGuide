@@ -92,7 +92,7 @@ class KalmanFilter1dPos:
         x_prev: position at previous time
         """
 
-        z = self.state_equation(x_prev, self.V) + np.random.randn() * self.R
+        z = self.state_equation(x_prev, self.V) + np.random.randn() * np.sqrt(self.R)
         return z
     
     def observation_equation(self, x_pred):
@@ -211,6 +211,8 @@ def main():
 
     print(__file__ + " start!!")
 
+    np.random.seed(42)
+
     # generate instance of kalman filter
     kf = KalmanFilter1dPos(interval_sec=INTERVAL_SEC,
                            input_velocity_ms=INPUT_VELOCITY_MS,
@@ -239,8 +241,7 @@ def main():
     # simulate
     while TIME_LIMIT_SEC >= elapsed_time_sec:
         # decide input velocity
-        input_velocity = INPUT_VELOCITY_MS + np.random.randn() * INPUT_NOISE_VARIANCE
-        if input_velocity < 0.0: input_velocity = 0.0
+        input_velocity = INPUT_VELOCITY_MS + np.random.randn() * np.sqrt(INPUT_NOISE_VARIANCE)
 
         # calculate data
         obsrv_pos = kf.observation(x_prev=true_pos)
