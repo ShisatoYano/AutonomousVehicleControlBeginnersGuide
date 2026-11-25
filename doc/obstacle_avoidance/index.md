@@ -9,7 +9,7 @@ Plan locally around obstacles that the global route doesn't know about, in the l
 ## Sections
 
 - 12.1 VFH polar histogram: [`vfh_polar_histogram_construction`](/src/simulations/mapping/vfh_polar_histogram_construction)
-- 12.2 Dynamic Window Approach: [`dynamic_window_approach`](/src/simulations/path_planning/dynamic_window_approach)
+- 12.4 Dynamic Window Approach: [`dynamic_window_approach`](/src/simulations/path_planning/dynamic_window_approach)
 
 ## Before this chapter
 
