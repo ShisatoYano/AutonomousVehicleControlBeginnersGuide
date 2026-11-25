@@ -14,6 +14,7 @@ Vehicle localization in Python with the Kalman filter, the extended Kalman filte
 - 6.4 Particle filter: [`particle_filter_localization`](/src/simulations/localization/particle_filter_localization)
 - 6.5 Comparing the filters: [`ekf_vs_ukf_comparison`](/src/simulations/localization/ekf_vs_ukf_comparison), [`ekf_ukf_pf_comparison`](/src/simulations/localization/ekf_ukf_pf_comparison)
 - 6.6 (Planned) EKF SLAM, [#64](https://github.com/ShisatoYano/AutonomousVehicleControlBeginnersGuide/issues/64)
+- 6.7 Scan matching odometry with ICP: [`icp_scan_matching`](/src/simulations/localization/icp_scan_matching)
 
 ## The system so far
 
