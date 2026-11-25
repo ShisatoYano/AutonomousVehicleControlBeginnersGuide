@@ -12,6 +12,7 @@ Optimal control for path tracking in Python: LQR, model predictive control (MPC)
 - 10.2 LQR: [`lqr_path_tracking`](/src/simulations/path_tracking/lqr_path_tracking)
 - [10.3 Model predictive control (MPC)](/doc/optimal_control/mpc.md): [`mpc_path_tracking`](/src/simulations/path_tracking/mpc_path_tracking)
 - [10.4 Model predictive path integral control (MPPI)](/doc/optimal_control/mppi.md): [`mppi_path_tracking`](/src/simulations/path_tracking/mppi_path_tracking)
+- 10.5 Iterative LQR (iLQR): [`ilqr_path_tracking`](/src/simulations/path_tracking/ilqr_path_tracking)
 
 ## The system so far
 
