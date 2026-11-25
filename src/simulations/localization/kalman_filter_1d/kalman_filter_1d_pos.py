@@ -211,6 +211,8 @@ def main():
 
     print(__file__ + " start!!")
 
+    np.random.seed(42)
+
     # generate instance of kalman filter
     kf = KalmanFilter1dPos(interval_sec=INTERVAL_SEC,
                            input_velocity_ms=INPUT_VELOCITY_MS,

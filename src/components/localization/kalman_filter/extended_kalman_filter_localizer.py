@@ -95,10 +95,7 @@ class ExtendedKalmanFilterLocalizer:
         
         # input with noise
         # u = u_org + noise
-        # Note: the noise is made by multiplying the variance matrix Q (not
-        # the standard deviation) by a standard normal random vector, so the
-        # sampled noise is sigma^2 * N(0, 1). This is kept as it is, so the
-        # behavior of the simulation does not change.
+        # noise ~ N(0, Q): scale a standard normal vector by sigma = sqrt(Q)
         input_org = np.array([[accel_mps2],
                               [yaw_rate_rps]])
         input_noise = np.sqrt(self.INPUT_NOISE_VAR_MAT) @ np.random.randn(2, 1)

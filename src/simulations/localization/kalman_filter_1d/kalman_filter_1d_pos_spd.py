@@ -102,7 +102,7 @@ class ObservationModel:
     
     def observe(self, x_true):
         """
-        Function to simulate observation by including noise variance
+        Function to simulate observation by including noise with the given standard deviation
         parameter, R
         x_true: true position
         """
@@ -250,6 +250,8 @@ def main():
     """
 
     print(__file__ + " start!!")
+
+    np.random.seed(42)
 
     # generate instances
     mm = MotionModel(interval_sec=INTERVAL_SEC, input_noise_variance=INPUT_NOISE_VARIANCE)
