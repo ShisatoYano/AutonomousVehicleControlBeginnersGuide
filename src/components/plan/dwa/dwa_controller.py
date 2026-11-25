@@ -20,6 +20,16 @@ class DwaController:
     within one cycle (the dynamic window), predicts a short trajectory for each pair,
     and picks the pair with the best score of heading to goal, clearance and speed.
     Works as a controller of FourWheelsVehicle.
+
+    Simplifications compared with Fox et al. (1997):
+    - Admissible velocities: the paper keeps only speeds from which the vehicle can stop
+      before the nearest obstacle (v <= sqrt(2 * dist * braking accel)). Here, a pair is
+      dropped if its predicted trajectory comes within ROBOT_RADIUS_M of an obstacle.
+    - Objective: the paper normalizes each term over the candidates and smooths the sum.
+      Here, each term is divided by its largest possible value.
+    - Obstacles are taken directly from ObstacleList, not sensed.
+    - The vehicle has no yaw-rate state, so the window around the yaw rate uses the
+      previous command.
     """
 
     def __init__(self, spec, goal_xy: tuple[float, float], obst_list=None):
@@ -62,6 +72,8 @@ class DwaController:
 
         self.best_trajectory = None
         self.candidate_trajectories = []
+        self.dropped_trajectories = []
+        self.center_xy = None
         self.goal_reached = False
 
     def _obstacle_points(self) -> npt.NDArray[np.float64]:
@@ -146,17 +158,21 @@ class DwaController:
         speed = state.get_speed_mps()
         min_v, max_v, min_w, max_w = self._dynamic_window(speed, self.target_yaw_rate_rps, time_s)
         obst_points = self._obstacle_points()
+        self.center_xy = (x + self.WHEEL_BASE_M / 2.0 * np.cos(yaw), y + self.WHEEL_BASE_M / 2.0 * np.sin(yaw))
 
-        candidates = []
+        candidates, dropped = [], []
         for v in np.arange(min_v, max_v + 1e-6, self.SPEED_RESO_MPS):
             for w in np.arange(min_w, max_w + 1e-6, self.YAW_RATE_RESO_RPS):
                 traj = self._predict_trajectory(x, y, yaw, v, w)
                 clearance = self._clearance(traj, obst_points)
-                if clearance <= 0.0: continue  # this input would hit an obstacle
+                if clearance <= 0.0:  # this input would hit an obstacle
+                    dropped.append(traj)
+                    continue
                 candidates.append((v, w, traj, self._heading_score(traj),
                                    min(clearance, self.MAX_CLEARANCE_M), v))
 
         self.candidate_trajectories = [c[2] for c in candidates]
+        self.dropped_trajectories = dropped
         if not candidates:
             # no safe input: brake hard and turn in place as much as possible
             self.target_speed_mps = max(min_v, 0.0)
@@ -182,7 +198,8 @@ class DwaController:
 
         if self.goal_reached:
             self.target_speed_mps, self.target_yaw_rate_rps = 0.0, 0.0
-            self.candidate_trajectories, self.best_trajectory = [], None
+            self.candidate_trajectories, self.dropped_trajectories, self.best_trajectory = [], [], None
+            self.center_xy = None
         else:
             self._search_best_input(state, time_s)
 
@@ -215,7 +232,8 @@ class DwaController:
 
     def draw(self, axes, elems) -> None:
         """
-        Function to draw the goal, the sampled trajectories and the selected trajectory
+        Function to draw the goal, the safety radius, the sampled trajectories
+        (safe ones in cyan, dropped ones in red) and the selected trajectory
         axes: Axes object of figure
         elems: List of plot objects
         """
@@ -223,8 +241,19 @@ class DwaController:
         goal_plot, = axes.plot(self.goal_xy[0], self.goal_xy[1], marker='*', ms=15, color='g', label="Goal")
         elems.append(goal_plot)
 
-        for traj in self.candidate_trajectories[::5]:
-            candidate_plot, = axes.plot(traj[:, 0], traj[:, 1], lw=0.5, color='c', alpha=0.4)
+        if self.center_xy is not None:
+            angles = np.linspace(0.0, 2.0 * np.pi, 50)
+            radius_plot, = axes.plot(self.center_xy[0] + self.ROBOT_RADIUS_M * np.cos(angles),
+                                     self.center_xy[1] + self.ROBOT_RADIUS_M * np.sin(angles),
+                                     lw=1.0, ls='--', color='k', label="Safety radius")
+            elems.append(radius_plot)
+
+        for traj in self.dropped_trajectories:
+            dropped_plot, = axes.plot(traj[:, 0], traj[:, 1], lw=0.7, color='r', alpha=0.5)
+            elems.append(dropped_plot)
+
+        for traj in self.candidate_trajectories:
+            candidate_plot, = axes.plot(traj[:, 0], traj[:, 1], lw=0.7, color='c', alpha=0.6)
             elems.append(candidate_plot)
 
         if self.best_trajectory is not None:
