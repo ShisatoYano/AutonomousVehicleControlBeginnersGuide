@@ -175,7 +175,7 @@ The package is also meant to be imported by other projects, not only by the simu
 
 Drawing dependencies (matplotlib, Pillow) and MPC dependencies (CasADi, do-mpc) are optional extras (`pip install <package>[viz]`, `[mpc]`). Each component is split when its stage is ported in Phase 2, not in one big rewrite, so open pull requests are affected as little as possible. Until Phase 2 is done the API can change between versions (0.x). A stable release on PyPI follows after it. The library is for learning, research and prototyping. It is pure Python and not meant for real-time control of real vehicles.
 
-The public API of the core has type hints for every argument and return value, the package ships a `py.typed` marker, and CI type-checks the core modules with pyright.
+The public API of the core has type hints for every argument and return value, the package ships a `py.typed` marker, and CI type-checks the core modules with pyright. Supported Python versions and the yearly review that updates them are defined in [HOWTOCONTRIBUTE.md](https://github.com/ShisatoYano/AutonomousVehicleControlBeginnersGuide/blob/main/HOWTOCONTRIBUTE.md#supported-python-versions).
 
 ## Roadmap
 
