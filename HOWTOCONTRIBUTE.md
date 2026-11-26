@@ -2,7 +2,7 @@
 This document describes how to contribute this project.  
 Before starting your contribution, please check [README](/README.md) to understand what this project is and setup your development environment.  
 If you use an AI coding tool such as Claude Code, the project's conventions are summarized in [CLAUDE.md](/CLAUDE.md), which Claude Code loads automatically.  
-For questions and ideas, please use [Discussions](https://github.com/ShisatoYano/AutonomousVehicleControlBeginnersGuide/discussions). Issues are for bug reports and agreed tasks.  
+For questions and ideas, please use [Discussions](https://github.com/ShisatoYano/AutonomousVehicleControlBeginnersGuide/discussions). Issues are for bug reports, proposals and agreed tasks.  
 
 ## Supported Python versions
 
@@ -42,7 +42,7 @@ release:
 To avoid two people working on the same thing, please claim an issue before you start working on it.  
 
 1. Anyone can claim an issue labeled `good first issue` or `help wanted`: comment on the issue that you want to work on it, and the maintainer assigns the issue to you. Other issues, such as a proposal or a defect report, are assigned by the maintainer after the maintainer agrees with them, even if you opened the issue yourself. If you want to work on such an issue, say so in it.  
-2. If neither a pull request nor an update appears within 14 days after you were assigned, the maintainer unassigns you so that someone else can take the issue. You can claim it again later.  
+2. If neither a pull request nor a comment from you on the issue appears within 14 days after you were assigned, the maintainer unassigns you so that someone else can take the issue. You can claim it again later.  
 3. You can have only one open `good first issue` assigned to you at a time, so that other newcomers can also find one.  
 4. Open a pull request only after you were assigned to its issue. Write "Closes #123" in the description, or "Part of #123" if the issue is labeled `multiple PRs` (see Step 4).  
 
@@ -155,11 +155,12 @@ When you report an issue, please provide the following information.
 * Python version.  
 * Each libraries version.  
 
-Additionally, you can see existing reported issues and fix the defect. And then, please don't forget to add a unit test code to check the defect was fixed. After you completed fixing, let's submit a PR following the rule of Step 4.  
+Additionally, you can see existing reported issues and fix the defect. Before you start fixing, get assigned to the issue as described in [Claim an issue before you start](#claim-an-issue-before-you-start). And then, please don't forget to add a unit test code to check the defect was fixed. After you completed fixing, let's submit a PR following the rule of Step 4.  
 
 ## Add documentation about existing program
 Adding a documentation about existing programs is also welcome.  
 To write or improve a chapter of the book, follow the [Writing Guide](https://shisatoyano.github.io/AutonomousVehicleControlBeginnersGuide/WRITING_GUIDE.html) and the [Notation and Units](https://shisatoyano.github.io/AutonomousVehicleControlBeginnersGuide/NOTATION.html) page (sources: [doc/WRITING_GUIDE.md](/doc/WRITING_GUIDE.md), [doc/NOTATION.md](/doc/NOTATION.md)). If you have a suggestion about how to write the documents, please submit a PR and I will review it.  
+A small fix to an existing section of the book, such as a typo or wording, doesn't need an issue: open a PR directly. To write a new section or largely extend one, open an issue with the [Book section claim](https://github.com/ShisatoYano/AutonomousVehicleControlBeginnersGuide/issues/new?template=book_section_claim.yml) template and start writing after you are assigned to it.  
 
 The documents under `doc/` are published as a [web book](https://shisatoyano.github.io/AutonomousVehicleControlBeginnersGuide/) with Sphinx and MyST, so they stay in Markdown. To check your changes, build the book locally and open `doc/_build/html/index.html` in a browser:
 
