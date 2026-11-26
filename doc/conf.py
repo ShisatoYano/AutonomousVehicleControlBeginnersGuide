@@ -9,6 +9,7 @@ Author: Shisato Yano
 import posixpath
 import re
 import runpy
+import subprocess
 import sys
 from pathlib import Path
 
@@ -17,6 +18,24 @@ from sphinx.application import Sphinx
 project = "Autonomous Vehicle Control Beginners Guide"
 author = "Shisato Yano"
 copyright = "2022, Shisato Yano"
+
+
+def git_version() -> str:
+    """
+    Return the release tag of the commit the book is built from, such as "v0.1.0",
+    or "v0.1.0-3-g1a2b3c4" for 3 commits after it, or "unknown version" without git
+    """
+
+    try:
+        result = subprocess.run(["git", "describe", "--tags", "--always"], cwd=Path(__file__).parent,
+                                capture_output=True, text=True, check=True)
+    except (OSError, subprocess.CalledProcessError):
+        return "unknown version"
+    return result.stdout.strip() or "unknown version"
+
+
+# Shown as "Built from <release>" in the footer of each page (_templates/footer.html)
+version = release = git_version()
 
 extensions = [
     "myst_parser",

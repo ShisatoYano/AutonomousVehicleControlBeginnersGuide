@@ -54,6 +54,11 @@ The maintainer promises the following.
 * The first reply to a new pull request within 48 hours.  
 * At least 8 open `good first issue` issues that nobody is assigned to, so that a newcomer can always find one.  
 
+## Releases
+The project is released at the beginning of every month, raising the minor version (v0.1.0, v0.2.0, ...). A pull request merged during a month is included in the next month's release. Only an urgent fix is released in between, raising the patch version (for example v0.1.1).  
+
+The release notes are generated from the merged pull requests and grouped by their labels: `breaking change`, `documentation` (shown as "Book"), `enhancement` and `bug`. The maintainer adds one of these labels to each pull request, so the release notes show it in the right group. The version of the book is shown at the bottom of each page.  
+
 ## Add new sample program of algorithm
 Steps to add a new sample program.  
 

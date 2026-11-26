@@ -1,0 +1,22 @@
+# Categories of the release notes that GitHub generates from the labels of merged PRs
+changelog:
+  exclude:
+    authors:
+      - github-actions[bot]
+      - dependabot[bot]
+  categories:
+    - title: Breaking changes
+      labels:
+        - breaking change
+    - title: Book
+      labels:
+        - documentation
+    - title: New features
+      labels:
+        - enhancement
+    - title: Fixes
+      labels:
+        - bug
+    - title: Other changes
+      labels:
+        - "*"
