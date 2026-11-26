@@ -1,5 +1,5 @@
 ## Summary
-<!-- What does this PR change, and which issue does it close? (e.g. Closes #123). For an issue labeled "multiple PRs", which is done in several PRs, write "Part of #123": "Closes" would close it when this PR is merged, and a check fails. -->
+<!-- What does this PR change, and which issue does it close? (e.g. Closes #123). The issue must be assigned to you: a check fails otherwise. For an issue labeled "multiple PRs", which is done in several PRs, write "Part of #123": "Closes" would close it when this PR is merged, and a check fails. -->
 
 ## How I checked it works
 <!-- Required. Tests you ran, and what you looked at. A check fails while this is empty. -->

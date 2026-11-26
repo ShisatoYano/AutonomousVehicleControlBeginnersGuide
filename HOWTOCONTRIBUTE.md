@@ -41,10 +41,10 @@ release:
 ## Claim an issue before you start
 To avoid two people working on the same thing, please claim an issue before you start working on it.  
 
-1. Anyone can claim an issue labeled `good first issue` or `help wanted`: comment on the issue that you want to work on it, and the maintainer assigns the issue to you. Other issues, such as a proposal or a defect report, are assigned by the maintainer after the maintainer agrees with them, even if you opened the issue yourself. If you want to work on such an issue, say so in it.  
+1. Anyone can claim an issue labeled `good first issue` or `help wanted`: comment `/claim` on the issue (on the first line of the comment), and the issue is assigned to you automatically. A reply tells you if it can't be, for example because someone else is already assigned or the issue is labeled `multiple PRs` (claim one of its child issues instead). Other issues, such as a proposal or a defect report, are assigned by the maintainer after the maintainer agrees with them, even if you opened the issue yourself. If you want to work on such an issue, say so in it.  
 2. If neither a pull request nor a comment from you on the issue appears within 14 days after you were assigned, the maintainer unassigns you so that someone else can take the issue. You can claim it again later.  
 3. You can have only one open `good first issue` assigned to you at a time, so that other newcomers can also find one.  
-4. Open a pull request only after you were assigned to its issue. Write "Closes #123" in the description, or "Part of #123" if the issue is labeled `multiple PRs` (see Step 4).  
+4. Open a pull request only after you were assigned to its issue. Write "Closes #123" in the description, or "Part of #123" if the issue is labeled `multiple PRs` (see Step 4). The `PR_Evidence` check fails if none of the issues in the description is assigned to you; after you are assigned, edit the description to run it again.  
 
 Small fixes such as a typo don't need an issue. Open a pull request directly, and the maintainer adds the `no issue needed` label.  
 
