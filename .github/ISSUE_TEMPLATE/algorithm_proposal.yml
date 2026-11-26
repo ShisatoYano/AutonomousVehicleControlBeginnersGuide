@@ -1,0 +1,44 @@
+name: Algorithm proposal
+description: Propose a new algorithm to add as a sample program.
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for proposing an algorithm. If you want to implement it yourself, choose "Yes" below. Please don't start implementing it yet: once the maintainer agrees with the proposal, the issue is assigned to you, as described in [Step 1 of How to contribute](https://github.com/ShisatoYano/AutonomousVehicleControlBeginnersGuide/blob/main/HOWTOCONTRIBUTE.md#step-1-propose-by-creating-issue). Start implementing after that.
+  - type: input
+    id: algorithm
+    attributes:
+      label: Algorithm
+      placeholder: e.g. Model Predictive Path Integral (MPPI) control
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: What the algorithm does, and what a learner understands from its sample program.
+    validations:
+      required: true
+  - type: textarea
+    id: references
+    attributes:
+      label: Papers and documentation
+      description: Links to papers or documentation that explain the algorithm.
+    validations:
+      required: true
+  - type: input
+    id: chapter
+    attributes:
+      label: Chapter of the book
+      description: Which chapter of the [book](https://shisatoyano.github.io/AutonomousVehicleControlBeginnersGuide/) the algorithm belongs to. Write "not sure" if you don't know.
+      placeholder: e.g. Path tracking
+  - type: dropdown
+    id: implement
+    attributes:
+      label: Do you want to implement it yourself?
+      options:
+        - "Yes"
+        - "No, it is just a proposal"
+    validations:
+      required: true

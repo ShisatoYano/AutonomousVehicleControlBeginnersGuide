@@ -1,0 +1,31 @@
+name: Book section claim
+description: Claim a section of the book that you want to write.
+labels: ["documentation"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for writing a section of the [book](https://shisatoyano.github.io/AutonomousVehicleControlBeginnersGuide/). Please read the [Writing Guide](https://shisatoyano.github.io/AutonomousVehicleControlBeginnersGuide/WRITING_GUIDE.html) (source: [doc/WRITING_GUIDE.md](https://github.com/ShisatoYano/AutonomousVehicleControlBeginnersGuide/blob/main/doc/WRITING_GUIDE.md)) before you start, and start writing once you are assigned to this issue, as described in [Claim an issue before you start](https://github.com/ShisatoYano/AutonomousVehicleControlBeginnersGuide/blob/main/HOWTOCONTRIBUTE.md#claim-an-issue-before-you-start).
+  - type: input
+    id: section
+    attributes:
+      label: Section
+      description: The number and title of the section you want to write.
+      placeholder: e.g. 6.2 Extended Kalman Filter
+    validations:
+      required: true
+  - type: input
+    id: parent-issue
+    attributes:
+      label: Parent issue
+      description: The issue of the chapter that the section belongs to.
+      placeholder: "e.g. #123"
+    validations:
+      required: true
+  - type: textarea
+    id: outline
+    attributes:
+      label: Outline
+      description: The headings of the section and what each one explains, with the figures, equations and simulations you plan to use.
+    validations:
+      required: true
