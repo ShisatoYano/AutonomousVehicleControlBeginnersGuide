@@ -135,7 +135,7 @@ In step 3 of Nearest, the near side goes first because it is where a close point
 
 ## Limits
 
-- **The code visits every node.** The current `KdTree` builds the tree as in this section, but its searches walk the whole tree instead of skipping subtrees ([#281](https://github.com/ShisatoYano/AutonomousVehicleControlBeginnersGuide/issues/281)). The results are right, but every search costs $n$ visits. This note is removed when #281 is fixed.
+- **The code finds the first distance differently.** `KdTree.search_nearest_neighbor_point` first walks down to the cell of the query point and takes the distance to that node's point as a fixed radius. It then runs the radius search of (8) with this radius and keeps the nearest of the points it finds. The result is the same as Nearest, but the radius doesn't shrink as closer points are found, so the code visits a few more nodes than Nearest.
 - **The worst case is still $n$.** (7) skips nothing when many points are at about the same distance from the query point, for example points on a circle with the query point at its center: every splitting line then crosses the circle of radius $d_{\min}$.
 - **Many dimensions.** (6) uses one coordinate. With many coordinates, the difference on one axis is a small part of the distance, (7) is true at most nodes and the search comes close to comparing every point. In 2D and 3D, the dimensions of LiDAR points, this isn't a problem.
 - **A fixed set of points.** The tree is balanced because every node takes the median of the points it is built from. A point added later would go below a leaf and make the tree deeper on one side, so a new tree is built for every scan.

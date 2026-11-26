@@ -117,7 +117,7 @@ ax.add_patch(Circle(QUERY, d_min, fill=False, color=style.ERROR, linestyle="--")
 ax.plot(*np.column_stack([QUERY, POINTS[nearest]]), color=style.ERROR)
 ax.plot(*QUERY, "x", color=style.ERROR, markersize=9, markeredgewidth=2.2)
 ax.text(QUERY[0] - 0.75, QUERY[1] - 0.2, r"$\mathbf{q}$", color=style.ERROR)
-ax.text(QUERY[0] - 0.55, QUERY[1] - 0.85, r"$d_{\min}$", color=style.ERROR)
+ax.text(QUERY[0] - 0.8, QUERY[1] + 0.3, r"$d_{\min}$", color=style.ERROR)
 
 # Distance from the query to the splitting line of the root, which is longer than d_min
 root_x = POINTS[root["index"], 0]
