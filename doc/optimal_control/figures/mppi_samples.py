@@ -60,7 +60,7 @@ ax.set_ylabel("y [m]")
 ax.axhline(Y_REF, color=style.COURSE, linestyle="--", label="course")
 for trajectory, w in zip(trajectories, weights):
     ax.plot(trajectory[:, 0], trajectory[:, 1], color=style.CONTROL,
-            linewidth=1.0, alpha=0.1 + 0.9 * w / weights.max())
+            linewidth=1.0, alpha=0.1 + 0.9 * (w / weights.max()))
 ax.plot([], [], color=style.CONTROL, linewidth=1.0, label="samples (darker: more weight)")
 new = rollout(u_new)
 ax.plot(new[:, 0], new[:, 1], color=style.ESTIMATE, linewidth=2.5, label="weighted update")
