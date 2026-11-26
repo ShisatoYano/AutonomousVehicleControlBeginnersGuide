@@ -100,6 +100,11 @@ Author: Erwin Lejeune
 ![](../src/simulations/path_planning/dstar_path_planning/dstar_navigate.gif)  
 ![](../src/simulations/path_planning/dstar_path_planning/dstar_search.gif)  
 
+### Dynamic Window Approach
+Picks the speed and yaw rate reachable in one step whose short predicted trajectory heads to the goal and keeps away from obstacles  
+Author: Yuvraj Gupta  
+![](../src/simulations/path_planning/dynamic_window_approach/dynamic_window_approach.gif)  
+
 ### Elastic Bands
 Smooths an A* path by treating it as an elastic band pushed away from obstacles  
 Author: Erwin Lejeune  
