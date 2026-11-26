@@ -79,23 +79,41 @@ jobs:
         if (os.environ["PR_CREATED_AT"] >= "2026-11-27"
                 and os.environ["AUTHOR_ASSOCIATION"] not in ("OWNER", "MEMBER", "COLLABORATOR")
                 and os.environ["NO_ISSUE_LABEL"] != "true"):
-            refs = re.findall(r"\b(?:close[sd]?|fix(?:e[sd])?|resolve[sd]?|part\s+of):?\s+#(\d+)\b", body, flags=re.I)
+            # Only the first 10 references, since each one is an API call
+            refs = list(dict.fromkeys(re.findall(
+                r"\b(?:close[sd]?|fix(?:e[sd])?|resolve[sd]?|part\s+of):?\s+#(\d+)\b", body, flags=re.I)))[:10]
             author = os.environ["PR_AUTHOR"]
+            unreadable = []
 
             def assignees(number):
                 result = subprocess.run(["gh", "api", f"repos/{os.environ['GH_REPO']}/issues/{number}"],
                                         capture_output=True, text=True)
-                return [a["login"] for a in json.loads(result.stdout)["assignees"]] if result.returncode == 0 else []
+                if result.returncode != 0:
+                    print(result.stderr, file=sys.stderr)
+                    if "HTTP 404" not in result.stderr:
+                        unreadable.append(number)
+                    return []
+                issue = json.loads(result.stdout)
+                # The maintainer assigns PRs to their authors, so a PR number must not count as an issue
+                if "pull_request" in issue or issue["state"] != "open":
+                    return []
+                return [a["login"] for a in issue["assignees"]]
 
-            if not any(author in assignees(n) for n in dict.fromkeys(refs)):
-                errors.append(
-                    f"Refer to an issue assigned to you (@{author}) in the description, with \"Closes #123\", "
-                    "or \"Part of #123\" for an issue labeled \"multiple PRs\". "
-                    "For an issue labeled \"good first issue\" or \"help wanted\", comment \"/claim\" on it to be assigned. "
-                    "For other issues, ask the maintainer in the issue. "
-                    "After you are assigned, edit the description to run this check again. See "
-                    f"https://github.com/{os.environ['GH_REPO']}/blob/main/HOWTOCONTRIBUTE.md#claim-an-issue-before-you-start"
-                )
+            if not any(author in assignees(n) for n in refs):
+                if unreadable:
+                    errors.append(
+                        "Couldn't read " + ", ".join(f"#{n}" for n in unreadable) + " to check who is assigned. "
+                        "Please edit the description in a while to run this check again."
+                    )
+                else:
+                    errors.append(
+                        f"Refer to an issue assigned to you (@{author}) in the description, with \"Closes #123\", "
+                        "or \"Part of #123\" for an issue labeled \"multiple PRs\". "
+                        "For an issue labeled \"good first issue\" or \"help wanted\", comment \"/claim\" on it to be assigned. "
+                        "For other issues, ask the maintainer in the issue. "
+                        "After you are assigned, edit the description to run this check again. See "
+                        f"https://github.com/{os.environ['GH_REPO']}/blob/main/HOWTOCONTRIBUTE.md#claim-an-issue-before-you-start"
+                    )
 
         for e in errors:
             print(f"::error::{e}")
