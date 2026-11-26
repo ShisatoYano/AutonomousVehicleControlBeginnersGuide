@@ -2,7 +2,8 @@ name: PR_Evidence
 
 # Checks that the PR description shows how the change was checked, has images when it
 # changes code under src/ (see HOWTOCONTRIBUTE.md, Step 4), and doesn't close an issue that
-# is done in several PRs (label "multiple PRs").
+# is done in several PRs (label "multiple PRs"). It also checks that the PR refers to an issue
+# assigned to its author (see "Claim an issue before you start" in HOWTOCONTRIBUTE.md).
 # pull_request_target runs without the approval that first-time contributors' PRs need.
 # It is safe only because this job never checks out or runs the PR's code: keep it that way.
 on:
@@ -12,6 +13,7 @@ on:
 permissions:
   contents: read
   pull-requests: read
+  issues: read
 
 jobs:
   check:
@@ -25,6 +27,9 @@ jobs:
         PR_NUMBER: ${{ github.event.pull_request.number }}
         PR_CREATED_AT: ${{ github.event.pull_request.created_at }}
         NO_IMAGES_LABEL: ${{ contains(github.event.pull_request.labels.*.name, 'no images needed') }}
+        NO_ISSUE_LABEL: ${{ contains(github.event.pull_request.labels.*.name, 'no issue needed') }}
+        PR_AUTHOR: ${{ github.event.pull_request.user.login }}
+        AUTHOR_ASSOCIATION: ${{ github.event.pull_request.author_association }}
         GH_TOKEN: ${{ github.token }}
         GH_REPO: ${{ github.repository }}
       run: |
@@ -37,8 +42,10 @@ jobs:
           }' --jq '.data.repository.pullRequest.closingIssuesReferences.nodes[]
                   | select(any(.labels.nodes[]; .name == "multiple PRs")) | .number' > multi_pr_issues.txt
         python3 - <<'EOF'
+        import json
         import os
         import re
+        import subprocess
         import sys
 
         body = re.sub(r"<!--.*?-->", "", os.environ.get("PR_BODY") or "", flags=re.S)
@@ -66,6 +73,28 @@ jobs:
                     "(drag and drop them into the description): the demo GIF of a new simulation or algorithm, "
                     "or for a change to existing code, the last frame of one or two simulations that use it, "
                     "before and after your change."
+                )
+
+        # Assigning the author doesn't run this check again, so the message asks for an edit
+        if (os.environ["PR_CREATED_AT"] >= "2026-11-27"
+                and os.environ["AUTHOR_ASSOCIATION"] not in ("OWNER", "MEMBER", "COLLABORATOR")
+                and os.environ["NO_ISSUE_LABEL"] != "true"):
+            refs = re.findall(r"\b(?:close[sd]?|fix(?:e[sd])?|resolve[sd]?|part\s+of):?\s+#(\d+)\b", body, flags=re.I)
+            author = os.environ["PR_AUTHOR"]
+
+            def assignees(number):
+                result = subprocess.run(["gh", "api", f"repos/{os.environ['GH_REPO']}/issues/{number}"],
+                                        capture_output=True, text=True)
+                return [a["login"] for a in json.loads(result.stdout)["assignees"]] if result.returncode == 0 else []
+
+            if not any(author in assignees(n) for n in dict.fromkeys(refs)):
+                errors.append(
+                    f"Refer to an issue assigned to you (@{author}) in the description, with \"Closes #123\", "
+                    "or \"Part of #123\" for an issue labeled \"multiple PRs\". "
+                    "For an issue labeled \"good first issue\" or \"help wanted\", comment \"/claim\" on it to be assigned. "
+                    "For other issues, ask the maintainer in the issue. "
+                    "After you are assigned, edit the description to run this check again. See "
+                    f"https://github.com/{os.environ['GH_REPO']}/blob/main/HOWTOCONTRIBUTE.md#claim-an-issue-before-you-start"
                 )
 
         for e in errors:

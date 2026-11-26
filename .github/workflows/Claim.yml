@@ -1,0 +1,102 @@
+name: Claim
+
+# A comment whose first line is "/claim" assigns its author to an open issue labeled
+# "good first issue" or "help wanted" (see "Claim an issue before you start" in HOWTOCONTRIBUTE.md).
+on:
+  issue_comment:
+    types: [created]
+
+permissions:
+  issues: write
+
+# Adding an assignee doesn't replace the others, so two /claim at once could both succeed
+concurrency:
+  group: claim-${{ github.event.issue.number }}
+  cancel-in-progress: false
+
+jobs:
+  claim:
+    if: contains(github.event.comment.body, '/claim')
+    runs-on: ubuntu-latest
+    name: Assign the commenter
+    steps:
+    - name: Claim the issue
+      env:
+        # Passed through env, never expanded into the script, since the comment is untrusted text
+        COMMENT_BODY: ${{ github.event.comment.body }}
+        COMMENTER: ${{ github.event.comment.user.login }}
+        COMMENTER_TYPE: ${{ github.event.comment.user.type }}
+        IS_PULL_REQUEST: ${{ github.event.issue.pull_request != null }}
+        ISSUE_NUMBER: ${{ github.event.issue.number }}
+        GH_TOKEN: ${{ github.token }}
+        GH_REPO: ${{ github.repository }}
+      run: |
+        python3 - <<'EOF'
+        import json
+        import os
+        import subprocess
+        import sys
+
+        repo = os.environ["GH_REPO"]
+        number = os.environ["ISSUE_NUMBER"]
+        user = os.environ["COMMENTER"]
+        rule = f"https://github.com/{repo}/blob/main/HOWTOCONTRIBUTE.md#claim-an-issue-before-you-start"
+
+        def gh(*args):
+            return json.loads(subprocess.run(["gh", "api", *args], check=True, capture_output=True, text=True).stdout)
+
+        def reply(text):
+            gh(f"repos/{repo}/issues/{number}/comments", "-f", f"body={text}")
+
+        lines = (os.environ.get("COMMENT_BODY") or "").strip().splitlines()
+        if os.environ["IS_PULL_REQUEST"] == "true" or os.environ["COMMENTER_TYPE"] == "Bot" \
+                or not lines or lines[0].strip() != "/claim":
+            print("Not a /claim comment on an issue.")
+            sys.exit(0)
+
+        # The event payload is a snapshot from when the comment was posted: read the issue again
+        issue = gh(f"repos/{repo}/issues/{number}")
+        labels = {label["name"] for label in issue["labels"]}
+        assignees = [a["login"] for a in issue["assignees"]]
+
+        reason = None
+        if issue["state"] != "open":
+            reason = "this issue is closed."
+        elif user in assignees:
+            reason = "you are already assigned to this issue."
+        elif assignees:
+            reason = "this issue is already assigned to " + ", ".join(f"@{a}" for a in assignees) + "."
+        elif "multiple PRs" in labels:
+            reason = ("this issue is done in several PRs. "
+                      "Please claim one of its child issues, or ask in this issue which part you can take.")
+        elif not labels & {"good first issue", "help wanted"}:
+            reason = ("only issues labeled `good first issue` or `help wanted` can be claimed with `/claim`. "
+                      "The maintainer assigns other issues after agreeing with them: "
+                      "say in this issue that you want to work on it.")
+        elif "good first issue" in labels:
+            mine = gh(f"repos/{repo}/issues?state=open&assignee={user}&labels=good%20first%20issue&per_page=100")
+            others = [i["number"] for i in mine if "pull_request" not in i]
+            if others:
+                reason = ("you can have only one open `good first issue` at a time, and you are assigned to "
+                          + ", ".join(f"#{n}" for n in others) + ". Please finish it first.")
+
+        if reason:
+            reply(f"@{user} This issue wasn't assigned to you: {reason} See [Claim an issue before you start]({rule}).")
+            print(f"Not assigned: {reason}")
+            sys.exit(0)
+
+        result = gh(f"repos/{repo}/issues/{number}/assignees", "-f", f"assignees[]={user}")
+        if user not in [a["login"] for a in result["assignees"]]:
+            reply(f"@{user} Assigning this issue to you failed. The maintainer will check it.")
+            print(f"::error::GitHub didn't assign {user} to #{number}.")
+            sys.exit(1)
+
+        reply(
+            f"@{user} This issue is now assigned to you. Thank you!\n\n"
+            f"* Open a pull request with `Closes #{number}` in the description.\n"
+            "* If neither a pull request nor a comment from you on this issue appears within 14 days, "
+            "you are unassigned so that someone else can take it. You can claim it again later.\n\n"
+            f"See [Claim an issue before you start]({rule})."
+        )
+        print(f"Assigned {user} to #{number}.")
+        EOF
