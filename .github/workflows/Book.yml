@@ -1,6 +1,7 @@
 name: Book
 
 # Build the web book from doc/ on pull requests, and publish it to GitHub Pages from main
+# and from each release, so the footer shows the release tag
 on:
   push:
     branches:
@@ -10,6 +11,9 @@ on:
       # The pages include code from src/ with literalinclude
       - 'src/**'
       - '.github/workflows/Book.yml'
+  # Deploying from a tag needs the tag pattern v* allowed in the github-pages environment
+  release:
+    types: [published]
   pull_request:
     paths:
       - 'doc/**'
@@ -19,9 +23,9 @@ on:
 permissions:
   contents: read
 
-# Serialize deployments so back-to-back merges don't race
+# Serialize deployments so back-to-back merges and releases don't race
 concurrency:
-  group: book-${{ github.ref }}
+  group: book-${{ github.event_name == 'pull_request' && github.ref || 'publish' }}
   cancel-in-progress: false
 
 jobs:
@@ -31,6 +35,9 @@ jobs:
 
     steps:
     - uses: actions/checkout@v7
+      with:
+        # The footer shows "git describe --tags", which needs the tags and the history up to them
+        fetch-depth: 0
 
     - name: Setup python
       uses: actions/setup-python@v7
@@ -47,13 +54,13 @@ jobs:
       run: sphinx-build -W --keep-going -b html doc doc/_build/html
 
     - name: Upload the site
-      if: github.event_name == 'push'
+      if: github.event_name != 'pull_request'
       uses: actions/upload-pages-artifact@v5
       with:
         path: doc/_build/html
 
   deploy:
-    if: github.event_name == 'push'
+    if: github.event_name != 'pull_request'
     needs: build
     runs-on: ubuntu-latest
     name: Publish to GitHub Pages

@@ -2,6 +2,8 @@ cff-version: 1.2.0
 message: "If you use this project in your research or teaching, please cite it as below."
 type: software
 title: "AutonomousVehicleControlBeginnersGuide"
+version: "0.1.0"
+date-released: 2026-12-01
 abstract: >-
   Python sample programs and documents for learning autonomous driving
   algorithms. Each algorithm is implemented as simply as possible and runs
