@@ -5,7 +5,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        Thank you for proposing an algorithm. Please don't start implementing it yet: start once the proposal is agreed and you are assigned to this issue, as described in [Step 1 of How to contribute](https://github.com/ShisatoYano/AutonomousVehicleControlBeginnersGuide/blob/main/HOWTOCONTRIBUTE.md#step-1-propose-by-creating-issue).
+        Thank you for proposing an algorithm. If you want to implement it yourself, choose "Yes" below. Please don't start implementing it yet: once the maintainer agrees with the proposal, the issue is assigned to you, as described in [Step 1 of How to contribute](https://github.com/ShisatoYano/AutonomousVehicleControlBeginnersGuide/blob/main/HOWTOCONTRIBUTE.md#step-1-propose-by-creating-issue). Start implementing after that.
   - type: input
     id: algorithm
     attributes:

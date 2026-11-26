@@ -41,7 +41,7 @@ release:
 ## Claim an issue before you start
 To avoid two people working on the same thing, please claim an issue before you start working on it.  
 
-1. Comment on the issue that you want to work on it. The maintainer then assigns the issue to you.  
+1. Anyone can claim an issue labeled `good first issue` or `help wanted`: comment on the issue that you want to work on it, and the maintainer assigns the issue to you. Other issues, such as a proposal or a defect report, are assigned by the maintainer after the maintainer agrees with them, even if you opened the issue yourself. If you want to work on such an issue, say so in it.  
 2. If neither a pull request nor an update appears within 14 days after you were assigned, the maintainer unassigns you so that someone else can take the issue. You can claim it again later.  
 3. You can have only one open `good first issue` assigned to you at a time, so that other newcomers can also find one.  
 4. Open a pull request only after you were assigned to its issue. Write "Closes #123" in the description, or "Part of #123" if the issue is labeled `multiple PRs` (see Step 4).  
@@ -61,7 +61,7 @@ Steps to add a new sample program.
 If you found an algorithm which you want to implement, let's create an issue to propose it on GitHub. We will check it and give a comment as soon as possible.  
 
 If we agreed with your proposal, let's go to Step 2.  
-If you want to implement it yourself, say so in the issue and wait until you are assigned, as described in [Claim an issue before you start](#claim-an-issue-before-you-start).  
+If you want to implement it yourself, say so in the issue. Once we agree with the proposal, the maintainer assigns the issue to you, as described in [Claim an issue before you start](#claim-an-issue-before-you-start). Please start implementing after that.  
 
 It is OK to just create an issue to propose. Someone might see your proposal and implement in the future. In this case, please share a paper or documentation about the algorithm to understand it.  
 

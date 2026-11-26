@@ -5,7 +5,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        Thank you for reporting a defect. If you want to fix it yourself, say so below and see [Claim an issue before you start](https://github.com/ShisatoYano/AutonomousVehicleControlBeginnersGuide/blob/main/HOWTOCONTRIBUTE.md#claim-an-issue-before-you-start).
+        Thank you for reporting a defect. If you want to fix it yourself, check the box below. Once the maintainer confirms the defect, the issue is assigned to you, as described in [Claim an issue before you start](https://github.com/ShisatoYano/AutonomousVehicleControlBeginnersGuide/blob/main/HOWTOCONTRIBUTE.md#claim-an-issue-before-you-start). Start fixing after that.
   - type: textarea
     id: description
     attributes:
