@@ -1,0 +1,65 @@
+name: Bug report
+description: Report a defect in a simulation, a module or the book.
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for reporting a defect. If you want to fix it yourself, say so below and see [Claim an issue before you start](https://github.com/ShisatoYano/AutonomousVehicleControlBeginnersGuide/blob/main/HOWTOCONTRIBUTE.md#claim-an-issue-before-you-start).
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: A clear and concise description of the defect.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: The commands you ran and the files you changed, if any.
+      placeholder: |
+        1. Run `python src/simulations/...`
+        2. ...
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+      description: What you expected to happen.
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+      description: What happened instead. Paste the error message, or drag and drop a screenshot.
+    validations:
+      required: true
+  - type: input
+    id: os
+    attributes:
+      label: OS
+      placeholder: e.g. Ubuntu 24.04, Windows 11, macOS 15
+    validations:
+      required: true
+  - type: input
+    id: python-version
+    attributes:
+      label: Python version
+      description: The output of `python --version`.
+      placeholder: e.g. 3.14.0
+    validations:
+      required: true
+  - type: textarea
+    id: libraries
+    attributes:
+      label: Library versions
+      description: Optional. The output of `pip freeze`, or the versions of the libraries in the error message.
+  - type: checkboxes
+    id: fix
+    attributes:
+      label: Fix
+      options:
+        - label: I want to fix this defect myself.

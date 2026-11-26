@@ -38,6 +38,22 @@ release:
 2. Move the recommended version up by one, and update the files in the table.
 3. Remove versions that reached their end of life from the matrix and the table.
 
+## Claim an issue before you start
+To avoid two people working on the same thing, please claim an issue before you start working on it.  
+
+1. Comment on the issue that you want to work on it. The maintainer then assigns the issue to you.  
+2. If neither a pull request nor an update appears within 14 days after you were assigned, the maintainer unassigns you so that someone else can take the issue. You can claim it again later.  
+3. You can have only one open `good first issue` assigned to you at a time, so that other newcomers can also find one.  
+4. Open a pull request only after you were assigned to its issue. Write "Closes #123" in the description, or "Part of #123" if the issue is labeled `multiple PRs` (see Step 4).  
+
+Small fixes such as a typo don't need an issue. Open a pull request directly, and the maintainer adds the `no issue needed` label.  
+
+## Response times
+The maintainer promises the following.  
+
+* The first reply to a new pull request within 48 hours.  
+* At least 8 open `good first issue` issues that nobody is assigned to, so that a newcomer can always find one.  
+
 ## Add new sample program of algorithm
 Steps to add a new sample program.  
 
@@ -45,6 +61,7 @@ Steps to add a new sample program.
 If you found an algorithm which you want to implement, let's create an issue to propose it on GitHub. We will check it and give a comment as soon as possible.  
 
 If we agreed with your proposal, let's go to Step 2.  
+If you want to implement it yourself, say so in the issue and wait until you are assigned, as described in [Claim an issue before you start](#claim-an-issue-before-you-start).  
 
 It is OK to just create an issue to propose. Someone might see your proposal and implement in the future. In this case, please share a paper or documentation about the algorithm to understand it.  
 

@@ -1,0 +1,5 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Questions and ideas
+    url: https://github.com/ShisatoYano/AutonomousVehicleControlBeginnersGuide/discussions
+    about: Ask questions and share ideas in Discussions. Issues are for bug reports and agreed tasks.
