@@ -14,6 +14,8 @@ The distance to the point, the **look-ahead distance**, is the controller's only
 
 **Run it** from the repository root: `python src/simulations/path_tracking/pure_pursuit_path_tracking/pure_pursuit_path_tracking.py` ([code on GitHub](/src/simulations/path_tracking/pure_pursuit_path_tracking)), and the adaptive version with `python src/simulations/path_tracking/adaptive_pure_pursuit_path_tracking/adaptive_pure_pursuit_path_tracking.py` ([code on GitHub](/src/simulations/path_tracking/adaptive_pure_pursuit_path_tracking))
 
+**Run it in the browser** without installing anything: [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ShisatoYano/AutonomousVehicleControlBeginnersGuide/blob/main/notebooks/pure_pursuit_path_tracking.ipynb)
+
 ## Theory
 
 The symbols follow [Notation and Units](../NOTATION.md). The vehicle's state $(x, y, \theta, v)$ is given at the rear axle.

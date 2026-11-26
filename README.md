@@ -115,6 +115,8 @@ $ python src/simulations/localization/extended_kalman_filter_localization/extend
 ```
 You can find all simulations in [doc/EXAMPLES.md](/doc/EXAMPLES.md).
 
+To try one without installing anything, run the Pure Pursuit path tracking simulation in Google Colab: [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ShisatoYano/AutonomousVehicleControlBeginnersGuide/blob/main/notebooks/pure_pursuit_path_tracking.ipynb)
+
 ### 4. (Optional) Run unit tests
 You can confirm that the environment is set up correctly by running the unit tests.
 ```bash
