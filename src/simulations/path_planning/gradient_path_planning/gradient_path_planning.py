@@ -39,6 +39,10 @@ from pure_pursuit_controller import PurePursuitController
 
 show_plot = True
 
+# folder that the map and path files are written to
+# when executed as unit test, this folder is set to a temporary one
+output_dir = abs_dir_path
+
 
 def main():
     # -- Build potential field --
@@ -59,7 +63,7 @@ def main():
                 pf_map.update_map([x], [y])
 
     # -- Export to JSON and plan path --
-    json_path = abs_dir_path + "/potential_field.json"
+    json_path = output_dir + "/potential_field.json"
     pf_map.export_to_json(json_path)
 
     planner = GradientPathPlanner(
@@ -70,7 +74,7 @@ def main():
     )
     result = planner.plan()
 
-    path_json = abs_dir_path + "/gradient_path.json"
+    path_json = output_dir + "/gradient_path.json"
     planner.save_path(result['path'], path_json)
 
     # -- Load path and create smooth course --

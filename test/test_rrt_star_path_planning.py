@@ -15,7 +15,11 @@ sys.path.append(
 import rrt_star_path_planning
 
 
-def test_simulation():
+def test_simulation(tmp_path):
     rrt_star_path_planning.show_plot = False
+    rrt_star_path_planning.output_dir = str(tmp_path)
 
     rrt_star_path_planning.main()
+
+    assert (tmp_path / "map.json").exists()
+    assert (tmp_path / "path.json").exists()
