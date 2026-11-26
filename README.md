@@ -44,8 +44,10 @@ Beyond single algorithms, the project shows how they work together: how the stag
 Choose one of the three setups in [Quick Start](#quick-start):
 
 * A. Dev Container: Install [Docker](https://www.docker.com/) and [VS Code](https://code.visualstudio.com/) with the [Dev Containers extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers).
-* B. Docker shell: Install [Docker](https://www.docker.com/). Follow the X server instructions in Quick Start to display plots with either container option.
+* B. Docker shell: Install [Docker](https://www.docker.com/).
 * C. Local Python: Install [Python 3.14.x](https://www.python.org/) on Linux, Windows or macOS. Follow Quick Start to create a virtual environment and install the packages in [requirements.txt](/requirements.txt).
+
+For options A and B, also set up an X server to display the animations (see the note in [Quick Start](#2-set-up-the-environment)).
 
 
 ## Quick Start
@@ -138,7 +140,7 @@ If you use the project, share your paper, animation or video in [Show and tell](
 
 
 ## Contribution
-Any contribution by creating an issue or sending a pull request is welcome!! Please check [this document about how to contribute](/HOWTOCONTRIBUTE.md).  
+Contributions are welcome, through issues or pull requests. Please read [how to contribute](/HOWTOCONTRIBUTE.md) first.  
 Questions about the algorithms or the code are welcome in [Q&A](https://github.com/ShisatoYano/AutonomousVehicleControlBeginnersGuide/discussions/categories/q-a), and feedback on the book in [Book](https://github.com/ShisatoYano/AutonomousVehicleControlBeginnersGuide/discussions/categories/book).  
 If you are looking for a place to start, see the [good first issues](https://github.com/ShisatoYano/AutonomousVehicleControlBeginnersGuide/issues?q=is%3Aissue%20state%3Aopen%20label%3A%22good%20first%20issue%22) and the [roadmap issue](https://github.com/ShisatoYano/AutonomousVehicleControlBeginnersGuide/issues/131).  
 
