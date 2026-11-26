@@ -12,6 +12,10 @@ sys.path.append(str(Path(__file__).absolute().parent)
 import gradient_path_planning
 
 
-def test_simulation():
+def test_simulation(tmp_path):
     gradient_path_planning.show_plot = False
+    gradient_path_planning.output_dir = str(tmp_path)
     gradient_path_planning.main()
+
+    assert (tmp_path / "potential_field.json").exists()
+    assert (tmp_path / "gradient_path.json").exists()

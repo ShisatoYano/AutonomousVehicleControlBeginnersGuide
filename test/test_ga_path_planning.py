@@ -15,7 +15,11 @@ sys.path.append(
 import ga_path_planning  # noqa: E402
 
 
-def test_simulation():
+def test_simulation(tmp_path):
     ga_path_planning.show_plot = False
+    ga_path_planning.output_dir = str(tmp_path)
 
     ga_path_planning.main()
+
+    assert (tmp_path / "map.json").exists()
+    assert (tmp_path / "path.json").exists()

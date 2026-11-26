@@ -41,6 +41,10 @@ from q_learning_path_planner import QLearningPathPlanner  # noqa: E402
 # when executed as unit test, this flag is set as false
 show_plot = True
 
+# folder that the map and path files are written to
+# when executed as unit test, this folder is set to a temporary one
+output_dir = abs_dir_path
+
 
 def main():
     """Main process function."""
@@ -52,8 +56,8 @@ def main():
         + relative_simulations
         + "path_planning/q_learning_path_planning/"
     )
-    map_path = sim_dir + "map.json"
-    path_filename = sim_dir + "path.json"
+    map_path = output_dir + "/map.json"
+    path_filename = output_dir + "/path.json"
     search_gif_path = sim_dir + "q_learning_search.gif"
     navigate_gif_path = sim_dir + "q_learning_navigate.gif"
 

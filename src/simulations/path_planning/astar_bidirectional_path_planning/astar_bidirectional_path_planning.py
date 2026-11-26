@@ -46,6 +46,10 @@ import json
 # when executed as unit test, this flag is set as false
 show_plot = True
 
+# folder that the map and path files are written to
+# when executed as unit test, this folder is set to a temporary one
+output_dir = abs_dir_path
+
 
 def main():
     """
@@ -59,16 +63,8 @@ def main():
         + relative_simulations
         + "path_planning/astar_bidirectional_path_planning/astar_bidirectional_navigate.gif"
     )
-    map_path = (
-        abs_dir_path
-        + relative_simulations
-        + "path_planning/astar_bidirectional_path_planning/map.json"
-    )
-    path_filename = (
-        abs_dir_path
-        + relative_simulations
-        + "path_planning/astar_bidirectional_path_planning/path.json"
-    )
+    map_path = output_dir + "/map.json"
+    path_filename = output_dir + "/path.json"
     search_gif_path = (
         abs_dir_path
         + relative_simulations
