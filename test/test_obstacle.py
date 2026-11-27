@@ -4,9 +4,8 @@ Unit test of Obstacle
 Author: yalshish
 """
 
-import pytest
-import sys
 import numpy as np
+import sys
 from pathlib import Path
 
 sys.path.append(str(Path(__file__).absolute().parent) + "/../src/components/obstacle")
@@ -17,6 +16,9 @@ from state import State
 
 LENGTH_M = 2.0
 WIDTH_M = 1.0
+
+ROTATED_90DEG_X_M = [-WIDTH_M, -WIDTH_M, WIDTH_M, WIDTH_M, -WIDTH_M]
+ROTATED_90DEG_Y_M = [LENGTH_M, -LENGTH_M, -LENGTH_M, LENGTH_M, LENGTH_M]
 
 
 def test_vertex_xy_at_origin() -> None:
@@ -32,25 +34,22 @@ def test_vertex_xy_translated() -> None:
     obstacle = Obstacle(State(x_m, y_m, 0.0), length_m=LENGTH_M, width_m=WIDTH_M)
     vertex_x_m, vertex_y_m = obstacle.vertex_xy()
 
-    assert np.allclose(vertex_x_m, [x_m + LENGTH_M, x_m - LENGTH_M, x_m - LENGTH_M, x_m + LENGTH_M, x_m + LENGTH_M])
-    assert np.allclose(vertex_y_m, [y_m + WIDTH_M, y_m + WIDTH_M, y_m - WIDTH_M, y_m - WIDTH_M, y_m + WIDTH_M])
+    assert np.allclose(vertex_x_m, x_m + np.array([LENGTH_M, -LENGTH_M, -LENGTH_M, LENGTH_M, LENGTH_M]))
+    assert np.allclose(vertex_y_m, y_m + np.array([WIDTH_M, WIDTH_M, -WIDTH_M, -WIDTH_M, WIDTH_M]))
 
 
 def test_vertex_xy_rotated_90deg() -> None:
     obstacle = Obstacle(State(0.0, 0.0, np.deg2rad(90)), length_m=LENGTH_M, width_m=WIDTH_M)
     x_m, y_m = obstacle.vertex_xy()
 
-    assert x_m[0] == pytest.approx(-WIDTH_M)
-    assert y_m[0] == pytest.approx(LENGTH_M)
+    assert np.allclose(x_m, ROTATED_90DEG_X_M)
+    assert np.allclose(y_m, ROTATED_90DEG_Y_M)
 
 
 def test_vertex_xy_after_update() -> None:
-    yaw_rate_rps = 0.5
-    time_s = 1.0
-    obstacle = Obstacle(State(0.0, 0.0, 0.0), yaw_rate_rps=yaw_rate_rps, length_m=LENGTH_M, width_m=WIDTH_M)
-    obstacle.update(time_s)
+    obstacle = Obstacle(State(0.0, 0.0, 0.0), yaw_rate_rps=np.pi / 2, length_m=LENGTH_M, width_m=WIDTH_M)
+    obstacle.update(1.0)
     x_m, y_m = obstacle.vertex_xy()
 
-    yaw_rad = yaw_rate_rps * time_s
-    assert x_m[0] == pytest.approx(LENGTH_M * np.cos(yaw_rad) - WIDTH_M * np.sin(yaw_rad))
-    assert y_m[0] == pytest.approx(LENGTH_M * np.sin(yaw_rad) + WIDTH_M * np.cos(yaw_rad))
+    assert np.allclose(x_m, ROTATED_90DEG_X_M)
+    assert np.allclose(y_m, ROTATED_90DEG_Y_M)
