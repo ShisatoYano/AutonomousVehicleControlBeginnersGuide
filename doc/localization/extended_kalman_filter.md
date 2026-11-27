@@ -51,12 +51,12 @@ $$
 \mathbf{x}_t = f(\mathbf{x}_{t-1}, \mathbf{u}_t + \boldsymbol{\varepsilon}_t), \qquad \boldsymbol{\varepsilon}_t \sim \mathcal{N}(\mathbf{0}, Q), \qquad Q = \mathrm{diag}(\sigma_a^2, \sigma_\omega^2) \tag{3}
 $$
 
-GNSS observes the position with the noise $\boldsymbol{\delta}_t$ of covariance $R$:
+GNSS observes the position with the noise $\boldsymbol{\eta}_t$ of covariance $R$:
 
 \begin{equation*}
-\mathbf{z}_t = H \mathbf{x}_t + \boldsymbol{\delta}_t, \qquad
+\mathbf{z}_t = H \mathbf{x}_t + \boldsymbol{\eta}_t, \qquad
 H = \begin{bmatrix} 1 & 0 & 0 & 0 \\ 0 & 1 & 0 & 0 \end{bmatrix}, \qquad
-\boldsymbol{\delta}_t \sim \mathcal{N}(\mathbf{0}, R), \qquad R = \mathrm{diag}(\sigma_x^2, \sigma_y^2) \tag{4}
+\boldsymbol{\eta}_t \sim \mathcal{N}(\mathbf{0}, R), \qquad R = \mathrm{diag}(\sigma_x^2, \sigma_y^2) \tag{4}
 \end{equation*}
 
 The observation model $h(\mathbf{x}) = H\mathbf{x}$ is linear, so only the motion model needs a linearization. In the simulation, $\sigma_a = 0.2$ m/s², $\sigma_\omega = 10$ deg/s (0.17 rad/s) and $\sigma_x = \sigma_y = 1$ m.
@@ -93,7 +93,7 @@ $$
 
 The first term carries the old uncertainty through the motion, and the second term adds the new uncertainty of the inputs. $G$ also converts $Q$, which is in the units of the inputs, into the units of the state.
 
-The Jacobians come from differentiating (2) row by row. Only the first two rows depend on $\theta$ and $v$, through $d\cos\theta$ and $d\sin\theta$ with $\partial d / \partial v = \Delta t$:
+The Jacobians come from differentiating (2) row by row. Apart from the ones on the diagonal, only the first two rows depend on $\theta$ and $v$, through $d\cos\theta$ and $d\sin\theta$ with $\partial d / \partial v = \Delta t$:
 
 \begin{equation*}
 F =
@@ -165,7 +165,7 @@ Update
 7. New covariance:          P_t = (I - K H) P̄_t                (13)
 ```
 
-Without a GNSS position in a step, the filter skips the update and keeps $\hat{\mathbf{x}}_t = \bar{\mathbf{x}}_t$ and $P_t = \bar{P}_t$: it does dead reckoning, and its covariance grows until the next position arrives.
+Without a GNSS position in a step, the filter skips the update and keeps $\hat{\mathbf{x}}_t = \bar{\mathbf{x}}_t$ and $P_t = \bar{P}_t$: it does dead reckoning, and its covariance grows until the next position arrives. The simulation has a GNSS position at every step, so the code always updates.
 
 ## Limits
 
@@ -189,11 +189,11 @@ Without a GNSS position in a step, the filter skips the update and keeps $\hat{\
 
 ## Check your understanding
 
-1. A vehicle stands still with a well known position, but its heading is unknown: a large variance in $P$, and no covariance with the position. GNSS positions arrive at every step. Does the heading estimate improve?
+1. A vehicle stands still with a well known position, but its heading is unknown: a large variance in $P$, and no covariance with the position. GNSS positions arrive at every step, the inputs are zero, and the estimated speed stays zero. Does the heading estimate improve?
 
    <details><summary>Answer</summary>
 
-   No. With $v = 0$ and $a = 0$, the distance $d$ in (9) is zero, so $F$ doesn't create any covariance between the heading and the position, and the lower block of (14) stays zero. The heading row of $K$ is zero, and (12) never changes the heading. The heading only becomes observable once the vehicle moves.
+   No. With $v = 0$ and $a = 0$, the distance $d$ in (9) is zero, so $F$ doesn't create any covariance between the heading and the position, and neither does $G Q G^\top$, where the yaw rate noise only reaches the heading. The heading row of $\bar{P}_{ep}$ in (14) stays zero, so the heading row of $K$ is zero, and (12) never changes the heading. The speed row is not zero: the column of $v$ in $F$ and the acceleration noise relate the speed to the position, so GNSS corrects the speed. The heading only becomes observable once the vehicle moves. In a real run, the GNSS noise moves the estimated speed a little away from zero, which makes $d$ nonzero and lets the heading be corrected slowly.
 
    </details>
 
