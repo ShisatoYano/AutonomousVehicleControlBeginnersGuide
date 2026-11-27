@@ -265,7 +265,11 @@ class LShapeFittingDetector:
         for cluster in clusters_list:
             array_list = [point.get_point_array() for point in list(cluster)]
             integrated_array = np.concatenate(array_list, 1)
-            rectangles_list.append(self._calculate_rectangle(integrated_array))
+            # A cluster is a set, whose order follows the points' object ids and
+            # changes from run to run. Sort the points by x, then y, so that the
+            # fitting gets them in the same order for the same input.
+            sorted_indices = np.lexsort((integrated_array[1, :], integrated_array[0, :]))
+            rectangles_list.append(self._calculate_rectangle(integrated_array[:, sorted_indices]))
 
         self.latest_rectangles_list = rectangles_list
 
