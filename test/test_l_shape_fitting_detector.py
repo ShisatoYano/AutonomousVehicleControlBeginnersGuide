@@ -74,3 +74,14 @@ def test_sides_have_known_length_and_width():
 
     assert np.isclose(np.hypot(*long_side), LENGTH_M, atol=0.01)
     assert np.isclose(np.hypot(*short_side), WIDTH_M, atol=0.01)
+
+
+def test_segmentation_gives_one_neighborhood_per_point_and_keeps_input_order():
+    point_cloud = _l_shape_point_cloud()
+    original_order = list(point_cloud)
+
+    clusters = LShapeFittingDetector()._adaptive_range_segmentation(point_cloud)
+
+    assert point_cloud == original_order
+    assert len(clusters) == len(point_cloud)
+    assert all(point in cluster for point, cluster in zip(point_cloud, clusters))
