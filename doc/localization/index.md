@@ -1,7 +1,7 @@
 # Chapter 6: Knowing Where You Are: Localization
 
 ```{note}
-This chapter is planned. This page lists what it will cover and the simulations that already exist for it.
+This chapter is being written. Section 6.2 has its theory; its code walkthrough, experiments and exercises are planned. The other sections are planned.
 ```
 
 Vehicle localization in Python with the Kalman filter, the extended Kalman filter (EKF), the unscented Kalman filter (UKF) and the particle filter. Estimate the vehicle's pose from noisy inputs and GNSS with these Bayes filters, using the motion model of [Chapter 3](/doc/vehicle_model/index.md) with noise. Then give the controller the estimate instead of the true state, and see how the tracking changes.
@@ -9,7 +9,7 @@ Vehicle localization in Python with the Kalman filter, the extended Kalman filte
 ## Sections
 
 - 6.1 The Kalman filter in one dimension: [`kalman_filter_1d`](/src/simulations/localization/kalman_filter_1d)
-- 6.2 Extended Kalman filter: [`extended_kalman_filter_localization`](/src/simulations/localization/extended_kalman_filter_localization)
+- [6.2 Extended Kalman filter](/doc/localization/extended_kalman_filter.md): [`extended_kalman_filter_localization`](/src/simulations/localization/extended_kalman_filter_localization)
 - 6.3 Unscented Kalman filter: [`unscented_kalman_filter_localization`](/src/simulations/localization/unscented_kalman_filter_localization)
 - 6.4 Particle filter: [`particle_filter_localization`](/src/simulations/localization/particle_filter_localization)
 - 6.5 Comparing the filters: [`ekf_vs_ukf_comparison`](/src/simulations/localization/ekf_vs_ukf_comparison), [`ekf_ukf_pf_comparison`](/src/simulations/localization/ekf_ukf_pf_comparison)
