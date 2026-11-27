@@ -39,6 +39,8 @@ This page defines the symbols and units used in the whole book. Each chapter fol
 | $H = \partial h / \partial \mathbf{x}$ | Jacobian of the observation model |
 | $Q$ | Covariance of the input (process) noise |
 | $R$ | Covariance of the observation noise |
+| $\boldsymbol{\varepsilon}_t$, $\sigma_a$, $\sigma_\omega$ | Input noise added to $\mathbf{u}_t$, $\boldsymbol{\varepsilon}_t \sim \mathcal{N}(\mathbf{0}, Q)$ with $Q = \mathrm{diag}(\sigma_a^2, \sigma_\omega^2)$, the standard deviations of the acceleration (m/s²) and the yaw rate (rad/s). Not the sample noise $\boldsymbol{\varepsilon}_{i,k}$ of MPPI, whose standard deviations [10.4](optimal_control/mppi.md) also writes $\sigma_\delta$, $\sigma_a$ |
+| $\boldsymbol{\eta}_t$, $\sigma_x$, $\sigma_y$ | Observation noise of a GNSS position, $\boldsymbol{\eta}_t \sim \mathcal{N}(\mathbf{0}, R)$ with $R = \mathrm{diag}(\sigma_x^2, \sigma_y^2)$, the standard deviations in m |
 | $S$ | Covariance of the innovation $\mathbf{z}_t - h(\bar{\mathbf{x}}_t)$ |
 | $K$ | Kalman gain |
 
