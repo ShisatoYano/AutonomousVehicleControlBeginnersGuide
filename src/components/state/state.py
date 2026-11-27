@@ -48,22 +48,47 @@ class State:
     def motion_model(state, motion_input, time_s):
         """
         Static function of motion model of vehicle state
+
+        Kinematic bicycle model (constant acceleration and yaw rate over one
+        cycle), discretized with a forward Euler step of length time_s:
+
+            x_{t+1}   = x_t + v_t * cos(yaw_t) * dt + 0.5 * a_t * cos(yaw_t) * dt^2
+            y_{t+1}   = y_t + v_t * sin(yaw_t) * dt + 0.5 * a_t * sin(yaw_t) * dt^2
+            yaw_{t+1} = yaw_t + omega_t * dt
+            v_{t+1}   = v_t + a_t * dt
+
+        In matrix form, x_{t+1} = A x_t + B u_t with
+            state x = [x, y, yaw, v]^T,  input u = [a, omega]^T,  dt = time_s.
+        The A matrix holds the state-to-state terms (the v_t * cos/sin * dt
+        terms are the 4th column) and B holds the input terms.
+
+        Reference: R. Rajamani, "Vehicle Dynamics and Control", 2nd ed.,
+        Springer, 2012, Ch. 2 (kinematic bicycle model); see also
+        doc/vehicle_model/index.md in this repository.
+
         state: Vehicle's state (x, y, yaw, speed) object
         motion_input: Motion input (acceleration, yaw rate) object
         time_s: Time interval per cycle[sec]
         """
 
-        # to fix DeprecationWarning: Conversion of an array with ndim > 0 
-        # to a scalar is deprecated, and will error in future. 
-        # Ensure you extract a single element from your array 
+        # to fix DeprecationWarning: Conversion of an array with ndim > 0
+        # to a scalar is deprecated, and will error in future.
+        # Ensure you extract a single element from your array
         # before performing this operation. (Deprecated NumPy 1.25.)
         yaw_rad = state.item(2) # do not extract an element like state[2]
-        
+
+        # A: state transition matrix, x_{t+1} = A x_t + B u_t
+        # Rows: x, y, yaw, v. Column 4 multiplies v_t.
+        # x and y advance along the heading yaw_t by v_t * dt.
+        # yaw and v carry over unchanged (identity) in this model.
         A = np.array([[1, 0, 0, cos(yaw_rad) * time_s],
                       [0, 1, 0, sin(yaw_rad) * time_s],
                       [0, 0, 1, 0],
                       [0, 0, 0, 1]])
-        
+
+        # B: input matrix. Column 1 is acceleration a_t, column 2 is yaw rate omega_t.
+        # a_t contributes 0.5 * a_t * dt^2 to x and y (constant acceleration
+        # over the step) and a_t * dt to v. omega_t adds omega_t * dt to yaw.
         B = np.array([[(cos(yaw_rad) * time_s**2) / 2, 0],
                       [(sin(yaw_rad) * time_s**2) / 2, 0],
                       [0, time_s],
