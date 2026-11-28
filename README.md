@@ -41,21 +41,13 @@ Beyond single algorithms, the project shows how they work together: how the stag
 
 
 ## Requirements
-Please satisfy with the following requirements on native or VM Linux in advance.  
-For running each sample codes:  
-* [Python 3.14.x](https://www.python.org/)
-* [Matplotlib](https://matplotlib.org/)
-* [NumPy](https://numpy.org/)
-* [SciPy](https://scipy.org/)
-* [CasADi](https://web.casadi.org/) (for MPC path tracking)
-* [do-mpc](https://www.do-mpc.com/) (for MPC path tracking)
+Choose one of the three setups in [Quick Start](#quick-start):
 
-For development:
-* [pytest](https://docs.pytest.org/en/7.4.x/) (for unit tests)
+* A. Dev Container: Install [Docker](https://www.docker.com/) and [VS Code](https://code.visualstudio.com/) with the [Dev Containers extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers).
+* B. Docker shell: Install [Docker](https://www.docker.com/).
+* C. Local Python: Install [Python 3.14.x](https://www.python.org/) on Linux, Windows or macOS. Follow Quick Start to create a virtual environment and install the packages in [requirements.txt](/requirements.txt).
 
-For setting up the environment with Docker (see [Quick Start](#quick-start)):
-* [Docker](https://www.docker.com/)
-* [VS Code](https://code.visualstudio.com/) with the [Dev Containers extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) (only for option A)
+For options A and B, also set up an X server to display the animations (see the note in [Quick Start](#2-set-up-the-environment)).
 
 
 ## Quick Start
@@ -124,7 +116,7 @@ $ . run_test_suites.sh
 ```
 On Windows without Docker, run `run_test_suites.bat` instead.
 
-Add star to this repository if you like it!!
+If this guide helped you understand an algorithm, consider giving the repository a star.
 
 
 ## Examples of Simulation
@@ -144,18 +136,17 @@ If you use this project in your research or teaching, please cite it. Click "Cit
 
 
 ## Use Case
-I started this project to study an algorithm and software development for Autonomous Vehicle system by myself. You can also use this repo for your own studying, education, researching and development.  
+I started this project to teach myself how autonomous vehicles work by implementing their algorithms in Python. You can run the simulations to study an algorithm on your own, demonstrate it in class, or compare approaches for research and development.
 
-If this project helps your task, please let me know in [Show and tell](https://github.com/ShisatoYano/AutonomousVehicleControlBeginnersGuide/discussions/categories/show-and-tell).  
-Any paper, animation, video as your output, always welcome!! It will encourage me to continue this project.  
-
-Your comment and output is added to [this list of user comments](/USERS_COMMENTS.md).  
+If you use the project, share your paper, animation or video in [Show and tell](https://github.com/ShisatoYano/AutonomousVehicleControlBeginnersGuide/discussions/categories/show-and-tell). You can also see [what other readers have shared](/USERS_COMMENTS.md).
 
 
 ## Contribution
-Any contribution by creating an issue or sending a pull request is welcome!! Please check [this document about how to contribute](/HOWTOCONTRIBUTE.md).  
+Contributions are welcome, through issues or pull requests. Please read [how to contribute](/HOWTOCONTRIBUTE.md) first.  
 Questions about the algorithms or the code are welcome in [Q&A](https://github.com/ShisatoYano/AutonomousVehicleControlBeginnersGuide/discussions/categories/q-a), and feedback on the book in [Book](https://github.com/ShisatoYano/AutonomousVehicleControlBeginnersGuide/discussions/categories/book).  
 If you are looking for a place to start, see the [good first issues](https://github.com/ShisatoYano/AutonomousVehicleControlBeginnersGuide/issues?q=is%3Aissue%20state%3Aopen%20label%3A%22good%20first%20issue%22) and the [roadmap issue](https://github.com/ShisatoYano/AutonomousVehicleControlBeginnersGuide/issues/131).  
+
+[![Contributors to the Autonomous Vehicle Control Beginners Guide](https://contrib.rocks/image?repo=ShisatoYano/AutonomousVehicleControlBeginnersGuide)](https://github.com/ShisatoYano/AutonomousVehicleControlBeginnersGuide/graphs/contributors)
 
 
 ## Support this project
@@ -171,4 +162,6 @@ No sponsors yet. [Be the first one!](https://github.com/sponsors/ShisatoYano)
 
 
 ## Author
-[Shisato Yano](https://github.com/ShisatoYano)  
+[Shisato Yano](https://github.com/ShisatoYano)
+
+[Blog](https://www.eureka-moments-blog.com/) · [X](https://x.com/4310sy) · [LinkedIn](https://www.linkedin.com/in/shisatoyano/)
