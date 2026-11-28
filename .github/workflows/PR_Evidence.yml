@@ -17,6 +17,8 @@ permissions:
 
 jobs:
   check:
+    # After a merge the PR's issues are closed, so the assignment check would fail on later label changes
+    if: github.event.pull_request.state == 'open'
     runs-on: ubuntu-latest
     name: PR description has evidence
     steps:
