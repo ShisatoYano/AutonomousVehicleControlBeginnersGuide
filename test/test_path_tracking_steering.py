@@ -83,3 +83,25 @@ def test_steering_is_larger_when_farther_from_the_course(controller_class: type,
     far_rad = steer_at(controller_class, straight_course, y_m=2.0)
 
     assert abs(far_rad) > abs(near_rad)
+
+
+@pytest.mark.parametrize("controller_class", CONTROLLERS)
+def test_steers_right_when_heading_left_of_the_course(controller_class: type, straight_course: CubicSplineCourse) -> None:
+    # The course runs along +x and a positive yaw points to the left of it.
+    steer_rad = steer_at(controller_class, straight_course, y_m=0.0, yaw_rad=0.1)
+
+    assert steer_rad < 0.0
+
+
+@pytest.mark.parametrize("controller_class", CONTROLLERS)
+def test_steers_left_when_heading_right_of_the_course(controller_class: type, straight_course: CubicSplineCourse) -> None:
+    steer_rad = steer_at(controller_class, straight_course, y_m=0.0, yaw_rad=-0.1)
+
+    assert steer_rad > 0.0
+
+
+def test_stanley_steers_more_for_a_larger_heading_error(straight_course: CubicSplineCourse) -> None:
+    small_steer_rad = steer_at(StanleyController, straight_course, y_m=0.0, yaw_rad=0.1)
+    large_steer_rad = steer_at(StanleyController, straight_course, y_m=0.0, yaw_rad=0.2)
+
+    assert abs(large_steer_rad) > abs(small_steer_rad)
