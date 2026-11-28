@@ -3,6 +3,8 @@ Unit test of the coordinates of the path saved by AStarPathPlanner and DijkstraP
 
 The saved path must be in world coordinates [m] whatever its length. The map
 here starts at (-5, -5), so grid indices and world coordinates differ.
+
+Author: abedinm
 """
 
 import json
@@ -10,6 +12,7 @@ import sys
 from pathlib import Path
 
 import numpy as np
+import numpy.typing as npt
 import pytest
 
 abs_dir_path = str(Path(__file__).absolute().parent)
@@ -23,7 +26,9 @@ from min_max import MinMax
 PLANNERS = [AStarPathPlanner, DijkstraPathPlanner]
 
 
-def plan(planner_class, grid, start, goal, x_lim, y_lim, tmp_path):
+def plan(planner_class: type, grid: npt.NDArray[np.float64], start: tuple[float, float],
+         goal: tuple[float, float], x_lim: MinMax, y_lim: MinMax,
+         tmp_path: Path) -> list[tuple[float, float]]:
     """Run the planner on the grid and return the saved path as a list of (x, y)."""
     map_file = tmp_path / "grid.npy"
     path_file = tmp_path / "path.json"
@@ -37,7 +42,7 @@ def plan(planner_class, grid, start, goal, x_lim, y_lim, tmp_path):
 
 
 @pytest.mark.parametrize("planner_class", PLANNERS)
-def test_short_path_is_saved_in_world_coordinates(planner_class, tmp_path):
+def test_short_path_is_saved_in_world_coordinates(planner_class: type, tmp_path: Path) -> None:
     # 10 x 10 cells of 1 m from -5 m to 5 m: cell (0, 0) is at (-5, -5)
     grid = np.zeros((10, 10))
 
@@ -48,7 +53,7 @@ def test_short_path_is_saved_in_world_coordinates(planner_class, tmp_path):
 
 
 @pytest.mark.parametrize("planner_class", PLANNERS)
-def test_long_path_is_saved_in_world_coordinates(planner_class, tmp_path):
+def test_long_path_is_saved_in_world_coordinates(planner_class: type, tmp_path: Path) -> None:
     # 30 cells along x, so the path has more than 20 points and is thinned to 20
     grid = np.zeros((3, 30))
 
