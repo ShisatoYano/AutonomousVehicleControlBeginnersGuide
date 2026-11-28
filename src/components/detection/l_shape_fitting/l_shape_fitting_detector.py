@@ -13,7 +13,6 @@ import sys
 import copy
 import itertools
 import numpy as np
-from collections import deque
 from pathlib import Path
 from math import sin, cos
 
@@ -76,33 +75,20 @@ class LShapeFittingDetector:
         MIN_RNG_TH_M as a minimum term.
 
         point_cloud: Input original point cloud
-        Return list of small clusters
+        Return list of small clusters, one neighborhood per point. Neighborhoods
+        that share points are joined into one cluster per object by _merge_clusters
         """
-        
+
+        # KdTree sorts the list it is given, so build it from a copy and keep
+        # the order of point_cloud for the loop below
+        tree = KdTree(list(point_cloud))
+
         clusters_list = []
-
-        points_checked = {point: False for point in point_cloud}
-        points_queue = deque()
-        
         for point in point_cloud:
-            if not points_checked[point]:
-                points_queue.append(point)
+            seg_rng_th = self.MIN_RNG_TH_M + self.RNG_TH_RATE * point.get_distance_m()
+            neighbor_points = tree.search_neighbor_points_within_r(point, r=seg_rng_th)
+            clusters_list.append(set(neighbor_points))
 
-                while len(points_queue) > 0:
-                    popped_point = points_queue.popleft()
-                    
-                    if not points_checked[popped_point]:
-                        point_distance_m = popped_point.get_distance_m()
-                        seg_rng_th = self.MIN_RNG_TH_M + self.RNG_TH_RATE * point_distance_m
-                        
-                        tree = KdTree(point_cloud)
-                        neighbor_points = tree.search_neighbor_points_within_r(popped_point, r=seg_rng_th)
-                        cluster = set(neighbor_points)
-                        
-                        points_checked[popped_point] = True
-                
-                clusters_list.append(cluster)
-        
         return clusters_list
 
     def _merge_clusters(self, cluster_list):
