@@ -2,6 +2,7 @@
   "extraPaths": [
     "src/components/array",
     "src/components/common",
+    "src/components/control/ilqr",
     "src/components/control/lqr",
     "src/components/control/mpc",
     "src/components/control/mppi",
@@ -74,6 +75,7 @@
     "src/simulations/path_planning/rrt_star_bidirectional_path_planning",
     "src/simulations/path_planning/rrt_star_path_planning",
     "src/simulations/path_tracking/adaptive_pure_pursuit_path_tracking",
+    "src/simulations/path_tracking/ilqr_path_tracking",
     "src/simulations/path_tracking/lqr_path_tracking",
     "src/simulations/path_tracking/mpc_path_tracking",
     "src/simulations/path_tracking/mppi_path_tracking",

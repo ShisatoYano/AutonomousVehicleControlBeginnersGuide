@@ -1,0 +1,78 @@
+"""
+ilqr_path_tracking.py
+
+Title: iLQR (Iterative Linear Quadratic Regulator) Path Tracking
+Description: Optimizes acceleration and steering over a horizon by repeatedly linearizing the nonlinear vehicle model and solving LQR
+Author: Yuvraj Gupta
+"""
+
+# import path setting
+import sys
+from pathlib import Path
+
+abs_dir_path = str(Path(__file__).absolute().parent)
+relative_path = "/../../../components/"
+relative_simulations = "/../../../simulations/"
+
+sys.path.append(abs_dir_path + relative_path + "visualization")
+sys.path.append(abs_dir_path + relative_path + "state")
+sys.path.append(abs_dir_path + relative_path + "vehicle")
+sys.path.append(abs_dir_path + relative_path + "course/cubic_spline_course")
+sys.path.append(abs_dir_path + relative_path + "control/ilqr")
+
+# import component modules
+from global_xy_visualizer import GlobalXYVisualizer
+from min_max import MinMax
+from time_parameters import TimeParameters
+from vehicle_specification import VehicleSpecification
+from state import State
+from four_wheels_vehicle import FourWheelsVehicle
+from cubic_spline_course import CubicSplineCourse
+from ilqr_controller import IlqrController
+
+
+# flag to show plot figure
+# when executed as unit test, this flag is set as false
+show_plot = True
+
+
+def main():
+    """
+    Main process function
+    """
+
+    # set simulation parameters
+    x_lim, y_lim = MinMax(-5, 55), MinMax(-20, 25)
+    gif_path = abs_dir_path + relative_simulations + "path_tracking/ilqr_path_tracking/ilqr_path_tracking.gif"
+    vis = GlobalXYVisualizer(x_lim, y_lim, TimeParameters(span_sec=30), gif_name=gif_path)
+
+    # create course data instance
+    course = CubicSplineCourse([0.0, 10.0, 25, 40, 50],
+                               [0.0, 4, -12, 20, -13],
+                               20)
+    vis.add_object(course)
+
+    # create vehicle's spec instance
+    spec = VehicleSpecification(area_size=20.0)
+    
+    # create vehicle's state instance
+    state = State(color=spec.color)
+
+    # create controller instance
+    ilqr = IlqrController(spec, course)
+
+    # create vehicle instance
+    # set state, spec and controller instances as arguments
+    vehicle = FourWheelsVehicle(state, spec, controller=ilqr)
+    vis.add_object(vehicle)
+
+    # plot figure is not shown when executed as unit test
+    if not show_plot: vis.not_show_plot()
+
+    # show plot figure
+    vis.draw()
+
+
+# execute main process
+if __name__ == "__main__":
+    main()
