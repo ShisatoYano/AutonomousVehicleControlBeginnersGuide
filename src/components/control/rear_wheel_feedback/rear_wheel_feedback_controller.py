@@ -75,12 +75,12 @@ class RearWheelFeedbackController:
         curr_spd = state.get_speed_mps()
         trgt_curv = self.course.point_curvature(self.target_course_index)
 
-        if error_yaw_rad == 0.0:
-            yaw_rate_rps = 0.0
-        else:
-            yaw_rate_rps = curr_spd * trgt_curv * cos(error_yaw_rad) / (1.0 - trgt_curv * error_lat_m) - \
-                self.YAW_ERROR_GAIN * abs(curr_spd) * error_yaw_rad - \
-                    self.LAT_ERROR_GAIN * curr_spd * sin(error_yaw_rad) * error_lat_m / error_yaw_rad
+        # sin(x) / x tends to 1 as x tends to 0, so only this ratio needs the special case
+        sin_ratio = 1.0 if error_yaw_rad == 0.0 else sin(error_yaw_rad) / error_yaw_rad
+
+        yaw_rate_rps = curr_spd * trgt_curv * cos(error_yaw_rad) / (1.0 - trgt_curv * error_lat_m) - \
+            self.YAW_ERROR_GAIN * abs(curr_spd) * error_yaw_rad - \
+                self.LAT_ERROR_GAIN * curr_spd * sin_ratio * error_lat_m
         self.target_yaw_rate_rps = yaw_rate_rps
 
     def _calculate_target_steer_angle_rad(self, state):
