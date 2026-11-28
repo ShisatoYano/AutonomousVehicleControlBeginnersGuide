@@ -67,7 +67,8 @@ class CubicSpline:
         return ddy
 
     def _search_segment_index(self, x):
-        return bisect.bisect(self.x_points, x) - 1
+        # x equal to the last point has no segment that starts there: reuse the last segment
+        return min(bisect.bisect(self.x_points, x) - 1, self.size_x_points - 2)
     
     def _calculate_coefficient_a(self):
         self.a = [y_point for y_point in self.y_points]
