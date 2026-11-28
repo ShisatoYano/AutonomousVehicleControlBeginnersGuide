@@ -75,6 +75,8 @@ def main():
         vis.not_show_plot()
     vis.draw()
 
+    return vehicle, course
+
 
 if __name__ == "__main__":
     main()
