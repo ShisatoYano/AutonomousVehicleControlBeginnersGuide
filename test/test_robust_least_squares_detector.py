@@ -5,11 +5,13 @@ Author: Leonardo Martins
 """
 
 import numpy as np
+import numpy.typing as npt
 import sys
 from pathlib import Path
 
 sys.path.append(str(Path(__file__).absolute().parent) + "/../src/components/detection/l_shape_fitting")
 sys.path.append(str(Path(__file__).absolute().parent) + "/../src/components/sensors/lidar")
+from rectangle import Rectangle
 from robust_least_squares_detector import OptimizedLShapeDetector
 from scan_point import ScanPoint
 
@@ -70,3 +72,26 @@ def test_shuffled_points_give_identical_rectangle():
     for _ in range(5):
         shuffled = [xy_list[i] for i in rng.permutation(len(xy_list))]
         assert _fit(shuffled) == first
+
+
+def test_one_ulp_does_not_move_unseen_edges() -> None:
+    # Six returns from one visible face of an obstacle in the simulation.
+    points = [
+        (-9.43, 24.90), (-8.02, 25.06), (-7.48, 25.40),
+        (-6.39, 25.43), (-5.47, 25.64), (-4.62, 25.72),
+    ]
+
+    def fit_corners_m(xy_list: list[tuple[float, float]]) -> npt.NDArray[np.float64]:
+        """Return the four fitted (x, y) corners as a (4, 2) array in metres."""
+        rectangle = Rectangle(*_fit(xy_list))
+        return rectangle.contour.get_data()[:, :4].T
+
+    initial_corners_m = fit_corners_m(points)
+    max_shift_m = 0.0
+    for index, (px, py) in enumerate(points):
+        perturbed = points.copy()
+        perturbed[index] = (float(np.nextafter(px, np.inf)), py)
+        shifts_m = np.linalg.norm(fit_corners_m(perturbed) - initial_corners_m, axis=1)
+        max_shift_m = max(max_shift_m, float(np.max(shifts_m)))
+
+    assert max_shift_m < 0.001

@@ -22,6 +22,7 @@ from l_shape_fitting_detector import LShapeFittingDetector
 from kd_tree import KdTree
 from rectangle import Rectangle
 import numpy as np
+import numpy.typing as npt
 from scipy.optimize import least_squares
 from math import sin, cos, atan2
 from scipy.spatial.distance import pdist, squareform
@@ -233,6 +234,10 @@ class OptimizedLShapeDetector(LShapeFittingDetector):
         
         This is the main entry point for the detector, providing a polished OBB 
         by refining the geometric guess with a non-linear Huber-weighted solver.
+        Point distances barely constrain the sides that LiDAR cannot see.
+        Weak priors keep the center, width and length near the geometric guess
+        so that translating or resizing the box has a cost even when it fits
+        the visible sides equally well.
         
         Args:
             points_array (numpy.ndarray): (2, N) array of clustered LiDAR points.
@@ -259,10 +264,19 @@ class OptimizedLShapeDetector(LShapeFittingDetector):
         res_before = self._calculate_residuals(init_guess, points_array, weights)
         cost_before = 0.5 * np.sum(res_before**2) # Least squares cost is 0.5 * sum(r^2)
         
+        center_and_size = [0, 1, 3, 4]
+        initial_geometry_m = np.asarray(init_guess)[center_and_size]
+        geometry_prior_weight = 0.15
+
+        def fit_residuals(params: npt.NDArray[np.float64]) -> npt.NDArray[np.float64]:
+            """Combine point distances with four geometric prior residuals (N + 4, in metres)."""
+            point_residuals = self._calculate_residuals(params, points_array, weights)
+            prior_residuals = geometry_prior_weight * (params[center_and_size] - initial_geometry_m)
+            return np.concatenate((point_residuals, prior_residuals))
+
         try:
             res = least_squares(
-                self._calculate_residuals, init_guess,
-                args=(points_array, weights),
+                fit_residuals, init_guess,
                 bounds=(lower, upper),
                 loss=self.lossfunc, f_scale=.02
             )
