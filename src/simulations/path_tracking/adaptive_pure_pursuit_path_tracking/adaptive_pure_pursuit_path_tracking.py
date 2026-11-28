@@ -37,6 +37,8 @@ show_plot = True
 def main():
     """
     Main process function
+
+    Returns the vehicle and the course, so that a test can check how well the course was tracked
     """
     # set simulation parameters
     x_lim, y_lim = MinMax(-5, 55), MinMax(-20, 25)
@@ -80,6 +82,8 @@ def main():
 
     # show plot figure
     vis.draw()
+
+    return vehicle, course
 
 
 # execute main process
