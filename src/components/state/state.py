@@ -49,22 +49,35 @@ class State:
         """
         Static function of motion model of vehicle state
 
-        Kinematic bicycle model (constant acceleration and yaw rate over one
-        cycle), discretized with a forward Euler step of length time_s:
+        Kinematic bicycle model, discretized over one step of length
+        dt = time_s. During the step the heading yaw_t and the acceleration
+        a_t are kept constant, so the vehicle moves on a straight segment of
+        length v_t * dt + 0.5 * a_t * dt^2 (a plain forward Euler step would
+        drop the 0.5 * a_t * dt^2 term):
 
             x_{t+1}   = x_t + v_t * cos(yaw_t) * dt + 0.5 * a_t * cos(yaw_t) * dt^2
             y_{t+1}   = y_t + v_t * sin(yaw_t) * dt + 0.5 * a_t * sin(yaw_t) * dt^2
             yaw_{t+1} = yaw_t + omega_t * dt
             v_{t+1}   = v_t + a_t * dt
 
+        Because the heading is frozen at yaw_t, the yaw rate omega_t only
+        changes yaw for the next step; it does not bend the path within
+        this step.
+
+        This model takes the yaw rate omega as input instead of the steering
+        angle delta. The two are related by omega = v * tan(delta) / L, where
+        L is the wheelbase (Section 3.2 of the book).
+
         In matrix form, x_{t+1} = A x_t + B u_t with
             state x = [x, y, yaw, v]^T,  input u = [a, omega]^T,  dt = time_s.
         The A matrix holds the state-to-state terms (the v_t * cos/sin * dt
         terms are the 4th column) and B holds the input terms.
 
+        Section 3.3 of the book describes this discretization:
+        https://shisatoyano.github.io/AutonomousVehicleControlBeginnersGuide/vehicle_model/index.html
+
         Reference: R. Rajamani, "Vehicle Dynamics and Control", 2nd ed.,
-        Springer, 2012, Ch. 2 (kinematic bicycle model); see also
-        doc/vehicle_model/index.md in this repository.
+        Springer, 2012, Ch. 2 (kinematic bicycle model).
 
         state: Vehicle's state (x, y, yaw, speed) object
         motion_input: Motion input (acceleration, yaw rate) object
@@ -79,7 +92,7 @@ class State:
 
         # A: state transition matrix, x_{t+1} = A x_t + B u_t
         # Rows: x, y, yaw, v. Column 4 multiplies v_t.
-        # x and y advance along the heading yaw_t by v_t * dt.
+        # x and y advance along the frozen heading yaw_t by v_t * dt.
         # yaw and v carry over unchanged (identity) in this model.
         A = np.array([[1, 0, 0, cos(yaw_rad) * time_s],
                       [0, 1, 0, sin(yaw_rad) * time_s],
@@ -87,8 +100,9 @@ class State:
                       [0, 0, 0, 1]])
 
         # B: input matrix. Column 1 is acceleration a_t, column 2 is yaw rate omega_t.
-        # a_t contributes 0.5 * a_t * dt^2 to x and y (constant acceleration
-        # over the step) and a_t * dt to v. omega_t adds omega_t * dt to yaw.
+        # a_t contributes 0.5 * a_t * dt^2 to x and y (speed integrated exactly
+        # under constant acceleration) and a_t * dt to v. omega_t adds
+        # omega_t * dt to yaw only; it does not move x or y within the step.
         B = np.array([[(cos(yaw_rad) * time_s**2) / 2, 0],
                       [(sin(yaw_rad) * time_s**2) / 2, 0],
                       [0, time_s],
